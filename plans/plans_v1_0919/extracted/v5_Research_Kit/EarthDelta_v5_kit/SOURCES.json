@@ -1,0 +1,169 @@
+{
+  "checked_date": "2026-09-17",
+  "primary_sources_only": true,
+  "scope": "directed_search_not_exhaustive_novelty_proof",
+  "papers": [
+    {
+      "title": "Spectral-Target Physical Latent Structuring for JEPA-Style World Models",
+      "url": "https://arxiv.org/html/2609.04264v3",
+      "first_date": "2026-09-02",
+      "verified_version_date": "2026-09-16",
+      "version": "v3",
+      "evidence": "paper_html_read",
+      "code_status": "author_training_code_not_verified_this_turn",
+      "boundary": "Fourier features of object bounding boxes, not atmospheric power spectra"
+    },
+    {
+      "title": "Semigroup-JEPA: Latent Dynamics Consistency for Zero-Shot Physics Generalization",
+      "url": "https://arxiv.org/html/2609.10464v1",
+      "first_date": "2026-09-09",
+      "version": "v1",
+      "project_url": "https://sg-jepa.github.io/",
+      "evidence": "paper_and_project_read",
+      "code_status": "project_has_code_link; implementation_not_audited_here",
+      "boundary": "recursive latent training with supplied gravity; no general weather semigroup guarantee"
+    },
+    {
+      "title": "StreamTTT",
+      "url": "https://arxiv.org/abs/2608.13416",
+      "version": "v4",
+      "verified_version_date": "2026-09-10",
+      "code_url": "https://github.com/zeyun-zhong/StreamTTT",
+      "evidence": "current_abstract_verified; earlier_conversation_source_read",
+      "boundary": "VLM fast weight memory, not a weather plugin"
+    },
+    {
+      "title": "Context-Conditioned Masked LoRA",
+      "url": "https://aclanthology.org/2026.findings-acl.1329/",
+      "date": "2026-07",
+      "evidence": "official_proceedings_abstract_read",
+      "code_status": "author_implementation_not_verified_this_turn"
+    },
+    {
+      "title": "LeWorldModel",
+      "url": "https://arxiv.org/abs/2603.19312",
+      "code_url": "https://github.com/lucas-maes/le-wm",
+      "evidence": "paper_and_code_read",
+      "boundary": "action encoder and latent predictor reused as design; no future goal image available in weather inference"
+    },
+    {
+      "title": "Flow-JEPA",
+      "url": "https://arxiv.org/abs/2608.29029",
+      "date": "2026-08-29",
+      "evidence": "abstract_read",
+      "boundary": "optional stochastic-trajectory extension, not implemented"
+    },
+    {
+      "title": "EPM-JEPA",
+      "url": "https://arxiv.org/abs/2606.12979",
+      "date": "2026-06",
+      "evidence": "paper_abstract_read_and_prior_plan",
+      "boundary": "memory+JEPA+LoRA is an existing combination"
+    },
+    {
+      "title": "A modified spherical harmonic loss function for machine-learning based weather prediction",
+      "url": "https://arxiv.org/abs/2501.19374",
+      "code_url": "https://github.com/csubich/graphcast/tree/amse",
+      "evidence": "paper_and_prior_branch_read",
+      "boundary": "AMSE not implemented in this package"
+    }
+  ],
+  "code_read": [
+    {
+      "repo": "tung-nd/stormer",
+      "url": "https://github.com/tung-nd/stormer",
+      "commit": "58dfee5a6037399a40fefd492bc00421e0c885a8",
+      "files": [
+        {
+          "path": "stormer/models/hub/stormer.py",
+          "lines": [
+            1,
+            215
+          ],
+          "blob_sha": "231c308ff04c46c4928218a5dd7fdb0891419083"
+        },
+        {
+          "path": "stormer/models/iterative_module.py",
+          "lines": [
+            85,
+            182
+          ],
+          "blob_sha": "e4ef1d23f2e3d90ddcc49aa9ee546f24deb7dadd"
+        }
+      ],
+      "executed_here": false
+    },
+    {
+      "repo": "lucas-maes/le-wm",
+      "url": "https://github.com/lucas-maes/le-wm",
+      "commit": null,
+      "files": [
+        {
+          "path": "jepa.py",
+          "lines": [
+            1,
+            120
+          ],
+          "blob_sha": "486fe93a60f7e7af1fce34e80cc3abdf557559f6"
+        }
+      ],
+      "executed_here": false
+    },
+    {
+      "repo": "fla-org/flash-linear-attention",
+      "url": "https://github.com/fla-org/flash-linear-attention",
+      "commit": null,
+      "files": [
+        {
+          "path": "fla/layers/gated_deltanet.py",
+          "lines": [
+            1,
+            95
+          ],
+          "blob_sha": "7db96686f2ce45e3a7ee74b66a4da6ac9d32ebae"
+        }
+      ],
+      "executed_here": false
+    },
+    {
+      "repo": "NVIDIA/torch-harmonics",
+      "url": "https://github.com/NVIDIA/torch-harmonics",
+      "commit": "66de80d6699fc29834d5e9ec2de0bb22b88cc4f3",
+      "files": [
+        {
+          "path": "torch_harmonics/quadrature.py",
+          "lines": [
+            55,
+            155
+          ],
+          "blob_sha": "4cf198f91ef38b2ec0b2cb216a1fbc7f718647f3",
+          "ref": "66de80d6699fc29834d5e9ec2de0bb22b88cc4f3"
+        },
+        {
+          "path": "torch_harmonics/sht.py",
+          "lines": [
+            45,
+            135
+          ],
+          "blob_sha": "6d8144b6041d8a0a5a17f2e0c73c5845cac59122",
+          "ref": "default_branch_at_read"
+        }
+      ],
+      "executed_here": false,
+      "note": "commit discovered by code search; sht.py read on default branch, not falsely asserted read at that same commit"
+    },
+    {
+      "repo": "google-research/weatherbenchX",
+      "url": "https://github.com/google-research/weatherbenchX",
+      "commit": null,
+      "files": [
+        {
+          "path": "README.md",
+          "blob_sha": "5d49b947d51fbdb735b22b4989d23320176c9743"
+        }
+      ],
+      "executed_here": false
+    }
+  ],
+  "note": "Blob hashes identify files, not repository commits. Null commits were not verified; resolve and pin before installation. No upstream code or weights are redistributed."
+}

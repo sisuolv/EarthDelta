@@ -1,0 +1,370 @@
+[
+ {
+  "dir": "AdaMerging",
+  "remote": "https://github.com/EnnengYang/AdaMerging.git",
+  "head": "cea1165",
+  "date": "2024-10-28",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "ClimaX",
+  "remote": "https://github.com/microsoft/ClimaX.git",
+  "head": "6d5d354",
+  "date": "2023-09-30",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "CoDA",
+  "remote": "https://github.com/yuan-yin/CoDA.git",
+  "head": "17b7352",
+  "date": "2024-05-06",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "CoMoL",
+  "remote": "https://github.com/DCDmllm/CoMoL.git",
+  "head": "011306a",
+  "date": "2026-04-29",
+  "license": "NONE",
+  "license_hint": ""
+ },
+ {
+  "dir": "DISeL",
+  "remote": "https://github.com/alizindari/DISeL.git",
+  "head": "b6e543a",
+  "date": "2026-05-15",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "Flow-JEPA",
+  "remote": "https://github.com/HuoYanchen/Flow-JEPA.git",
+  "head": "e9172e7",
+  "date": "2026-08-27",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "INC",
+  "remote": "https://github.com/tum-pbs/INC.git",
+  "head": "16d29b6",
+  "date": "2026-04-13",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "JEPA-Anything",
+  "remote": "https://github.com/Gen-Verse/JEPA-Anything.git",
+  "head": "c6e6c88",
+  "date": "2026-09-18",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "LEADS",
+  "remote": "https://github.com/yuan-yin/LEADS.git",
+  "head": "9104d7d",
+  "date": "2022-02-10",
+  "license": "LICENCE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "ORCA",
+  "remote": "https://github.com/Fifthky/ORCA.git",
+  "head": "e00bc06",
+  "date": "2026-06-12",
+  "license": "NONE",
+  "license_hint": ""
+ },
+ {
+  "dir": "PEAR",
+  "remote": "https://github.com/FinJun/PEAR.git",
+  "head": "bb00e7b",
+  "date": "2026-05-14",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "PETSA",
+  "remote": "https://github.com/BorealisAI/PETSA.git",
+  "head": "87853d8",
+  "date": "2025-05-30",
+  "license": "LICENSE",
+  "license_hint": "Attribution-NonCommercial-ShareAlike 4.0 Internati"
+ },
+ {
+  "dir": "PyEPO",
+  "remote": "https://github.com/khalil-research/PyEPO.git",
+  "head": "6a9fa25",
+  "date": "2026-07-10",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "SHINE",
+  "remote": "https://github.com/MuLabPKU/SHINE.git",
+  "head": "fd60679",
+  "date": "2026-08-18",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "Solver-in-the-Loop",
+  "remote": "https://github.com/tum-pbs/Solver-in-the-Loop.git",
+  "head": "f514fcf",
+  "date": "2022-10-19",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "StreamTTT",
+  "remote": "https://github.com/zeyun-zhong/StreamTTT.git",
+  "head": "96aed21",
+  "date": "2026-09-13",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "WeatherPEFT",
+  "remote": "https://github.com/ShileiCao/WeatherPEFT.git",
+  "head": "b2cdc25",
+  "date": "2026-06-18",
+  "license": "NONE",
+  "license_hint": ""
+ },
+ {
+  "dir": "Weight2Token",
+  "remote": "https://github.com/xiaolonghan2000/Weight2Token.git",
+  "head": "4979345",
+  "date": "2026-06-18",
+  "license": "NONE",
+  "license_hint": ""
+ },
+ {
+  "dir": "ace",
+  "remote": "https://github.com/ai2cm/ace.git",
+  "head": "b648495",
+  "date": "2026-09-18",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "ai-models-ensembles",
+  "remote": "https://github.com/MeteoSwiss/ai-models-ensembles.git",
+  "head": "69e3f9f",
+  "date": "2026-09-18",
+  "license": "LICENSE",
+  "license_hint": "BSD 3-Clause License"
+ },
+ {
+  "dir": "amortized-optimization-tutorial",
+  "remote": "https://github.com/facebookresearch/amortized-optimization-tutorial.git",
+  "head": "d276ccd",
+  "date": "2025-10-05",
+  "license": "LICENSE",
+  "license_hint": "Attribution-NonCommercial 4.0 International"
+ },
+ {
+  "dir": "aurora",
+  "remote": "https://github.com/microsoft/aurora.git",
+  "head": "4765abc",
+  "date": "2026-09-14",
+  "license": "LICENSE.txt",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "cvxpylayers",
+  "remote": "https://github.com/cvxgrp/cvxpylayers.git",
+  "head": "bd9caf9",
+  "date": "2026-05-19",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "flash-linear-attention",
+  "remote": "https://github.com/fla-org/flash-linear-attention.git",
+  "head": "864a87f",
+  "date": "2026-09-18",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "fusion_bench",
+  "remote": "https://github.com/tanganke/fusion_bench.git",
+  "head": "54c9e8c",
+  "date": "2026-08-05",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "geoarches",
+  "remote": "https://github.com/INRIA/geoarches.git",
+  "head": "b2bdb07",
+  "date": "2026-09-18",
+  "license": "LICENSE",
+  "license_hint": "Copyright (c) 2024-2025, ARCHES team @ INRIA"
+ },
+ {
+  "dir": "geps",
+  "remote": "https://github.com/itsakk/geps.git",
+  "head": "e9a8652",
+  "date": "2024-11-19",
+  "license": "NONE",
+  "license_hint": ""
+ },
+ {
+  "dir": "graphcast",
+  "remote": "https://github.com/google-deepmind/graphcast.git",
+  "head": "f2f2c51",
+  "date": "2026-09-04",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "graphcast-amse",
+  "remote": "https://github.com/csubich/graphcast.git",
+  "head": "6ed80d8",
+  "date": "2025-05-20",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "le-wm",
+  "remote": "https://github.com/lucas-maes/le-wm.git",
+  "head": "8edfeb3",
+  "date": "2026-05-22",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "lejepa",
+  "remote": "https://github.com/rbalestr-lab/lejepa.git",
+  "head": "c293d29",
+  "date": "2026-01-25",
+  "license": "LICENSE",
+  "license_hint": "Attribution-NonCommercial 4.0 International"
+ },
+ {
+  "dir": "lorahub",
+  "remote": "https://github.com/sail-sg/lorahub.git",
+  "head": "df73afe",
+  "date": "2024-07-22",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "mergekit",
+  "remote": "https://github.com/arcee-ai/mergekit.git",
+  "head": "9eeb539",
+  "date": "2026-09-12",
+  "license": "LICENSE",
+  "license_hint": "GNU LESSER GENERAL PUBLIC LICENSE"
+ },
+ {
+  "dir": "ncflow",
+  "remote": "https://github.com/ddrous/ncflow.git",
+  "head": "8e7390d",
+  "date": "2025-08-09",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "peft",
+  "remote": "https://github.com/huggingface/peft.git",
+  "head": "50a277e",
+  "date": "2026-09-18",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "qpth",
+  "remote": "https://github.com/locuslab/qpth.git",
+  "head": "528e9f6",
+  "date": "2024-09-03",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "sg-jepa",
+  "remote": "https://github.com/sg-jepa/sg-jepa.git",
+  "head": "1b7794b",
+  "date": "2026-09-09",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "stormer",
+  "remote": "https://github.com/tung-nd/stormer.git",
+  "head": "58dfee5",
+  "date": "2025-03-17",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "task_vectors",
+  "remote": "https://github.com/mlfoundations/task_vectors.git",
+  "head": "826a64c",
+  "date": "2023-03-08",
+  "license": "NONE",
+  "license_hint": ""
+ },
+ {
+  "dir": "text-to-lora",
+  "remote": "https://github.com/SakanaAI/text-to-lora.git",
+  "head": "8ba7749",
+  "date": "2025-06-08",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "ties-merging",
+  "remote": "https://github.com/prateeky2806/ties-merging.git",
+  "head": "44e7891",
+  "date": "2024-02-03",
+  "license": "LICENSE.txt",
+  "license_hint": "BSD 3-Clause License"
+ },
+ {
+  "dir": "torch-harmonics",
+  "remote": "https://github.com/NVIDIA/torch-harmonics.git",
+  "head": "4ac8ed3",
+  "date": "2026-09-18",
+  "license": "LICENSE.txt",
+  "license_hint": "SPDX-FileCopyrightText: Copyright (c) 2022 The tor"
+ },
+ {
+  "dir": "weather-regional",
+  "remote": "https://github.com/akhtarvision/weather-regional.git",
+  "head": "4f28604",
+  "date": "2024-10-30",
+  "license": "LICENSE",
+  "license_hint": "MIT License"
+ },
+ {
+  "dir": "weatherbench2",
+  "remote": "https://github.com/google-research/weatherbench2.git",
+  "head": "b5fc067",
+  "date": "2026-09-10",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "weatherbenchX",
+  "remote": "https://github.com/google-research/weatherbenchX.git",
+  "head": "964a35e",
+  "date": "2026-09-17",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ },
+ {
+  "dir": "zebra",
+  "remote": "https://github.com/LouisSerrano/zebra.git",
+  "head": "aef60ba",
+  "date": "2026-03-09",
+  "license": "LICENSE",
+  "license_hint": "Apache License"
+ }
+]

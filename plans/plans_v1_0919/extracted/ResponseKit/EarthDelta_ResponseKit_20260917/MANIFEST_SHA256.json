@@ -1,0 +1,25 @@
+{
+  "files": {
+    "CODEX_PLAN_CN.md": "a6747305eed7905274486ed63b0ef0005805c34561222cb31dd0a514a65a8539",
+    "EXECUTION_STATUS.json": "30583a9256b0f2434bc243106aa498bcd9f7afd3fb9453414b9d60cec5e17a45",
+    "ORIGINAL_STARTER_RETEST.txt": "96116e228f5533145795d97d04c3de38001a63a189edcd4b0925390186184300",
+    "README_CN.md": "6bc3b38ca1cf883325d1ff41bde72324b0ff59e965fb4791cba38ee13c281744",
+    "SOURCES.md": "de5363675525c4a87d662ded633756b57f4eb367c48f368f4c609d56c4e8b9bc",
+    "SYNTHETIC_EXAMPLE.json": "24d644bc62441934db6e9907790f5d679a9cb635c43121cff7816f3784347a53",
+    "TEST_REPORT.txt": "ef6659390e5b808d1908188117cf0dcfb22c72693510d23d5a6d4d9ed15d9aad",
+    "VERIFIED_UPSTREAM.json": "63ca5502a679b31daf58da9707f9ebf91b867b15225b62aae8e69f0355ae2c94",
+    "configs/research_spec.yaml": "ac25dd7cf083f94df3c61de4db74efc48e9a4fee8f7369140cf295dabbcecf62",
+    "earthdelta_response/__init__.py": "5d1b38e43b67e5cf4fd2554995bab5382c7a46569eafeb6bf7394c459c2407ef",
+    "earthdelta_response/geometry.py": "41c1b1095643bcb593afb614ab52f2fd9951c5690f0d3fa2fb9cd98883e9e665",
+    "earthdelta_response/probe.py": "452856306bd57991af25d4f25dc999c0f819d68e24e651cbebbf04f51079b0d8",
+    "earthdelta_response/program.py": "4d6555db8092ddd9e7f94beca2320d8c205731bc5a2b495535bb112001164e05",
+    "earthdelta_response/student.py": "a3859cacce6bd87f607d515e8417f531bd975c380d9e33df7cde8e61cfb672f0",
+    "earthdelta_response/teacher.py": "45e37b046b3402f9aaf536e556c1f996b581c9defb7da3310c9460e283e00630",
+    "earthdelta_response/utility.py": "90d38089c9c353b1afaea762c36517fb01e85d6df95e880e23d2809d7a0b19c6",
+    "examples/synthetic_probe.py": "2763ca80d634c6482db1fabe832b0a50576515e8e105f1c028c5fe1513154eb7",
+    "pyproject.toml": "3a6edd137eacf306be04cd2f0348a78726042e224fc9bc7007ad800924377b45",
+    "tests/test_response.py": "96f8591956d6cfe159f2238e0c33af577e474983e21e4971bde7776130fe66e7",
+    "tests/test_utility.py": "abf19fb999b7308616b7038c1cce484e5eee22c71cec1d552a267252d9fe2adc"
+  },
+  "note": "Manifest excludes itself and runtime caches."
+}

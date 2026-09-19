@@ -1,0 +1,32 @@
+# Third-party reference clones (46 repos, ~3 GB) are NOT tracked.
+# Re-create them with reference/_clone_refs*.sh; the manifest records the pinned HEADs.
+reference/*
+!reference/README.md
+!reference/_manifest.json
+!reference/_clone_refs*.sh
+
+# Data and large artifacts
+data/
+*.ckpt
+*.pt
+*.pth
+*.zarr/
+*.h5
+*.hdf5
+*.nc
+*.grib
+*.grib2
+*.npy
+*.npz
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+.env
+
+# Misc
+.DS_Store
+nohup.out

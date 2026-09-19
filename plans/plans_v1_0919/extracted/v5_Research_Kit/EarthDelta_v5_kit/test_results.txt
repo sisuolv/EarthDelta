@@ -1,0 +1,8 @@
+.........................................                                [100%]
+============================= slowest 5 durations ==============================
+1.06s call     tests/test_primitives.py::test_model_gradients_and_ema_update
+0.04s setup    tests/test_primitives.py::test_version_digest_stable
+0.01s call     tests/test_primitives.py::test_model_shapes_and_exact_no_edit_outputs
+0.01s call     tests/test_primitives.py::test_model_checkpoint_roundtrip
+0.01s call     tests/test_primitives.py::test_paired_error_identity
+41 passed in 2.40s

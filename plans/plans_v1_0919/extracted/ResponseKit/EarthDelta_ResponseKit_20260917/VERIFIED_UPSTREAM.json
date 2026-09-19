@@ -1,0 +1,57 @@
+{
+  "checked_date": "2026-09-17",
+  "resources": [
+    {
+      "name": "Stormer",
+      "repository": "tung-nd/stormer",
+      "commit": "58dfee5a6037399a40fefd492bc00421e0c885a8",
+      "verification": "main branch metadata rechecked this turn; source inspected earlier in this conversation",
+      "source_paths": [
+        "stormer/models/hub/stormer.py",
+        "stormer/models/iterative_module.py",
+        "stormer/data/iterative_dataset.py",
+        "inference.py"
+      ],
+      "installed_or_executed": false
+    },
+    {
+      "name": "WeatherBench-X",
+      "repository": "google-research/weatherbenchX",
+      "git_tree_ref": "19548af79e75190254bba273ff5e3b179265e0bd",
+      "verification": "tree and run_example_evaluation.py lines1-190 read this turn",
+      "source_paths": [
+        "evaluation_scripts/run_example_evaluation.py"
+      ],
+      "installed_or_executed": false
+    },
+    {
+      "name": "CoMoL",
+      "repository": "DCDmllm/CoMoL",
+      "source_path": "src/mocorelora/layer.py",
+      "blob_sha": "9aa7a4aa9d0a0e796115e722b2a552638741b931",
+      "commit": null,
+      "verification": "README and layer source read this turn; blob hash is NOT a commit",
+      "installed_or_executed": false
+    },
+    {
+      "name": "DISeL",
+      "repository": "alizindari/DISeL",
+      "previously_verified_commit": "b6e543a13bd79caca75655cbae9b616011fe2d71",
+      "verification": "paper rechecked this turn; source commit from earlier conversation, not a new branch check",
+      "installed_or_executed": false
+    },
+    {
+      "name": "PEAR",
+      "repository": "FinJun/PEAR",
+      "verification": "author code link found in paper only; no source-level verification",
+      "installed_or_executed": false
+    },
+    {
+      "name": "CLAW",
+      "paper": "https://arxiv.org/abs/2609.12278",
+      "repository": null,
+      "verification": "paper read; no usable official source verified",
+      "installed_or_executed": false
+    }
+  ]
+}

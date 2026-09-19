@@ -1,0 +1,22 @@
+{
+  "experiment_kind": "synthetic_algebra_NOT_weather",
+  "probe_trajectories": 6,
+  "candidate_supports": 3,
+  "verification_trajectories": 3,
+  "gram": [
+    [
+      1.04,
+      1.04
+    ],
+    [
+      1.04,
+      1.04
+    ]
+  ],
+  "chosen_offset": [
+    0.9999903847078391,
+    0.0
+  ],
+  "baseline_loss": 1.04,
+  "chosen_loss": 9.615199707356369e-11
+}

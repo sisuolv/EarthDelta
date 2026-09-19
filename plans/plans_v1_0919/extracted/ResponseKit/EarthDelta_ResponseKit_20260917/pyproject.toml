@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "earthdelta-response-kit"
+version = "0.1.0"
+description = "Small offline response-geometry research primitives, not a weather model"
+requires-python = ">=3.10"
+dependencies = ["torch>=2.2", "numpy>=1.24", "scipy>=1.11"]
+[project.optional-dependencies]
+test = ["pytest>=8"]
+[tool.setuptools.packages.find]
+include = ["earthdelta_response*"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]

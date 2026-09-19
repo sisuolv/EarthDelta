@@ -1,0 +1,16 @@
+{
+  "status": "synthetic_plumbing_only_not_weather_evidence",
+  "train_steps": 30,
+  "first_training_loss": 2.2256717681884766,
+  "last_training_loss": 1.8649940490722656,
+  "selected_plans": [
+    "reference",
+    "reference",
+    "reference",
+    "reference",
+    "reference",
+    "reference",
+    "reference",
+    "reference"
+  ]
+}

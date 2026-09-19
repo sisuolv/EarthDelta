@@ -1,0 +1,23 @@
+{
+  "status": "proposal_not_a_completed_weather_run",
+  "backbone_repo": "tung-nd/stormer",
+  "backbone_ref": "58dfee5a6037399a40fefd492bc00421e0c885a8",
+  "checkpoint_variant": "1.40625_patch_size_4",
+  "native_grid": [128, 256],
+  "channels": 69,
+  "interval_hours": 6,
+  "history_frames": 4,
+  "pilot_adapter_sites": [20, 23],
+  "site_type": "post_block_matches_existing_starter_not_attention_LoRA",
+  "edit_groups": 4,
+  "rank_per_group": 4,
+  "hold_steps": 4,
+  "continuation": "reference_after_hold",
+  "probe_steps": [1, 2, 4],
+  "extended_evaluation_steps": [12, 20],
+  "example_latent_dim": 32,
+  "candidate_count": 6,
+  "verified_memory_during_forecast": "read_only",
+  "analysis_grid": "must_be_validated_against_SHT_nodes",
+  "required_real_acceptance": ["checkpoint parity", "normalization parity", "no future writes", "spherical single-mode tests", "actual GPU profile", "paired weather held-out evaluation"]
+}
