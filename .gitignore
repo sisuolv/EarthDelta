@@ -6,7 +6,7 @@ reference/*
 !reference/_clone_refs*.sh
 
 # Data and large artifacts
-data/
+/data/
 *.ckpt
 *.pt
 *.pth
@@ -26,6 +26,9 @@ __pycache__/
 .ipynb_checkpoints/
 .venv/
 .env
+
+# Build artifacts
+*.egg-info/
 
 # Misc
 .DS_Store
