@@ -27,6 +27,13 @@ __pycache__/
 .venv/
 .env
 
+# Local pip --target install dir (persistent-AFS workaround for /root wipe on
+# container restart); not source code, reinstalled from PyPI as needed.
+/.pydeps/
+
+# Ephemeral run logs
+checkpoints/*.log
+
 # Build artifacts
 *.egg-info/
 
