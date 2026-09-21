@@ -1,0 +1,84 @@
+{
+  "access_date_utc": "2026-09-21",
+  "targeted_primary_sources": [
+    {
+      "key": "weatherpeft",
+      "url": "https://arxiv.org/html/2509.22020v2",
+      "error": "HTTPSConnectionPool(host='arxiv.org', port=443): Max retries exceeded with url: /html/2509.22020v2 (Caused by ProxyError('Cannot connect to proxy.', TimeoutError('_ssl.c:990: The handshake operation timed out')))"
+    },
+    {
+      "key": "adapter_banks",
+      "url": "https://arxiv.org/html/2609.17042v1",
+      "status": 200,
+      "characters": 61398,
+      "retrieved_text_sha256": "c037c07ba13a7581b43d2ed5a710695daddc79b4531a29c5f3f9016286e401d4"
+    },
+    {
+      "key": "vi_mole",
+      "url": "https://arxiv.org/html/2608.02528v1",
+      "status": 200,
+      "characters": 72563,
+      "retrieved_text_sha256": "8dcbabb77fbce6508daead8362d12d017c77759c3c3e21c8ac36cdd5e6750031"
+    },
+    {
+      "key": "aurora",
+      "url": "https://arxiv.org/html/2405.13063v1",
+      "status": 200,
+      "characters": 141007,
+      "retrieved_text_sha256": "95e6abd4da402b42cfed8e825032c3266a6572ac19ad9f39e3e0e8974b06a5b0"
+    },
+    {
+      "key": "honda",
+      "url": "https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023GL107938",
+      "status": 403,
+      "characters": 58,
+      "retrieved_text_sha256": "ae0b26c68939e8214056c2517af3b5091f1c674c8aef5f1e1fbab7804a78829b"
+    },
+    {
+      "key": "greens",
+      "url": "https://gmd.copernicus.org/articles/15/2309/2022/",
+      "status": 200,
+      "characters": 65564,
+      "retrieved_text_sha256": "a3e61f2d042a4fbcb814d9a0b8a3fc170faf45771e42101bed3e90f2307897e9"
+    },
+    {
+      "key": "weatherpeft_v1",
+      "url": "https://arxiv.org/html/2509.22020v1",
+      "status": 200,
+      "characters": 120172,
+      "retrieved_text_sha256": "5e6864efed821dbcb0d4ebc68c06bfcd6fd5d4726d56a70eca96b31f1c9d053d"
+    },
+    {
+      "key": "weatherpeft_abs",
+      "url": "https://arxiv.org/abs/2509.22020",
+      "status": 200,
+      "characters": 4962,
+      "retrieved_text_sha256": "22df6eb046fc0406e3046196fb105eddf362d1348c2d1c3e5e6cc500b5c4e619"
+    },
+    {
+      "key": "adapter_banks_abs",
+      "url": "https://arxiv.org/abs/2609.17042",
+      "status": 200,
+      "characters": 4289,
+      "retrieved_text_sha256": "ce2c3713acf84b33a710712996eba6d5128196848b045f0aa0fa50653380bc8e"
+    }
+  ],
+  "extended_search_attempts": [
+    {
+      "query": "forecast sensitivity parameter edits learned response",
+      "error": "HTTPSConnectionPool(host='www.google.com.hk', port=443): Max retries exceeded with url: /url?sa=p&hl=zh-CN&pref=hkredirect&pval=yes&q=https://www.google.com.hk/search%3Fq%3Dforecast%2Bsensitivity%2Bparameter%2Bedits%2Blearned%2Bresponse%26gl%3Dus%26hl%3Den&ust=1789978480197980&usg=AOvVaw3KFSKX-m2HLrKP61Hdl55a (Caused by ProxyError('Cannot connect to proxy.', ConnectionResetError(104, 'Connection reset by peer')))"
+    },
+    {
+      "query": "weather conditional adaptation error prediction",
+      "error": "HTTPSConnectionPool(host='www.google.com.hk', port=443): Max retries exceeded with url: /url?sa=p&hl=zh-CN&pref=hkredirect&pval=yes&q=https://www.google.com.hk/search%3Fq%3Dweather%2Bconditional%2Badaptation%2Berror%2Bprediction%26gl%3Dus%26hl%3Den&ust=1789978480190922&usg=AOvVaw06Yz4RDiJ93Fom1bAQyYI4 (Caused by ProxyError('Cannot connect to proxy.', ConnectionResetError(104, 'Connection reset by peer')))"
+    },
+    {
+      "query": "amortized parameter response quadratic optimization",
+      "error": "HTTPSConnectionPool(host='www.google.com.hk', port=443): Max retries exceeded with url: /url?sa=p&hl=zh-CN&pref=hkredirect&pval=yes&q=https://www.google.com.hk/search%3Fq%3Damortized%2Bparameter%2Bresponse%2Bquadratic%2Boptimization%26gl%3Dus%26hl%3Den&ust=1789978480182326&usg=AOvVaw3M_65CR4mHpxaRx3NsAJ_V (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)')))"
+    },
+    {
+      "query": "forecast proactive quality control Honda Yamazaki",
+      "error": "HTTPSConnectionPool(host='www.google.com.hk', port=443): Max retries exceeded with url: /url?sa=p&hl=zh-CN&pref=hkredirect&pval=yes&q=https://www.google.com.hk/search%3Fq%3Dforecast%2Bproactive%2Bquality%2Bcontrol%2BHonda%2BYamazaki%26gl%3Dus%26hl%3Den&ust=1789978480184214&usg=AOvVaw2j3yO5HtufQZyTMOHhB3p8 (Caused by ProxyError('Cannot connect to proxy.', ConnectionResetError(104, 'Connection reset by peer')))"
+    }
+  ]
+}

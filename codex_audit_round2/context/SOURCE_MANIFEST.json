@@ -1,0 +1,132 @@
+{
+  "purpose": "Unmodified context copies for independent review; not new evidence of weather performance.",
+  "files": [
+    {
+      "role": "round1_background",
+      "original_path": "plans/plans_0921/pkg_20260921/EarthDelta_Codex_Execution_Package_20260921/research/CURRENT_METHOD_AUDIT.md",
+      "packaged_path": "context/round1/research/CURRENT_METHOD_AUDIT.md",
+      "original_audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+      "sha256": "1daed4336c6ff5d41f41a0c6220acd2524e981ae5059945936bd7195b446bc28"
+    },
+    {
+      "role": "round1_background",
+      "original_path": "plans/plans_0921/pkg_20260921/EarthDelta_Codex_Execution_Package_20260921/research/EARTHDELTA_V2.md",
+      "packaged_path": "context/round1/research/EARTHDELTA_V2.md",
+      "original_audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+      "sha256": "e67302ffad58e9ac5723e9f55a67bb938f6ae13b92cac7ca928315333437fc7a"
+    },
+    {
+      "role": "round1_background",
+      "original_path": "plans/plans_0921/pkg_20260921/EarthDelta_Codex_Execution_Package_20260921/research/EIGHT_DIRECT_ANSWERS.md",
+      "packaged_path": "context/round1/research/EIGHT_DIRECT_ANSWERS.md",
+      "original_audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+      "sha256": "9f23632f3f2746ba3b4c17e10a47fcc4f2b86bd8d830466a88162e8eccaed0b1"
+    },
+    {
+      "role": "round1_background",
+      "original_path": "plans/plans_0921/pkg_20260921/EarthDelta_Codex_Execution_Package_20260921/research/FINAL_RESEARCH_DECISION.md",
+      "packaged_path": "context/round1/research/FINAL_RESEARCH_DECISION.md",
+      "original_audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+      "sha256": "a835375da67f09c7248f9c343f82d60581a1160d1c0d607ca4d4e5ca7688e6b7"
+    },
+    {
+      "role": "round1_background",
+      "original_path": "plans/plans_0921/pkg_20260921/EarthDelta_Codex_Execution_Package_20260921/research/MATHEMATICAL_AUDIT.md",
+      "packaged_path": "context/round1/research/MATHEMATICAL_AUDIT.md",
+      "original_audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+      "sha256": "fe3a2c52d938cc53bbed2b82bfe3eba8bba68d4380debbb29ef03d436ceff9f9"
+    },
+    {
+      "role": "round1_background",
+      "original_path": "plans/plans_0921/pkg_20260921/EarthDelta_Codex_Execution_Package_20260921/research/NOVELTY_AUDIT.md",
+      "packaged_path": "context/round1/research/NOVELTY_AUDIT.md",
+      "original_audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+      "sha256": "db48e4f71a0648d1cc081b73da08a8cc8704585db240b5bb4ac22aa530453637"
+    },
+    {
+      "role": "round1_background",
+      "original_path": "plans/plans_0921/pkg_20260921/EarthDelta_Codex_Execution_Package_20260921/research/OUTPUT_CORRECTION_CHALLENGE.md",
+      "packaged_path": "context/round1/research/OUTPUT_CORRECTION_CHALLENGE.md",
+      "original_audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+      "sha256": "1fd9f8df665fb734d3aebaff8dcb46fbd358d9cac8a4d2c861217b714434dbb5"
+    },
+    {
+      "role": "round1_background",
+      "original_path": "plans/plans_0921/pkg_20260921/EarthDelta_Codex_Execution_Package_20260921/research/RELATED_WORK.md",
+      "packaged_path": "context/round1/research/RELATED_WORK.md",
+      "original_audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+      "sha256": "22deeb8493b113a0b580c054718ecc85c0d50190eaa245f68bafb95a79448031"
+    },
+    {
+      "role": "round1_background",
+      "original_path": "plans/plans_0921/pkg_20260921/EarthDelta_Codex_Execution_Package_20260921/research/literature_sources.json",
+      "packaged_path": "context/round1/research/literature_sources.json",
+      "original_audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+      "sha256": "f8586c185ef37ac04bc87214e329f1aed1aeb7e14c14196546eb20f7ed29fe27"
+    },
+    {
+      "role": "round1_background",
+      "original_path": "plans/plans_0921/pkg_20260921/EarthDelta_Codex_Execution_Package_20260921/experiments/BASELINES.md",
+      "packaged_path": "context/round1/experiments/BASELINES.md",
+      "original_audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+      "sha256": "6e8c248c0820919aeecd97c4cf68685621f1aa0c0dd922272aa2f1c1853bb365"
+    },
+    {
+      "role": "round1_background",
+      "original_path": "plans/plans_0921/pkg_20260921/EarthDelta_Codex_Execution_Package_20260921/experiments/P0_SURVIVAL_EXPERIMENTS.md",
+      "packaged_path": "context/round1/experiments/P0_SURVIVAL_EXPERIMENTS.md",
+      "original_audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+      "sha256": "70cdd1104df5ffc0c5464dac5909486405a83035f6650403f1dbd3ed3e821279"
+    },
+    {
+      "role": "round1_background",
+      "original_path": "plans/plans_0921/pkg_20260921/EarthDelta_Codex_Execution_Package_20260921/evidence/audit_findings.json",
+      "packaged_path": "context/round1/evidence/audit_findings.json",
+      "original_audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+      "sha256": "110de1a0c4ba2abb41f8cff4d78d8f8eba476e48e8d7c4d64e93a508e2058b80"
+    },
+    {
+      "role": "round1_background",
+      "original_path": "plans/plans_0921/pkg_20260921/EarthDelta_Codex_Execution_Package_20260921/STOP_CONDITIONS.md",
+      "packaged_path": "context/round1/STOP_CONDITIONS.md",
+      "original_audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+      "sha256": "31223fd8ed4a561dd9c94083c0cf1cdb0695ad05d9c7b385bfeac3140e2ba368"
+    },
+    {
+      "role": "upstream_source",
+      "original_path": "reference/stormer/LICENSE",
+      "packaged_path": "context/upstream_stormer/LICENSE",
+      "source_url": "https://github.com/tung-nd/stormer",
+      "source_commit": "58dfee5a6037399a40fefd492bc00421e0c885a8",
+      "license": "MIT",
+      "sha256": "fc2852ab5ec903746c781069b1f7df29a1d1453820e814b6124d7e3ffa322c47"
+    },
+    {
+      "role": "upstream_source",
+      "original_path": "reference/stormer/inference.py",
+      "packaged_path": "context/upstream_stormer/inference.py",
+      "source_url": "https://github.com/tung-nd/stormer",
+      "source_commit": "58dfee5a6037399a40fefd492bc00421e0c885a8",
+      "license": "MIT",
+      "sha256": "596e3356e8ff7de3d3207751a100e85d276ab7b59120178b8180ac209360700e"
+    },
+    {
+      "role": "upstream_source",
+      "original_path": "reference/stormer/stormer/models/iterative_module.py",
+      "packaged_path": "context/upstream_stormer/stormer/models/iterative_module.py",
+      "source_url": "https://github.com/tung-nd/stormer",
+      "source_commit": "58dfee5a6037399a40fefd492bc00421e0c885a8",
+      "license": "MIT",
+      "sha256": "841a47506d6ec9981532f0f3dedca7dff66d03c873877467f9bc75413cef86a7"
+    },
+    {
+      "role": "upstream_source",
+      "original_path": "reference/stormer/stormer/models/hub/stormer.py",
+      "packaged_path": "context/upstream_stormer/stormer/models/hub/stormer.py",
+      "source_url": "https://github.com/tung-nd/stormer",
+      "source_commit": "58dfee5a6037399a40fefd492bc00421e0c885a8",
+      "license": "MIT",
+      "sha256": "42ddaca271e2b96b11084036266c85ce3f9e7741b0f58c3be1b83048f973b81f"
+    }
+  ]
+}

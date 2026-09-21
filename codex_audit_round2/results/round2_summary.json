@@ -1,0 +1,52 @@
+{
+  "audited_commit_range": "4fe55a7..fb767f7",
+  "audited_head": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+  "prior_findings_disposition": {
+    "A01": "PARTIALLY_CLOSED",
+    "A03": "PARTIALLY_CLOSED",
+    "A04": "PARTIALLY_CLOSED",
+    "A05": "PARTIALLY_CLOSED",
+    "A06": "PARTIALLY_CLOSED",
+    "A11": "PARTIALLY_CLOSED"
+  },
+  "prior_findings_disposition_reasons": {
+    "A01": "官方网络/xformers导入、无资源BLOCKED、七项False初始化和缺参照阻断有效；完整官方rollout/归一化仍不独立，晚期异常保留PASS。B01/B13，另见B02/B10。",
+    "A03": "本轮明确点名的finite/bound/max_active/max_candidates全部有效，bound=0.5测试是合理适配；按原A03完整范围仍欠类型校验，复数被转换为另一组实数候选，故保守记PARTIALLY_CLOSED而非否定四项修复。B15为P2残留。",
+    "A04": "五个调用点确已迁移，head新增真实权重参数；跨目标Q/scale/D执行合同及默认校准问题未关闭，并引入batched Gram和零权重回归。B04/B05/B06。",
+    "A05": "完整SHA被计算并保存，前16位接入backbone版本；norm摘要确含变量顺序、interval键、shape。消费者未核验参照身份，版本检查未成为执行入口，实际grid身份未补。B02。",
+    "A06": "所有datetime构造路径已UTC感知，三种真实进程TZ复现一致；字段均有赋值，但6h情景/legacy被赋予不正确来源，实际时轴联结与过程group未补。B07/B09。",
+    "A11": "历史YAML加superseding note的方式可接受，无须强制原地改写。beats/zero-shot和2-3%已降级，但preview零成本声明与delta_min/MDE区别未妥善处置。B11。"
+  },
+  "new_findings_count": 15,
+  "new_findings_by_priority": {"P0": 2, "P1": 10, "P2": 3},
+  "new_findings_evidence_status": {"STATIC_CONFIRMED": 15, "PLAUSIBLE_UNVERIFIED": 0},
+  "round2_verdict": "FAIL_REOPEN_P0_03",
+  "also_reopen": ["P0-02: metrics, availability provenance and remaining candidate validation"],
+  "blocking_items_before_P0_04": [
+    "B01/B02/B10: 修复独立官方完整推理、零差分均值policy和参照身份/config/多步绑定；当前合成反例可绕过gate。",
+    "B13/B14: 修复真实orchestration晚期异常的PASS撤销及错误报告生成。",
+    "B03: 显式保留caller tensor coefficients[B,K]的梯度路径，以冻结骨干和非零bank验证。",
+    "B04/B05/B06: 修复批量Gram与权重/scale校验；贯通同一Q_eff和全目标reducer，默认关闭独立gain calibration。",
+    "B07/B08/B09: 训练准入核验已完成数据及实际time/history/target索引、真实hash、provenance和process grouping；不得依赖shape或placeholder。",
+    "B11/B15: 权威规格分开最小有用效应与MDE并计preview/replay成本；补齐有限registry的实浮点/空表验证。",
+    "以上实现修复之后，真实GPU+xformers S0仍须由后续有资源任务产生PASS；本轮未执行且不以CPU测试替代。"
+  ],
+  "nonblocking_scope_note": "B12当前仅确认guard支持范围有限，未发现生产并发/replay调用；串行P0可以明确不支持这些模式，无需先建设并发框架。",
+  "cpu_test_result": {
+    "collected": 290,
+    "passed": 283,
+    "skipped": 7,
+    "failed": 0,
+    "exit_code": 0,
+    "elapsed_seconds": 58.28,
+    "skip_reasons": {"memory": 3, "CUDA": 2, "upstream_artifact": 2},
+    "log": "evidence/pytest_cpu.log"
+  },
+  "real_gpu_upstream_s0_status": "BLOCKED",
+  "real_gpu_upstream_s0_executed": false,
+  "real_gpu_limitation_is_new_finding": false,
+  "existing_tests_weakened": false,
+  "tracked_source_modified_by_audit": false,
+  "novelty_assessment_file": "novelty_value_assessment.json",
+  "independence_note": "本文件round2_verdict仅针对代码。第零部分的PROCEED_TO_P0_04支持有界的研究假设检验，不证明novelty/价值，也不绕过本文件的实现与真实S0准入。"
+}

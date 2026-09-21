@@ -1,0 +1,67 @@
+{
+  "B04_batched_gram": {
+    "old_output": [
+      2.0,
+      2.0
+    ],
+    "new_error": "Einstein sum subscript 'ij' does not contain the correct number of indices for operand 1."
+  },
+  "B05_weights": {
+    "finite_input_returns_nonfinite_gain": true,
+    "negative_weight_mse": -2.0
+  },
+  "B06_metric_scope": {
+    "feature_reduced_gain_then_plain_mean": [
+      [
+        0.5,
+        0.5
+      ]
+    ],
+    "global_Q_gain": [
+      [
+        0.9900990128517151,
+        0.009900989942252636
+      ]
+    ]
+  },
+  "B07_availability": {
+    "default_source": "reanalysis_retrospective",
+    "default_delay_hours": 6.0,
+    "legacy_missing_source_is_filled_as": "reanalysis_retrospective"
+  },
+  "B09_calendar_index": {
+    "first_issue_UTC": 1420070400,
+    "last_valid_UTC": 1451606400,
+    "normalization_hash": "placeholder_1979_2018",
+    "last_valid_year": "2016",
+    "same_issue_leads_have_distinct_event_ids": true
+  },
+  "A03_empty_registry": {
+    "returns_noop": true,
+    "solver_failures": 0
+  },
+  "B03_coefficient_gradient": {
+    "caller_coefficient_grad_is_none": true,
+    "bank_has_nonzero_gradient": true,
+    "frozen_backbone_has_gradient": false
+  },
+  "B02_unbound_reference": {
+    "wrong_hash_wrong_norm_wrong_raw_input_and_missing_4step_pass": true,
+    "max_abs_diff": 0.0
+  },
+  "B02_hash_gate": true,
+  "B12_thread_guard": [
+    "first",
+    "second_while_first_active"
+  ],
+  "B14_failure_report": "ValueError: Unknown format code 'e' for object of type 'str'",
+  "B13_late_exception": {
+    "s0_gate_pass": true,
+    "status": "ok",
+    "error": "RuntimeError: cleanup failed"
+  },
+  "B08_unwritten_store": {
+    "declared_complete": true,
+    "first_field_all_nan": true
+  }
+}

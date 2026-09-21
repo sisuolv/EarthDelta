@@ -1,0 +1,33 @@
+{
+  "novelty_value_assessment": {
+    "agrees_no_prior_occupancy": "UNCERTAIN",
+    "occupancy_reasoning": "本轮读到的原始文献没有展示完整的签发时刻 e0/du 双头、平方误差二次组合、带交互的预算参数编辑管线，但这不足以证明所有已发表工作都没有占据它。各组成部分都有直接先例：平方损失差是代数恒等式；参数扰动响应与加权最小二乘见 Green's functions；执行前预测候选收益并分配全局适配预算见 VI-MoLE；冻结共享模型后组合 adapter 改变轨迹见 Adapter Banks。最有希望的研究差异是无未来真值的 du 仿真监督和有核验标签的 e0 监督分离，能否带来同信息、同总资源下的标签效率或未见动作泛化优势。不能用四个条件的交集暂未检出代替方法贡献证据，也不能把风险收敛成只有 headroom。",
+    "knowledge_cutoff_limitation_disclosed": "true。此会话未提供可可靠声明的精确训练知识截止日，因此不以参数记忆核实 2025-2026 论文。本轮于 2026-09-21 实际访问了 Aurora 2405.13063v1、Adapter Banks 2609.17042v1、VI-MoLE 2608.02528v1、WeatherPEFT 2509.22020v1 正文，以及 WeatherPEFT v2 摘要/版本元数据；WeatherPEFT v2 正文请求超时，不能声称核完该最新版本。Strobach 2022 GMD 正文可读；Honda 2024 期刊正文返回 403，其本轮判断仅沿用标明来源的既有材料，未冒称新读全文。四次扩展 Google 检索因代理/TLS 失败，另一次扩展检索也失败。本轮是原文定向重读，不能声称完成截至当日的穷尽检索或独立复现此前约 200 次搜索。",
+    "nearest_neighbor_recheck": [
+      {
+        "work": "Aurora LoRA",
+        "still_non_occupying": "YES",
+        "note": "已读 2405.13063v1 Appendix D.4、G.6/G.7：LoRA 在 rollout fine-tuning 中训练，利用 replay buffer 和末步梯度；没有逐起报 e0/du 候选效果预测与预算求解。它已覆盖低秩参数改变多步预报动力学，也展示有/无 LoRA 的指标权衡，不能只把它当普通静态 one-step 微调。YES 限于本轮读到的版本和明确管线。"
+      },
+      {
+        "work": "WeatherPEFT 2509.22020",
+        "still_non_occupying": "YES",
+        "note": "brief 的 'PEFT benchmark' 描述不准确。v1 第 4 节提出 TADP 与 SFAS：提示由任务编码器 embedding 权重提取；SFAS 用带随机项的 Fisher 分数在训练反向传播时选参数。TADP 的 dynamic 不等于对每次起报候选编辑预测收益；正文未见 e0/du 双头或签发时预算 planner。v2 摘要仍描述这两项方法，但 v2 正文未成功取回，YES 是已核查内容下的非占据判断。"
+      },
+      {
+        "work": "Adapter Banks 2609.17042",
+        "still_non_occupying": "YES",
+        "note": "brief 的 'RL-return-based selection' 不符已读原文。第 3.1.2/3.2 节用示范轨迹分段和模仿学习形成 bank；第 4.4 节冻结网络后，对 T×10 soft policy 用目标手部轨迹 L1 损失做 350 步梯度优化。该工作更直接覆盖冻结动力学模型、adapter 组合和轨迹优化，不能以 '只是 RL' 排除。它没有部署前由合法天气历史预测候选 du 和参考 e0，也没有 FSO 二次预算选择。"
+      },
+      {
+        "work": "VI-MoLE 2608.02528",
+        "still_non_occupying": "YES",
+        "note": "已读第 3-5 节及评估协议。式 (3)-(4) 的 counterfactual prefix residual risk、预执行 risk head、共享预算的 marginal-gain/cost 分配已占据 '先预测价值再运行 LoRA' 这个宽泛动机；beta=0 时还允许 committee-relative 无标签监督。它采用标量 prefix 风险，未见 e0/du 向量分解或跨任意参数编辑的 Gram 二次目标。但 '标量' 不能自动说明其表达能力弱：条件化 prefix 风险也能反映已购专家的上下文影响。其两个 upper-risk certificates 之差不自动成为真实 marginal gain 的下界，EarthDelta 也不应继承这种安全措辞。"
+      }
+    ],
+    "mechanism_plausibility": "存在可检验的归纳偏置，但没有先验优越性保证。固定 Q、同一输出空间下 g=2e^TQu-u^TQu 精确成立；学习量代入后只得到 surrogate，并不保持收益预测无偏。若合法信息 I 足以确定响应 u，则预测 E[e|I] 已足以计算条件期望收益，direct-gain 也能学习同一量；若 I 是压缩 context，u 在条件下仍有变化，则 plug-in 均值漏掉 2 tr(Q Cov(u,e|I)) - tr(Q Var(u|I))。故准确的独立 MSE 双头仍可能错误排序。好处可能来自复用 label-free 仿真监督、共享 e、PSD 几何、换 Q/预算无需重拟合标量 utility，但必须与获准使用同一仿真数据的 direct-gain/router/edited-forecast 比较。H 的非对角项首先表示响应在 Q 下重叠，并非非线性编辑交互；只有 du(a)=Ra 的适用域内二次系数模型才精确。对实际非线性候选的端点损失恒等式精确，不代表 singleton 响应组合精确。参数编辑相对反馈式输出纠错只能争取有限样本/成本优势，不能声称表达能力或动力学一致性独占。",
+    "p0_05_experiment_design_critique": "完整实际非线性候选、固定 bank、dev 选静态策略、confirm 一次、按起报/天气过程配对 bootstrap、失败不删分母，这些设计适合测当前 registry 的 hindsight 上限，且比 top-3 或导数替代的上限更可信。它不是整个 idea 的决定性检验：E[max_a g] 可远大于 E[max_a E[g|I]]。例如 I 与 e 独立、e 等概率为 ±1，候选 u 为 0/±0.5，则 oracle 每次 gain=0.75，合法策略最佳仍是 no-edit，gain=0；即使 oracle CI 极窄也没有可部署动态价值。这不是 bootstrap 假阳性，而是 estimand 不同。PASS 只准进入可预测性与 baseline 比较；FAIL 只否证同一 bank/预算/Q/lead 内的候选选择，不能否证所有参数编辑，尤其不能用 singleton-only registry 的失败否证未测试的组合 H。现有合同已经把 P0-06/07 及 P0-08 分开，因此无须推翻其顺序或整体重设 P0-05。应在 P0-04 的预登记中写清该不对称含义、固定 registry 和阈值，并在同一小 pilot 缓存上增加打乱 context/truth 的 hindsight 参照、交叉拟合的小 direct-gain/regime 对照；打乱只作诊断，不能当真实技能或从实际收益中机械扣除。最小有用差异 delta 和给定样本量下的 MDE 必须分开，CI 未排除阈值就 INCONCLUSIVE。",
+    "novelty_value_verdict": "PROCEED_TO_P0_04",
+    "if_uncertain_what_would_resolve_it": "支持的是有明确 cap 的最小非零 Fs/bank 与生存规格工作，不是基于 'novelty 已成立' 的大规模训练。无需再做无边界文献搜索才允许小 pilot；先修正近邻描述与 claims，补齐 WeatherPEFT v2 方法核查并定向查 forward parameter-response surrogate + learned reference error + predict-then-optimize 的组合。真实天气可用性无法用无成本推理证明：若无合格现成 bank，最小 bank 的成本不可避免。用该 bank 的 dev 候选表先看 oracle-static gap、误差在响应方向的可预测性、同标签/仿真资格的小 direct-gain；通过后再按原 P0-06/07 进行分解和 feedback challenger 的确认比较。持续投资所需的是可部署 pred/pred 相对强静态的收益以及至少一个预登记的分解优势，oracle PASS 单独不够。代码准入是否通过由独立 round2_verdict 决定，此字段不解锁当前尚未合格的 S0。"
+  }
+}

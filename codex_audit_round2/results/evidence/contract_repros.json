@@ -1,0 +1,75 @@
+{
+  "A03_four_requested_checks": {
+    "nonfinite": {
+      "rejected": "candidate_offsets contains 1 non-finite values (NaN/Inf); all candidates must be finite"
+    },
+    "max_candidates": {
+      "rejected": "candidate count K=3 exceeds max_candidates=2; reduce candidates or increase max_candidates limit"
+    },
+    "bound": {
+      "support": [],
+      "solver_failures": 1
+    },
+    "max_active": {
+      "support": [],
+      "solver_failures": 1
+    }
+  },
+  "A03_complex_cast": {
+    "support": [
+      0
+    ],
+    "selected_coefficients": [
+      0.10000000149011612,
+      0.0
+    ],
+    "warnings": [
+      "Casting complex values to real discards the imaginary part (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/native/Copy.cpp:300.)"
+    ]
+  },
+  "A06_timezone_invariance": {
+    "timestamps": {
+      "UTC": [
+        1420070400,
+        1420092000,
+        1420113600,
+        1451584800
+      ],
+      "Pacific/Honolulu": [
+        1420070400,
+        1420092000,
+        1420113600,
+        1451584800
+      ],
+      "Asia/Shanghai": [
+        1420070400,
+        1420092000,
+        1420113600,
+        1451584800
+      ]
+    },
+    "all_equal": true
+  },
+  "B01_nonzero_diff_means": {
+    "6": {
+      "nonzero_channels": 69,
+      "max_abs_raw": 0.008956237696111202,
+      "max_abs_in_input_normalized_units": 1.6597556168562733e-05
+    },
+    "12": {
+      "nonzero_channels": 69,
+      "max_abs_raw": 0.008119450882077217,
+      "max_abs_in_input_normalized_units": 3.4205055271741e-05
+    },
+    "24": {
+      "nonzero_channels": 69,
+      "max_abs_raw": 0.029582981020212173,
+      "max_abs_in_input_normalized_units": 7.170275057433173e-05
+    }
+  },
+  "uniform_weight_bit_identity": {
+    "bit_equal": false,
+    "max_abs_diff": 5.960464477539063e-08,
+    "interpretation": "rounding only; mathematical equality still holds"
+  }
+}

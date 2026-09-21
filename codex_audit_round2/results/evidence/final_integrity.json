@@ -1,0 +1,17 @@
+{
+  "head": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+  "head_unchanged": true,
+  "changed_audited_files": [],
+  "tracked_diff_vs_head": [],
+  "status_at_audit_end": [
+    "?? artifacts/",
+    "?? checkpoints/run_multi_year_pull.sh",
+    "?? codex_audit_round2/",
+    "?? plans/plans_0921/"
+  ],
+  "json_parsing": "PASS",
+  "finding_schema_and_counts": "PASS",
+  "finding_line_references_checked": 82,
+  "report_local_links": "PASS",
+  "audit_scope_gpu_executed": false
+}

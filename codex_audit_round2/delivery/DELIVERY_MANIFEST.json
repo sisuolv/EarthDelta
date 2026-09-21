@@ -1,0 +1,17 @@
+{
+  "audited_commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+  "upstream_commit": "58dfee5a6037399a40fefd492bc00421e0c885a8",
+  "archive": {
+    "path": "EarthDelta_Round2_Pro_Review_20260921.zip",
+    "bytes": 443003,
+    "sha256": "f29773261340d3f5bd4f3a06397d4165cdc656ece8b19ddaab23dbc23a0382a7",
+    "member_count": 78
+  },
+  "reading_packet": {
+    "path": "CHATGPT_PRO_REVIEW_PACKET.md",
+    "bytes": 329593,
+    "sha256": "2a3e4346429b56def1bc0bdef301c5d515c7d57291c84d410d5707c6a290265c"
+  },
+  "archive_content_manifest": "BUNDLE_MANIFEST.json",
+  "validation": "ZIP CRC and every manifest member SHA-256 verified"
+}

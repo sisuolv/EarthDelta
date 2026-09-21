@@ -1,0 +1,32 @@
+{
+  "python": "3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]",
+  "packages": {
+    "torch": "2.3.0a0+6ddf5cf85e.nv24.4",
+    "numpy": "1.24.4",
+    "scipy": "1.12.0",
+    "pandas": "1.5.3",
+    "pytest": "8.1.1",
+    "xarray": "2023.1.0",
+    "timm": "0.9.2",
+    "huggingface-hub": "0.23.1",
+    "safetensors": "0.4.0",
+    "zarr": "2.17.0",
+    "numcodecs": "0.12.1",
+    "asciitree": "0.3.3",
+    "fasteners": "0.19"
+  },
+  "temporary_dependency_paths": [
+    "/tmp/earthdelta_round2_deps",
+    "/tmp/earthdelta_round2_xarray"
+  ],
+  "dependency_note": "原系统缺timm/xarray等；初次collection阻塞，子集6个data测试因缺xarray失败。安装到隔离/tmp后完整重跑，最终结果以pytest_cpu.log为准；未改全局或仓库依赖。",
+  "command": "PYTHONPATH=/tmp/earthdelta_round2_deps:/tmp/earthdelta_round2_xarray PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 python3 -m pytest tests/ -q -rs",
+  "gpu_paths_executed": false,
+  "model_training_executed": false,
+  "weather_data_downloaded": false,
+  "real_checkpoint_deserialized": false,
+  "synthetic_reproductions": [
+    "cpu_repros.py",
+    "contract_repros.py"
+  ]
+}

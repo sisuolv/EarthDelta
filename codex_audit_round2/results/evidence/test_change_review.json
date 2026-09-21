@@ -1,0 +1,500 @@
+{
+  "commit_ranges": [
+    "607fad5^..607fad5",
+    "fb767f7^..fb767f7"
+  ],
+  "all_test_diffs_read": true,
+  "existing_assertions_weakened": false,
+  "existing_file_hunks": [
+    {
+      "file": "tests/test_data.py:12",
+      "change": "import timezone",
+      "assessment": "合理UTC适配"
+    },
+    {
+      "file": "tests/test_data.py:408",
+      "change": "边界与safe datetime加timezone.utc",
+      "assessment": "两个原assert保留"
+    },
+    {
+      "file": "tests/test_data.py:424",
+      "change": "late与safe datetime加timezone.utc",
+      "assessment": "两个原assert保留"
+    },
+    {
+      "file": "tests/test_data.py:446",
+      "change": "valid SplitManifestRow补availability_source",
+      "assessment": "原validate断言保留；字段语义问题独列B07"
+    },
+    {
+      "file": "tests/test_data.py:459",
+      "change": "invalid SplitManifestRow补availability_source",
+      "assessment": "原not validate断言保留"
+    },
+    {
+      "file": "tests/test_data.py:530",
+      "change": "VerifiedRecord fixture补availability_source",
+      "assessment": "原memory相关断言保留"
+    },
+    {
+      "file": "tests/test_earthdelta.py:461",
+      "change": "bound=0.5,max_active=2",
+      "assessment": "0.5候选在显式合法域内检验原选择目的；结果断言没有改弱"
+    },
+    {
+      "file": "tests/test_bridge.py:298",
+      "change": "signature列表增加return_trajectory,differentiable",
+      "assessment": "仍精确相等且保留mutable-default检查"
+    }
+  ],
+  "added_files": [
+    {
+      "file": "tests/test_metric_contract.py",
+      "kind": "new_file",
+      "test_definitions_count": 25,
+      "test_definitions": [
+        {
+          "name": "test_weight_convention_enum_values",
+          "line": 33
+        },
+        {
+          "name": "test_metricspec_valid_construction",
+          "line": 43
+        },
+        {
+          "name": "test_metricspec_invalid_missing_policy",
+          "line": 59
+        },
+        {
+          "name": "test_metricspec_invalid_units",
+          "line": 71
+        },
+        {
+          "name": "test_metricspec_negative_weights_rejected",
+          "line": 84
+        },
+        {
+          "name": "test_metricspec_empty_variable_order_rejected",
+          "line": 96
+        },
+        {
+          "name": "test_quadratic_gain_weighted_mean_uniform_weights",
+          "line": 112
+        },
+        {
+          "name": "test_quadratic_gain_weighted_mean_nonuniform_weights",
+          "line": 125
+        },
+        {
+          "name": "test_quadratic_gain_weighted_sum",
+          "line": 140
+        },
+        {
+          "name": "test_quadratic_gain_convention_required",
+          "line": 154
+        },
+        {
+          "name": "test_quadratic_gain_shape_validation",
+          "line": 164
+        },
+        {
+          "name": "test_quadratic_gain_nonfinite_rejected",
+          "line": 179
+        },
+        {
+          "name": "test_quadratic_gain_identity_holds",
+          "line": 189
+        },
+        {
+          "name": "test_quadratic_gain_from_benefit_gram_unbatched",
+          "line": 216
+        },
+        {
+          "name": "test_quadratic_gain_from_benefit_gram_batched",
+          "line": 229
+        },
+        {
+          "name": "test_quadratic_gain_numpy",
+          "line": 249
+        },
+        {
+          "name": "test_quadratic_gain_numpy_nonfinite_rejected",
+          "line": 262
+        },
+        {
+          "name": "test_weighted_mse_weighted_mean",
+          "line": 278
+        },
+        {
+          "name": "test_weighted_mse_weighted_sum",
+          "line": 292
+        },
+        {
+          "name": "test_weighted_rmse_aggregation_order",
+          "line": 306
+        },
+        {
+          "name": "test_weighted_rmse_with_scale",
+          "line": 324
+        },
+        {
+          "name": "test_quadratic_gain_matches_paired_py_weighted_mean",
+          "line": 341
+        },
+        {
+          "name": "test_quadratic_gain_matches_heads_py_coefficient_space",
+          "line": 362
+        },
+        {
+          "name": "test_quadratic_gain_matches_geometry_py",
+          "line": 379
+        },
+        {
+          "name": "test_quadratic_gain_matches_selection_py",
+          "line": 399
+        }
+      ]
+    },
+    {
+      "file": "tests/test_selection_domain.py",
+      "kind": "new_file",
+      "test_definitions_count": 18,
+      "test_definitions": [
+        {
+          "name": "test_finite_candidates_nan_rejected",
+          "line": 38
+        },
+        {
+          "name": "test_finite_candidates_inf_rejected",
+          "line": 48
+        },
+        {
+          "name": "test_finite_candidates_neginf_rejected",
+          "line": 58
+        },
+        {
+          "name": "test_finite_candidates_valid_passes",
+          "line": 68
+        },
+        {
+          "name": "test_bound_enforcement_rejects_over_bound",
+          "line": 86
+        },
+        {
+          "name": "test_bound_enforcement_all_over_returns_noop",
+          "line": 106
+        },
+        {
+          "name": "test_bound_enforcement_negative_coefficients",
+          "line": 126
+        },
+        {
+          "name": "test_max_active_rejects_large_support",
+          "line": 148
+        },
+        {
+          "name": "test_max_active_all_over_returns_noop",
+          "line": 166
+        },
+        {
+          "name": "test_max_active_zero_allowed",
+          "line": 184
+        },
+        {
+          "name": "test_max_candidates_cap_enforced",
+          "line": 206
+        },
+        {
+          "name": "test_max_candidates_at_limit_ok",
+          "line": 216
+        },
+        {
+          "name": "test_max_candidates_under_limit_ok",
+          "line": 227
+        },
+        {
+          "name": "test_max_candidates_error_message_informative",
+          "line": 237
+        },
+        {
+          "name": "test_all_hardening_checks_combined",
+          "line": 255
+        },
+        {
+          "name": "test_solver_failures_count_includes_rejections",
+          "line": 278
+        },
+        {
+          "name": "test_empty_support_candidates_skipped",
+          "line": 301
+        },
+        {
+          "name": "test_budget_constraint_still_enforced",
+          "line": 320
+        }
+      ]
+    },
+    {
+      "file": "tests/test_time_provenance.py",
+      "kind": "new_file",
+      "test_definitions_count": 22,
+      "test_definitions": [
+        {
+          "name": "test_availability_source_enum_values",
+          "line": 27
+        },
+        {
+          "name": "test_availability_source_all_values",
+          "line": 34
+        },
+        {
+          "name": "test_manifest_row_with_availability_source",
+          "line": 45
+        },
+        {
+          "name": "test_manifest_row_invalid_availability_source",
+          "line": 61
+        },
+        {
+          "name": "test_manifest_row_to_dict_includes_availability_source",
+          "line": 76
+        },
+        {
+          "name": "test_manifest_row_from_dict_with_availability_source",
+          "line": 93
+        },
+        {
+          "name": "test_manifest_row_from_dict_backward_compatible",
+          "line": 109
+        },
+        {
+          "name": "test_guard_boundaries_are_utc_aware",
+          "line": 130
+        },
+        {
+          "name": "test_timestamp_consistency_across_construction",
+          "line": 143
+        },
+        {
+          "name": "test_manifest_timestamps_are_utc",
+          "line": 162
+        },
+        {
+          "name": "test_utc_independence_from_local_timezone",
+          "line": 184
+        },
+        {
+          "name": "test_guard_boundary_timestamps_consistent",
+          "line": 208
+        },
+        {
+          "name": "test_is_in_guard_window_with_utc_datetimes",
+          "line": 225
+        },
+        {
+          "name": "test_build_manifest_default_availability_source",
+          "line": 248
+        },
+        {
+          "name": "test_build_manifest_custom_availability_source",
+          "line": 257
+        },
+        {
+          "name": "test_build_manifest_invalid_availability_source_rejected",
+          "line": 269
+        },
+        {
+          "name": "test_build_manifest_metadata_includes_availability_source",
+          "line": 279
+        },
+        {
+          "name": "test_build_manifest_metadata_created_is_utc",
+          "line": 291
+        },
+        {
+          "name": "test_manifest_json_roundtrip_preserves_availability_source",
+          "line": 306
+        },
+        {
+          "name": "test_era5_data_labeled_as_reanalysis",
+          "line": 330
+        },
+        {
+          "name": "test_availability_source_semantic_correctness",
+          "line": 346
+        },
+        {
+          "name": "test_no_naive_datetime_in_make_splits_module",
+          "line": 364
+        }
+      ]
+    },
+    {
+      "file": "tests/test_differentiable_rollout.py",
+      "kind": "new_file",
+      "test_definitions_count": 11,
+      "test_definitions": [
+        {
+          "name": "test_controlled_rollout_returns_correct_shape",
+          "line": 98
+        },
+        {
+          "name": "test_controlled_rollout_trajectory_shape",
+          "line": 114
+        },
+        {
+          "name": "test_gradient_flows_through_lora",
+          "line": 137
+        },
+        {
+          "name": "test_gradient_flows_through_differentiable_coefficients",
+          "line": 173
+        },
+        {
+          "name": "test_lora_parameters_receive_gradients",
+          "line": 204
+        },
+        {
+          "name": "test_reentrant_rollout_raises",
+          "line": 250
+        },
+        {
+          "name": "test_rollout_lock_released_on_exception",
+          "line": 274
+        },
+        {
+          "name": "test_trajectory_preserves_gradients",
+          "line": 317
+        },
+        {
+          "name": "test_trajectory_includes_initial_state",
+          "line": 340
+        },
+        {
+          "name": "test_gradient_accumulates_through_steps",
+          "line": 362
+        },
+        {
+          "name": "test_differentiable_mode_same_output",
+          "line": 401
+        }
+      ]
+    },
+    {
+      "file": "tests/test_s0_fail_closed.py",
+      "kind": "new_file",
+      "test_definitions_count": 13,
+      "test_definitions": [
+        {
+          "name": "test_gate_criteria_default_to_false",
+          "line": 83
+        },
+        {
+          "name": "test_verify_sha256_fails_closed_on_missing_file",
+          "line": 113
+        },
+        {
+          "name": "test_verify_upstream_parity_fails_closed_without_reference",
+          "line": 135
+        },
+        {
+          "name": "test_verify_normalization_fails_closed_on_missing_dir",
+          "line": 194
+        },
+        {
+          "name": "test_verify_no_state_leak_fails_closed_on_exception",
+          "line": 224
+        },
+        {
+          "name": "test_verify_outputs_finite_fails_closed_on_nan",
+          "line": 253
+        },
+        {
+          "name": "test_strict_load_zero_diff_with_missing_keys",
+          "line": 317
+        },
+        {
+          "name": "test_strict_load_zero_diff_with_unexpected_keys",
+          "line": 342
+        },
+        {
+          "name": "test_strict_load_zero_diff_passes_when_clean",
+          "line": 366
+        },
+        {
+          "name": "test_s0_gate_pass_requires_all_criteria",
+          "line": 395
+        },
+        {
+          "name": "test_gate_exit_code_zero_only_on_pass",
+          "line": 414
+        },
+        {
+          "name": "test_zero_edit_equals_official_fails_closed_on_exception",
+          "line": 434
+        },
+        {
+          "name": "test_all_verification_functions_have_fail_closed_structure",
+          "line": 462
+        }
+      ]
+    },
+    {
+      "file": "tests/test_upstream_parity.py",
+      "kind": "new_file",
+      "test_definitions_count": 6,
+      "test_definitions": [
+        {
+          "name": "test_export_script_blocks_without_xformers",
+          "line": 49
+        },
+        {
+          "name": "test_official_stormer_requires_xformers",
+          "line": 84
+        },
+        {
+          "name": "test_upstream_parity_direct",
+          "line": 114
+        },
+        {
+          "name": "test_attention_equivalence_xformers_vs_sdpa",
+          "line": 186
+        },
+        {
+          "name": "test_upstream_reference_manifest_loading",
+          "line": 240
+        },
+        {
+          "name": "test_upstream_reference_outputs_loadable",
+          "line": 261
+        }
+      ]
+    }
+  ],
+  "coverage_gaps": [
+    {
+      "file": "tests/test_metric_contract.py:229",
+      "gap": "只测batched program/gram，漏shared program + batched gram；未检每slice零权重、非法MSE权重；wrapper一致性不能证明跨物理/系数合同"
+    },
+    {
+      "file": "tests/test_selection_domain.py:38",
+      "gap": "四项主要验证真实；未测复杂dtype与空registry；现有empty_support只测零行而非K=0"
+    },
+    {
+      "file": "tests/test_time_provenance.py:184",
+      "gap": "标题称时区独立但未切换进程TZ；本轮另做真实TZ切换；来源枚举测试不能证明first_seen"
+    },
+    {
+      "file": "tests/test_differentiable_rollout.py:173",
+      "gap": "系数梯度测试只检查x_norm.grad；同文件250所谓reentrant顺序调用两次；bank测试不等于controller梯度"
+    },
+    {
+      "file": "tests/test_s0_fail_closed.py:224",
+      "gap": "异常测试只assert passed字段存在；395与414操作自己字典/表达式，未调用run_s0_gate/main；462只证明函数callable"
+    },
+    {
+      "file": "tests/test_upstream_parity.py:49",
+      "gap": "缺xformers阻断的subprocess测试有效；真实GPU/产物测试本机合法跳过，不能据此声明真实parity PASS"
+    }
+  ]
+}
