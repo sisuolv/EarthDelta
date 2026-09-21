@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import torch
 from torch import Tensor
 from .probe import finite_vector
+from .metrics_contract import quadratic_gain_from_benefit_gram, WeightConvention
 
 
 @dataclass(frozen=True)
@@ -12,6 +13,11 @@ class ResponseGeometry:
     gram = R.T Q R is a Gauss-Newton/local linear metric, NOT the exact
     nonlinear loss Hessian. 'Benefit' is label dependent, not available
     at inference.
+
+    Weight convention: WEIGHTED_SUM (no automatic normalization). The spatial
+    weights Q are baked into gram and benefit at construction time, so
+    predicted_gain computes 2*b.a - a.T H a directly without further weighting.
+    This is appropriate because the weights are already embedded in the geometry.
     """
     response: Tensor     # [m, d] response matrix
     error: Tensor        # [m] error vector
@@ -28,7 +34,14 @@ class ResponseGeometry:
 
         gram = R.T Q R is a Gauss-Newton/local linear metric, NOT the exact
         nonlinear loss Hessian. 'Benefit' is label dependent, not available
-        at inference. No automatic normalization of weights is performed.
+        at inference.
+
+        Convention: WEIGHTED_SUM - No automatic normalization of weights is
+        performed. The weights Q are incorporated directly into gram and benefit
+        as R.T Q R and R.T (Q * e) respectively. This is appropriate because
+        the caller provides weights representing absolute importance, not
+        relative frequencies. For spatial averaging, normalize weights before
+        calling.
 
         Args:
             response: [m, d] response matrix
@@ -54,6 +67,10 @@ class ResponseGeometry:
     def predicted_gain(self, offset: Tensor) -> Tensor:
         """Predict gain for a given offset: 2*b.a - a.T H a.
 
+        This computes gain in coefficient space where spatial weights are
+        already baked into benefit (b = R.T Q e) and gram (H = R.T Q R).
+        Uses the canonical quadratic_gain_from_benefit_gram function.
+
         Args:
             offset: [d] coefficient offset
 
@@ -63,7 +80,8 @@ class ResponseGeometry:
         a = offset.to(self.gram)
         if a.ndim != 1 or a.shape[0] != self.gram.shape[0] or not bool(torch.isfinite(a).all()):
             raise ValueError('invalid offset')
-        return 2 * self.benefit.dot(a) - a @ self.gram @ a
+        # Use canonical coefficient-space gain function (weights already in gram/benefit)
+        return quadratic_gain_from_benefit_gram(self.benefit, self.gram, a)
 
 
 def response_distillation(student: Tensor, teacher: Tensor, gram: Tensor) -> Tensor:

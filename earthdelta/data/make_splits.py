@@ -11,26 +11,49 @@ Time contract columns (from research_spec_v6.yaml):
 - split_id: train/val/test/shift_test
 - normalization_hash: Hash of normalization constants used
 - grid_hash: Hash of grid coordinates
+- availability_source: How the availability_time was determined
+    - reanalysis_retrospective: Data from reanalysis (ERA5), available with ~5 day delay
+    - observed_first_seen: Real-time operational NWP analysis availability
+    - scenario: Synthetic/scenario-based assumption
 
 Guard windows:
 - Exclude issue times near split boundaries whose history/lead-time window
   would cross into an adjacent split.
 - Guard width = max_history_hours + max_lead_hours (configurable)
+
+UTC time convention:
+- All datetime construction uses timezone-aware UTC (datetime.timezone.utc)
+- All .timestamp() calls use timezone-aware datetimes to ensure correctness
+  regardless of host timezone settings
 """
 from __future__ import annotations
 
 import hashlib
 import json
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Dict, List, Literal, Optional, Tuple, Any
 import warnings
 
 import numpy as np
 import pandas as pd
 
 from earthdelta.data.pull_wb2 import variable_order_hash, grid_hash
+
+
+class AvailabilitySource(Enum):
+    """Source of data availability time determination.
+
+    This makes explicit whether a data point's availability time reflects:
+    - reanalysis_retrospective: ERA5-style reanalysis data with publication delay
+    - observed_first_seen: Real-time operational NWP products
+    - scenario: Synthetic timing for what-if analysis
+    """
+    REANALYSIS_RETROSPECTIVE = "reanalysis_retrospective"
+    OBSERVED_FIRST_SEEN = "observed_first_seen"
+    SCENARIO = "scenario"
 
 
 # ============================================================================
@@ -90,6 +113,9 @@ def compute_guard_boundaries(
     - A forecast issued at the boundary doesn't use history from the adjacent split
     - A forecast issued at the boundary doesn't verify into the adjacent split
 
+    All datetime objects are timezone-aware (UTC) to ensure correct timestamp
+    computation regardless of host timezone.
+
     Args:
         max_history_hours: Maximum history window used by the model
         max_lead_hours: Maximum forecast lead time
@@ -110,7 +136,8 @@ def compute_guard_boundaries(
         max_year = max(years)
 
         # Start: beginning of first year + guard (to not use history from prev split)
-        start_dt = datetime(min_year, 1, 1, 0, 0, 0)
+        # Use timezone-aware UTC datetime to ensure correct .timestamp() behavior
+        start_dt = datetime(min_year, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
         # Check if there's a previous split
         years_before = [y for y in all_years if y < min_year]
@@ -119,7 +146,8 @@ def compute_guard_boundaries(
             start_dt = start_dt + timedelta(hours=max_history_hours)
 
         # End: end of last year - guard (to not verify into next split)
-        end_dt = datetime(max_year + 1, 1, 1, 0, 0, 0)  # Start of next year
+        # Use timezone-aware UTC datetime
+        end_dt = datetime(max_year + 1, 1, 1, 0, 0, 0, tzinfo=timezone.utc)  # Start of next year
 
         # Check if there's a next split
         years_after = [y for y in all_years if y > max_year]
@@ -168,10 +196,17 @@ class SplitManifestRow:
     split_id: str
     normalization_hash: str
     grid_hash: str
+    availability_source: str  # One of AvailabilitySource values
 
     def validate(self) -> bool:
         """Validate time ordering: issue_time < valid_time <= available_time."""
-        return self.issue_time < self.valid_time <= self.available_time
+        if not (self.issue_time < self.valid_time <= self.available_time):
+            return False
+        # Validate availability_source
+        valid_sources = {s.value for s in AvailabilitySource}
+        if self.availability_source not in valid_sources:
+            return False
+        return True
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -182,10 +217,15 @@ class SplitManifestRow:
             'split_id': self.split_id,
             'normalization_hash': self.normalization_hash,
             'grid_hash': self.grid_hash,
+            'availability_source': self.availability_source,
         }
 
     @classmethod
     def from_dict(cls, d: Dict[str, Any]) -> 'SplitManifestRow':
+        # Handle backward compatibility - default to reanalysis_retrospective if missing
+        if 'availability_source' not in d:
+            d = dict(d)
+            d['availability_source'] = AvailabilitySource.REANALYSIS_RETROSPECTIVE.value
         return cls(**d)
 
 
@@ -265,8 +305,12 @@ def build_manifest(
     max_history_hours: int = 24,
     availability_delay_hours: int = DEFAULT_AVAILABILITY_DELAY_HOURS,
     normalization_hash: Optional[str] = None,
+    availability_source: str = AvailabilitySource.REANALYSIS_RETROSPECTIVE.value,
 ) -> SplitManifest:
     """Build a split manifest for the given years.
+
+    All datetime operations use timezone-aware UTC to ensure correct timestamp
+    computation regardless of host timezone settings.
 
     Args:
         years: Years to include
@@ -275,10 +319,22 @@ def build_manifest(
         max_history_hours: Maximum history window (for guard computation)
         availability_delay_hours: Hours between valid_time and available_time
         normalization_hash: Hash of normalization constants (placeholder if None)
+        availability_source: How the availability_time was determined.
+            Default is 'reanalysis_retrospective' for ERA5-style data.
+            Note: 6-hourly ERA5 reanalysis data is retrospective (published with
+            ~5 day delay), NOT real-time 'observed_first_seen'. Use 'scenario'
+            for synthetic/what-if timing assumptions.
 
     Returns:
         SplitManifest with all valid issue/valid time combinations
     """
+    # Validate availability_source
+    valid_sources = {s.value for s in AvailabilitySource}
+    if availability_source not in valid_sources:
+        raise ValueError(
+            f"availability_source must be one of {valid_sources}, got {availability_source}"
+        )
+
     if normalization_hash is None:
         normalization_hash = 'placeholder_1979_2018'
 
@@ -300,8 +356,9 @@ def build_manifest(
             continue
 
         # Generate all issue times for this year
-        start_dt = datetime(year, 1, 1, 0, 0, 0)
-        end_dt = datetime(year + 1, 1, 1, 0, 0, 0)
+        # Use timezone-aware UTC datetime for correct .timestamp() behavior
+        start_dt = datetime(year, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+        end_dt = datetime(year + 1, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
         current_dt = start_dt
         while current_dt < end_dt:
@@ -311,6 +368,7 @@ def build_manifest(
                 current_dt += timedelta(hours=time_step_hours)
                 continue
 
+            # .timestamp() on a timezone-aware datetime gives correct UTC seconds
             issue_time = int(current_dt.timestamp())
 
             # Generate valid times for each lead hour
@@ -330,6 +388,7 @@ def build_manifest(
                     split_id=split_id,
                     normalization_hash=normalization_hash,
                     grid_hash=g_hash,
+                    availability_source=availability_source,
                 )
 
                 if row.validate():
@@ -343,12 +402,14 @@ def build_manifest(
         'time_step_hours': time_step_hours,
         'max_history_hours': max_history_hours,
         'availability_delay_hours': availability_delay_hours,
+        'availability_source': availability_source,
         'excluded_guard_window': excluded_guard,
         'excluded_no_split': excluded_no_split,
         'variable_order_hash': var_hash,
         'grid_hash': g_hash,
         'normalization_hash': normalization_hash,
-        'created': datetime.utcnow().isoformat() + 'Z',
+        # Use timezone-aware UTC datetime for consistent ISO format
+        'created': datetime.now(timezone.utc).isoformat(),
     }
 
     return SplitManifest(rows=rows, metadata=metadata)

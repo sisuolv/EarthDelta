@@ -457,7 +457,9 @@ def test_unified_select_finite_candidates():
         gram=torch.eye(2, dtype=DT),
         candidate_offsets=candidates,
         budget=2.,
-        ridge=0.
+        ridge=0.,
+        bound=0.5,  # Explicit bound to allow 0.5 coefficients
+        max_active=2,
     )
     assert isinstance(result, SurrogatePlan)
     # First candidate should win since it aligns with benefit

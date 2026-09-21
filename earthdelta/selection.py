@@ -13,6 +13,8 @@ from scipy.optimize import minimize
 import torch
 from torch import Tensor
 
+from .metrics_contract import quadratic_gain_numpy as _canonical_qg_numpy
+
 
 def select_plan(predicted_gain: Tensor, total_cost: Tensor, budget: float,
                 plan_ids: tuple[str, ...], cost_penalty: float = 0.0) -> Tensor:
@@ -85,8 +87,15 @@ class SurrogatePlan:
 
 
 def quadratic_gain_numpy(benefit: np.ndarray, gram: np.ndarray, program: np.ndarray) -> float:
-    """Compute gain = 2*b.a - a.T H a in numpy."""
-    return float(2 * benefit @ program - program @ gram @ program)
+    """Compute gain = 2*b.a - a.T H a in numpy.
+
+    This computes gain in coefficient space where spatial weights are already
+    baked into benefit (b = R.T Q e) and gram (H = R.T Q R).
+
+    Convention: WEIGHTED_SUM - weights are embedded in gram/benefit, so no
+    additional normalization is applied. This matches ResponseGeometry.predicted_gain.
+    """
+    return _canonical_qg_numpy(benefit, gram, program)
 
 
 @torch.no_grad()
@@ -145,7 +154,10 @@ def plan_from_prediction(benefit: Tensor, gram: Tensor, *, bound: float = 0.25,
 
     # Handle finite candidate set as a special case
     if candidate_offsets is not None:
-        return _plan_from_finite_candidates(benefit, gram, candidate_offsets, costs, budget, ridge)
+        return _plan_from_finite_candidates(
+            benefit, gram, candidate_offsets, costs, budget, ridge,
+            bound=bound, max_active=max_active, max_candidates=max_candidates
+        )
 
     # Continuous optimization path
     if sum(math.comb(d, k) for k in range(max_active + 1)) > max_candidates:
@@ -191,15 +203,29 @@ def plan_from_prediction(benefit: Tensor, gram: Tensor, *, bound: float = 0.25,
 
 
 @torch.no_grad()
-def _plan_from_finite_candidates(benefit: Tensor, gram: Tensor,
-                                 candidate_offsets: Tensor,
-                                 costs: tuple[float, ...] | None,
-                                 budget: float, ridge: float) -> SurrogatePlan:
+def _plan_from_finite_candidates(
+    benefit: Tensor,
+    gram: Tensor,
+    candidate_offsets: Tensor,
+    costs: tuple[float, ...] | None,
+    budget: float,
+    ridge: float,
+    *,
+    bound: float,
+    max_active: int,
+    max_candidates: int,
+) -> SurrogatePlan:
     """Select best plan from finite candidate set.
 
     This treats finite candidates as a continuous program restricted to a
     discrete support set: we evaluate the quadratic gain at each candidate
     and select the best feasible one.
+
+    Hardening checks:
+    - Finiteness: Rejects candidates containing NaN or Inf
+    - Bound enforcement: Rejects candidates with |coefficient| > bound
+    - Support size: Rejects candidates with more than max_active nonzero coefficients
+    - Candidate count: Raises error if K exceeds max_candidates
 
     Args:
         benefit: [d] benefit vector
@@ -208,14 +234,38 @@ def _plan_from_finite_candidates(benefit: Tensor, gram: Tensor,
         costs: Per-dimension costs
         budget: Maximum total cost
         ridge: Ridge regularization
+        bound: Componentwise coefficient bound (candidates must satisfy |a_i| <= bound)
+        max_active: Maximum number of nonzero coefficients per candidate
+        max_candidates: Maximum allowed candidate count (raises if exceeded)
 
     Returns:
         SurrogatePlan with best feasible candidate
+
+    Raises:
+        ValueError: If candidate_offsets contains non-finite values, exceeds
+                    max_candidates, or has other shape/type issues
     """
     if candidate_offsets.ndim != 2 or candidate_offsets.shape[1] != benefit.numel():
         raise ValueError('candidate_offsets must be [K, d]')
 
+    k_count = candidate_offsets.shape[0]
     d = benefit.numel()
+
+    # Hardening: max_candidates cap enforcement
+    if k_count > max_candidates:
+        raise ValueError(
+            f'candidate count K={k_count} exceeds max_candidates={max_candidates}; '
+            f'reduce candidates or increase max_candidates limit'
+        )
+
+    # Hardening: finiteness check on entire candidate array
+    if not torch.isfinite(candidate_offsets).all():
+        nonfinite_count = (~torch.isfinite(candidate_offsets)).sum().item()
+        raise ValueError(
+            f'candidate_offsets contains {nonfinite_count} non-finite values (NaN/Inf); '
+            f'all candidates must be finite'
+        )
+
     b = benefit.detach().double().cpu().numpy()
     h = gram.detach().double().cpu().numpy()
     c = np.ones(d) if costs is None else np.asarray(costs, dtype=float)
@@ -227,12 +277,25 @@ def _plan_from_finite_candidates(benefit: Tensor, gram: Tensor,
     best_support = ()
     best_cost = 0.
     solves = 0
+    rejected_bound = 0
+    rejected_support = 0
 
     for k in range(candidates.shape[0]):
         offset = candidates[k]
         support = tuple(i for i in range(d) if offset[i] != 0)
         if not support:
             continue
+
+        # Hardening: max_active support-size check
+        if len(support) > max_active:
+            rejected_support += 1
+            continue
+
+        # Hardening: bound enforcement per-coefficient
+        if np.abs(offset).max() > bound + 1e-12:
+            rejected_bound += 1
+            continue
+
         idx = np.asarray(support)
         cost = float(c[idx].sum())
         if cost > budget + 1e-12:
@@ -247,7 +310,7 @@ def _plan_from_finite_candidates(benefit: Tensor, gram: Tensor,
             best_predicted = quadratic_gain_numpy(b, h, best)
 
     return SurrogatePlan(torch.from_numpy(best).to(benefit), best_support, best_predicted,
-                         best_gain, best_cost, solves, 0)
+                         best_gain, best_cost, solves, rejected_bound + rejected_support)
 
 
 def unified_select(predicted_gain: Tensor | None = None,

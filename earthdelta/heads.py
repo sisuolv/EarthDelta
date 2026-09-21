@@ -22,6 +22,12 @@ import torch
 from torch import Tensor, nn
 import torch.nn.functional as F
 
+from .metrics_contract import (
+    quadratic_gain as _canonical_quadratic_gain,
+    quadratic_gain_from_benefit_gram,
+    WeightConvention,
+)
+
 
 class BoundedProgramHead(nn.Module):
     """[B, features] -> bounded [B, d] coefficients.
@@ -297,7 +303,8 @@ class ComposedPredictionHead(nn.Module):
             self.response_target = copy.deepcopy(self.response_encoder).requires_grad_(False)
 
     def forward(self, history: Tensor, memory: Tensor, edit_descriptors: Tensor,
-                leads_hours: Tensor, enabled: Tensor) -> dict[str, Tensor]:
+                leads_hours: Tensor, enabled: Tensor,
+                weights: Tensor | None = None) -> dict[str, Tensor]:
         """Forward pass for prediction.
 
         Args:
@@ -306,6 +313,11 @@ class ComposedPredictionHead(nn.Module):
             edit_descriptors: [K, A] edit descriptors
             leads_hours: [H] lead time hours
             enabled: [K] boolean mask of enabled edits
+            weights: Optional [target_dim] Q-weights for gain computation.
+                     Convention: WEIGHTED_MEAN - weights are normalized to sum to 1.
+                     This matches the training target convention in paired.py.
+                     For uniform weights (None), output is bit-identical to the
+                     previous unweighted .mean(-1) implementation.
 
         Returns:
             Dict with base_z, response_z, reference_error, edit_response, gain
@@ -332,7 +344,13 @@ class ComposedPredictionHead(nn.Module):
 
         error = self.base_decoder(z0)
         response = self.response_decoder(ze) * enabled.to(history)[None, :, None, None, None]
-        geometric = (2 * error[:, None] * response - response.square()).mean(-1)
+
+        # Compute geometric gain using canonical implementation with WEIGHTED_MEAN convention.
+        # For uniform weights (weights=None), this is mathematically equivalent to .mean(-1),
+        # preserving bit-identical behavior for backward compatibility.
+        geometric = _canonical_quadratic_gain(
+            error, response, weights, convention=WeightConvention.WEIGHTED_MEAN
+        )
 
         reference_z = z0[:, None].expand(-1, k, -1, -1, -1)
         calibration = self.gain_calibration(torch.cat((reference_z, ze), -1)).squeeze(-1)
@@ -414,5 +432,14 @@ PairedEditPredictor = ComposedPredictionHead
 
 
 def quadratic_gain(benefit: Tensor, gram: Tensor, program: Tensor) -> Tensor:
-    """Batched differentiable surrogate gain; program can be [B, d] or [d]."""
-    return 2 * (benefit * program).sum(-1) - torch.einsum('...i,...ij,...j->...', program, gram, program)
+    """Batched differentiable surrogate gain; program can be [B, d] or [d].
+
+    This computes gain in coefficient space: 2*b.a - a.T H a
+    where benefit (b = R.T Q e) and gram (H = R.T Q R) already have spatial
+    weights baked in. No additional weighting convention is applied here.
+
+    Convention note: This is a coefficient-space operation, distinct from the
+    physical-space quadratic_gain in metrics_contract.py. The spatial weighting
+    was already applied when constructing benefit and gram matrices.
+    """
+    return quadratic_gain_from_benefit_gram(benefit, gram, program)

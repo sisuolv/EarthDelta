@@ -12,6 +12,8 @@ from dataclasses import dataclass
 import torch
 from torch import Tensor
 
+from .metrics_contract import quadratic_gain as _canonical_quadratic_gain, WeightConvention
+
 
 def _assert_linear_operator_assumption():
     """Document the linearity requirement for D.
@@ -23,14 +25,6 @@ def _assert_linear_operator_assumption():
     If D is nonlinear, e_u != e_0 - du and the gain formula does not hold exactly.
     """
     pass
-
-
-def _weights(x: Tensor, weights: Tensor | None) -> Tensor:
-    """Normalize weights for weighted inner products."""
-    w = torch.ones_like(x) if weights is None else torch.broadcast_to(weights.to(x), x.shape)
-    if not torch.isfinite(w).all() or (w < 0).any() or (w.sum(-1) <= 0).any():
-        raise ValueError('Finite nonnegative weights with positive feature sums required.')
-    return w / w.sum(-1, keepdim=True)
 
 
 def edit_responses(reference: Tensor, edited: Tensor) -> Tensor:
@@ -58,6 +52,10 @@ def quadratic_gain(error: Tensor, response: Tensor, weights: Tensor | None = Non
     This is the exact gain identity when D is linear: ||e_0||^2 - ||e_u||^2 = 2<e_0,du> - ||du||^2.
     The final feature dimension is reduced.
 
+    Convention: WEIGHTED_MEAN - weights are normalized to sum to 1 for computing
+    the spatially-averaged gain. This is the correct convention for training targets
+    where we want the average error reduction per unit of weighted space.
+
     Args:
         error: [B,H,S,F] reference errors (truth - reference in summary space)
         response: [B,K,H,S,F] edit responses
@@ -67,12 +65,9 @@ def quadratic_gain(error: Tensor, response: Tensor, weights: Tensor | None = Non
         [B,K,H,S] quadratic gains
     """
     _assert_linear_operator_assumption()
-    if error.ndim != 4 or response.ndim != 5 or response.shape[:1] + response.shape[2:] != error.shape:
-        raise ValueError('Expected aligned [B,H,S,F] and [B,K,H,S,F].')
-    if not torch.isfinite(error).all() or not torch.isfinite(response).all():
-        raise ValueError('Nonfinite error/response.')
-    w = _weights(response, weights)
-    return ((2 * error[:, None] * response - response.square()) * w).sum(-1)
+    # Delegate to canonical implementation with WEIGHTED_MEAN convention
+    # This preserves exact bit-identical behavior for all weight configurations
+    return _canonical_quadratic_gain(error, response, weights, convention=WeightConvention.WEIGHTED_MEAN)
 
 
 @dataclass

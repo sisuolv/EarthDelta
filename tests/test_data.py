@@ -9,7 +9,7 @@ from __future__ import annotations
 import hashlib
 import os
 import tempfile
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -405,13 +405,14 @@ class TestGuardWindows:
         boundaries = compute_guard_boundaries(max_history_hours=24, max_lead_hours=168)
 
         # Test at exact split boundary (Jan 1, 2019 - start of val)
-        boundary_dt = datetime(2019, 1, 1, 0, 0, 0)
+        # Use UTC-aware datetime to match boundary format
+        boundary_dt = datetime(2019, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
         # Should be excluded from val (history would cross into train)
         assert is_in_guard_window(boundary_dt, 'val', boundaries)
 
         # A few days into val should be included
-        safe_dt = datetime(2019, 1, 3, 0, 0, 0)
+        safe_dt = datetime(2019, 1, 3, 0, 0, 0, tzinfo=timezone.utc)
         assert not is_in_guard_window(safe_dt, 'val', boundaries)
 
     def test_guard_excludes_end_boundary(self):
@@ -419,11 +420,12 @@ class TestGuardWindows:
         boundaries = compute_guard_boundaries(max_history_hours=24, max_lead_hours=168)
 
         # End of test (Dec 2020) - forecast would verify in shift_test
-        late_dt = datetime(2020, 12, 28, 0, 0, 0)
+        # Use UTC-aware datetime to match boundary format
+        late_dt = datetime(2020, 12, 28, 0, 0, 0, tzinfo=timezone.utc)
         assert is_in_guard_window(late_dt, 'test', boundaries)
 
         # Earlier in test should be fine
-        safe_dt = datetime(2020, 12, 20, 0, 0, 0)
+        safe_dt = datetime(2020, 12, 20, 0, 0, 0, tzinfo=timezone.utc)
         assert not is_in_guard_window(safe_dt, 'test', boundaries)
 
 
@@ -441,6 +443,7 @@ class TestSplitManifest:
             split_id='test',
             normalization_hash='abc123',
             grid_hash='def456',
+            availability_source='reanalysis_retrospective',
         )
         assert valid_row.validate()
 
@@ -453,6 +456,7 @@ class TestSplitManifest:
             split_id='test',
             normalization_hash='abc123',
             grid_hash='def456',
+            availability_source='reanalysis_retrospective',
         )
         assert not invalid_row.validate()
 
@@ -523,6 +527,7 @@ class TestVerifiedRecordIntegration:
             split_id='test',
             normalization_hash='abc123',
             grid_hash='def456',
+            availability_source='reanalysis_retrospective',
         )
 
         # Create mock key/value tensors
