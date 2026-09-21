@@ -128,6 +128,11 @@ CONSTANTS = [
 # Normalization Contract
 # =============================================================================
 
+# Normalization policy constants
+POLICY_LEGACY = "legacy"  # Use actual diff_mean values from NPZ files (pre-audit behavior)
+POLICY_OFFICIAL_ZERO_DIFF_MEAN = "official_zero_diff_mean"  # Force diff_mean to zero (matches official inference.py)
+
+
 @dataclass(frozen=True)
 class NormalizationContract:
     """Encapsulates input and diff normalization transforms.
@@ -137,28 +142,50 @@ class NormalizationContract:
     - reverse_inp_transform: denormalizes normalized input -> raw
     - reverse_diff_transform[interval]: denormalizes normalized diff -> raw diff
     - replace_constant: zeros out constant variable channels
+
+    Policy field controls diff_mean behavior:
+    - POLICY_LEGACY (default): Uses actual diff_mean values from NPZ files.
+      This preserves backward compatibility with existing experiments.
+    - POLICY_OFFICIAL_ZERO_DIFF_MEAN: Forces diff_mean to zero, matching the
+      official inference.py which uses transforms.Normalize(np.zeros_like(...), std).
+      This is the correct semantic for comparison against official upstream outputs.
+
+    NOTE: The official Stormer inference.py (reference/stormer/inference.py:118)
+    uses zero diff_mean: `transforms.Normalize(np.zeros_like(normalize_diff_std), normalize_diff_std)`
+    The legacy path loaded nonzero diff_mean values which creates a numeric mismatch.
     """
     inp_mean: torch.Tensor  # [V]
     inp_std: torch.Tensor   # [V]
     diff_mean: Dict[int, torch.Tensor]  # interval -> [V]
     diff_std: Dict[int, torch.Tensor]   # interval -> [V]
     variables: List[str]
+    policy: str = POLICY_LEGACY  # Default to legacy for backward compatibility
 
     @classmethod
-    def from_npz_dir(cls, npz_dir: str, variables: Optional[List[str]] = None,
-                     intervals: Tuple[int, ...] = (6, 12, 24)) -> 'NormalizationContract':
+    def from_npz_dir(
+        cls,
+        npz_dir: str,
+        variables: Optional[List[str]] = None,
+        intervals: Tuple[int, ...] = (6, 12, 24),
+        policy: str = POLICY_LEGACY,
+    ) -> 'NormalizationContract':
         """Load normalization constants from npz files.
 
         Args:
             npz_dir: Directory containing normalize_*.npz files
             variables: Variable list (default: DEFAULT_VARIABLES)
             intervals: Intervals to load diff transforms for
+            policy: Normalization policy (POLICY_LEGACY or POLICY_OFFICIAL_ZERO_DIFF_MEAN).
+                    Default is POLICY_LEGACY for backward compatibility.
 
         Returns:
             NormalizationContract instance
         """
         if variables is None:
             variables = DEFAULT_VARIABLES.copy()
+
+        if policy not in (POLICY_LEGACY, POLICY_OFFICIAL_ZERO_DIFF_MEAN):
+            raise ValueError(f"Unknown policy: {policy}. Use POLICY_LEGACY or POLICY_OFFICIAL_ZERO_DIFF_MEAN.")
 
         # Load input normalization
         mean_path = os.path.join(npz_dir, "normalize_mean.npz")
@@ -179,9 +206,11 @@ class NormalizationContract:
 
             if os.path.exists(diff_mean_path):
                 dm = dict(np.load(diff_mean_path))
-                diff_mean[interval] = torch.from_numpy(
-                    np.concatenate([dm[v] for v in variables], axis=0)
-                ).float()
+                raw_diff_mean = np.concatenate([dm[v] for v in variables], axis=0)
+                # Under official policy, force diff_mean to zero
+                if policy == POLICY_OFFICIAL_ZERO_DIFF_MEAN:
+                    raw_diff_mean = np.zeros_like(raw_diff_mean)
+                diff_mean[interval] = torch.from_numpy(raw_diff_mean).float()
 
             if os.path.exists(diff_std_path):
                 ds = dict(np.load(diff_std_path))
@@ -195,6 +224,7 @@ class NormalizationContract:
             diff_mean=diff_mean,
             diff_std=diff_std,
             variables=variables,
+            policy=policy,
         )
 
     def normalize(self, x_raw: torch.Tensor) -> torch.Tensor:
@@ -226,9 +256,13 @@ class NormalizationContract:
     def denormalize_diff(self, diff_norm: torch.Tensor, interval: int) -> torch.Tensor:
         """Denormalize normalized diff: diff_raw = diff_norm * std + mean.
 
-        Note: For Stormer inference, the diff_mean is typically zeros, but we
-        include it for completeness. The inference.py uses only std (via
-        Normalize with zeros mean).
+        The mean used depends on the policy:
+        - POLICY_OFFICIAL_ZERO_DIFF_MEAN: Always uses zero mean, matching official inference.py.
+        - POLICY_LEGACY: Uses the loaded diff_mean values (may be nonzero).
+
+        Note: The official Stormer inference.py (reference/stormer/inference.py:118)
+        uses transforms.Normalize(np.zeros_like(...), std), i.e., zero diff_mean.
+        Using nonzero diff_mean creates a numeric mismatch with upstream.
 
         Args:
             diff_norm: Normalized diff of shape (B, V, H, W)
@@ -242,8 +276,12 @@ class NormalizationContract:
 
         std = self.diff_std[interval].to(diff_norm.device, diff_norm.dtype).view(1, -1, 1, 1)
 
-        # Use mean if available, otherwise zeros
-        if interval in self.diff_mean:
+        # Determine mean based on policy
+        if self.policy == POLICY_OFFICIAL_ZERO_DIFF_MEAN:
+            # Official semantic: always zero diff_mean
+            mean = torch.zeros_like(std)
+        elif interval in self.diff_mean:
+            # Legacy semantic: use actual diff_mean from NPZ
             mean = self.diff_mean[interval].to(diff_norm.device, diff_norm.dtype).view(1, -1, 1, 1)
         else:
             mean = torch.zeros_like(std)
@@ -268,14 +306,22 @@ class NormalizationContract:
 
     @property
     def digest(self) -> str:
-        """Hash of normalization constants for version tracking.
+        """Hash of normalization constants and policy for version tracking.
 
-        Includes variable names/order, interval keys, and tensor shapes to ensure
-        the digest changes when any structural aspect of the contract changes,
-        not just the raw tensor values.
+        Includes:
+        - Variable names/order
+        - Interval keys
+        - Tensor shapes and values
+        - Policy (POLICY_LEGACY or POLICY_OFFICIAL_ZERO_DIFF_MEAN)
+
+        This ensures the digest changes when any structural or semantic aspect
+        of the contract changes, including the diff_mean policy.
         """
         # Build a canonical representation that includes all structural info
         parts = []
+
+        # Policy MUST be part of the digest - it changes the semantic behavior
+        parts.append(f"policy={self.policy}".encode())
 
         # Variable names and order
         parts.append((",".join(self.variables)).encode())
@@ -287,6 +333,8 @@ class NormalizationContract:
         parts.append(self.inp_std.numpy().tobytes())
 
         # Diff normalization with explicit keys (sorted for determinism)
+        # Note: Under POLICY_OFFICIAL_ZERO_DIFF_MEAN, diff_mean tensors are zeros
+        # but we still include them for structural completeness
         for interval in sorted(self.diff_mean.keys()):
             parts.append(f"diff_mean_{interval}_shape={tuple(self.diff_mean[interval].shape)}".encode())
             parts.append(self.diff_mean[interval].numpy().tobytes())

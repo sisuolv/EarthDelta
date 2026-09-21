@@ -2,22 +2,21 @@
 """Export upstream reference outputs for S0 gate parity verification.
 
 This script MUST run inside a GPU job container with xformers installed.
-It builds the real official Stormer model using the actual code in
-reference/stormer/ (which uses xformers.ops.memory_efficient_attention,
-NOT the SDPA version in earthdelta.bridge).
+It imports and uses the ACTUAL official GlobalForecastIterativeModule.forward_validation
+from reference/stormer/ (which uses xformers.ops.memory_efficient_attention),
+NOT the SDPA version in earthdelta.bridge.
+
+CRITICAL: This script does NOT reuse the earthdelta NormalizationContract to build
+the reference outputs. That contract is exactly what's under audit. Instead, it
+constructs transforms independently from the official NPZ files using the official
+inference.py semantics (zero diff_mean).
 
 The script:
 1. Verifies xformers is available (exits BLOCKED otherwise)
 2. Loads the official Stormer model from reference/stormer/
-3. Loads weights from the same checkpoint used by the bridge
-4. Runs inference on the pinned input tensor (jan2020_full.npy)
-5. Exports outputs + environment manifest to artifacts/upstream_reference/
-
-This output is then used by s0_gate.py's upstream_parity check to verify
-the bridge produces equivalent output.
-
-Usage (in ACP GPU container):
-    python scripts/export_upstream_reference.py [--checkpoint ps2|ps4] [--output-dir PATH]
+3. Sets up transforms INDEPENDENTLY using zero diff_mean (matching official inference.py)
+4. Runs the official forward_validation method
+5. Exports outputs + environment manifest to a namespaced directory
 
 Exit codes:
     0 - Success, reference output exported
@@ -36,7 +35,7 @@ import socket
 import sys
 import traceback
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 # =============================================================================
 # Environment check - must happen before any torch/xformers imports
@@ -77,7 +76,9 @@ if not check_xformers_available():
     exit_blocked(
         "xformers not available. This script requires xformers to execute "
         "the official Stormer code path. Install xformers and re-run, or "
-        "run this script in a GPU container with xformers pre-installed.",
+        "run this script in a GPU container with xformers pre-installed. "
+        "IMPORTANT: This script will NOT fall back to SDPA - that would defeat "
+        "the purpose of generating an independent reference.",
         code=2
     )
 
@@ -95,6 +96,7 @@ if not check_cuda_available():
 
 import numpy as np
 import torch
+from torchvision.transforms import transforms
 
 # Add reference stormer to path (before earthdelta to avoid conflicts)
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -102,16 +104,89 @@ REPO_ROOT = SCRIPT_DIR.parent
 REFERENCE_STORMER = REPO_ROOT / "reference" / "stormer"
 sys.path.insert(0, str(REFERENCE_STORMER))
 
-# Import official Stormer (uses xformers)
+# Import official Stormer modules (uses xformers)
 from stormer.models.hub.stormer import Stormer as OfficialStormer  # noqa: E402
+from stormer.models.iterative_module import GlobalForecastIterativeModule  # noqa: E402
 
-# Import earthdelta for normalization (but NOT the bridge Stormer)
+# Import ONLY the file hash utility from earthdelta - NOT NormalizationContract
 sys.path.insert(0, str(REPO_ROOT))
-from earthdelta.bridge import (  # noqa: E402
-    NormalizationContract,
-    DEFAULT_VARIABLES,
-    _compute_file_sha256,
-)
+from earthdelta.bridge.stormer_bridge import _compute_file_sha256  # noqa: E402
+from earthdelta.contracts import GateIdentityConfig, OFFICIAL_STORMER_COMMIT  # noqa: E402
+
+# Official 69-variable list (from reference/stormer/configs/finetune_multi_step.yaml)
+# We hardcode this here to avoid importing from earthdelta.bridge.DEFAULT_VARIABLES
+# which would couple the reference path to the audited code.
+OFFICIAL_VARIABLES = [
+    "2m_temperature",
+    "10m_u_component_of_wind",
+    "10m_v_component_of_wind",
+    "mean_sea_level_pressure",
+    "geopotential_50",
+    "geopotential_100",
+    "geopotential_150",
+    "geopotential_200",
+    "geopotential_250",
+    "geopotential_300",
+    "geopotential_400",
+    "geopotential_500",
+    "geopotential_600",
+    "geopotential_700",
+    "geopotential_850",
+    "geopotential_925",
+    "geopotential_1000",
+    "u_component_of_wind_50",
+    "u_component_of_wind_100",
+    "u_component_of_wind_150",
+    "u_component_of_wind_200",
+    "u_component_of_wind_250",
+    "u_component_of_wind_300",
+    "u_component_of_wind_400",
+    "u_component_of_wind_500",
+    "u_component_of_wind_600",
+    "u_component_of_wind_700",
+    "u_component_of_wind_850",
+    "u_component_of_wind_925",
+    "u_component_of_wind_1000",
+    "v_component_of_wind_50",
+    "v_component_of_wind_100",
+    "v_component_of_wind_150",
+    "v_component_of_wind_200",
+    "v_component_of_wind_250",
+    "v_component_of_wind_300",
+    "v_component_of_wind_400",
+    "v_component_of_wind_500",
+    "v_component_of_wind_600",
+    "v_component_of_wind_700",
+    "v_component_of_wind_850",
+    "v_component_of_wind_925",
+    "v_component_of_wind_1000",
+    "temperature_50",
+    "temperature_100",
+    "temperature_150",
+    "temperature_200",
+    "temperature_250",
+    "temperature_300",
+    "temperature_400",
+    "temperature_500",
+    "temperature_600",
+    "temperature_700",
+    "temperature_850",
+    "temperature_925",
+    "temperature_1000",
+    "specific_humidity_50",
+    "specific_humidity_100",
+    "specific_humidity_150",
+    "specific_humidity_200",
+    "specific_humidity_250",
+    "specific_humidity_300",
+    "specific_humidity_400",
+    "specific_humidity_500",
+    "specific_humidity_600",
+    "specific_humidity_700",
+    "specific_humidity_850",
+    "specific_humidity_925",
+    "specific_humidity_1000",
+]
 
 
 # =============================================================================
@@ -130,40 +205,121 @@ def get_default_paths(repo_root: Path) -> Dict[str, Path]:
         "checkpoint_ps2": repo_root / "checkpoints" / "stormer_1.40625_patch_size_2.ckpt",
         "checkpoint_ps4": repo_root / "checkpoints" / "stormer_1.40625_patch_size_4.ckpt",
         "norm_dir": repo_root / "reference" / "stormer" / "normalization_constants",
-        "output_dir": repo_root / "artifacts" / "upstream_reference",
+        "output_base": repo_root / "artifacts",
     }
+
+
+# =============================================================================
+# Official Transform Construction (INDEPENDENT from earthdelta)
+# =============================================================================
+
+def build_official_transforms(
+    norm_dir: Path,
+    variables: list,
+    intervals: tuple = (6, 12, 24),
+) -> tuple:
+    """Build transforms using OFFICIAL inference.py semantics.
+
+    CRITICAL: This function constructs transforms independently, NOT using
+    the earthdelta NormalizationContract. It matches the official inference.py
+    which uses:
+    - inp_transform: Normalize(mean, std)
+    - diff_transform: Normalize(ZEROS, std)  <-- Zero diff_mean!
+
+    See reference/stormer/inference.py lines 116-118:
+        out_transforms[l] = transforms.Normalize(
+            np.zeros_like(normalize_diff_std), normalize_diff_std
+        )
+
+    Returns:
+        (inp_transform, diff_transforms_dict)
+    """
+    # Load input normalization
+    normalize_mean = dict(np.load(norm_dir / "normalize_mean.npz"))
+    normalize_mean = np.concatenate([normalize_mean[v] for v in variables], axis=0)
+    normalize_std = dict(np.load(norm_dir / "normalize_std.npz"))
+    normalize_std = np.concatenate([normalize_std[v] for v in variables], axis=0)
+
+    inp_transform = transforms.Normalize(normalize_mean, normalize_std)
+
+    # Load diff normalization - USING ZEROS for mean (official semantic)
+    diff_transforms = {}
+    for interval in intervals:
+        diff_std_path = norm_dir / f"normalize_diff_std_{interval}.npz"
+        if diff_std_path.exists():
+            normalize_diff_std = dict(np.load(diff_std_path))
+            normalize_diff_std = np.concatenate([normalize_diff_std[v] for v in variables], axis=0)
+            # OFFICIAL SEMANTIC: Zero mean, not the NPZ diff_mean values
+            diff_transforms[interval] = transforms.Normalize(
+                np.zeros_like(normalize_diff_std), normalize_diff_std
+            )
+
+    return inp_transform, diff_transforms
+
+
+def compute_normalization_digest(
+    norm_dir: Path,
+    variables: list,
+    intervals: tuple = (6, 24),
+) -> str:
+    """Compute a digest for the normalization constants.
+
+    This is computed independently for the manifest, using zero diff_mean
+    policy to match the official semantics.
+    """
+    parts = []
+    parts.append(b"policy=official_zero_diff_mean")
+    parts.append((",".join(variables)).encode())
+
+    # Input normalization
+    mean_dict = dict(np.load(norm_dir / "normalize_mean.npz"))
+    std_dict = dict(np.load(norm_dir / "normalize_std.npz"))
+    inp_mean = np.concatenate([mean_dict[v] for v in variables], axis=0)
+    inp_std = np.concatenate([std_dict[v] for v in variables], axis=0)
+
+    parts.append(f"inp_mean_shape={inp_mean.shape}".encode())
+    parts.append(inp_mean.tobytes())
+    parts.append(f"inp_std_shape={inp_std.shape}".encode())
+    parts.append(inp_std.tobytes())
+
+    # Diff normalization (zeros for mean)
+    for interval in sorted(intervals):
+        diff_std_path = norm_dir / f"normalize_diff_std_{interval}.npz"
+        if diff_std_path.exists():
+            ds = dict(np.load(diff_std_path))
+            diff_std = np.concatenate([ds[v] for v in variables], axis=0)
+            # Zero mean
+            diff_mean = np.zeros_like(diff_std)
+            parts.append(f"diff_mean_{interval}_shape={diff_mean.shape}".encode())
+            parts.append(diff_mean.tobytes())
+            parts.append(f"diff_std_{interval}_shape={diff_std.shape}".encode())
+            parts.append(diff_std.tobytes())
+
+    return hashlib.sha256(b"".join(parts)).hexdigest()[:16]
 
 
 # =============================================================================
 # Core functions
 # =============================================================================
 
-def load_official_stormer(
+def load_official_module(
     checkpoint_path: Path,
     patch_size: int,
     variables: list,
+    inp_transform,
+    diff_transforms: dict,
     in_img_size: tuple = (128, 256),
     device: torch.device = None,
-) -> OfficialStormer:
-    """Load the official Stormer model using reference code.
+) -> GlobalForecastIterativeModule:
+    """Load the official GlobalForecastIterativeModule with transforms set.
 
-    This loads the real xformers-based Stormer, not the SDPA bridge version.
-
-    Args:
-        checkpoint_path: Path to checkpoint file
-        patch_size: Patch size (2 or 4)
-        variables: List of variable names
-        in_img_size: Input image size (H, W)
-        device: Device to load model to
-
-    Returns:
-        Loaded and frozen OfficialStormer model
+    This uses the ACTUAL official module, not a reimplementation.
     """
     if device is None:
         device = torch.device("cuda:0")
 
-    # Build official model
-    model = OfficialStormer(
+    # Build official Stormer network
+    net = OfficialStormer(
         in_img_size=list(in_img_size),
         variables=variables,
         patch_size=patch_size,
@@ -173,89 +329,31 @@ def load_official_stormer(
         mlp_ratio=4.0,
     )
 
+    # Wrap in GlobalForecastIterativeModule
+    module = GlobalForecastIterativeModule(net)
+
     # Load checkpoint
     checkpoint = torch.load(str(checkpoint_path), map_location="cpu", weights_only=False)
     state_dict = checkpoint["state_dict"]
+    module.load_state_dict(state_dict)
 
-    # Strip 'net.' prefix (same as bridge)
-    new_state_dict = {}
-    for k, v in state_dict.items():
-        if k.startswith("net."):
-            new_state_dict[k[4:]] = v
-        else:
-            new_state_dict[k] = v
-
-    # Load with strict=True
-    model.load_state_dict(new_state_dict, strict=True)
+    # Set transforms (this is how official inference.py does it)
+    module.set_transforms(inp_transform, diff_transforms)
 
     # Freeze and move to device
-    model.requires_grad_(False)
-    model.eval()
-    model = model.to(device)
+    module.requires_grad_(False)
+    module.eval()
+    module = module.to(device)
 
-    return model
+    return module
 
 
-def run_official_inference(
-    model: OfficialStormer,
-    x_norm: torch.Tensor,
+def create_environment_manifest(
+    checkpoint_path: Path,
+    patch_size: int,
+    norm_dir: Path,
     variables: list,
-    normalization: NormalizationContract,
-    interval: int,
-    steps: int,
-) -> torch.Tensor:
-    """Run official autoregressive inference.
-
-    Matches the rollout logic in GlobalForecastIterativeModule.forward_validation.
-
-    Args:
-        model: Official Stormer model
-        x_norm: Normalized input of shape (B, V, H, W)
-        variables: Variable names
-        normalization: Normalization contract
-        interval: Forecast interval (hours)
-        steps: Number of autoregressive steps
-
-    Returns:
-        Normalized output at final step
-    """
-    device = x_norm.device
-    patch_size = model.patch_size
-
-    # Scale interval (matching iterative_module.py)
-    interval_tensor = torch.tensor([interval], device=device, dtype=x_norm.dtype) / 10.0
-    interval_tensor = interval_tensor.repeat(x_norm.shape[0])
-
-    x = x_norm
-    for _ in range(steps):
-        # Pad if needed
-        h = x.shape[-2]
-        if h % patch_size != 0:
-            pad_size = patch_size - h % patch_size
-            padded_x = torch.nn.functional.pad(x, (0, 0, pad_size, 0), 'constant', 0)
-        else:
-            padded_x = x
-            pad_size = 0
-
-        # Forward pass
-        with torch.no_grad():
-            output = model(padded_x, variables, interval_tensor)
-
-        # Remove padding
-        pred_diff = output[:, :, pad_size:] if pad_size > 0 else output
-
-        # Zero out constant channels
-        pred_diff = normalization.replace_constant(pred_diff, variables)
-
-        # Denormalize diff, add to denormalized input, renormalize
-        pred_diff = normalization.denormalize_diff(pred_diff, interval)
-        pred = normalization.denormalize(x) + pred_diff
-        x = normalization.normalize(pred)
-
-    return x
-
-
-def create_environment_manifest(checkpoint_path: Path, patch_size: int) -> Dict[str, Any]:
+) -> Dict[str, Any]:
     """Create manifest documenting the execution environment."""
     import xformers
 
@@ -280,6 +378,17 @@ def create_environment_manifest(checkpoint_path: Path, patch_size: int) -> Dict[
             "num_heads": 16,
             "mlp_ratio": 4.0,
         },
+        "normalization": {
+            "dir": str(norm_dir),
+            "policy": "official_zero_diff_mean",
+            "digest": compute_normalization_digest(norm_dir, variables),
+            "note": "Uses zero diff_mean matching official inference.py semantics",
+        },
+        "official_source": {
+            "pinned_commit": OFFICIAL_STORMER_COMMIT,
+            "note": "This reference was generated using the official GlobalForecastIterativeModule.forward_validation, NOT the earthdelta bridge implementation.",
+        },
+        "variables_count": len(variables),
     }
     return manifest
 
@@ -289,17 +398,13 @@ def export_reference(
     patch_size: int,
     input_dir: Path,
     output_dir: Path,
+    norm_dir: Path,
 ) -> Dict[str, Any]:
     """Export official reference outputs.
 
-    Args:
-        checkpoint_path: Path to checkpoint
-        patch_size: Patch size (2 or 4)
-        input_dir: Directory with pinned inputs
-        output_dir: Directory to write outputs
-
-    Returns:
-        Result dict with status and metadata
+    CRITICAL: This uses the ACTUAL official forward_validation method,
+    NOT a reimplementation. The transforms are constructed independently
+    using official semantics (zero diff_mean).
     """
     result = {
         "status": "failed",
@@ -311,54 +416,42 @@ def export_reference(
         device = torch.device("cuda:0")
         print(f"Using device: {device} ({torch.cuda.get_device_name(0)})")
 
+        # Build transforms INDEPENDENTLY using official semantics
+        print("Building official transforms (zero diff_mean)...")
+        inp_transform, diff_transforms = build_official_transforms(
+            norm_dir, OFFICIAL_VARIABLES
+        )
+
         # Load pinned input
         print("Loading pinned input from s0_gate_inputs...")
         jan2020_data = np.load(input_dir / "jan2020_full.npy")  # (124, 69, 128, 256)
         x_raw = jan2020_data[0]  # First timestep
         x_raw_t = torch.from_numpy(x_raw).float().unsqueeze(0).to(device)
 
-        # Load normalization
-        print("Loading normalization constants...")
-        inputs = {
-            'inp_mean': np.load(input_dir / 'inp_mean.npy'),
-            'inp_std': np.load(input_dir / 'inp_std.npy'),
-            'diff_mean_6': np.load(input_dir / 'diff_mean_6.npy'),
-            'diff_std_6': np.load(input_dir / 'diff_std_6.npy'),
-            'diff_mean_24': np.load(input_dir / 'diff_mean_24.npy'),
-            'diff_std_24': np.load(input_dir / 'diff_std_24.npy'),
-        }
-        normalization = NormalizationContract(
-            inp_mean=torch.from_numpy(inputs['inp_mean']).float(),
-            inp_std=torch.from_numpy(inputs['inp_std']).float(),
-            diff_mean={
-                6: torch.from_numpy(inputs['diff_mean_6']).float(),
-                24: torch.from_numpy(inputs['diff_mean_24']).float(),
-            },
-            diff_std={
-                6: torch.from_numpy(inputs['diff_std_6']).float(),
-                24: torch.from_numpy(inputs['diff_std_24']).float(),
-            },
-            variables=DEFAULT_VARIABLES,
+        # Compute raw input hash for identity binding
+        raw_input_hash = hashlib.sha256(x_raw.tobytes()).hexdigest()[:16]
+        print(f"Raw input hash: {raw_input_hash}")
+
+        # Normalize input using official transform
+        x_norm = inp_transform(x_raw_t)
+
+        # Load official module
+        print(f"Loading official GlobalForecastIterativeModule (patch_size={patch_size}) with xformers...")
+        module = load_official_module(
+            checkpoint_path, patch_size, OFFICIAL_VARIABLES,
+            inp_transform, diff_transforms, device=device
         )
+        print("Module loaded successfully")
 
-        # Normalize input
-        x_norm = normalization.normalize(x_raw_t)
-
-        # Load official model
-        print(f"Loading official Stormer (patch_size={patch_size}) with xformers...")
-        model = load_official_stormer(
-            checkpoint_path, patch_size, DEFAULT_VARIABLES, device=device
-        )
-        print("Model loaded successfully")
-
-        # Run inference for multiple configurations
+        # Run inference using the ACTUAL official forward_validation method
         outputs = {}
         for interval, steps in [(6, 1), (6, 4)]:
             key = f"{interval}h_{steps}step"
-            print(f"Running inference: {key}...")
+            print(f"Running official forward_validation: {key}...")
             with torch.no_grad():
-                out = run_official_inference(
-                    model, x_norm, DEFAULT_VARIABLES, normalization, interval, steps
+                # This is the ACTUAL official method, not a reimplementation
+                out = module.forward_validation(
+                    x_norm, OFFICIAL_VARIABLES, interval, steps
                 )
             outputs[key] = out.cpu()
             print(f"  Output shape: {out.shape}, finite: {torch.isfinite(out).all()}")
@@ -375,11 +468,18 @@ def export_reference(
         # Save the normalized input (for exact reproducibility)
         torch.save(x_norm.cpu(), output_dir / "input_norm.pt")
 
+        # Save raw input hash
+        with open(output_dir / "raw_input_hash.txt", "w") as f:
+            f.write(raw_input_hash)
+
         # Save manifest
-        manifest = create_environment_manifest(checkpoint_path, patch_size)
+        manifest = create_environment_manifest(
+            checkpoint_path, patch_size, norm_dir, OFFICIAL_VARIABLES
+        )
         manifest["outputs"] = {k: list(v.shape) for k, v in outputs.items()}
         manifest["outputs_finite"] = {k: bool(torch.isfinite(v).all()) for k, v in outputs.items()}
-        manifest["normalization_digest"] = normalization.digest
+        manifest["raw_input_hash"] = raw_input_hash
+        manifest["input_path"] = str(input_dir / "jan2020_full.npy")
 
         manifest_path = output_dir / "manifest.json"
         with open(manifest_path, "w") as f:
@@ -389,9 +489,10 @@ def export_reference(
         result["status"] = "ok"
         result["output_dir"] = str(output_dir)
         result["manifest"] = manifest
+        result["raw_input_hash"] = raw_input_hash
 
         # Clean up
-        del model
+        del module
         torch.cuda.empty_cache()
 
     except Exception as e:
@@ -408,12 +509,12 @@ def main():
         description="Export upstream reference outputs for S0 gate verification"
     )
     parser.add_argument(
-        "--checkpoint", choices=["ps2", "ps4"], default="ps2",
-        help="Checkpoint to use (default: ps2)"
+        "--checkpoint", choices=["ps2", "ps4"], default="ps4",
+        help="Checkpoint to use (default: ps4 - the mainline per research_spec_v6.yaml)"
     )
     parser.add_argument(
         "--output-dir", type=Path, default=None,
-        help="Output directory (default: artifacts/upstream_reference)"
+        help="Output directory (default: artifacts/upstream_reference_<identity>)"
     )
     parser.add_argument(
         "--repo-root", type=Path, default=None,
@@ -426,14 +527,22 @@ def main():
 
     checkpoint_path = paths["checkpoint_ps2"] if args.checkpoint == "ps2" else paths["checkpoint_ps4"]
     patch_size = 2 if args.checkpoint == "ps2" else 4
-    output_dir = args.output_dir or paths["output_dir"]
+
+    # Compute checkpoint SHA for identity
+    ckpt_sha256 = _compute_file_sha256(str(checkpoint_path)) if checkpoint_path.exists() else "unknown"
+
+    # Build namespaced output directory
+    identity_tag = f"ps{patch_size}_{ckpt_sha256[:8]}_zd"
+    output_dir = args.output_dir or (paths["output_base"] / f"upstream_reference_{identity_tag}")
 
     print("=" * 60)
     print("Export Upstream Reference - Official Stormer with xformers")
     print("=" * 60)
     print(f"Checkpoint: {checkpoint_path}")
     print(f"Patch size: {patch_size}")
+    print(f"Checkpoint SHA-256: {ckpt_sha256}")
     print(f"Output dir: {output_dir}")
+    print(f"Note: Using official forward_validation with zero diff_mean")
     print()
 
     result = export_reference(
@@ -441,6 +550,7 @@ def main():
         patch_size=patch_size,
         input_dir=paths["input_dir"],
         output_dir=output_dir,
+        norm_dir=paths["norm_dir"],
     )
 
     print()

@@ -4,13 +4,89 @@ Timestamps are integer UTC seconds. EditPlan generalizes from rank-group masks
 to expert-dictionary coefficients with an application window.
 """
 from __future__ import annotations
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from collections.abc import Sequence
+from pathlib import Path
+from typing import Optional, Tuple, List, Dict, Any
 import hashlib
 import json
 import math
 import torch
 from torch import Tensor
+
+
+# =============================================================================
+# Gate Identity Configuration
+# =============================================================================
+
+# Official Stormer reference commit from which inference semantics are pinned
+OFFICIAL_STORMER_COMMIT = "58dfee5a6037399a40fefd492bc00421e0c885a8"
+
+
+@dataclass(frozen=True)
+class GateIdentityConfig:
+    """Shared identity configuration for exporter and gate.
+
+    This configuration ensures both exporter and gate use exactly the same
+    identity for checkpoint, normalization, variables, and rollout parameters.
+    The output directory is namespaced by this identity to prevent silent
+    overwrites between different configurations (e.g., ps2 vs ps4).
+    """
+    # Checkpoint identity
+    checkpoint_path: str
+    expected_checkpoint_sha256: str
+    patch_size: int  # 2 or 4 (ps4 is the mainline per research_spec_v6.yaml:33)
+
+    # Normalization identity
+    normalization_policy: str  # "official_zero_diff_mean" or "legacy"
+    normalization_dir: str
+
+    # Variable/coordinate identity
+    variables: Tuple[str, ...]
+    grid_shape: Tuple[int, int]  # (H, W), e.g., (128, 256)
+
+    # Rollout configuration
+    interval_hours: int = 6
+    rollout_steps: Tuple[int, ...] = (1, 4)  # Steps to run/verify (1-step and 4-step)
+
+    # Reference source identity
+    official_commit: str = OFFICIAL_STORMER_COMMIT
+
+    @property
+    def identity_tag(self) -> str:
+        """Short identity tag for directory namespacing.
+
+        Format: ps{patch_size}_{sha_prefix}_{policy_prefix}
+        """
+        sha_prefix = self.expected_checkpoint_sha256[:8] if self.expected_checkpoint_sha256 else "unknown"
+        policy_prefix = "zd" if self.normalization_policy == "official_zero_diff_mean" else "lg"
+        return f"ps{self.patch_size}_{sha_prefix}_{policy_prefix}"
+
+    @property
+    def reference_output_dir_name(self) -> str:
+        """Directory name for reference outputs, namespaced by identity."""
+        return f"upstream_reference_{self.identity_tag}"
+
+    def validate_checkpoint_sha256(self, computed_sha256: str) -> bool:
+        """Compare computed SHA-256 against expected value."""
+        return computed_sha256.lower() == self.expected_checkpoint_sha256.lower()
+
+    def to_manifest_dict(self) -> Dict[str, Any]:
+        """Convert to manifest dictionary for JSON serialization."""
+        return {
+            "checkpoint_path": self.checkpoint_path,
+            "expected_checkpoint_sha256": self.expected_checkpoint_sha256,
+            "patch_size": self.patch_size,
+            "normalization_policy": self.normalization_policy,
+            "normalization_dir": self.normalization_dir,
+            "variables_count": len(self.variables),
+            "variables_hash": hashlib.sha256(",".join(self.variables).encode()).hexdigest()[:16],
+            "grid_shape": list(self.grid_shape),
+            "interval_hours": self.interval_hours,
+            "rollout_steps": list(self.rollout_steps),
+            "official_commit": self.official_commit,
+            "identity_tag": self.identity_tag,
+        }
 
 
 @dataclass(frozen=True)

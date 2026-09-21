@@ -178,7 +178,8 @@ def test_verify_upstream_parity_fails_closed_without_reference():
 
         result = verify_upstream_parity(
             bridge,
-            upstream_dir=Path("/nonexistent/upstream_reference"),
+            upstream_base_dir=Path("/nonexistent/artifacts"),
+            patch_size=2,
             x_raw=x_raw,
             device=torch.device("cpu"),
         )

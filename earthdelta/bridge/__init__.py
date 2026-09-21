@@ -31,6 +31,8 @@ from .stormer_arch import (
 from .stormer_bridge import (
     DEFAULT_VARIABLES,
     CONSTANTS,
+    POLICY_LEGACY,
+    POLICY_OFFICIAL_ZERO_DIFF_MEAN,
     NormalizationContract,
     WeatherStepBridge,
     load_stormer_checkpoint,
@@ -56,6 +58,8 @@ __all__ = [
     # Bridge
     "DEFAULT_VARIABLES",
     "CONSTANTS",
+    "POLICY_LEGACY",
+    "POLICY_OFFICIAL_ZERO_DIFF_MEAN",
     "NormalizationContract",
     "WeatherStepBridge",
     "load_stormer_checkpoint",
