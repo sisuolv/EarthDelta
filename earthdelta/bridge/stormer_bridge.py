@@ -268,19 +268,67 @@ class NormalizationContract:
 
     @property
     def digest(self) -> str:
-        """Hash of normalization constants for version tracking."""
-        data = (
-            self.inp_mean.numpy().tobytes() +
-            self.inp_std.numpy().tobytes() +
-            b"".join(v.numpy().tobytes() for v in self.diff_mean.values()) +
-            b"".join(v.numpy().tobytes() for v in self.diff_std.values())
-        )
+        """Hash of normalization constants for version tracking.
+
+        Includes variable names/order, interval keys, and tensor shapes to ensure
+        the digest changes when any structural aspect of the contract changes,
+        not just the raw tensor values.
+        """
+        # Build a canonical representation that includes all structural info
+        parts = []
+
+        # Variable names and order
+        parts.append((",".join(self.variables)).encode())
+
+        # Input normalization with shape
+        parts.append(f"inp_mean_shape={tuple(self.inp_mean.shape)}".encode())
+        parts.append(self.inp_mean.numpy().tobytes())
+        parts.append(f"inp_std_shape={tuple(self.inp_std.shape)}".encode())
+        parts.append(self.inp_std.numpy().tobytes())
+
+        # Diff normalization with explicit keys (sorted for determinism)
+        for interval in sorted(self.diff_mean.keys()):
+            parts.append(f"diff_mean_{interval}_shape={tuple(self.diff_mean[interval].shape)}".encode())
+            parts.append(self.diff_mean[interval].numpy().tobytes())
+        for interval in sorted(self.diff_std.keys()):
+            parts.append(f"diff_std_{interval}_shape={tuple(self.diff_std[interval].shape)}".encode())
+            parts.append(self.diff_std[interval].numpy().tobytes())
+
+        data = b"".join(parts)
         return hashlib.sha256(data).hexdigest()[:16]
 
 
 # =============================================================================
 # Checkpoint Loading
 # =============================================================================
+
+@dataclass
+class CheckpointLoadResult:
+    """Result of loading a checkpoint with strict=True.
+
+    Provides detailed information about the load for gate verification.
+    """
+    model: 'Stormer'
+    version: ArtifactVersion
+    checkpoint_sha256: str
+    file_size_bytes: int
+    missing_keys: List[str]
+    unexpected_keys: List[str]
+
+    @property
+    def strict_load_zero_diff(self) -> bool:
+        """True if strict load had zero missing and zero unexpected keys."""
+        return len(self.missing_keys) == 0 and len(self.unexpected_keys) == 0
+
+
+def _compute_file_sha256(path: str) -> str:
+    """Compute SHA-256 hash of a file."""
+    sha256 = hashlib.sha256()
+    with open(path, 'rb') as f:
+        for chunk in iter(lambda: f.read(8192 * 1024), b''):
+            sha256.update(chunk)
+    return sha256.hexdigest()
+
 
 def load_stormer_checkpoint(
     ckpt_path: str,
@@ -291,6 +339,7 @@ def load_stormer_checkpoint(
     depth: int = 24,
     num_heads: int = 16,
     mlp_ratio: float = 4.0,
+    compute_sha256: bool = True,
 ) -> Tuple[Stormer, ArtifactVersion]:
     """Load a Stormer checkpoint with strict=True.
 
@@ -303,6 +352,7 @@ def load_stormer_checkpoint(
         depth: Number of transformer blocks
         num_heads: Number of attention heads
         mlp_ratio: MLP expansion ratio
+        compute_sha256: Whether to compute SHA-256 hash (can be slow for large files)
 
     Returns:
         Tuple of (model, artifact_version)
@@ -345,11 +395,17 @@ def load_stormer_checkpoint(
 
     # Create artifact version
     file_size = os.path.getsize(ckpt_path)
-    var_hash = hashlib.sha256(",".join(variables).encode()).hexdigest()[:16]
     config_str = f"ps{patch_size}_h{hidden_size}_d{depth}_nh{num_heads}_mr{mlp_ratio}"
 
+    # Compute SHA-256 if requested (provides checkpoint identity binding)
+    if compute_sha256:
+        ckpt_sha256 = _compute_file_sha256(ckpt_path)
+        backbone_str = f"stormer_{config_str}_sha256:{ckpt_sha256[:16]}"
+    else:
+        backbone_str = f"stormer_{config_str}"
+
     version = ArtifactVersion(
-        backbone=f"stormer_{config_str}",
+        backbone=backbone_str,
         static_adapter="none",
         edit_bank="none",
         normalization="pending",  # Will be set when paired with NormalizationContract
@@ -360,6 +416,101 @@ def load_stormer_checkpoint(
     )
 
     return model, version
+
+
+def load_stormer_checkpoint_detailed(
+    ckpt_path: str,
+    patch_size: int,
+    variables: Optional[List[str]] = None,
+    in_img_size: Tuple[int, int] = (128, 256),
+    hidden_size: int = 1024,
+    depth: int = 24,
+    num_heads: int = 16,
+    mlp_ratio: float = 4.0,
+) -> CheckpointLoadResult:
+    """Load a Stormer checkpoint with detailed load result for gate verification.
+
+    Unlike load_stormer_checkpoint, this uses strict=False to capture
+    missing/unexpected keys, then validates they are empty.
+
+    Args:
+        ckpt_path: Path to checkpoint file
+        patch_size: Patch size (2 or 4)
+        variables: Variable list (default: DEFAULT_VARIABLES)
+        in_img_size: Input image size (H, W)
+        hidden_size: Hidden dimension
+        depth: Number of transformer blocks
+        num_heads: Number of attention heads
+        mlp_ratio: MLP expansion ratio
+
+    Returns:
+        CheckpointLoadResult with model, version, and load details
+
+    Raises:
+        RuntimeError: If checkpoint loading encounters unexpected issues
+    """
+    if variables is None:
+        variables = DEFAULT_VARIABLES.copy()
+
+    # Build model
+    model = Stormer(
+        in_img_size=in_img_size,
+        variables=variables,
+        patch_size=patch_size,
+        hidden_size=hidden_size,
+        depth=depth,
+        num_heads=num_heads,
+        mlp_ratio=mlp_ratio,
+    )
+
+    # Compute file metadata first
+    file_size = os.path.getsize(ckpt_path)
+    ckpt_sha256 = _compute_file_sha256(ckpt_path)
+
+    # Load checkpoint
+    checkpoint = torch.load(ckpt_path, map_location="cpu", weights_only=False)
+    state_dict = checkpoint["state_dict"]
+
+    # Strip 'net.' prefix from keys
+    new_state_dict = {}
+    for k, v in state_dict.items():
+        if k.startswith("net."):
+            new_state_dict[k[4:]] = v
+        else:
+            new_state_dict[k] = v
+
+    # Load with strict=False to capture details
+    load_result = model.load_state_dict(new_state_dict, strict=False)
+    missing_keys = list(load_result.missing_keys)
+    unexpected_keys = list(load_result.unexpected_keys)
+
+    # Freeze all parameters
+    model.requires_grad_(False)
+    model.eval()
+
+    # Create artifact version
+    config_str = f"ps{patch_size}_h{hidden_size}_d{depth}_nh{num_heads}_mr{mlp_ratio}"
+    backbone_str = f"stormer_{config_str}_sha256:{ckpt_sha256[:16]}"
+
+    version = ArtifactVersion(
+        backbone=backbone_str,
+        static_adapter="none",
+        edit_bank="none",
+        normalization="pending",
+        grid=f"{in_img_size[0]}x{in_img_size[1]}",
+        projection=f"patch{patch_size}",
+        split="full",
+        continuation="reference_after_hold",
+    )
+
+    return CheckpointLoadResult(
+        model=model,
+        version=version,
+        checkpoint_sha256=ckpt_sha256,
+        file_size_bytes=file_size,
+        missing_keys=missing_keys,
+        unexpected_keys=unexpected_keys,
+    )
 
 
 # =============================================================================
@@ -479,6 +630,36 @@ class WeatherStepBridge:
 # Controlled Rollout with LoRA Injection
 # =============================================================================
 
+# Thread-local state for re-entrancy detection
+import threading
+_rollout_lock = threading.local()
+
+
+def _check_reentrant_rollout(bridge: 'WeatherStepBridge') -> None:
+    """Check for concurrent/reentrant rollout on the same bridge.
+
+    Raises:
+        RuntimeError: If this bridge is already in a rollout call.
+    """
+    if not hasattr(_rollout_lock, 'active_bridges'):
+        _rollout_lock.active_bridges = set()
+
+    bridge_id = id(bridge)
+    if bridge_id in _rollout_lock.active_bridges:
+        raise RuntimeError(
+            "Reentrant call to controlled_rollout on the same bridge detected. "
+            "This could corrupt the model's forward hooks. Each bridge instance "
+            "should only be used in one rollout at a time."
+        )
+    _rollout_lock.active_bridges.add(bridge_id)
+
+
+def _release_rollout_lock(bridge: 'WeatherStepBridge') -> None:
+    """Release the re-entrancy lock for a bridge."""
+    if hasattr(_rollout_lock, 'active_bridges'):
+        _rollout_lock.active_bridges.discard(id(bridge))
+
+
 def controlled_rollout(
     bridge: WeatherStepBridge,
     x_norm: torch.Tensor,
@@ -489,6 +670,8 @@ def controlled_rollout(
     expert_loras: Dict[int, ExpertLoRA],
     target_blocks: Tuple[int, ...] = (18, 19, 20, 21, 22, 23),
     sparse: bool = False,
+    return_trajectory: bool = False,
+    differentiable: bool = False,
 ) -> torch.Tensor:
     """Controlled rollout with LoRA injection at specified blocks.
 
@@ -517,9 +700,19 @@ def controlled_rollout(
         expert_loras: Dict mapping block index to ExpertLoRA module
         target_blocks: Which blocks to inject LoRA (default: 18-23 per v6 spec)
         sparse: Whether to use sparse LoRA forward (skip inactive experts)
+        return_trajectory: If True, return the full trajectory (B, T+1, V, H, W)
+            including initial state and all intermediate steps
+        differentiable: If True, construct the coefficient tensor in a way that
+            preserves gradients for differentiable selection/optimization.
+            When False (default), coefficients are detached.
 
     Returns:
-        Normalized prediction at final step, shape (B, V, H, W)
+        If return_trajectory is False: Normalized prediction at final step, shape (B, V, H, W)
+        If return_trajectory is True: Full trajectory, shape (B, T+1, V, H, W)
+
+    Raises:
+        TypeError: If plan or expert_loras have wrong types
+        RuntimeError: If called reentrantly on the same bridge instance
 
     Note:
         If plan.coefficients are all zero, this produces identical output
@@ -531,70 +724,91 @@ def controlled_rollout(
     if not isinstance(expert_loras, dict):
         raise TypeError("expert_loras must be a dict")
 
-    batch_size = x_norm.shape[0]
+    # Re-entrancy guard
+    _check_reentrant_rollout(bridge)
 
-    # Scale interval by 10.0
-    interval_tensor = torch.tensor([interval], device=x_norm.device, dtype=x_norm.dtype) / 10.0
-    interval_tensor = interval_tensor.repeat(batch_size)
+    try:
+        batch_size = x_norm.shape[0]
 
-    x = x_norm
+        # Scale interval by 10.0
+        interval_tensor = torch.tensor([interval], device=x_norm.device, dtype=x_norm.dtype) / 10.0
+        interval_tensor = interval_tensor.repeat(batch_size)
 
-    for step_idx in range(steps):
-        # Get coefficients for this step (zero outside application window)
-        coeffs_at_step = plan.coefficients_at(step_idx)
-        coeffs_tensor = torch.tensor(
-            coeffs_at_step, device=x.device, dtype=x.dtype
-        ).unsqueeze(0).expand(batch_size, -1)  # [B, K]
+        x = x_norm
+        trajectory = [x] if return_trajectory else None
 
-        # Create hook functions and register them for each target block with LoRA
-        hook_handles = []
+        for step_idx in range(steps):
+            # Get coefficients for this step (zero outside application window)
+            coeffs_at_step = plan.coefficients_at(step_idx)
 
-        def make_lora_hook(lora_module, coeffs, use_sparse):
-            """Create a forward hook that adds LoRA contribution to proj output.
+            if differentiable:
+                # Keep coefficient tensor in a form that allows gradient flow
+                # This is needed for differentiable expert selection
+                coeffs_tensor = torch.tensor(
+                    coeffs_at_step, device=x.device, dtype=x.dtype, requires_grad=True
+                ).unsqueeze(0).expand(batch_size, -1)  # [B, K]
+            else:
+                coeffs_tensor = torch.tensor(
+                    coeffs_at_step, device=x.device, dtype=x.dtype
+                ).unsqueeze(0).expand(batch_size, -1)  # [B, K]
 
-            The hook receives (module, input, output) where:
-            - input[0] is the attention output (pre-projection tensor)
-            - output is the projection output (before proj_drop)
+            # Create hook functions and register them for each target block with LoRA
+            hook_handles = []
 
-            We compute LoRA from input[0] and add to output, matching the
-            original semantic of injecting LoRA contribution after projection.
-            """
-            def hook(module, input, output):
-                # input[0] is the attention output (what goes into proj)
-                lora_out = lora_module.forward(input[0], coeffs, sparse=use_sparse)
-                return output + lora_out
-            return hook
+            def make_lora_hook(lora_module, coeffs, use_sparse):
+                """Create a forward hook that adds LoRA contribution to proj output.
 
-        try:
-            # Register hooks for targeted blocks with LoRA modules
-            for block_idx in target_blocks:
-                if block_idx in expert_loras:
-                    proj_module = bridge.model.blocks[block_idx].attn.proj
-                    hook_fn = make_lora_hook(expert_loras[block_idx], coeffs_tensor, sparse)
-                    handle = proj_module.register_forward_hook(hook_fn)
-                    hook_handles.append(handle)
+                The hook receives (module, input, output) where:
+                - input[0] is the attention output (pre-projection tensor)
+                - output is the projection output (before proj_drop)
 
-            # Pad input and run model forward
-            padded_x, pad_size = bridge.pad(x)
-            output = bridge.model(padded_x, variables, interval_tensor)
+                We compute LoRA from input[0] and add to output, matching the
+                original semantic of injecting LoRA contribution after projection.
+                """
+                def hook(module, input, output):
+                    # input[0] is the attention output (what goes into proj)
+                    lora_out = lora_module.forward(input[0], coeffs, sparse=use_sparse)
+                    return output + lora_out
+                return hook
 
-        finally:
-            # Always remove hooks, even if forward raises
-            for handle in hook_handles:
-                handle.remove()
+            try:
+                # Register hooks for targeted blocks with LoRA modules
+                for block_idx in target_blocks:
+                    if block_idx in expert_loras:
+                        proj_module = bridge.model.blocks[block_idx].attn.proj
+                        hook_fn = make_lora_hook(expert_loras[block_idx], coeffs_tensor, sparse)
+                        handle = proj_module.register_forward_hook(hook_fn)
+                        hook_handles.append(handle)
 
-        # Remove padding
-        pred_diff = output[:, :, pad_size:]
+                # Pad input and run model forward
+                padded_x, pad_size = bridge.pad(x)
+                output = bridge.model(padded_x, variables, interval_tensor)
 
-        # Zero out constant channels
-        pred_diff = bridge.normalization.replace_constant(pred_diff, variables)
-        # Denormalize diff
-        pred_diff = bridge.normalization.denormalize_diff(pred_diff, interval)
-        # Denormalize current state, add diff, renormalize
-        pred = bridge.normalization.denormalize(x) + pred_diff
-        x = bridge.normalization.normalize(pred)
+            finally:
+                # Always remove hooks, even if forward raises
+                for handle in hook_handles:
+                    handle.remove()
 
-    return x
+            # Remove padding
+            pred_diff = output[:, :, pad_size:]
+
+            # Zero out constant channels
+            pred_diff = bridge.normalization.replace_constant(pred_diff, variables)
+            # Denormalize diff
+            pred_diff = bridge.normalization.denormalize_diff(pred_diff, interval)
+            # Denormalize current state, add diff, renormalize
+            pred = bridge.normalization.denormalize(x) + pred_diff
+            x = bridge.normalization.normalize(pred)
+
+            if return_trajectory:
+                trajectory.append(x)
+
+        if return_trajectory:
+            return torch.stack(trajectory, dim=1)  # (B, T+1, V, H, W)
+        return x
+
+    finally:
+        _release_rollout_lock(bridge)
 
 
 # =============================================================================

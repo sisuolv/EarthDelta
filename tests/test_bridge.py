@@ -295,7 +295,8 @@ def test_no_state_leak_function_signature():
 
     # All parameters should be explicit
     expected = ['bridge', 'x_norm', 'variables', 'interval', 'steps', 'plan',
-                'expert_loras', 'target_blocks', 'sparse']
+                'expert_loras', 'target_blocks', 'sparse', 'return_trajectory',
+                'differentiable']
     assert param_names == expected, f"Unexpected parameters: {param_names}"
 
     # No default mutable arguments that could leak state

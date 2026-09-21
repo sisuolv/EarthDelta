@@ -34,8 +34,11 @@ from .stormer_bridge import (
     NormalizationContract,
     WeatherStepBridge,
     load_stormer_checkpoint,
+    load_stormer_checkpoint_detailed,
+    CheckpointLoadResult,
     controlled_rollout,
     check_version_match,
+    _compute_file_sha256,
 )
 
 __all__ = [
@@ -56,6 +59,9 @@ __all__ = [
     "NormalizationContract",
     "WeatherStepBridge",
     "load_stormer_checkpoint",
+    "load_stormer_checkpoint_detailed",
+    "CheckpointLoadResult",
     "controlled_rollout",
     "check_version_match",
+    "_compute_file_sha256",
 ]
