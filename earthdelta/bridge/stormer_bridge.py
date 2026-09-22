@@ -11,16 +11,24 @@ ONLY on (x_norm, variables, interval, steps, plan, expert_loras) and NOT on
 any external/future data accessible from enclosing scope.
 """
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 import hashlib
 import os
+import sys
+import types
 
 import numpy as np
 import torch
 import torch.nn as nn
 
-from ..contracts import ArtifactVersion, EditPlan
+from ..contracts import (
+    ArtifactVersion,
+    EditPlan,
+    NORM_IDENTITY_SCHEMA_VERSION,
+    compute_normalization_identity_digest,
+    format_normalization_identity,
+)
 from ..lowrank import ExpertLoRA
 from .stormer_arch import Stormer
 
@@ -160,6 +168,52 @@ class NormalizationContract:
     diff_std: Dict[int, torch.Tensor]   # interval -> [V]
     variables: List[str]
     policy: str = POLICY_LEGACY  # Default to legacy for backward compatibility
+    # The official NPZ diff constants are float64.  Keep private source copies
+    # for inverse-transform construction while exposing the historical
+    # float32 contract tensors to callers and identity hashing.
+    _reverse_diff_mean: Optional[Dict[int, torch.Tensor]] = field(
+        default=None, repr=False, compare=False
+    )
+    _reverse_diff_std: Optional[Dict[int, torch.Tensor]] = field(
+        default=None, repr=False, compare=False
+    )
+
+    def __post_init__(self):
+        """Reject a contract whose declared policy contradicts its contents.
+
+        The policy label is part of the identity, so it must not be able to lie
+        about what the object actually holds. Under
+        POLICY_OFFICIAL_ZERO_DIFF_MEAN the stored diff_mean tensors ARE the
+        effective ones (zeros); a nonzero stored diff_mean under that label is
+        a mislabelled object and is rejected at construction.
+        """
+        if self.policy not in (POLICY_LEGACY, POLICY_OFFICIAL_ZERO_DIFF_MEAN):
+            raise ValueError(
+                f"Unknown policy: {self.policy}. "
+                "Use POLICY_LEGACY or POLICY_OFFICIAL_ZERO_DIFF_MEAN."
+            )
+        if not self.policy_content_consistent:
+            offending = sorted(
+                interval for interval, tensor in self.diff_mean.items()
+                if bool(torch.any(tensor != 0))
+            )
+            raise ValueError(
+                f"Policy '{self.policy}' declares zero diff_mean but the contract "
+                f"holds nonzero diff_mean for intervals {offending}. The declared "
+                "policy must match the actual contents."
+            )
+
+    @property
+    def policy_content_consistent(self) -> bool:
+        """True when the declared policy agrees with the stored constants.
+
+        Used by the gate so that a contract mutated after construction (e.g. a
+        relabelled policy field) is still rejected rather than trusted on the
+        strength of its label alone.
+        """
+        if self.policy != POLICY_OFFICIAL_ZERO_DIFF_MEAN:
+            return True
+        return all(not bool(torch.any(t != 0)) for t in self.diff_mean.values())
 
     @classmethod
     def from_npz_dir(
@@ -200,6 +254,8 @@ class NormalizationContract:
         # Load diff normalization for each interval
         diff_mean = {}
         diff_std = {}
+        raw_diff_mean_source = {}
+        raw_diff_std_source = {}
         for interval in intervals:
             diff_mean_path = os.path.join(npz_dir, f"normalize_diff_mean_{interval}.npz")
             diff_std_path = os.path.join(npz_dir, f"normalize_diff_std_{interval}.npz")
@@ -210,15 +266,16 @@ class NormalizationContract:
                 # Under official policy, force diff_mean to zero
                 if policy == POLICY_OFFICIAL_ZERO_DIFF_MEAN:
                     raw_diff_mean = np.zeros_like(raw_diff_mean)
+                raw_diff_mean_source[interval] = raw_diff_mean
                 diff_mean[interval] = torch.from_numpy(raw_diff_mean).float()
 
             if os.path.exists(diff_std_path):
                 ds = dict(np.load(diff_std_path))
-                diff_std[interval] = torch.from_numpy(
-                    np.concatenate([ds[v] for v in variables], axis=0)
-                ).float()
+                raw_diff_std = np.concatenate([ds[v] for v in variables], axis=0)
+                raw_diff_std_source[interval] = raw_diff_std
+                diff_std[interval] = torch.from_numpy(raw_diff_std).float()
 
-        return cls(
+        contract = cls(
             inp_mean=torch.from_numpy(inp_mean).float(),
             inp_std=torch.from_numpy(inp_std).float(),
             diff_mean=diff_mean,
@@ -226,6 +283,22 @@ class NormalizationContract:
             variables=variables,
             policy=policy,
         )
+        # Keep the uncast arrays separately: torchvision constructs the
+        # reverse transform from these float64 values before applying it to
+        # a float32 tensor.
+        object.__setattr__(
+            contract, "_reverse_diff_mean", {
+                interval: torch.from_numpy(raw).clone()
+                for interval, raw in raw_diff_mean_source.items()
+            },
+        )
+        object.__setattr__(
+            contract, "_reverse_diff_std", {
+                interval: torch.from_numpy(raw).clone()
+                for interval, raw in raw_diff_std_source.items()
+            },
+        )
+        return contract
 
     def normalize(self, x_raw: torch.Tensor) -> torch.Tensor:
         """Normalize raw input: x_norm = (x_raw - mean) / std.
@@ -240,8 +313,36 @@ class NormalizationContract:
         std = self.inp_std.to(x_raw.device, x_raw.dtype).view(1, -1, 1, 1)
         return (x_raw - mean) / std
 
+    @staticmethod
+    def _reverse_parameters(
+        mean: torch.Tensor, std: torch.Tensor, device: torch.device,
+        dtype: torch.dtype,
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        """Build inverse Normalize constants with upstream operation order.
+
+        ``GlobalForecastIterativeModule.get_reverse_transform`` computes the
+        reciprocal and reverse mean while its transform tensors are still CPU
+        float32, then moves those constants with the module.  Computing the
+        reciprocal directly on CUDA can round differently on each rollout
+        step, even though the formulas are mathematically identical.
+        """
+        cpu_std = std.detach().to(device="cpu")
+        cpu_mean = mean.detach().to(device="cpu")
+        cpu_std_inverse = 1.0 / cpu_std
+        cpu_mean_inverse = -cpu_mean * cpu_std_inverse
+        return (
+            cpu_mean_inverse.to(device=device, dtype=dtype),
+            cpu_std_inverse.to(device=device, dtype=dtype),
+        )
+
     def denormalize(self, x_norm: torch.Tensor) -> torch.Tensor:
-        """Denormalize normalized input: x_raw = x_norm * std + mean.
+        """Denormalize normalized input using the official inverse transform.
+
+        The upstream Stormer module constructs an inverse
+        ``torchvision.transforms.Normalize`` with ``std_inverse = 1 / std``
+        and applies subtraction followed by division.  Writing the
+        mathematically equivalent ``x_norm * std + mean`` changes FP32
+        rounding enough to fail the strict upstream parity gate after rollout.
 
         Args:
             x_norm: Normalized input of shape (B, V, H, W)
@@ -251,7 +352,14 @@ class NormalizationContract:
         """
         mean = self.inp_mean.to(x_norm.device, x_norm.dtype).view(1, -1, 1, 1)
         std = self.inp_std.to(x_norm.device, x_norm.dtype).view(1, -1, 1, 1)
-        return x_norm * std + mean
+        # Use the original CPU float32 constants for inverse construction;
+        # see _reverse_parameters for why this is intentionally not computed
+        # from the device-cast tensors above.
+        mean_inverse, std_inverse = self._reverse_parameters(
+            self.inp_mean.view(1, -1, 1, 1), self.inp_std.view(1, -1, 1, 1),
+            x_norm.device, x_norm.dtype,
+        )
+        return (x_norm - mean_inverse) / std_inverse
 
     def denormalize_diff(self, diff_norm: torch.Tensor, interval: int) -> torch.Tensor:
         """Denormalize normalized diff: diff_raw = diff_norm * std + mean.
@@ -274,19 +382,30 @@ class NormalizationContract:
         if interval not in self.diff_std:
             raise ValueError(f"No diff transform for interval {interval}")
 
-        std = self.diff_std[interval].to(diff_norm.device, diff_norm.dtype).view(1, -1, 1, 1)
+        reverse_std = self._reverse_diff_std or self.diff_std
+        reverse_mean = self._reverse_diff_mean or self.diff_mean
+        source_std = reverse_std[interval].view(1, -1, 1, 1)
 
         # Determine mean based on policy
         if self.policy == POLICY_OFFICIAL_ZERO_DIFF_MEAN:
             # Official semantic: always zero diff_mean
-            mean = torch.zeros_like(std)
-        elif interval in self.diff_mean:
+            source_mean = torch.zeros_like(source_std)
+        elif interval in reverse_mean:
             # Legacy semantic: use actual diff_mean from NPZ
-            mean = self.diff_mean[interval].to(diff_norm.device, diff_norm.dtype).view(1, -1, 1, 1)
+            source_mean = reverse_mean[interval].view(1, -1, 1, 1)
         else:
-            mean = torch.zeros_like(std)
+            source_mean = torch.zeros_like(source_std)
 
-        return diff_norm * std + mean
+        # Match torchvision's get_reverse_transform arithmetic exactly.  This
+        # is deliberately written as subtraction/division instead of the
+        # equivalent multiply/add expression so official parity is stable in
+        # float32 across autoregressive steps.  Inverse constants are built on
+        # CPU, where the official transform constructs them.
+        mean_inverse, std_inverse = self._reverse_parameters(
+            source_mean, source_std,
+            diff_norm.device, diff_norm.dtype,
+        )
+        return (diff_norm - mean_inverse) / std_inverse
 
     def replace_constant(self, yhat: torch.Tensor, variables: List[str]) -> torch.Tensor:
         """Zero out constant variable channels (matching iterative_module.py).
@@ -306,44 +425,36 @@ class NormalizationContract:
 
     @property
     def digest(self) -> str:
-        """Hash of normalization constants and policy for version tracking.
+        """Bare 16-hex identity digest of the effective normalization constants.
 
-        Includes:
-        - Variable names/order
-        - Interval keys
-        - Tensor shapes and values
-        - Policy (POLICY_LEGACY or POLICY_OFFICIAL_ZERO_DIFF_MEAN)
+        Computed with the SHARED serializer in earthdelta.contracts so that this
+        value is byte-for-byte comparable with the digest the independent
+        exporter computes from the same NPZ assets. See
+        `serialize_normalization_identity` for the pinned schema (field order,
+        explicit sorted interval set, float32 little-endian digest dtype).
 
-        This ensures the digest changes when any structural or semantic aspect
-        of the contract changes, including the diff_mean policy.
+        Prefer `identity_digest` when the value is written to or read from a
+        manifest/config: that form carries the schema version, which is what
+        makes a legacy reference fail closed instead of being silently reused.
         """
-        # Build a canonical representation that includes all structural info
-        parts = []
+        return compute_normalization_identity_digest(
+            policy=self.policy,
+            variables=self.variables,
+            inp_mean=self.inp_mean,
+            inp_std=self.inp_std,
+            diff_mean=self.diff_mean,
+            diff_std=self.diff_std,
+        )
 
-        # Policy MUST be part of the digest - it changes the semantic behavior
-        parts.append(f"policy={self.policy}".encode())
+    @property
+    def identity_schema_version(self) -> str:
+        """Serialization schema version backing `digest` / `identity_digest`."""
+        return NORM_IDENTITY_SCHEMA_VERSION
 
-        # Variable names and order
-        parts.append((",".join(self.variables)).encode())
-
-        # Input normalization with shape
-        parts.append(f"inp_mean_shape={tuple(self.inp_mean.shape)}".encode())
-        parts.append(self.inp_mean.numpy().tobytes())
-        parts.append(f"inp_std_shape={tuple(self.inp_std.shape)}".encode())
-        parts.append(self.inp_std.numpy().tobytes())
-
-        # Diff normalization with explicit keys (sorted for determinism)
-        # Note: Under POLICY_OFFICIAL_ZERO_DIFF_MEAN, diff_mean tensors are zeros
-        # but we still include them for structural completeness
-        for interval in sorted(self.diff_mean.keys()):
-            parts.append(f"diff_mean_{interval}_shape={tuple(self.diff_mean[interval].shape)}".encode())
-            parts.append(self.diff_mean[interval].numpy().tobytes())
-        for interval in sorted(self.diff_std.keys()):
-            parts.append(f"diff_std_{interval}_shape={tuple(self.diff_std[interval].shape)}".encode())
-            parts.append(self.diff_std[interval].numpy().tobytes())
-
-        data = b"".join(parts)
-        return hashlib.sha256(data).hexdigest()[:16]
+    @property
+    def identity_digest(self) -> str:
+        """Schema-qualified identity, e.g. ``ed-norm-identity/1:<16 hex>``."""
+        return format_normalization_identity(self.digest, NORM_IDENTITY_SCHEMA_VERSION)
 
 
 # =============================================================================
@@ -367,6 +478,66 @@ class CheckpointLoadResult:
     def strict_load_zero_diff(self) -> bool:
         """True if strict load had zero missing and zero unexpected keys."""
         return len(self.missing_keys) == 0 and len(self.unexpected_keys) == 0
+
+
+# The pinned Stormer .ckpt files are PyTorch Lightning checkpoints, so their pickle
+# stream also carries the original training run's hyper_parameters, which reference
+# `climate_learn` -- a training framework we neither install nor use. We only consume
+# checkpoint["state_dict"], but the unpickler must resolve every name before it can
+# hand that dict back. Pickle opcode inspection (zipfile + pickletools.genops over
+# archive/data.pkl, without unpickling) confirmed these are the only five such names,
+# and that none of them carries custom __reduce__ logic, so placeholders are inert.
+_CLIMATE_LEARN_PICKLE_CLASSES: Tuple[Tuple[str, str], ...] = (
+    ("climate_learn.models.lr_scheduler", "LinearWarmupCosineAnnealingLR"),
+    ("climate_learn.metrics.metrics", "LatWeightedMSE"),
+    ("climate_learn.metrics.metrics", "LatWeightedRMSE"),
+    ("climate_learn.metrics.utils", "MetricsMetaInfo"),
+    ("climate_learn.transforms.denormalize", "Denormalize"),
+)
+
+_COMPAT_SHIM_MARKER = "__earthdelta_compat_shim__"
+
+
+class _ClimateLearnCompatPlaceholder:
+    """Inert stand-in for an unpickled climate_learn checkpoint-metadata object."""
+
+
+def _ensure_climate_learn_pickle_compat() -> None:
+    """Make the checkpoint's climate_learn class paths resolvable for unpickling.
+
+    No-op when a real climate_learn is importable. Otherwise registers placeholder
+    modules/classes for exactly the five names in _CLIMATE_LEARN_PICKLE_CLASSES,
+    never overwriting an existing sys.modules entry or module attribute.
+    """
+    try:
+        import climate_learn  # noqa: F401
+    except ImportError:
+        pass
+    else:
+        if not getattr(climate_learn, _COMPAT_SHIM_MARKER, False):
+            return
+
+    for module_path, class_name in _CLIMATE_LEARN_PICKLE_CLASSES:
+        parts = module_path.split(".")
+        for depth in range(1, len(parts) + 1):
+            dotted = ".".join(parts[:depth])
+            module = sys.modules.get(dotted)
+            if module is None:
+                module = types.ModuleType(dotted)
+                module.__path__ = []  # type: ignore[attr-defined]
+                setattr(module, _COMPAT_SHIM_MARKER, True)
+                sys.modules[dotted] = module
+                if depth > 1:
+                    parent = sys.modules[".".join(parts[:depth - 1])]
+                    if not hasattr(parent, parts[depth - 1]):
+                        setattr(parent, parts[depth - 1], module)
+
+        leaf = sys.modules[module_path]
+        if not hasattr(leaf, class_name):
+            placeholder = type(
+                class_name, (_ClimateLearnCompatPlaceholder,), {"__module__": module_path}
+            )
+            setattr(leaf, class_name, placeholder)
 
 
 def _compute_file_sha256(path: str) -> str:
@@ -411,18 +582,16 @@ def load_stormer_checkpoint(
     if variables is None:
         variables = DEFAULT_VARIABLES.copy()
 
-    # Build model
-    model = Stormer(
-        in_img_size=in_img_size,
-        variables=variables,
-        patch_size=patch_size,
-        hidden_size=hidden_size,
-        depth=depth,
-        num_heads=num_heads,
-        mlp_ratio=mlp_ratio,
+    # When the official package is present (the real S0 worker), instantiate
+    # its Stormer class directly. This removes backend/architecture drift from
+    # the parity comparison; CPU development still uses the self-contained SDPA
+    # implementation because it has no xformers dependency.
+    model, official_backend = _build_stormer_model(
+        in_img_size, variables, patch_size, hidden_size, depth, num_heads, mlp_ratio
     )
 
     # Load checkpoint
+    _ensure_climate_learn_pickle_compat()
     checkpoint = torch.load(ckpt_path, map_location="cpu", weights_only=False)
     state_dict = checkpoint["state_dict"]
 
@@ -466,6 +635,34 @@ def load_stormer_checkpoint(
     return model, version
 
 
+def _build_stormer_model(
+    in_img_size: Tuple[int, int], variables: List[str], patch_size: int,
+    hidden_size: int, depth: int, num_heads: int, mlp_ratio: float,
+) -> Tuple[nn.Module, bool]:
+    """Build the pinned official model when its CUDA attention is available."""
+    try:
+        # The worker source snapshot is not a Git checkout; make the pinned
+        # upstream package explicit instead of relying on caller PYTHONPATH.
+        reference_root = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "reference", "stormer")
+        )
+        if os.path.isdir(reference_root) and reference_root not in sys.path:
+            sys.path.insert(0, reference_root)
+        import xformers.ops  # noqa: F401
+        from stormer.models.hub.stormer import Stormer as OfficialStormer
+    except (ImportError, ModuleNotFoundError):
+        return Stormer(
+            in_img_size=in_img_size, variables=variables, patch_size=patch_size,
+            hidden_size=hidden_size, depth=depth, num_heads=num_heads,
+            mlp_ratio=mlp_ratio,
+        ), False
+    return OfficialStormer(
+        in_img_size=in_img_size, variables=variables, patch_size=patch_size,
+        hidden_size=hidden_size, depth=depth, num_heads=num_heads,
+        mlp_ratio=mlp_ratio,
+    ), True
+
+
 def load_stormer_checkpoint_detailed(
     ckpt_path: str,
     patch_size: int,
@@ -500,15 +697,8 @@ def load_stormer_checkpoint_detailed(
     if variables is None:
         variables = DEFAULT_VARIABLES.copy()
 
-    # Build model
-    model = Stormer(
-        in_img_size=in_img_size,
-        variables=variables,
-        patch_size=patch_size,
-        hidden_size=hidden_size,
-        depth=depth,
-        num_heads=num_heads,
-        mlp_ratio=mlp_ratio,
+    model, official_backend = _build_stormer_model(
+        in_img_size, variables, patch_size, hidden_size, depth, num_heads, mlp_ratio
     )
 
     # Compute file metadata first
@@ -516,6 +706,7 @@ def load_stormer_checkpoint_detailed(
     ckpt_sha256 = _compute_file_sha256(ckpt_path)
 
     # Load checkpoint
+    _ensure_climate_learn_pickle_compat()
     checkpoint = torch.load(ckpt_path, map_location="cpu", weights_only=False)
     state_dict = checkpoint["state_dict"]
 
@@ -601,6 +792,23 @@ class WeatherStepBridge:
     def patch_size(self) -> int:
         return self.model.patch_size
 
+    @property
+    def normalization_identity(self) -> str:
+        """Schema-qualified identity of this bridge's normalization contract."""
+        return self.normalization.identity_digest
+
+    def normalize(self, x_raw: torch.Tensor) -> torch.Tensor:
+        """Normalize a raw input through THIS bridge's own normalizer.
+
+        Exposed so that callers binding a raw input to a saved normalized
+        tensor run the real bridge transform rather than re-deriving it.
+        """
+        return self.normalization.normalize(x_raw)
+
+    def denormalize(self, x_norm: torch.Tensor) -> torch.Tensor:
+        """Denormalize through THIS bridge's own normalizer."""
+        return self.normalization.denormalize(x_norm)
+
     def pad(self, x: torch.Tensor) -> Tuple[torch.Tensor, int]:
         """Pad input height to be divisible by patch_size.
 
@@ -678,34 +886,168 @@ class WeatherStepBridge:
 # Controlled Rollout with LoRA Injection
 # =============================================================================
 
-# Thread-local state for re-entrancy detection
+# -----------------------------------------------------------------------------
+# Supported-execution-mode declaration (B12)
+# -----------------------------------------------------------------------------
+#
+# `controlled_rollout` injects edits by registering forward hooks on submodules
+# of the SHARED backbone (`bridge.model.blocks[i].attn.proj`) and removing them
+# again once the step's forward pass has returned. That mechanism is only
+# correct under a narrow set of execution modes, which are declared here and
+# enforced by the guards below. Modes outside this declaration are REJECTED,
+# not silently supported:
+#
+#   1. SERIAL ONLY. Exactly one `controlled_rollout` may be in flight for a
+#      given backbone at any time, process-wide. Hook registration mutates the
+#      backbone itself, so a second in-flight rollout would see the first
+#      rollout's hooks (and vice versa) and silently produce the sum of two
+#      unrelated edits.
+#
+#   2. NO SHARED-MODEL CONCURRENCY. The unit of exclusion is the *backbone*,
+#      not the bridge wrapper. Two distinct `WeatherStepBridge` objects that
+#      wrap the same `Stormer` instance are just as unsafe as one bridge used
+#      twice, so the guard is keyed on `id(bridge.model)`. It is also
+#      process-wide rather than thread-local: a thread-local guard cannot see
+#      a concurrent rollout on another thread, which is exactly the case it
+#      most needs to reject.
+#
+#   3. NO ACTIVATION-CHECKPOINT REPLAY. With activation checkpointing the
+#      backbone's forward is *replayed* during the backward pass. By then the
+#      hooks have already been removed in this function's `finally`, so the
+#      replayed graph would omit the LoRA contribution entirely and backward
+#      would compute gradients of a model that was never evaluated forward --
+#      silently wrong, with no exception. Any backbone that advertises
+#      activation checkpointing is therefore refused up front.
+#
+# This is a rejection guard only. Supporting any of these modes would require a
+# different injection mechanism (e.g. permanently wrapped modules) and is out
+# of scope here.
+
 import threading
-_rollout_lock = threading.local()
+
+#: Attribute names used by common backbones to advertise activation
+#: checkpointing. Any of these being truthy on the backbone or one of its
+#: submodules means the forward pass may be replayed during backward.
+_ACTIVATION_CHECKPOINT_FLAGS: Tuple[str, ...] = (
+    "gradient_checkpointing",
+    "grad_checkpointing",
+    "use_checkpoint",
+    "use_activation_checkpointing",
+    "activation_checkpointing",
+    "checkpoint_activations",
+)
+
+#: Execution modes `controlled_rollout` supports. Exposed so callers and tests
+#: can assert against the declaration rather than re-deriving it.
+CONTROLLED_ROLLOUT_SUPPORTED_MODES: Dict[str, bool] = {
+    "serial_single_rollout_per_backbone": True,
+    "concurrent_rollouts_sharing_a_backbone": False,
+    "activation_checkpoint_replay": False,
+}
+
+
+class _RolloutRegistry:
+    """Process-wide record of the rollouts currently in flight.
+
+    Deliberately NOT `threading.local()`. The state being protected is the
+    backbone's forward-hook table, which is shared across threads; a
+    thread-local registry would report "no rollout in flight" to precisely the
+    concurrent caller that must be rejected.
+    """
+
+    def __init__(self) -> None:
+        # id(bridge) of every bridge currently inside controlled_rollout.
+        self.active_bridges = set()
+        # id(model) -> (id(bridge), owning thread name) for every backbone
+        # currently being mutated by a rollout.
+        self.active_models: Dict[int, Tuple[int, str]] = {}
+
+
+_rollout_lock = _RolloutRegistry()
+_rollout_registry_mutex = threading.Lock()
+
+
+def _assert_no_activation_checkpointing(model: nn.Module) -> None:
+    """Reject backbones that replay their forward pass during backward.
+
+    Raises:
+        RuntimeError: If the backbone or any submodule advertises activation
+            checkpointing, which would drop the hook-injected LoRA term from
+            the recomputed graph.
+    """
+    if not isinstance(model, nn.Module):
+        return
+    for module_name, module in model.named_modules():
+        for flag in _ACTIVATION_CHECKPOINT_FLAGS:
+            if getattr(module, flag, False):
+                where = module_name or "<backbone>"
+                raise RuntimeError(
+                    "controlled_rollout does not support activation-checkpoint "
+                    f"replay, but {where} has {flag}=True. The LoRA edit is "
+                    "injected via a forward hook that is removed as soon as the "
+                    "forward pass returns, so a checkpointed backward would "
+                    "recompute the forward WITHOUT the edit and produce "
+                    "gradients for a model that was never evaluated. Disable "
+                    "activation checkpointing on the backbone before calling "
+                    "controlled_rollout."
+                )
 
 
 def _check_reentrant_rollout(bridge: 'WeatherStepBridge') -> None:
-    """Check for concurrent/reentrant rollout on the same bridge.
+    """Admit a rollout only if its backbone is not already being mutated.
+
+    Enforces the serial-only / no-shared-model-concurrency declaration above,
+    and refuses backbones configured for activation-checkpoint replay.
 
     Raises:
-        RuntimeError: If this bridge is already in a rollout call.
+        RuntimeError: If this bridge is already in a rollout call, if another
+            bridge is mid-rollout on the same backbone (including from another
+            thread), or if the backbone advertises activation checkpointing.
     """
-    if not hasattr(_rollout_lock, 'active_bridges'):
-        _rollout_lock.active_bridges = set()
+    model = getattr(bridge, "model", None)
+    _assert_no_activation_checkpointing(model)
 
     bridge_id = id(bridge)
-    if bridge_id in _rollout_lock.active_bridges:
-        raise RuntimeError(
-            "Reentrant call to controlled_rollout on the same bridge detected. "
-            "This could corrupt the model's forward hooks. Each bridge instance "
-            "should only be used in one rollout at a time."
-        )
-    _rollout_lock.active_bridges.add(bridge_id)
+    model_id = id(model)
+    this_thread = threading.current_thread().name
+
+    with _rollout_registry_mutex:
+        if bridge_id in _rollout_lock.active_bridges:
+            raise RuntimeError(
+                "Reentrant call to controlled_rollout on the same bridge detected. "
+                "This could corrupt the model's forward hooks. Each bridge instance "
+                "should only be used in one rollout at a time."
+            )
+        owner = _rollout_lock.active_models.get(model_id)
+        if owner is not None:
+            owner_bridge_id, owner_thread = owner
+            raise RuntimeError(
+                "Concurrent controlled_rollout on a shared backbone detected: "
+                f"backbone id={model_id} is already in a rollout held by bridge "
+                f"id={owner_bridge_id} on thread {owner_thread!r} (this call is "
+                f"bridge id={bridge_id} on thread {this_thread!r}). controlled_rollout "
+                "is serial-only per backbone because it injects edits by mutating "
+                "the backbone's forward hooks; two in-flight rollouts would apply "
+                "each other's edits. Give each concurrent caller its own backbone, "
+                "or serialize the calls."
+            )
+        _rollout_lock.active_bridges.add(bridge_id)
+        _rollout_lock.active_models[model_id] = (bridge_id, this_thread)
 
 
 def _release_rollout_lock(bridge: 'WeatherStepBridge') -> None:
-    """Release the re-entrancy lock for a bridge."""
-    if hasattr(_rollout_lock, 'active_bridges'):
-        _rollout_lock.active_bridges.discard(id(bridge))
+    """Release the admission record for a bridge.
+
+    Only the bridge that actually owns the backbone's record clears it, so a
+    rejected concurrent caller can never release the incumbent's claim.
+    """
+    bridge_id = id(bridge)
+    model_id = id(getattr(bridge, "model", None))
+    with _rollout_registry_mutex:
+        _rollout_lock.active_bridges.discard(bridge_id)
+        owner = _rollout_lock.active_models.get(model_id)
+        if owner is not None and owner[0] == bridge_id:
+            del _rollout_lock.active_models[model_id]
 
 
 def controlled_rollout(
@@ -760,7 +1102,12 @@ def controlled_rollout(
 
     Raises:
         TypeError: If plan or expert_loras have wrong types
-        RuntimeError: If called reentrantly on the same bridge instance
+        RuntimeError: If the call is outside the declared supported execution
+            modes (see CONTROLLED_ROLLOUT_SUPPORTED_MODES): a reentrant call on
+            the same bridge, a concurrent rollout on a backbone that is already
+            in flight (even from another thread or another bridge wrapping the
+            same model), or a backbone configured for activation-checkpoint
+            replay.
 
     Note:
         If plan.coefficients are all zero, this produces identical output

@@ -1,0 +1,20 @@
+Running 290 items in this shard
+..........sss........................................................... [ 24%]
+........................................................................ [ 49%]
+........................................................................ [ 74%]
+......................................................................ss [ 99%]
+ss                                                                       [100%]
+=============================== warnings summary ===============================
+../../../../usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py:619
+  /usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py:619: UserWarning: Can't initialize NVML
+    warnings.warn("Can't initialize NVML")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [2] tests/test_bridge.py:411: Insufficient memory: 8.6GB limit, need ~12.0GB for checkpoint loading
+SKIPPED [1] tests/test_bridge.py:411: Insufficient memory: 8.6GB limit, need ~24.0GB for checkpoint loading
+SKIPPED [1] tests/test_upstream_parity.py:112: CUDA not available
+SKIPPED [1] tests/test_upstream_parity.py:184: CUDA not available
+SKIPPED [1] tests/test_upstream_parity.py:249: Upstream reference not exported yet
+SKIPPED [1] tests/test_upstream_parity.py:270: Upstream reference outputs not exported yet
+283 passed, 7 skipped, 1 warning in 58.28s

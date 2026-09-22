@@ -1,0 +1,24 @@
+{
+  "algorithm": "sha256",
+  "scope": "all package files except this manifest itself",
+  "mutability_note": "Verify the original delivery; update execution state in a separate working copy.",
+  "files": {
+    "CODEX_TASKS.md": "a25650c7e4b1d30383ca5123cf2bf4404c51a793779827969e781883c62eeaf0",
+    "EarthDelta_Codex_Execution_Plan.md": "bac9361b2a2e089898f04e51a88c97c21bf3bb34dc03c9acfffd74cc9300ba60",
+    "FINAL_RESEARCH_DECISION.md": "76f34e89d080f9d35fac78c63e0358a6ced50cd7211f31a0ff2133a2271fe169",
+    "IMPLEMENTATION_AUDIT_ACTIONS.md": "be5c719fca97b7f4e1e9b0c68c007d0a7f174b9b71dc3606f3c3568e02f357fe",
+    "START_HERE_FOR_CODEX.md": "58b089c6d3d4f3937cc847695c04f3f20f0c5cb7a74e7fe29b8fcac21ec8f505",
+    "STOP_CONDITIONS.md": "46f71e6368b1c31500d1a21cdac621d3f7c9e8d0fddb29604e1ffa793b91ea59",
+    "VALIDATION_REPORT.json": "2f1d30374232b1aa3bd6571995b88f649ded560a4b0639d8a0fdba9d5003ee45",
+    "codex_tasks.json": "15914813f811587efa5d93c8d5508844aad27a89a16afb68bbe7f54c97a8c1d7",
+    "configs/authorization.template.json": "7a6c3824520144e43e4aef8db55a2fbbd03b2c32cf85c56d171f9adb5b2dc002",
+    "configs/pilot_config.template.json": "2a5356103f5388574e00ae10dd2765fd084409bcbe1f32fb566e74de903ae2d5",
+    "evidence/REPOSITORY_SNAPSHOT.json": "9afbb93a93340f8e3626466c7620870f29dfe018d63f8e593211f9aa78d5f238",
+    "experiments/BASELINES.md": "d3704d2ce2115a358b6dad0d1433fea226ef06f9089886d2c07439a14466159c",
+    "experiments/P0_SURVIVAL_EXPERIMENTS.md": "79a21d72e5595b026a92b30e8590f683e7bb3351f96a525969faa4178048c11f",
+    "research/ROUND2_REVIEW_SUMMARY.md": "a6b8c849cbb093d3f26e85b1efb005b571984fda4545ec6a69a13920d11ad454",
+    "tools/repo_preflight.py": "382e39d616f2405b3d5ab054d0adf4256d63f1c7dc5de8235bad7410ae87b97b",
+    "tools/test_delivery.py": "d907b99df8ec7020d0aff72461f6da5ccbbce5dd11cfb37d2fb77a5bf42ba6af",
+    "tools/validate_package.py": "945d19655e971652ac35c03a4d249b4feb129422cc12c38846376f166b30f1cd"
+  }
+}

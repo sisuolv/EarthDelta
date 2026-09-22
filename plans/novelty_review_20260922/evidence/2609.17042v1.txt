@@ -1,0 +1,2444 @@
+Learning Options for Compositional
+Motor Control with Adapter Banks
+Sreejan Kumar
+Affiliation:
+Columbia University
+Affiliation:
+New York University
+Marcelo G. Mattar
+1
+1
+footnotemark:
+1
+†
+†
+thanks:
+equally contributing senior authors
+Affiliation:
+New York University
+Lea Duncker
+1
+1
+footnotemark:
+1
+Affiliation:
+Columbia University
+Abstract
+Learning flexible motor primitives is a hallmark of skilled motor control. Recent neuroscience theory proposes that motor primitives may be implemented as low-rank perturbations of a shared recurrent network, but leaves open how such a system is learned. We translate this principle into a novel architecture for learning motor skills end-to-end: a shared recurrent core modulated by a bank of residual adapters, each selected by a discrete latent code. Trained on closed-loop biomechanical control, the adapters develop emergent low-rank perturbations of the recurrent dynamics despite no architectural rank constraint, placing task representations in disparate subspaces of the shared core network. A simple high-level policy over the learned options, optimized while the whole network is frozen, sequences the low-rank adapters to produce novel out-of-distribution movements. We demonstrate the ability to generalize to novel motor sequences within the closed-loop control setting, improving on the generalization error of a task-input-conditioned multitask baseline by upto order of magnitude.
+1
+Introduction
+In the movie
+The Karate Kid
+, how did Mr. Miyagi train his student to win a fighting tournament through seemingly unrelated chores like waxing cars and painting fences? The capacity to generate flexible behavior from a finite set of reusable primitives that are recombined and rescaled across new contexts is a hallmark of skilled motor control in humans
+[
+1
+,
+2
+]
+. Reproducing this capacity in artificial agents has been a central goal of hierarchical and modular control: how can a learning system discover reusable building blocks of behavior, and flexibly recombine them to solve new problems without catastrophic interference between old and new skills
+[
+3
+,
+4
+]
+?
+The classical framing of this challenge in reinforcement learning is the
+options
+framework of
+Sutton et al. [5]
+: temporally extended actions, each with its own internal low-level policy, invoked by a high-level policy that decides which option to engage at each moment. Subsequent work has examined how multiple options can be discovered without explicit supervision on individual options, via mutual-information objectives
+[
+6
+]
+, unsupervised segmentation of demonstrations
+[
+7
+]
+, or hierarchical reinforcement learning
+[
+8
+]
+. A persistent challenge across these approaches is ensuring that learned options are
+compositional
+: that they can be recombined into novel sequences without interference, so that the high-level controller can extend to new tasks without retraining learned options.
+Compositional neural population structure has been hypothesized to underlie flexible motor control, decision making, and spontaneous behavior
+[
+9
+,
+10
+,
+11
+]
+. A recurring architectural proposal in neuroscience is that flexible computation is supported by
+low-rank perturbations of a shared base network
+, with particular relevance to compositional motor sequencing
+[
+12
+]
+and continual learning
+[
+13
+]
+. This pattern is structurally identical to Low Rank Adaptation (LoRA) in Large Language Models
+[
+14
+]
+, which, though initially developed for parameter-efficient finetuning, has recently been repurposed for continual learning and cross-task generalization through mixtures of expert adapters
+[
+15
+,
+16
+,
+17
+]
+. While these works establish low-rank perturbations as a powerful compositional substrate, they leave open how a system in this family can be
+learned end-to-end from scratch
+via demonstrations, with primitives that recombine to support genuinely out-of-distribution compositional transfer.
+Building on the closed-loop musculoskeletal control setting of
+Lazzari and Saxena [18]
+, we address this gap by introducing a learning architecture in which a shared recurrent core is modulated by a bank of in-the-loop residual adapters, each selected by a discrete latent code inferred from expert demonstrations alone. Three properties emerge from training. First, despite each adapter being initialized as a full-rank residual modulator, the adapters learn to apply emergent
+low-rank
+perturbations to the core network, recovering the structural assumption of
+Logiaco et al. [12]
+. Second, task representations are factored into disparate subspaces of a shared recurrent substrate, factoring the compositional structure of the task suite. Third, the trained adapter library supports out-of-distribution
+compositional transfer
+: a soft policy over the learned adapters, optimized while the rest of the network is frozen, sequences existing primitives into a novel trajectory the network was never trained on, outperforming a task-input-conditioned multitask baseline by upto order of magnitude.
+2
+Low-rank Adapters via Thalamocortical Architectures in Neuroscience
+Theoretical work has proposed an architecture for composing motor primitives into flexible sequences, inspired by the connectivity between motor cortex, thalamus and basal ganglia in the brain
+[
+12
+]
+. Here, motor primitives are implemented through an interplay of the recurrence in motor cortex, and cortex-thalamus-cortex projections (thalamocortical loops, Figure
+1
+A). Distinct thalamic units participate in different thalamocortical loops, and activations of subsets of thalamic units via basal ganglia inputs can thus act as a low-rank perturbation of the effective recurrent dynamics in the motor cortex.
+This allows the system to generate complex movements by sequencing low-rank perturbations of the same shared cortical substrate.
+Figure 1:
+Adapter Banks as Thalamocortical Loops
+(A)
+Schematic of the framework of
+Logiaco et al. [12]
+: thalamic inputs
+𝐮
+k
+\mathbf{u}_{k}
+drive a cortical RNN with recurrence
+𝐉
+0
+\mathbf{J}_{0}
+. A rank-one perturbation
+𝐮
+k
+​
+𝐯
+k
+⊤
+\mathbf{u}_{k}\mathbf{v}_{k}^{\top}
+can induce oscillatory dynamics at a target frequency.
+(B)
+Eigenvalue placement. Gray: eigenvalues of the bare cortex
+𝐉
+0
+\mathbf{J}_{0}
+. Stars: target locations on the oscillation line (Re
+(
+λ
+)
+=
+1
+(\lambda)=1
+) for four motifs at different frequencies
+ω
+k
+\omega_{k}
+. Each low-rank perturbation shifts a conjugate pair of eigenvalues to the corresponding target.
+(C)
+Cortical activity projected onto a one-dimensional readout. Each motif
+J
+0
++
+u
+k
+​
+v
+k
+T
+J_{0}+u_{k}v_{k}^{T}
+sustains a different oscillation at its target frequency
+ω
+k
+\omega_{k}
+, demonstrating that rank-one perturbations selectively recruit the cortical network to produce frequency-specific dynamics.
+Let
+𝐡
+∈
+ℝ
+N
+\mathbf{h}\in\mathbb{R}^{N}
+denote the cortical state and
+𝐉
+0
+∈
+ℝ
+N
+×
+N
+\mathbf{J}_{0}\in\mathbb{R}^{N\times N}
+the recurrent connectivity in cortex. Each thalamocortical channel
+k
+k
+consists of a corticothalamic readout
+𝐯
+k
+∈
+ℝ
+N
+\mathbf{v}_{k}\in\mathbb{R}^{N}
+and a thalamocortical projection
+𝐮
+k
+∈
+ℝ
+N
+\mathbf{u}_{k}\in\mathbb{R}^{N}
+. The cortical dynamics evolve as
+τ
+​
+𝐡
+˙
+=
+−
+𝐡
++
+𝐉
+0
+​
+𝐡
++
+∑
+k
+𝐮
+k
+​
+𝐯
+k
+⊤
+​
+𝐡
+=
+−
+𝐡
++
+(
+𝐉
+0
++
+∑
+k
+𝐮
+k
+​
+𝐯
+k
+⊤
+)
+​
+𝐡
+.
+\tau\dot{\mathbf{h}}=-\mathbf{h}+\mathbf{J}_{0}\mathbf{h}+\sum_{k}\mathbf{u}_{k}\mathbf{v}_{k}^{\top}\mathbf{h}=-\mathbf{h}+\left(\mathbf{J}_{0}+\sum_{k}\mathbf{u}_{k}\mathbf{v}_{k}^{\top}\right)\mathbf{h}.
+(1)
+The thalamocortical loop therefore acts as a low-rank perturbation to the effective cortical dynamics. In the linear setting,
+Logiaco et al. [12]
+showed that this low-rank perturbation can be tuned to precisely modulate the eigenvalues of the effective dynamics (Figure
+1
+B). It can therefore change the behavior of the network (e.g. oscillation frequency of activity patterns, Figure
+1
+C) and introduce particular
+dynamical motifs
+that would not be expressible by
+𝐉
+0
+\mathbf{J}_{0}
+alone.
+This hence provides a mechanism for compositional motor control: the activity patterns needed to generate diverse movements can be constructed from a recurrent network by sequentially engaging different thalamocortical channels.
+The framework in
+Logiaco et al. [12]
+showed how to design readout vectors
+𝐯
+k
+\mathbf{v}_{k}
+to achieve a particular change in eigenvalue of the effective dynamics and proposed that the selection mechanism an be implemented via disinhibition from basal ganglia circuits. However, they did not address how such an architecture could be
+learned
+more generally, and what mechanisms might govern motif
+selection
+.
+In the following section, we build on the conceptual framework of
+Logiaco et al. [12]
+to arrive at an algorithm for the learning and selection of motifs in more general, nonlinear settings.
+3
+Learning Adapters for Flexible Motor Control
+Figure 2:
+Teacher–student framework for learning motor adapters
+(A)
+Task context-conditioned teacher.
+A recurrent network controls a two-link, six-muscle biomechanical arm in closed loop
+[
+18
+]
+.
+(B)
+Student encoder.
+A shared LSTM core network reads the teacher’s full demonstration (observations and muscle commands, but
+not
+the rule input) and segments each trajectory into three output probabilities: what task is being done
+p
+⁡
+(
+t
+​
+a
+​
+s
+​
+k
+)
+p(task)
+, distribution
+p
+⁡
+(
+z
+)
+p(z)
+over
+K
+=
+10
+K=10
+latent codes, and a distribution
+p
+⁡
+(
+b
+)
+p(b)
+of the boundary between the two task segments.
+(C)
+Student decoder.
+The same core network rolls out in closed loop with
+only
+body-state feedback and task inputs (no teacher actions). The encoder-sampled code activates the corresponding adapter, which perturbs the cortical hidden state at each timestep.
+To understand how learning system can discover reusable building blocks of behavior that flexibly recombine to solve new problems, we turn to the domain of closed-loop biomechanical motor control.
+3.1
+Biomechanical control RNN task
+We adopt a closed-loop biomechanical control task from
+Lazzari and Saxena [18]
+. In this task, an RNN is required to control a two-link biomechanical arm with six muscles to generate a variety of movement types: straight reaches, clockwise and counterclockwise circular arcs, and sinusoidal trajectories. The RNN receives proprioceptive feedback (hand position, muscle length, muscle velocity) at each timestep. Movements come in two variants:
+half
+(start
+→
+\to
+target) and
+full
+(start
+→
+\to
+target
+→
+\to
+start). This yields ten distinct task conditions.
+3.1.1
+Task-context conditioned teacher
+We adopt the architecture from
+Lazzari and Saxena [18]
+as a teacher network that can generate expert trajectories. The teacher network receives a one-hot
+rule input
+at every timestep, specifying which task is currently active (Figure
+2
+A), alongside speed, go-cue, and target information, as well as proprioceptive feedback. As was demonstrated in
+Lazzari and Saxena [18]
+, RNNs develop shared dynamical structure across movement types after training, allowing for reuse of the same computations across the different tasks.
+While this solution is compositional, the rule input supplies the network a particular organization of composable units rather than discovering them from learning.
+In the next section, we explore an alternative architecture with a bank of learnable adapters that can be flexibly selected to compose movements.
+3.1.2
+CABRA: Compositional Adapter Banks for Recurrent Architectures
+To arrive at a general architecture for flexible motor control, we develop an encoder/decoder architecture which learns to segment expert demonstrations into learned discrete latent skills
+[
+7
+]
+, and then use this decomposition to select adapters to modulates the shared recurrent core. We treat this architecture as a student network (Figure
+2
+) which learns to imitate the teacher’s behavior.
+Student encoder (selection).
+The student’s encoder (Figure
+2
+B) reads the teacher’s full trajectory (observations minus rule input and muscle commands) and partitions it into
+M
+=
+2
+M=2
+segments. For each segment, it produces two outputs: a
+boundary distribution
+p
+⁡
+(
+b
+)
+p(b)
+over timesteps, indicating when the segment ends, and a categorical distribution
+p
+⁡
+(
+z
+)
+p(z)
+over
+K
+=
+10
+K=10
+latent codes, specifying which adapter is active in that segment. At the end of the first segment, the encoder also outputs a task-identity prediction.
+To achieve this, we adopt the CompILE (Compositional Imitation Learning and Execution) framework of
+Kipf et al. [7]
+. CompILE was developed for grid-world and toy-reacher domains and has not previously been applied to closed-loop biomechanical control.
+During training, the code distribution is sampled with the straight-through Gumbel-softmax estimator, yielding a one-hot sample
+z
+m
+,
+k
+∈
+{
+0
+,
+1
+}
+z_{m,k}\in\{0,1\}
+with
+∑
+k
+z
+m
+,
+k
+=
+1
+\sum_{k}z_{m,k}=1
+in the forward pass so that exactly one adapter is active per segment. The boundary distribution is sampled with Gumbel-softmax at low temperature, inducing a soft segment assignment
+σ
+m
+​
+(
+t
+)
+∈
+[
+0
+,
+1
+]
+\sigma_{m}(t)\in[0,1]
+that concentrates near
+{
+0
+,
+1
+}
+\{0,1\}
+except in the narrow window around the segment transition. At evaluation, both samples become hard via argmax. Half of the codes (
+z
+0
+,
+…
+,
+z
+4
+z_{0},\ldots,z_{4}
+) are reserved for segment 0 (extension); the other half (
+z
+5
+,
+…
+,
+z
+9
+z_{5},\ldots,z_{9}
+) for segment 1 (retraction). This phase split is implemented through hard masking of invalid logits and is the only structural prior we impose on the code identities themselves; the assignment of tasks to specific extension and retraction codes, and whether tasks reuse codes altogether, is up to the model to learn.
+Student decoder (execution).
+The student’s decoder (Figure
+2
+C) is the operational controller and instantiates the architectural commitment of the adapter bank. The decoder shares its core network module with the encoder, but the recurrent parameters are detached during the decoder pass: the decoder’s loss calculated during closed-loop arm rollouts cannot update the core network’s recurrence. The decoder’s gradient flows only into the adapters, the muscle readout, and the input projection to the core network. The recurrence itself is frozen during this pass and is shaped instead by the encoder’s segmentation and code-inference objectives. The encoder and decoder are
+jointly
+trained simultaneously, using two forward passes of the core network per step (one for encoder-mode and one for decoder-mode).
+We impose no explicit rank constraint on the adapters. Each adapter (one per latent code)
+Δ
+k
+:
+ℝ
+N
+→
+ℝ
+N
+\Delta_{k}:\mathbb{R}^{N}\rightarrow\mathbb{R}^{N}
+is a residual modulator of the core network’s hidden state and any low-rank structure they develop in training emerges from the optimization itself, a property we examine quantitatively in Section
+4
+. At each decoder timestep
+t
+t
+, the core recurrent network produces a hidden state
+h
+t
+h_{t}
+from observations and the previous state, and the adapter perturbs it residually. Let
+z
+(
+0
+)
+,
+z
+(
+1
+)
+z^{(0)},z^{(1)}
+denote the codes sampled by the encoders for both segments respectively, and let
+σ
+⁡
+(
+t
+)
+=
+∑
+τ
+≤
+t
+b
+τ
+\sigma(t)=\sum_{\tau\leq t}b_{\tau}
+denote the cumulative probability the segment boundary has occured by time
+t
+t
+. At decoder timestep
+t
+t
+, the core network produces a hidden state
+h
+t
+h_{t}
+and the active adapters perturb it residually:
+h
+~
+t
+=
+h
+~
+t
+−
+1
++
+(
+1
+−
+σ
+⁡
+(
+t
+)
+)
+​
+Δ
+z
+0
+​
+(
+h
+t
+)
++
+σ
+⁡
+(
+t
+)
+​
+Δ
+z
+1
+​
+(
+h
+t
+)
+\tilde{h}_{t}=\tilde{h}_{t-1}+(1-\sigma(t))\Delta_{z_{0}}(h_{t})+\sigma(t)\Delta_{z_{1}}(h_{t})
+(2)
+Because
+σ
+⁡
+(
+t
+)
+\sigma(t)
+is sharply concentrated around the sampled boundary, the perturbation collapses to
+Δ
+z
+0
+​
+(
+h
+t
+)
+\Delta_{z_{0}}(h_{t})
+during the extension segment and
+Δ
+z
+1
+​
+(
+h
+t
+)
+\Delta_{z_{1}}(h_{t})
+during the retraction segment, with brief soft mixing only across the transition. The muscle readout reads from
+h
+~
+t
+\tilde{h}_{t}
+, the arm advances one-step through differentiable physics, and
+h
+~
+t
+\tilde{h}_{t}
+is fed back to the core network as the next-step recurrent input. The decoder receives the same task inputs and closed-loop body-state feedback the teacher uses during training, but never the rule input. Removing the adapters or replacing them with a single shared modulator prevents the network from effectively learning (Supplementary Figure
+9
+).
+3.2
+Model training
+We train the full system end-to-end with a hand-trajectory
+L
+1
+L_{1}
+loss against the teacher’s trajectories, KL regularization on boundary and code distributions, and standard activity and muscle-effort regularizers following
+Lazzari and Saxena [18]
+. The encoder additionally maintains a task-identity readout from its segment-1 pooled representation, providing a learning signal for the encoder’s representation that is a separate MLP head from the one that outputs the code logits. Two auxiliary losses improve training stability and sharpen code routing: a behavioral discriminator that predicts the active code from segment-pooled muscle commands (DIAYN,
+Eysenbach et al. 6
+), which reads only the six-dimensional muscle output and predicts the code that produced it; and an
+L
+1
+L_{1}
+loss between student and teacher muscle excitations. Neither auxiliary loss directly determines the assignment of tasks to codes: the discriminator operates on muscle output rather than routing, and excitation matching shapes muscle commands rather than code logits. We show in Supplementary Figure
+8
+that both auxiliary losses can be ablated without losing the architectural transfer learning advantage.
+We train the student only on compound trajectories (FullReach, FullCircleClk, FullCircleCClk, Figure-8, Figure-8 Inv) and never on the half-task primitives that compose them. Any decomposition into reusable half extension and retraction primitives must therefore arise from training rather than from being explicitly demonstrated as a half movement.
+4
+Results
+4.1
+Compound performance and meaningful code routing
+Figure 3:
+Student execution of compound movements.
+Top row:
+Hand-trajectory L1 error of the trained student under all 25 forced (extension code, retraction code) pairs, for each of the five compound tasks. Rows index the five extension codes (
+z
+0
+z_{0}
+–
+z
+4
+z_{4}
+); columns index the five retraction codes (
+z
+5
+z_{5}
+–
+z
+9
+z_{9}
+). Stars mark the natural code pair selected by the encoder.
+Bottom row:
+Expert (black) and student (blue, dashed) hand trajectories under the encoder’s natural code choice. Green dots mark the start position.
+We first verify that the student successfully reproduces the teacher’s compound movements (Figure
+3
+, bottom row). Trained only on compound trajectories and without ever being supplied the rule as input, the student traces the expert circles, figure-eights, and reaches with end-to-end hand L1 of approximately order
+10
+−
+2
+10^{-2}
+m on all five tasks. The reach is essentially exact; the figure-eights show closed-loop wobble deviations, but recover the general shape.
+The more revealing analysis is the forced-code sweep (Figure
+3
+, top row). For each compound task, we run the trained decoder under all 25 possible (extension code, retraction code) combinations and measure hand-trajectory error against the expert. If the discovered codes index meaningful primitives, forcing the model to use the wrong code should degrade behavior. If instead the codes are interchangeable, the heatmaps should be roughly uniform.
+The pattern in the extension dimension shows specialized codes. Each task’s natural extension code lies in a distinct row: Reach selects
+z
+2
+z_{2}
+, Circle CW selects
+z
+0
+z_{0}
+, Circle CCW selects
+z
+3
+z_{3}
+, Figure-8 selects
+z
+1
+z_{1}
+, and Figure-8 Inverse selects
+z
+4
+z_{4}
+. Forcing any other extension code raises error substantially. All five extension codes are populated, with a one-to-one assignment from tasks to codes. The training signal carries task-discriminative information (the encoder receives an auxiliary task readout, and the muscle output is matched to the teacher’s task-specific commands) but does not specify the assignment from tasks to codes. The network is free to consolidate multiple tasks onto a single code or to populate the available codes one-to-one, and we observe the latter.
+The retraction dimension is partially shared rather than one-to-one: Reach and Circle CW both select
+z
+5
+z_{5}
+while Circle CCW, Figure-8, and Figure-8 Inverse all select
+z
+7
+z_{7}
+. Within a task’s preferred extension code, swapping the retraction code from
+z
+5
+z_{5}
+to
+z
+9
+z_{9}
+produces only modest changes in trajectory error. This asymmetry between extensions and retractions tracks from the fact that the task prediction of the encoder is read out from the midpoint of the trial (specifically, the task readout is applied only to the segment-1 encoding) and the kinematics of the task suite (several compound retractions converge to similar end-state trajectories).
+4.2
+Emergent Low-Rank Structure
+Figure 4:
+Emergent low-rank structure in the adapter bank.
+(A)
+Held-out hand
+L
+1
+L_{1}
+per task and mean over training.
+(B)
+Effective rank (95% variance) of three quantities computed from closed-loop rollouts: the recurrent core’s hidden-state manifold, the per-adapter perturbation subspace (averaged across adapters), and the union of all adapter perturbations. Shaded bands are bootstrap standard errors.
+We now ask whether the trained architecture exhibits the particular structural assumption that was made within
+Logiaco et al. [12]
+: motifs that are individually low-dimensional and jointly span the cortical state space. Recall that we impose no rank constraint on the motif adapters, because each is initialized as a full-rank residual modulator with an unconstrained
+H
+→
+H
+H\to H
+map. Any low-rank structure they develop in training is therefore a property the architecture discovers, not one we imposed.
+Figure
+4
+A shows that all five compound tasks learn simultaneously. We characterize the dimensionality of the trained adapter bank’s perturbation space relative to the dimensionality of the recurrent core’s hidden-state manifold (Figure
+4
+B). The recurrent core’s full hidden-state manifold reaches an effective rank of
+∼
+30
+\sim 30
+by end of training (out of the available
+H
+=
+256
+H=256
+dimensions), indicating the core develops a structured low-dimensional manifold. Each individual adapter’s perturbation subspace converges to an effective rank of only
+∼
+5
+\sim 5
+–
+6
+6
+, which is nearly an order of magnitude below the available adapter dimensionality. And the union of all ten adapters’ perturbations spans an effective rank of
+∼
+28
+\sim 28
+, nearly matching the core’s full hidden-state manifold. The architecture discovers low-rank perturbations as a learned solution rather than as an architectural commitment.
+These geometric properties are aggregate features of the adapter bank. They describe what the trained motifs are, not how they are organized relative to specific tasks. We turn next to that question, comparing the dynamical and representational structure of the student to the teacher across different movement types.
+4.3
+Shared core, separated representations
+Figure 5:
+Teacher vs. student dynamics and representational geometry.
+Pairwise dynamical similarity (DSA distance, top row; lower means more similar dynamics) and principal-subspace overlap (bottom row; mean squared cosine of principal angles between the dominant cortical activity subspaces, higher means more shared geometry) between the five compound tasks, computed for the teacher (left) and the student (right).
+We now compare the dynamical and representational organization of the trained student to the teacher, a vanilla closed-loop multitask rule input-conditioned RNN. The two networks were trained on the same compound movements, although our network was only trained on compound movements while the teacher’s training also included half extension-only movements. The teacher is a recurrent network that is modulated by a one-hot rule input, while the student is also a recurrent network but is modulated by learned adapters. We characterize each network along two complementary axes:
+representational geometry
+(how recurrent hidden state activity for different tasks occupies the state space, measured via principal-subspace overlap) and
+dynamical structure
+(how the underlying recurrent dynamics differ across tasks, measured via DSA). Figure
+5
+shows that this architectural difference produces a sharp dissociation along the representational axis, with corresponding structure along the dynamical axis.
+Representational geometry.
+Following
+Lazzari and Saxena [18]
+, we compute the principal-subspace overlap between pairs of tasks via principal-angle analysis. For each task
+A
+A
+, we collect recurrent hidden state activity over the trajectory into a matrix
+𝐗
+A
+∈
+ℝ
+N
+×
+T
+\mathbf{X}_{A}\in\mathbb{R}^{N\times T}
+(
+N
+=
+256
+N=256
+units,
+T
+T
+timesteps) and extract the top
+m
+m
+principal components
+𝐏
+A
+∈
+ℝ
+N
+×
+m
+\mathbf{P}_{A}\in\mathbb{R}^{N\times m}
+explaining
+≥
+95
+%
+\geq 95\%
+of task variance. We use
+m
+teacher
+=
+12
+m_{\text{teacher}}=12
+and
+m
+student
+=
+25
+m_{\text{student}}=25
+, each matching its network’s typical effective rank under the
+95
+%
+95\%
+variance threshold. The pairwise principal-subspace overlap between tasks
+A
+A
+and
+B
+B
+is then
+1
+m
+​
+∑
+i
+=
+1
+m
+cos
+2
+⁡
+θ
+i
+\frac{1}{m}\sum_{i=1}^{m}\cos^{2}\theta_{i}
+where
+{
+cos
+⁡
+θ
+i
+}
+i
+=
+1
+m
+=
+svd
+⁡
+(
+𝐏
+A
+⊤
+​
+𝐏
+B
+)
+\{\cos\theta_{i}\}_{i=1}^{m}=\mathrm{svd}\!\left(\mathbf{P}_{A}^{\top}\mathbf{P}_{B}\right)
+and
+θ
+i
+\theta_{i}
+are the principal angles between the two subspaces. The teacher’s pairwise overlap (Figure
+5
+, bottom-left) is uniformly high, with off-diagonal mean
+0.69
+0.69
+. Task representations live in nearly the same recurrent subspace, consistent with the shared-manifold organization reported by
+Lazzari and Saxena [18]
+. The student’s overlap (bottom-right) is uniformly low, with off-diagonal mean
+0.18
+0.18
+, less than
+2
+×
+2\times
+its random baseline. Task representations in the student are highly separated in state space. This is the core empirical realization of the framework from
+Logiaco et al. [12]
+: a shared substrate modulated by discrete perturbations into minimally-overlapping subspaces.
+Dynamical structure.
+We assess the similarity of recurrent dynamics across tasks using Dynamical Similarity Analysis (DSA,
+Ostrow et al. 19
+), again following the protocol of
+Lazzari and Saxena [18]
+.
+The teacher’s DSA matrix (Figure
+5
+, top-left) is uniformly low, with off-diagonal mean
+0.12
+0.12
+: dynamics are similar across all task pairs. This is the within-manifold dynamical reuse that produces the teacher’s single shared subspace. The student’s DSA matrix (top-right) tells a different story. Off-diagonal mean is
+0.25
+0.25
+, materially higher than the teacher’s, but the values are not uniform in that they are organized along behavioral axes. Pairs sharing rotational sense have low DSA distance (Circle CW vs. Figure-8 Inverse:
+0.05
+0.05
+; Circle CCW vs. Reach:
+0.11
+0.11
+), while rotation-opposite pairs separate sharply (Circle CW vs. Circle CCW:
+0.44
+0.44
+; Circle CCW vs. Figure-8 Inverse:
+0.42
+0.42
+). The adapters do not produce small residual perturbations of a strictly common dynamical system, but rather genuinely distinct dynamical systems organized by behavioral kinematics.
+These two findings are complementary. The teacher reuses both dynamics and representations: its compositional structure lives in a single shared subspace, modulated by explicit rule inputs. The student factors the problem differently. Its recurrent
+substrate
+is shared: a single LSTM, the same recurrence, the same input projection, and the same readout. However, the adapter perturbations introduce structured dynamical differences and place task representations in highly separated subspaces. Where the teacher’s compositional structure is tangled within a single manifold, the student’s is geometrically factored.
+4.4
+Compositional transfer to a novel two-petal trajectory
+Figure 6:
+Out-of-distribution compositional transfer.
+(A)
+The two-petal target trajectory, composed of four movement segments stitched together in a novel combination.
+(B)
+Hand
+L
+1
+L_{1}
+during transfer optimization, in which both networks are frozen and a 10-dimensional soft policy over the network’s task interface is optimized for 350 steps via gradient descent. Final teacher
+L
+1
+≈
+0.04
+L_{1}\approx 0.04
+; final student
+L
+1
+≈
+0.005
+L_{1}\approx 0.005
+.
+(C)
+Final teacher (top) and student (bottom) hand trajectories under the optimized policies. Open circle marks the home position; star marks the reach target.
+(D)
+Final policies. Top: teacher rule-input weights over time. Bottom: student adapter-code weights.
+The previous section established that the student’s task representations occupy highly seperable subspaces while the teacher’s collapse into a single shared manifold. If this geometric factoring is what enables compositional reuse, then mixing primitives to compose a novel trajectory should be substantially easier in the student. We test this prediction directly.
+We construct a synthetic four-segment trajectory (Figure
+6
+A) that splices primitive movements in pairings neither network was trained on. Segment 1 is a straight extension followed by Segment 2’s curved retraction, which contains a kinematic discontinuity at the target where the network must transition from a straight-line motor program to a curved-arc one. Segment 3 is a curved extension followed by Segment 4’s straight retraction and represents the same discontinuity in the opposite direction. Neither (straight ext, curved ret) nor (curved ext, straight ret) appeared in either network’s training data. We freeze both networks and optimize a
+10
+10
+-dimensional soft policy over the network’s task interface (only learning a
+T
+×
+10
+T\times 10
+matrix): rule-input weights for the teacher and adapter-code weights for the student. We use gradient descent on the hand-trajectory
+L
+1
+L_{1}
+to the two-petal target (Figure
+6
+B). Both networks use the same optimizer, the same target, the same initialization heuristic, and the same evaluation procedure. The only thing that differs is the frozen substrate.
+The student tracks the target to within
+L
+1
+=
+0.005
+L_{1}=0.005
+while the teacher plateaus at
+L
+1
+∼
+0.04
+L_{1}\sim 0.04
+, an order of magnitude worse (Figure
+6
+B,C). The student’s optimized policy (Figure
+6
+D, bottom) shows that mixing concentrates around the segment transitions, but extends into within-segment timesteps as well (most prominently during Segment 3). The student also produces qualitatively distinct retractions across the two compositions:
+z
+7
+z_{7}
+(producing a curved retraction) follows the straight Segment-1 extension, while
+z
+5
+z_{5}
+(straight) follows the curved Segment-3 extension. Although forced-code analysis (Figure
+3
+) showed that the choice of retraction code mattered little for in-distribution compound performance, in this OOD setting the student’s selection policy meaningfully differentiates retraction primitives to match the trajectory’s demands. The teacher’s policy (Figure
+6
+D, top), in principle, could mix multiple rule inputs to compose the target (and a few timesteps show such co-activation), but the transfer optimization consequently gravitates toward solutions where one rule dominates at a time, leaving the teacher unable to manage transitions within novel splice-compositions. The architectural advantage holds on a second more difficult out-of-distribution shape (Supplementary Figure
+7
+). The student’s advantage is preserved when both networks are restricted to hard discrete selection at each timestep (
+2.5
+×
+2.5\times
+gap; Supplementary
+Figure
+10
+).
+5
+Discussion
+We present a novel architecture for learning motor options end-to-end from compound motor demonstrations. The architecture, a shared recurrent core modulated by a bank of low-rank adapters which are selected by a discrete code, is inspired by the thalamocortical circuit principle of
+Logiaco et al. [12]
+, in which a shared cortical substrate has low-rank perturbations supplied by thalamic units, and the basal ganglia (BG) select which perturbation is active at each moment. Although each adapter is initialized as a full-rank residual modulator, learning discovers emergent low-rank perturbations of the core network’s hidden state (Figure
+4
+), reproducing the structural commitment of
+Logiaco et al. [12]
+. Resulting task representations occupy highly separated subspaces of the recurrent state space, while the underlying recurrent dynamics retain a structured selective sharing organized by behavioral kinematics (Figure
+5
+). This geometric factoring supports compositional generalization (Figure
+6
+).
+Several recent papers address the broader problem of compositionality in recurrent networks from complementary angles.
+Bakermans et al. [20]
+and
+Shan et al. [13]
+learn compositional structure through probabilistic task inference, decomposing tasks into a basis of latent factors that combine generatively. Our adapter library serves an analogous compositional role through learned "neural primitives" in the form of residual adapters, without committing to a prespecified factor basis or generative model. Closely related architecturally,
+Costacurta et al. [21]
+introduce neuromodulated RNNs in which a continuous modulatory signal scales rank-1 components of a low-rank recurrent network, demonstrating generalization to new held-out versions of tasks via newly learned gain patterns. We instead focus on the problem of
+compositional generalization
+by showing our trained adapters can be resequenced into novel combinations, in principle enabling an unbounded behavioral repertoire from a finite primitive library.
+Duncker et al. [4]
+corroborates our findings of separate task subspaces by showing that orthogonalizing dynamics across tasks mitigates catastrophic forgetting.
+Our architecture has a natural mapping onto the circuit loop between cortex, thalamus, and BG
+[
+22
+]
+. The shared recurrent core corresponds to motor cortex, the adapter bank corresponds to low-rank perturbations supplied by thalamic units
+[
+12
+]
+, and the movement policy that selects which adapter to engage corresponds to action selection via BG. The training procedure has a meta-learning interpretation
+[
+23
+]
+: the recurrent core is shaped on a slow timescale via inferring which high-level options to execute, while the adapter library is learned on a faster timescale: which low-level actions produce a desired movement. Our framework also resolves a long-standing dichotomy in basal ganglia research between high-level action selection
+[
+24
+]
+and low-level kinematic specification
+[
+25
+]
+: selecting a particular adapter’s low-rank perturbation also prescribes a specific kinematic pattern.
+Our current approach has some limitations. Training uses task-identity supervision on the encoder’s segment-1 representation, which shapes how codes are organized. Empirically this produced a clean specialization for extension codes (one per task) alongside partial sharing among retraction codes (Figure
+3
+). A purely unsupervised version of the architecture, which learns a variable number of codes and boundaries from task demands alone, may yield a qualitatively different organization. This organization could either be closer to the kinematic-motif structure observed in biological motor systems, if such systems can be recovered purely by task demands
+[
+26
+]
+, or farther if they are working with extra constraints
+[
+27
+]
+. Identifying the training paradigm that produces the adapter bank that recovers biological motor primitives with minimal supervision is a central question for future work.
+The cortex–thalamus–basal ganglia loop, a circuit for motor flexibility in biology, may help designing motor control in machines
+[
+28
+]
+. The same circuit is also responsible for cognitive flexibility in the brain, such as working memory management or task switching
+[
+29
+,
+30
+,
+31
+]
+. This raises the possibility that the architectural principles we identify for motor compositionality may also be relevant to compositional intelligence more broadly.
+References
+[1]
+T. Flash and B. Hochner
+(2005)
+Motor primitives in vertebrates and invertebrates
+.
+Current opinion in neurobiology
+15
+(
+6
+),
+pp. 660–666
+.
+Cited by:
+§1
+.
+[2]
+J. B. Heald, M. Lengyel, and D. M. Wolpert
+(2021)
+Contextual inference underlies the learning of sensorimotor repertoires
+.
+Nature
+600
+(
+7889
+),
+pp. 489–493
+.
+Cited by:
+§1
+.
+[3]
+K. Khetarpal, M. Riemer, I. Rish, and D. Precup
+(2022)
+Towards continual reinforcement learning: a review and perspectives
+.
+Journal of Artificial Intelligence Research
+75
+,
+pp. 1401–1476
+.
+Cited by:
+§1
+.
+[4]
+L. Duncker, L. Driscoll, K. V. Shenoy, M. Sahani, and D. Sussillo
+(2020)
+Organizing recurrent network dynamics by task-computation to enable continual learning
+.
+Advances in neural information processing systems
+33
+,
+pp. 14387–14397
+.
+Cited by:
+§1
+,
+§5
+.
+[5]
+R. S. Sutton, D. Precup, and S. Singh
+(1999)
+Between mdps and semi-mdps: a framework for temporal abstraction in reinforcement learning
+.
+Artificial intelligence
+112
+(
+1-2
+),
+pp. 181–211
+.
+Cited by:
+§1
+.
+[6]
+B. Eysenbach, A. Gupta, J. Ibarz, and S. Levine
+(2018)
+Diversity is all you need: learning skills without a reward function
+.
+arXiv preprint arXiv:1802.06070
+.
+Cited by:
+§A.1
+,
+§1
+,
+§3.2
+.
+[7]
+T. Kipf, Y. Li, H. Dai, V. Zambaldi, A. Sanchez-Gonzalez, E. Grefenstette, P. Kohli, and P. Battaglia
+(2019)
+Compile: compositional imitation learning and execution
+.
+In
+International Conference on Machine Learning
+,
+pp. 3418–3428
+.
+Cited by:
+§1
+,
+§3.1.2
+,
+§3.1.2
+.
+[8]
+P. Bacon, J. Harb, and D. Precup
+(2017)
+The option-critic architecture
+.
+In
+Proceedings of the AAAI conference on artificial intelligence
+,
+Vol.
+31
+.
+Cited by:
+§1
+.
+[9]
+E. A. Amematsro, E. M. Trautmann, N. J. Marshall, L. Abbott, M. N. Shadlen, D. M. Wolpert, and M. M. Churchland
+(2025)
+Motor cortex flexibly deploys a high-dimensional repertoire of subskills
+.
+bioRxiv
+.
+Cited by:
+§1
+.
+[10]
+S. Tafazoli, F. M. Bouchacourt, A. Ardalan, N. T. Markov, M. Uchimura, M. G. Mattar, N. D. Daw, and T. J. Buschman
+(2026)
+Building compositional tasks with shared neural subspaces
+.
+Nature
+650
+(
+8100
+),
+pp. 164–172
+.
+Cited by:
+§1
+.
+[11]
+C. Weinreb, L. T. Kannan, A. Newman-Boulle, T. Sainburg, W. F. Gillis, A. Plotnikoff, S. Makowska, J. E. Pearl, M. A. M. Osman, S. W. Linderman,
+et al.
+(2026)
+Spontaneous behavior is a succession of self-directed tasks
+.
+Neuron
+.
+Cited by:
+§1
+.
+[12]
+L. Logiaco, L. Abbott, and S. Escola
+(2021)
+Thalamic control of cortical dynamics in a model of flexible motor sequencing
+.
+Cell reports
+35
+(
+9
+).
+Cited by:
+§1
+,
+§1
+,
+Figure 1
+,
+§2
+,
+§2
+,
+§2
+,
+§4.2
+,
+§4.3
+,
+§5
+,
+§5
+.
+[13]
+H. Shan, S. Minni, and L. Duncker
+(2025)
+Separating the what and how of compositional computation to enable reuse and continual learning
+.
+arXiv preprint arXiv:2510.20709
+.
+Cited by:
+§1
+,
+§5
+.
+[14]
+E. J. Hu, Y. Shen, P. Wallis, Z. Allen-Zhu, Y. Li, S. Wang, L. Wang, W. Chen,
+et al.
+(2022)
+Lora: low-rank adaptation of large language models.
+.
+Iclr
+1
+(
+2
+),
+pp. 3
+.
+Cited by:
+§1
+.
+[15]
+C. Huang, Q. Liu, B. Y. Lin, T. Pang, C. Du, and M. Lin
+(2023)
+Lorahub: efficient cross-task generalization via dynamic lora composition
+.
+arXiv preprint arXiv:2307.13269
+.
+Cited by:
+§1
+.
+[16]
+Z. Jia, A. Wang, X. Qu, X. Yang, and J. Wang
+(2025)
+Hierarchical-task-aware multi-modal mixture of incremental lora experts for embodied continual learning
+.
+In
+Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)
+,
+pp. 28415–28427
+.
+Cited by:
+§1
+.
+[17]
+D. Li, Y. Ma, N. Wang, Z. Ye, Z. Cheng, Y. Tang, Y. Zhang, L. Duan, J. Zuo, C. Yang,
+et al.
+(2024)
+Mixlora: enhancing large language models fine-tuning with lora-based mixture of experts
+.
+arXiv preprint arXiv:2404.15159
+.
+Cited by:
+§1
+.
+[18]
+J. Lazzari and S. Saxena
+(2025)
+Multitasking recurrent networks utilize compositional strategies for control of movement
+.
+bioRxiv
+,
+pp. 2025–09
+.
+Cited by:
+§A.2
+,
+§A.3
+,
+§A.4
+,
+§A.4
+,
+§1
+,
+Figure 2
+,
+§3.1.1
+,
+§3.1
+,
+§3.2
+,
+§4.3
+,
+§4.3
+.
+[19]
+M. Ostrow, A. Eisen, L. Kozachkov, and I. Fiete
+(2023)
+Beyond geometry: comparing the temporal structure of computation in neural circuits with dynamical similarity analysis
+.
+Advances in Neural Information Processing Systems
+36
+,
+pp. 33824–33837
+.
+Cited by:
+§A.4
+,
+§4.3
+.
+[20]
+J. J. Bakermans, P. Tano, R. Riveland, C. Findling, and A. Pouget
+(2025)
+Compositional meta-learning through probabilistic task inference
+.
+arXiv preprint arXiv:2510.01858
+.
+Cited by:
+§5
+.
+[21]
+J. C. Costacurta, S. Bhandarkar, D. Zoltowski, and S. W. Linderman
+(2024)
+Structured flexibility in recurrent neural networks via neuromodulation
+.
+Advances in Neural Information Processing Systems
+37
+,
+pp. 1954–1972
+.
+Cited by:
+§5
+.
+[22]
+I. Silkis
+(2001)
+The cortico-basal ganglia-thalamocortical circuit with synaptic plasticity. ii. mechanism of synergistic modulation of thalamic activity via the direct and indirect pathways through the basal ganglia
+.
+Biosystems
+59
+(
+1
+),
+pp. 7–14
+.
+Cited by:
+§5
+.
+[23]
+J. X. Wang
+(2021)
+Meta-learning in natural and artificial intelligence
+.
+Current Opinion in Behavioral Sciences
+38
+,
+pp. 90–95
+.
+Cited by:
+§5
+.
+[24]
+J. W. Mink
+(1996)
+The basal ganglia: focused selection and inhibition of competing motor programs
+.
+Progress in neurobiology
+50
+(
+4
+),
+pp. 381–425
+.
+Cited by:
+§5
+.
+[25]
+A. K. Dhawale, S. B. Wolff, R. Ko, and B. P. Ölveczky
+(2021)
+The basal ganglia control the detailed kinematics of learned motor skills
+.
+Nature neuroscience
+24
+(
+9
+),
+pp. 1256–1269
+.
+Cited by:
+§5
+.
+[26]
+R. Cao and D. Yamins
+(2024)
+Explanatory models in neuroscience, part 2: functional intelligibility and the contravariance principle
+.
+Cognitive Systems Research
+85
+,
+pp. 101200
+.
+Cited by:
+§5
+.
+[27]
+V. Gritsenko, R. L. Hardesty, M. T. Boots, and S. Yakovenko
+(2016)
+Biomechanical constraints underlying motor primitives derived from the musculoskeletal anatomy of the human arm
+.
+PLoS One
+11
+(
+10
+),
+pp. e0164050
+.
+Cited by:
+§5
+.
+[28]
+J. Merel, M. Botvinick, and G. Wayne
+(2019)
+Hierarchical motor control in mammals and machines
+.
+Nature communications
+10
+(
+1
+),
+pp. 5489
+.
+Cited by:
+§5
+.
+[29]
+R. C. O’Reilly and M. J. Frank
+(2006)
+Making working memory work: a computational model of learning in the prefrontal cortex and basal ganglia
+.
+Neural computation
+18
+(
+2
+),
+pp. 283–328
+.
+Cited by:
+§5
+.
+[30]
+E. K. Miller and T. J. Buschman
+(2008)
+Rules through recursion: how interactions between the frontal cortex and basal ganglia may build abstract, complex rules from concrete, simple ones
+.
+Neuroscience of rule-guided behavior
+,
+pp. 419–440
+.
+Cited by:
+§5
+.
+[31]
+O. Hikosaka and M. Isoda
+(2010)
+Switching from automatic to controlled behavior: cortico-basal ganglia mechanisms
+.
+Trends in cognitive sciences
+14
+(
+4
+),
+pp. 154–161
+.
+Cited by:
+§5
+.
+[32]
+O. Codol, J. A. Michaels, M. Kashefi, J. A. Pruszynski, and P. L. Gribble
+(2024)
+MotorNet, a python toolbox for controlling differentiable biomechanical effectors with artificial neural networks
+.
+Elife
+12
+,
+pp. RP88591
+.
+Cited by:
+§A.3
+.
+Appendix A
+Supplementary Methods
+A.1
+Architecture details
+The student is implemented as a single module containing an encoder, a decoder, and a bank of adapters that share a common LSTM core. All modules use hidden dimension
+H
+=
+256
+H=256
+.
+Shared LSTM core.
+A single LSTM of width
+H
+=
+256
+H=256
+is used both for encoder and decoder forward passes. The recurrent parameters are detached from the autograd graph during the decoder pass, so the closed-loop hand-trajectory loss flows only through the decoder input projection, the adapter bank, and the muscle readout, never through the LSTM recurrence.
+Input projections.
+The encoder and decoder receive different observation subsets and use separate input projection MLPs (each a two-layer MLP with ReLU activation, hidden width
+H
+=
+256
+H{=}256
+):
+•
+Encoder input: 24-dim concatenation of the 18-dim sliced observation (full observation with the 10-dim rule input stripped) and the 6-dim teacher muscle command.
+•
+Decoder input: 18-dim sliced observation only (no muscle command, no rule input).
+Encoder heads.
+Three heads read from the encoder LSTM hidden state. The boundary and code heads are two-layer MLPs (
+H
+→
+H
+→
+⋅
+H\to H\to\cdot
+) with a ReLU between layers; the task head is also a two-layer MLP with ReLU.
+•
+Boundary head
+: outputs a scalar logit per timestep, softmaxed across time within each segment to yield
+p
+⁡
+(
+b
+)
+p(b)
+.
+•
+Code head
+: outputs
+K
+=
+10
+K=10
+logits per segment. Sampled with the straight-through Gumbel-softmax estimator at temperature
+τ
+z
+=
+0.1
+\tau_{z}=0.1
+, yielding a one-hot
+z
+m
+,
+k
+z_{m,k}
+in the forward pass with gradients flowing through the soft distribution.
+•
+Task head
+(auxiliary): two-layer MLP (
+H
+→
+64
+→
+5
+H\to 64\to 5
+) reading from the encoder’s segment-1 pooled hidden state, predicting task identity. Loss propagates only through the encoder.
+Adapter bank.
+Each of the
+K
+=
+10
+K=10
+adapters is a two-layer nonlinear residual modulator:
+Δ
+k
+​
+(
+𝐡
+)
+=
+𝐖
+k
+out
+​
+tanh
+⁡
+(
+𝐖
+k
+in
+​
+𝐡
+)
+,
+\Delta_{k}(\mathbf{h})=\mathbf{W}_{k}^{\mathrm{out}}\tanh\!\left(\mathbf{W}_{k}^{\mathrm{in}}\mathbf{h}\right),
+where
+𝐖
+k
+in
+,
+𝐖
+k
+out
+∈
+ℝ
+H
+×
+H
+\mathbf{W}_{k}^{\mathrm{in}},\mathbf{W}_{k}^{\mathrm{out}}\in\mathbb{R}^{H\times H}
+. No bias terms. The output weights
+𝐖
+k
+out
+\mathbf{W}_{k}^{\mathrm{out}}
+are scaled by a factor of
+2
+2
+at initialization to produce non-negligible early perturbations and accelerate adapter learning. No rank constraint is imposed on
+Δ
+k
+\Delta_{k}
+in the architecture; the empirical rank of the learned adapter perturbation in the cortical hidden state is analyzed in Section
+4
+.
+Phase-split mask.
+Codes are partitioned by movement phase: codes
+z
+0
+,
+…
+,
+z
+K
+/
+2
+−
+1
+z_{0},\ldots,z_{K/2-1}
+are reserved for segment 0 (extension) and
+z
+K
+/
+2
+,
+…
+,
+z
+K
+−
+1
+z_{K/2},\ldots,z_{K-1}
+for segment 1 (retraction). The phase split is implemented via hard masking of the invalid logits before sampling and is the only structural prior we impose on code identities; the assignment of tasks to specific codes within each phase emerges from training.
+Muscle readout.
+A linear layer maps the (adapter-perturbed) hidden state
+𝐡
+~
+t
+\tilde{\mathbf{h}}_{t}
+to a 6-dimensional pre-activation, passed through a sigmoid to produce the muscle excitation vector supplied to the differentiable arm.
+DIAYN discriminator.
+The DIAYN
+[
+6
+]
+discriminator is implemented in
+binned_muscle
+mode: muscle commands within each segment are pooled into
+n
+bins
+=
+3
+n_{\text{bins}}=3
+temporal bins and concatenated to form a
+3
+×
+6
+=
+18
+3\times 6=18
+-dim feature, fed to a two-layer MLP (
+18
+→
+64
+→
+K
+/
+2
+18\to 64\to K/2
+) that predicts the active code restricted to the segment’s valid phase subset. Separate discriminators are used for extension and retraction segments. The discriminator reads only muscle output, never cortical state.
+A.2
+Training procedure
+Optimization.
+Training uses Adam with learning rate
+10
+−
+4
+10^{-4}
+, batch size
+32
+32
+, gradient clipping at norm
+1.0
+1.0
+, and no weight decay. The full system is trained end-to-end for
+30,000
+30{,}000
+iterations. Encoder and decoder use two separate forward passes of the shared LSTM per training step.
+Closed-loop rollouts.
+At each training iteration, the encoder forward pass reads the full teacher demonstration (observation and muscle command) and produces
+p
+⁡
+(
+b
+)
+p(b)
+,
+p
+⁡
+(
+z
+)
+p(z)
+, and the task-identity logits. The decoder forward pass uses the sampled
+z
+m
+,
+k
+z_{m,k}
+and
+σ
+m
+​
+(
+t
+)
+\sigma_{m}(t)
+to roll out the closed-loop arm trajectory using only body-state feedback. The hand-trajectory
+L
+1
+L_{1}
+loss is computed between the student’s closed-loop rollout at the current training step and the teacher’s pre-recorded hand trajectory for the same trial. Both trajectories are produced by closed-loop rollouts through the same differentiable arm: the teacher’s was recorded once during demonstration generation; the student’s is produced fresh each training step from its current parameters.
+Detached recurrence on decoder pass.
+The LSTM recurrent parameters are shared between encoder and decoder modes but are detached during the decoder pass: the decoder’s gradient flows only into the decoder input projection, the adapter bank, and the muscle readout. The encoder pass updates the LSTM recurrence through the encoder’s segmentation and code-inference objectives, never directly through closed-loop motor error.
+Loss composition.
+The total loss decomposes into three components corresponding to the encoder’s segmentation/inference objective, the decoder’s closed-loop control objective, and a set of auxiliary losses:
+ℒ
+enc
+\displaystyle\mathcal{L}_{\mathrm{enc}}
+=
+β
+z
+​
+ℒ
+KL
+z
++
+β
+b
+​
+ℒ
+KL
+b
+\displaystyle=\beta_{z}\mathcal{L}_{\mathrm{KL}_{z}}+\beta_{b}\mathcal{L}_{\mathrm{KL}_{b}}
+ℒ
+dec
+\displaystyle\mathcal{L}_{\mathrm{dec}}
+=
+ℒ
+hand
++
+λ
+rate
+​
+ℒ
+rate
++
+λ
+musc
+​
+ℒ
+musc
+\displaystyle=\mathcal{L}_{\mathrm{hand}}+\lambda_{\mathrm{rate}}\mathcal{L}_{\mathrm{rate}}+\lambda_{\mathrm{musc}}\mathcal{L}_{\mathrm{musc}}
+ℒ
+aux
+\displaystyle\mathcal{L}_{\mathrm{aux}}
+=
+β
+DIAYN
+​
+ℒ
+DIAYN
++
+λ
+exc
+​
+ℒ
+exc
++
+λ
+task
+​
+ℒ
+task
+\displaystyle=\beta_{\mathrm{DIAYN}}\mathcal{L}_{\mathrm{DIAYN}}+\lambda_{\mathrm{exc}}\mathcal{L}_{\mathrm{exc}}+\lambda_{\mathrm{task}}\mathcal{L}_{\mathrm{task}}
+ℒ
+\displaystyle\mathcal{L}
+=
+ℒ
+enc
++
+ℒ
+dec
++
+ℒ
+aux
+\displaystyle=\mathcal{L}_{\mathrm{enc}}+\mathcal{L}_{\mathrm{dec}}+\mathcal{L}_{\mathrm{aux}}
+The encoder objective
+ℒ
+enc
+\mathcal{L}_{\mathrm{enc}}
+regularizes the boundary and code distributions toward priors:
+ℒ
+KL
+z
+\mathcal{L}_{\mathrm{KL}_{z}}
+is the KL between the encoder’s per-segment code distribution and a uniform prior over the valid code subset;
+ℒ
+KL
+b
+\mathcal{L}_{\mathrm{KL}_{b}}
+is the KL between the boundary distribution and a per-sample Poisson prior centered on the trial midpoint.
+The decoder objective
+ℒ
+dec
+\mathcal{L}_{\mathrm{dec}}
+shapes the closed-loop motor output:
+ℒ
+hand
+\mathcal{L}_{\mathrm{hand}}
+is the per-timestep
+L
+1
+L_{1}
+between student and teacher hand trajectories averaged over the trial;
+ℒ
+rate
+\mathcal{L}_{\mathrm{rate}}
+and
+ℒ
+musc
+\mathcal{L}_{\mathrm{musc}}
+are
+L
+1
+L_{1}
+regularizers on decoder hidden activity and muscle excitations following
+Lazzari and Saxena [18]
+.
+The auxiliary losses
+ℒ
+aux
+\mathcal{L}_{\mathrm{aux}}
+provide additional learning signal:
+ℒ
+DIAYN
+\mathcal{L}_{\mathrm{DIAYN}}
+is the cross-entropy of the discriminator predicting the active code from segment-pooled muscle commands;
+ℒ
+exc
+\mathcal{L}_{\mathrm{exc}}
+is an
+L
+1
+L_{1}
+loss between student and teacher muscle excitations;
+ℒ
+task
+\mathcal{L}_{\mathrm{task}}
+is the cross-entropy of the task-identity readout on the encoder’s segment-1 representation. All three auxiliary losses can be ablated without losing the architectural transfer advantage (Figure
+8
+).
+Loss weights for the headline configuration are
+β
+z
+=
+0.3
+\beta_{z}=0.3
+,
+β
+b
+=
+0.1
+\beta_{b}=0.1
+,
+β
+DIAYN
+=
+1.0
+\beta_{\mathrm{DIAYN}}=1.0
+,
+λ
+rate
+=
+10
+−
+3
+\lambda_{\mathrm{rate}}=10^{-3}
+,
+λ
+musc
+=
+10
+−
+2
+\lambda_{\mathrm{musc}}=10^{-2}
+,
+λ
+exc
+=
+0.5
+\lambda_{\mathrm{exc}}=0.5
+,
+λ
+task
+=
+0.5
+\lambda_{\mathrm{task}}=0.5
+.
+Each training run was performed on a single NVIDIA GeForce GTX 1080 Ti GPU and took approximately 48 hours of wall-clock time to complete 30,000 iterations.
+A.3
+Task and data details
+Biomechanical environment.
+We use the
+motornet
+[
+32
+]
+RigidTendonArm26
+effector with the
+MujocoHillMuscle
+model: a two-link arm with six muscles (two per joint plus two biarticular). Arm parameters match those used by
+Lazzari and Saxena [18]
+.
+Compound tasks.
+The student is trained on five compound trajectories (each comprising an extension followed by a retraction):
+•
+FullReach
+: straight extension to target, then straight retraction home.
+•
+FullCircleClk
+: clockwise half-circle outward, clockwise half-circle home.
+•
+FullCircleCClk
+: counter-clockwise half-circle outward, counter-clockwise home.
+•
+Figure8
+: half of a figure-8 outward, second half on return.
+•
+Figure8Inv
+: figure-8 with inverted phase.
+For each task we sample 32 reach conditions (target locations) per training batch. Each trial is a 200-timestep movement.
+Half-task primitives are unseen.
+Although each compound trajectory consists of an extension followed by a retraction, we never expose the student to the half-task primitives in isolation. Any decomposition into reusable extension and retraction codes must arise from segmenting compound demonstrations rather than from explicitly demonstrated primitives.
+A.4
+Analysis methodology
+Effective rank.
+For each adapter
+k
+k
+, we collect the cortical perturbation
+Δ
+k
+​
+(
+𝐡
+t
+)
+\Delta_{k}(\mathbf{h}_{t})
+over a held-out task suite and compute the effective rank as the number of singular values needed to explain
+≥
+95
+%
+\geq 95\%
+of the cumulative variance. Reported with mean
+±
+\pm
+standard error over
+n
+boot
+=
+10
+n_{\text{boot}}=10
+bootstrap resamples.
+Principal-subspace overlap.
+For each task
+A
+A
+, we collect cortical hidden state activity over the trajectory into
+𝐗
+A
+∈
+ℝ
+N
+×
+T
+\mathbf{X}_{A}\in\mathbb{R}^{N\times T}
+(
+N
+=
+256
+N=256
+,
+T
+T
+timesteps) and extract the top
+m
+m
+principal components
+𝐏
+A
+∈
+ℝ
+N
+×
+m
+\mathbf{P}_{A}\in\mathbb{R}^{N\times m}
+explaining
+≥
+95
+%
+\geq 95\%
+of task variance. We use
+m
+teacher
+=
+12
+m_{\mathrm{teacher}}=12
+and
+m
+student
+=
+25
+m_{\mathrm{student}}=25
+, each matching its network’s effective rank under the 95% variance threshold. The pairwise principal-subspace overlap between tasks
+A
+A
+and
+B
+B
+is
+overlap
+⁡
+(
+A
+,
+B
+)
+=
+1
+m
+​
+∑
+i
+=
+1
+m
+cos
+2
+⁡
+θ
+i
+,
+{
+cos
+⁡
+θ
+i
+}
+i
+=
+1
+m
+=
+svd
+⁡
+(
+𝐏
+A
+⊤
+​
+𝐏
+B
+)
+,
+\mathrm{overlap}(A,B)=\frac{1}{m}\sum_{i=1}^{m}\cos^{2}\theta_{i},\quad\{\cos\theta_{i}\}_{i=1}^{m}=\mathrm{svd}\!\left(\mathbf{P}_{A}^{\top}\mathbf{P}_{B}\right),
+where
+θ
+i
+\theta_{i}
+are the principal angles between the two subspaces. The chance baseline is the expected overlap between two random orthonormal
+m
+m
+-dimensional subspaces in
+ℝ
+N
+\mathbb{R}^{N}
+, computed via QR decomposition of Gaussian matrices (
+∼
+0.05
+\sim 0.05
+for
+m
+=
+12
+m=12
+,
+∼
+0.10
+\sim 0.10
+for
+m
+=
+25
+m=25
+). Trajectories used for this analysis are pooled across
+128
+128
+trials per task (
+32
+32
+reach conditions
+×
+4
+\times 4
+repeats).
+Dynamical Similarity Analysis.
+We follow the protocol of
+Lazzari and Saxena [18]
+, computing DSA
+[
+19
+]
+pairwise between tasks. For each task we collect cortical activity into a tensor over conditions, trials, timesteps, and units, PCA-reduce to the network’s effective rank (
+m
+teacher
+=
+12
+m_{\text{teacher}}=12
+,
+m
+student
+=
+25
+m_{\text{student}}=25
+), construct delay-embedded Hankel tensors with lag
+p
+=
+90
+p=90
+, and fit reduced-rank Dynamic Mode Decomposition (DMD) matrices
+𝐀
+A
+,
+𝐀
+B
+\mathbf{A}_{A},\mathbf{A}_{B}
+via Hankel Alternative View of Koopman (HAVOK) at rank
+r
+=
+150
+r=150
+. The DSA distance between tasks is the Procrustes distance under similarity transformation:
+d
+⁡
+(
+𝐀
+A
+,
+𝐀
+B
+)
+=
+min
+𝐂
+∈
+O
+⁡
+(
+r
+)
+⁡
+‖
+𝐀
+A
+−
+𝐂
+​
+𝐀
+B
+​
+𝐂
+−
+1
+‖
+2
+,
+d(\mathbf{A}_{A},\mathbf{A}_{B})=\min_{\mathbf{C}\in O(r)}\|\mathbf{A}_{A}-\mathbf{C}\,\mathbf{A}_{B}\,\mathbf{C}^{-1}\|_{2},
+computed using the
+DSA
+package with
+score_method="euclidean"
+. All DSA hyperparameters match
+Lazzari and Saxena [18]
+.
+Transfer optimization.
+For both teacher and student, we freeze the network and optimize a
+K
+K
+-dimensional soft policy over the network’s task interface (rule-input weights for the teacher, adapter-code weights for the student). Each policy is a learnable matrix of logits over time, softmaxed at temperature
+τ
+=
+0.5
+\tau=0.5
+to produce a per-timestep distribution over the
+K
+=
+10
+K=10
+task interfaces. We optimize hand-trajectory
+L
+1
+L_{1}
+loss against the two-petal target using Adam with learning rate
+0.1
+0.1
+for
+350
+350
+iterations. Both networks use identical optimizer settings, target trajectory, and policy initialization; the only difference is the frozen substrate. The butterfly trajectory uses
+600
+600
+iterations at the same learning rate to accommodate its more complex shape. The softmax temperature in principle allows either policy to mix multiple task interfaces simultaneously at any timestep; differences in how soft each network’s optimized policy ends up therefore reflect each network’s underlying representational structure rather than any architectural asymmetry in the optimization itself.
+Forced-code analysis.
+For the qualitative inspection of code-task assignment (Figure
+3
+), we run the trained student in closed loop while overriding the encoder’s code distribution with a fixed one-hot code per segment. The resulting hand trajectory shows what behavior each adapter
+Δ
+k
+\Delta_{k}
+produces in isolation, factored away from the encoder’s learned code-inference policy.
+Appendix B
+Supplementary Figures
+Figure 7:
+Compositional transfer to a butterfly trajectory.
+A second out-of-distribution test using a four-segment butterfly composed of (Figure-8 extension, Clockwise retraction, Figure-8 Inverse extension, Counter-clockwise retraction); none of these pairings appeared in either network’s training data.
+(A)
+The butterfly target trajectory, with each 50-timestep segment shown in a separate color. Open circle marks the home position; star marks the reach target.
+(B)
+Hand
+L
+1
+L_{1}
+during transfer optimization. Both networks are frozen and a 10-dimensional soft policy over the network’s task interface is optimized for 600 steps. The student reaches hand
+L
+1
+≈
+0.011
+L_{1}\approx 0.011
+, while the teacher plateaus at
+≈
+0.058
+\approx 0.058
+, a
+∼
+5
+×
+\sim 5\times
+gap.
+(C)
+Final teacher (top) and student (bottom) hand trajectories. The student recovers the butterfly’s figure-8-like crossing structure; the teacher’s trajectory is qualitatively distorted.
+(D)
+Final policies. Top: teacher rule-input weights over time. Bottom: student adapter-code weights.
+Figure 8:
+Ablation of auxiliary supervision components across two OOD trajectories.
+We test whether the architectural transfer advantage depends on the two auxiliary losses (
+ℒ
+DIAYN
+\mathcal{L}_{\mathrm{DIAYN}}
+and
+ℒ
+exc
+\mathcal{L}_{\mathrm{exc}}
+) by training two ablated configurations: one with
+β
+DIAYN
+=
+0
+\beta_{\mathrm{DIAYN}}=0
+(No DIAYN), and one with both
+β
+DIAYN
+=
+0
+\beta_{\mathrm{DIAYN}}=0
+and
+λ
+exc
+=
+0
+\lambda_{\mathrm{exc}}=0
+(No DIAYN, no exc). All other architectural choices, hyperparameters, and training details are unchanged. Final transfer trajectories on the two-petal (top) and butterfly (bottom) OOD tasks across the target and three configurations. The full configuration achieves numerically the best transfer hand
+L
+1
+L_{1}
+on both OOD trajectories (two-petal:
+0.005
+0.005
+; butterfly:
+0.011
+0.011
+), and all three configurations achieve transfer well below the teacher baseline (two-petal:
+0.04
+0.04
+, butterfly:
+0.058
+0.058
+). The architectural advantage over the teacher therefore does not depend on the auxiliary supervisions, though auxiliary supervisions provide modest refinement to transfer accuracy.
+Figure 9:
+Adapter bank ablation.
+The previous ablation removed auxiliary supervision components but preserved the adapter architecture. We additionally test whether the adapter bank itself is crucial for the network’s ability to learn the multi-task suite by training two further ablations: one with a single shared adapter (
+K
+=
+1
+K{=}1
+, with all tasks routed through the same modulator), and one with no adapters at all (the cortex must learn all task dynamics within a single shared recurrence). For the latter, we allowed the decoder loss to train the LSTM recurrence.
+Figure 10:
+Compositional transfer under hard discrete policy execution.
+A complementary version of the two-petal transfer experiment in
+Figure
+6
+, in which both networks are constrained to use
+hard one-hot
+selection over their respective task interfaces at every
+timestep. Optimization uses a straight-through estimator: the forward pass
+takes the argmax of the policy logits at each timestep (genuinely discrete
+selection), while gradients flow through the soft softmax distribution
+during backpropagation.
+(A)
+The two-petal target trajectory (same as Figure
+6
+).
+(B)
+Smoothed L1 loss over 350 optimization steps. Both networks are
+optimized with identical Adam settings, target trajectory, and initialization
+heuristic; they differ only in the frozen substrate. Curves show
+median-filtered loss (window 25) followed by Gaussian smoothing (
+σ
+=
+8
+\sigma=8
+)
+to suppress the noise inherent to straight-through estimation. Final mean L1
+over the last 50 steps: student
+0.018
+0.018
+, teacher
+0.040
+0.040
+, a
+2.2
+×
+2.2\times
+gap;
+best L1: student
+0.014
+0.014
+, teacher
+0.036
+0.036
+, a
+2.5
+×
+2.5\times
+gap.
+(C)
+Final teacher (top) and student (bottom) hand trajectories. Even
+under hard discrete selection, the student recovers the qualitative two-petal
+structure (orange and green half-loops), while the teacher’s trajectory is
+contracted and distorted.
+(D)
+Final policies as actually applied to each network: the argmax
+code at each timestep. Top: teacher rule-input selection; bottom: student
+adapter-code selection.

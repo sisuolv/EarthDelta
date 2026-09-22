@@ -1,0 +1,35 @@
+[
+  {
+    "id": "2606.19549v1",
+    "url": "https://arxiv.org/html/2606.19549v1",
+    "retrieved_at_utc": "2026-09-22T03:02:29.262814+00:00",
+    "status": 200,
+    "characters": 67025,
+    "file": "2606.19549v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2604.15557v1",
+    "url": "https://arxiv.org/html/2604.15557v1",
+    "retrieved_at_utc": "2026-09-22T03:02:29.263334+00:00",
+    "status": 200,
+    "characters": 68498,
+    "file": "2604.15557v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2506.06105v1",
+    "url": "https://arxiv.org/html/2506.06105v1",
+    "retrieved_at_utc": "2026-09-22T03:02:33.448844+00:00",
+    "status": 200,
+    "characters": 78015,
+    "file": "2506.06105v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2608.11499v1",
+    "url": "https://arxiv.org/html/2608.11499v1",
+    "retrieved_at_utc": "2026-09-22T03:02:35.435704+00:00",
+    "error": "SSLError: HTTPSConnectionPool(host='arxiv.org', port=443): Max retries exceeded with url: /html/2608.11499v1 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)')))"
+  }
+]

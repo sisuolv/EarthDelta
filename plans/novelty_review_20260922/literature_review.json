@@ -1,0 +1,945 @@
+{
+  "review_date": "2026-09-22",
+  "generated_at_utc": "2026-09-22T03:21:46.756568+00:00",
+  "search_cutoff": "2026-09-22",
+  "search_platform": "arXiv API and primary arXiv HTML/PDF",
+  "scope_note": "Focused research review, not an exhaustive systematic review. Downloaded text is not automatically reviewed. Dates are API metadata, not inferred from arXiv identifiers. Peer-review acceptance is not independently verified.",
+  "research_direction": "Reusable finite intervention-response prediction for goal/action transfer, with strong vector-gain and output-correction baselines",
+  "gpu_executions_for_this_research_review": 0,
+  "external_llm_api_calls_for_this_research_review": 0,
+  "searches": [
+    {
+      "source_file": "arxiv_searches.json",
+      "query": "known_neighbors",
+      "url": "https://export.arxiv.org/api/query?id_list=2608.02528%2C2609.17042%2C2509.22020%2C2405.13063%2C2605.14546%2C2609.12278%2C2603.15990%2C2608.22370%2C2609.08412%2C2603.19325%2C2606.14222%2C2609.03937%2C2605.22222%2C2609.12296%2C2606.08365%2C2510.09734%2C2608.09948%2C2608.07053%2C2608.29998%2C2606.19549%2C2605.17250%2C2506.23424%2C2007.00016%2C1710.08005&max_results=24",
+      "returned_entries": 24
+    },
+    {
+      "source_file": "arxiv_searches.json",
+      "query": "weather_adaptation",
+      "url": "https://export.arxiv.org/api/query?search_query=%28all%3A%22weather+forecasting%22+OR+all%3A%22weather+foundation%22%29+AND+%28all%3Aadapter+OR+all%3Aadaptation+OR+all%3Acorrection+OR+all%3Arouting%29+AND+submittedDate%3A%5B202501010000+TO+202609222359%5D&start=0&max_results=35&sortBy=submittedDate&sortOrder=descending",
+      "returned_entries": 35
+    },
+    {
+      "source_file": "arxiv_searches.json",
+      "query": "parameter_response",
+      "url": "https://export.arxiv.org/api/query?search_query=%28all%3A%22parameter+response%22+OR+all%3A%22intervention+response%22+OR+all%3A%22counterfactual+prediction%22+OR+all%3A%22edit+response%22%29+AND+%28all%3Amodel+OR+all%3Aneural%29+AND+submittedDate%3A%5B202501010000+TO+202609222359%5D&start=0&max_results=35&sortBy=submittedDate&sortOrder=descending",
+      "returned_entries": 35
+    },
+    {
+      "source_file": "arxiv_searches.json",
+      "query": "adapter_utility",
+      "url": "https://export.arxiv.org/api/query?search_query=%28all%3ALoRA+OR+all%3Aadapter%29+AND+%28all%3A%22predicted+utility%22+OR+all%3A%22response+prediction%22+OR+all%3A%22budget-aware%22+OR+all%3A%22test-time+fusion%22+OR+all%3Acounterfactual%29+AND+submittedDate%3A%5B202501010000+TO+202609222359%5D&start=0&max_results=35&sortBy=submittedDate&sortOrder=descending",
+      "returned_entries": 35
+    },
+    {
+      "source_file": "arxiv_searches.json",
+      "query": "dynamics_adaptation",
+      "url": "https://export.arxiv.org/api/query?search_query=%28ti%3A%22world+model%22+OR+all%3A%22PDE+foundation%22%29+AND+%28all%3Aadaptation+OR+all%3Aintervention+OR+all%3Acorrector%29+AND+submittedDate%3A%5B202501010000+TO+202609222359%5D&start=0&max_results=35&sortBy=submittedDate&sortOrder=descending",
+      "returned_entries": 35
+    },
+    {
+      "source_file": "arxiv_searches.json",
+      "query": "forecast_errors",
+      "url": "https://export.arxiv.org/api/query?search_query=%28all%3A%22forecast+error%22+OR+all%3A%22error+correction%22%29+AND+%28all%3A%22test-time%22+OR+all%3Amemory+OR+all%3Acontext%29+AND+%28all%3Aforecast+OR+all%3Adynamics%29+AND+submittedDate%3A%5B202501010000+TO+202609222359%5D&start=0&max_results=35&sortBy=submittedDate&sortOrder=descending",
+      "returned_entries": 35
+    },
+    {
+      "source_file": "arxiv_searches.json",
+      "query": "merging_response",
+      "url": "https://export.arxiv.org/api/query?search_query=%28all%3A%22model+merging%22+OR+all%3A%22weight+space%22%29+AND+%28all%3Aresponse+OR+all%3Asurrogate+OR+all%3Apredicting%29+AND+submittedDate%3A%5B202501010000+TO+202609222359%5D&start=0&max_results=35&sortBy=submittedDate&sortOrder=descending",
+      "returned_entries": 35
+    },
+    {
+      "source_file": "arxiv_searches.json",
+      "query": "forecast_sensitivity",
+      "url": "https://export.arxiv.org/api/query?search_query=%28all%3A%22forecast+sensitivity%22+OR+all%3A%22observation+impact%22+OR+all%3A%22proactive+quality%22%29+AND+submittedDate%3A%5B202501010000+TO+202609222359%5D&start=0&max_results=35&sortBy=submittedDate&sortOrder=descending",
+      "returned_entries": 35
+    },
+    {
+      "source_file": "arxiv_searches.json",
+      "query": "weather_selection",
+      "url": "https://export.arxiv.org/api/query?search_query=%28all%3Aweather+OR+all%3Aatmospheric%29+AND+%28all%3A%22model+selection%22+OR+all%3A%22mixture+of+experts%22+OR+all%3A%22weight+perturbation%22+OR+all%3A%22concept+tuning%22%29+AND+submittedDate%3A%5B202501010000+TO+202609222359%5D&start=0&max_results=35&sortBy=submittedDate&sortOrder=descending",
+      "returned_entries": 35
+    },
+    {
+      "source_file": "additional_neighbors.json",
+      "query": "id_lookup",
+      "url": "https://export.arxiv.org/api/query?id_list=2609.21787%2C2609.21740%2C2609.13257%2C2609.11445%2C2608.09490%2C2607.20887%2C2609.12897%2C2609.19674%2C1606.05312&max_results=9",
+      "returned_entries": 9
+    },
+    {
+      "source_file": "cv_nlp_searches.json",
+      "query": "cv_nlp_selected",
+      "url": "https://export.arxiv.org/api/query?id_list=2603.15990%2C2606.19549%2C2606.08365%2C2604.15557%2C2506.06105%2C2608.11499%2C2604.20313&max_results=7",
+      "returned_entries": 7
+    },
+    {
+      "source_file": "cv_nlp_searches.json",
+      "query": "cv_nlp_effect_predictors",
+      "url": "https://export.arxiv.org/api/query?search_query=%28ti%3ALoRA+OR+ti%3Asteering+OR+ti%3Aintervention+OR+ti%3Amerging%29+AND+%28abs%3A%22predict%22+OR+abs%3A%22response%22+OR+abs%3A%22surrogate%22%29+AND+submittedDate%3A%5B202601010000+TO+202609222359%5D&sortBy=submittedDate&sortOrder=descending&max_results=30",
+      "returned_entries": 30
+    }
+  ],
+  "papers": [
+    {
+      "reference_id": "L01",
+      "arxiv_id": "2609.20051v1",
+      "short_name": "DART",
+      "title": "DART: Distillation-Aware Reparameterization for Training-Free LoRA Reuse in Few-Step Video Diffusion Models",
+      "authors": [
+        "Shihong Li",
+        "Juntao Xu",
+        " JinCao",
+        "Maowen Tang",
+        "Jun Huang",
+        "Jintao Li"
+      ],
+      "published": "2026-09-17T10:58:04Z",
+      "updated": "2026-09-17T10:58:04Z",
+      "primary_url": "https://arxiv.org/abs/2609.20051v1",
+      "domain": "CV/video diffusion",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Sections 3-5, limitations; complete Section 4",
+      "overlap_or_useful_idea": "目标日程上的配对响应校准；分开功能保留与质量",
+      "proposed_transfer_to_earthdelta": "复用幅度/hold/时效变化的响应模型，计入前向校准成本",
+      "interpretation_limits": "非天气；有限局部响应模型，部分 adapter 仍失败，原文主表排除了近零源收益 adapter",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.20051v1.html",
+          "sha256": "4853e0d8fe53f34686ef7565eae370fa6da2150aec0de30b16aca53fc5fde65a"
+        },
+        {
+          "path": "evidence/2609.20051v1.readable.txt",
+          "sha256": "e0f90be715f66b2e5915c03e250e415fef236255c85f14bda9b42ed7c649a597"
+        }
+      ]
+    },
+    {
+      "reference_id": "L02",
+      "arxiv_id": "2609.08618v1",
+      "short_name": "L-State",
+      "title": "Target-Independent Micro-Interventions for Predicting Training Response Across Language-Model Families",
+      "authors": [
+        "Zhongxuan Liu",
+        "Sicheng Zhou",
+        "Hongzhi Wang"
+      ],
+      "published": "2026-09-08T11:54:09Z",
+      "updated": "2026-09-08T11:54:09Z",
+      "primary_url": "https://arxiv.org/abs/2609.08618v1",
+      "domain": "NLP/training response",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Sections 3.1-3.3, 3.6, 4; selected introduction/results",
+      "overlap_or_useful_idea": "共同初态、标准微干预；自由读出与结构算子读出对照",
+      "proposed_transfer_to_earthdelta": "共同 Fs 上的行为探针；按动作/目标留出评价，而非仅响应 RMSE",
+      "interpretation_limits": "原文是微训练而非固定编辑 rollout；跨 family 共享坐标有失败边界",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.08618v1.html",
+          "sha256": "b29619d9e70c7ab312e9983483e529bb98d5742409a1946320e1e7697d30bc0f"
+        },
+        {
+          "path": "evidence/2609.08618v1.readable.txt",
+          "sha256": "8975fc03bcd54d022024cdc06351cab0ee19494ce94838e13eeb45231be94b61"
+        }
+      ]
+    },
+    {
+      "reference_id": "L03",
+      "arxiv_id": "2603.15990v1",
+      "short_name": "W2T",
+      "title": "W2T: LoRA Weights Already Know What They Can Do",
+      "authors": [
+        "Xiaolong Han",
+        "Ferrante Neri",
+        "Zijian Jiang",
+        "Fang Wu",
+        "Yanfang Ye",
+        "Lu Yin",
+        "Zehong Wang"
+      ],
+      "published": "2026-03-16T23:01:00Z",
+      "updated": "2026-03-16T23:01:00Z",
+      "primary_url": "https://arxiv.org/abs/2603.15990v1",
+      "domain": "NLP/LoRA representation",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Canonicalization and encoder sections; selected Sections 3-4",
+      "overlap_or_useful_idea": "处理 LoRA 因子不唯一性，从权重读出能力",
+      "proposed_transfer_to_earthdelta": "先用 DeltaW 的固定 sketch，再测试行为探针；不先建大型 encoder",
+      "interpretation_limits": "四专家不足以验证 meta 泛化；SVD 符号/重根约定须明确",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2603.15990v1.html",
+          "sha256": "474298aff8ac95ba4828a6cb542433a1122a8ea5567af088777d99bbe677cfeb"
+        },
+        {
+          "path": "evidence/2603.15990v1.readable.txt",
+          "sha256": "2317176fc0c12c37b1242f55c2da9df6ca00a70ec8ce079f0191aa19943bf780"
+        }
+      ]
+    },
+    {
+      "reference_id": "L04",
+      "arxiv_id": "2608.22370v2",
+      "short_name": "LiST",
+      "title": "LiST: Local-Simplex Test-Time LoRA Fusion",
+      "authors": [
+        "Yihua Shao",
+        "Jia Li",
+        "Siyu Chen",
+        "Xinyu Luo",
+        "Yang Liu",
+        "Kecheng Chen",
+        "Xinwei Long",
+        "Lingyu Zhu",
+        "Fanhu Zeng",
+        "Maolin Wang",
+        "Ziyang Yan",
+        "Jingcai Guo",
+        "Hao Tang",
+        "Nicu Sebe",
+        "Zhenyi Wang"
+      ],
+      "published": "2026-08-23T11:24:28Z",
+      "updated": "2026-08-31T07:53:00Z",
+      "primary_url": "https://arxiv.org/abs/2608.22370v2",
+      "domain": "NLP/VLM adapter composition",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Sections 3.2-3.4, selected ablations and limitations",
+      "overlap_or_useful_idea": "参数与行为联合描述、局部候选、接受与回退",
+      "proposed_transfer_to_earthdelta": "复用离线行为描述与经验性回退，对照方法获得相同信息",
+      "interpretation_limits": "在线 CMA-ES/随机前向有成本；代理能量下降不是天气准确率证书",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2608.22370v2.html",
+          "sha256": "0c5e6fd0f58b9c777273dff897212deaf89ededed788269d906dd082cd46f517"
+        },
+        {
+          "path": "evidence/2608.22370v2.readable.txt",
+          "sha256": "e8b80b148d49a9598aa551070af24eeea09d166cec8044d0cbbaf42d28fb2eed"
+        }
+      ]
+    },
+    {
+      "reference_id": "L05",
+      "arxiv_id": "2608.11499v1",
+      "short_name": "HyperFix",
+      "title": "HyperFix: Combinatorial Nonlinear Correction for Task Vector Merging",
+      "authors": [
+        "Hyo Seo Kim",
+        "Ren Wang"
+      ],
+      "published": "2026-08-11T23:27:33Z",
+      "updated": "2026-08-11T23:27:33Z",
+      "primary_url": "https://arxiv.org/abs/2608.11499v1",
+      "domain": "CV/model merging",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Complete Method section; selected theory, experiment and limitation paragraphs",
+      "overlap_or_useful_idea": "低阶子集训练组合残差，减少逐组合调参",
+      "proposed_transfer_to_earthdelta": "先量测实际响应非加性，必要时增加小型交互残差",
+      "interpretation_limits": "原文修正权重，条件是局部小扰动；不自动保证长程天气响应",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2608.11499v1.html",
+          "sha256": "71185679eefeaebe04cd1583fa3962031fc32f912e6e9a55692a268d55c61b65"
+        },
+        {
+          "path": "evidence/2608.11499v1.readable.txt",
+          "sha256": "066ae79a7cd349d4ee32c909d7fb31132682cff0afe1cbaea97c4b76a0d83352"
+        }
+      ]
+    },
+    {
+      "reference_id": "L06",
+      "arxiv_id": "2609.09148v3",
+      "short_name": "Proxy Policy Steering",
+      "title": "Proxy Policy Steering",
+      "authors": [
+        "Chuanruo Ning",
+        "Tianrui Wang",
+        "Wei-Chiu Ma",
+        "Kuan Fang"
+      ],
+      "published": "2026-09-08T17:59:03Z",
+      "updated": "2026-09-13T20:53:27Z",
+      "primary_url": "https://arxiv.org/abs/2609.09148v3",
+      "domain": "CV/robotics",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Sections 4.1-4.3, selected 5.3/limitations/Appendix D",
+      "overlap_or_useful_idea": "匹配参考代理与任务代理的差分，沿生成轨迹施加",
+      "proposed_transfer_to_earthdelta": "共享编码器差分蒸馏、virtual edit 和逐步反馈强基线",
+      "interpretation_limits": "flow-matching 假设不直接适用 Stormer；摘要/正文增益数字不一致，本文不转述该数字",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.09148v3.html",
+          "sha256": "7725b3f30f661d46f831228c6c508fcf767de177286f8b829685977f7ad78d5d"
+        },
+        {
+          "path": "evidence/2609.09148v3.readable.txt",
+          "sha256": "f71b63c6699e2f108c84911bf6eaa5dcd7b827f8f64eca9ae9df8b5b20da3f76"
+        }
+      ]
+    },
+    {
+      "reference_id": "L07",
+      "arxiv_id": "2509.22020v2",
+      "short_name": "WeatherPEFT",
+      "title": "Task-Adaptive Parameter-Efficient Fine-Tuning for Weather Foundation Models",
+      "authors": [
+        "Shilei Cao",
+        "Hehai Lin",
+        "Jiashun Cheng",
+        "Yang Liu",
+        "Guowen Li",
+        "Xuehe Wang",
+        "Juepeng Zheng",
+        "Haoyuan Liang",
+        "Meng Jin",
+        "Chengwei Qin",
+        "Hong Cheng",
+        "Haohuan Fu"
+      ],
+      "published": "2025-09-26T07:54:05Z",
+      "updated": "2026-06-17T13:14:44Z",
+      "primary_url": "https://arxiv.org/abs/2509.22020v2",
+      "domain": "weather adaptation",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Sections 4.1-4.2 (TADP/SFAS)",
+      "overlap_or_useful_idea": "任务 prompt 与参数敏感性驱动适配",
+      "proposed_transfer_to_earthdelta": "作为天气 PEFT 近邻，明确本项目的逐起报响应与决策贡献",
+      "interpretation_limits": "不是逐起报预测所有有限编辑的未来响应；本文未复现其结果",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2509.22020v2.html",
+          "sha256": "10416415f39f8b2c39df93e1f7f573028ddac2c80c5dc6be37c49a3bde8dd98f"
+        },
+        {
+          "path": "evidence/2509.22020v2.readable.txt",
+          "sha256": "1fa553e42d5033ee8d5735c8bf9db13644a1ba6f25a038280bcb4ed6155e25ba"
+        }
+      ]
+    },
+    {
+      "reference_id": "L08",
+      "arxiv_id": "2603.19325v1",
+      "short_name": "TaCT",
+      "title": "Target Concept Tuning Improves Extreme Weather Forecasting",
+      "authors": [
+        "Shijie Ren",
+        "Xinyue Gu",
+        "Ziheng Peng",
+        "Haifan Zhang",
+        "Peisong Niu",
+        "Bo Wu",
+        "Xiting Wang",
+        "Liang Sun",
+        "Jirong Wen"
+      ],
+      "published": "2026-03-17T15:34:05Z",
+      "updated": "2026-03-17T15:34:05Z",
+      "primary_url": "https://arxiv.org/abs/2603.19325v1",
+      "domain": "weather adaptation",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Sections 3.2-3.3",
+      "overlap_or_useful_idea": "SAE 概念激活门控 LoRA/adapter 残差",
+      "proposed_transfer_to_earthdelta": "比较简单 regime/风险门，不把条件化天气编辑本身称为新概念",
+      "interpretation_limits": "不能据概念门控推断本项目的响应预测或多时效收益成立",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2603.19325v1.html",
+          "sha256": "7865e0812113e9bef63bdcda6ed2cd7498b295eec55b34ebc6b508cd6fb6e270"
+        },
+        {
+          "path": "evidence/2603.19325v1.readable.txt",
+          "sha256": "5a769824ea36f1816c88b1b833b94589fcd2fa5d33c3c186aeea0029799eebb4"
+        }
+      ]
+    },
+    {
+      "reference_id": "L09",
+      "arxiv_id": "2608.02528v1",
+      "short_name": "VI-MoLE",
+      "title": "Uncertainty Is Not Enough: Value-of-Information Routing for Mixtures of LoRA Experts",
+      "authors": [
+        "Tom Saliencro",
+        "Rohan Desai",
+        "Priya Nair",
+        "Maya Lindqvist",
+        "Daniel Whitmore"
+      ],
+      "published": "2026-08-03T17:24:27Z",
+      "updated": "2026-08-03T17:24:27Z",
+      "primary_url": "https://arxiv.org/abs/2608.02528v1",
+      "domain": "NLP/LoRA acquisition",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Sections 3-4",
+      "overlap_or_useful_idea": "pre-acquisition risk/value head 与预算分配、abstention",
+      "proposed_transfer_to_earthdelta": "把执行前价值估计视为已有先例，强调天气目标和实际成本证据",
+      "interpretation_limits": "实验/发布计划不等于完整数值复现；风险上界之差不能自动当增益下界",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2608.02528v1.html",
+          "sha256": "13d4c89dc00342287d97bccff2fc7716a650b23ce51d3869aeab1764b36ff3a2"
+        },
+        {
+          "path": "evidence/2608.02528v1.readable.txt",
+          "sha256": "4eb4761fd93513670e42f86a93639d73d9a82fecfb37ff12168ffe7de066ca91"
+        }
+      ]
+    },
+    {
+      "reference_id": "L10",
+      "arxiv_id": "2605.14546v1",
+      "short_name": "CCM",
+      "title": "Discovering Physical Directions in Weight Space: Composing Neural PDE Experts",
+      "authors": [
+        "Pengkai Wang",
+        "Pengwei Liu",
+        "Yuanyi Wang",
+        "Guanyu Chen",
+        "Xingyu Ren",
+        "Xiaolong Li",
+        "Zhongkai Hao",
+        "Yuting Kong",
+        "Qixin Zhang",
+        "Dong Ni"
+      ],
+      "published": "2026-05-14T08:25:16Z",
+      "updated": "2026-05-14T08:25:16Z",
+      "primary_url": "https://arxiv.org/abs/2605.14546v1",
+      "domain": "PDE adaptation",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Section 3",
+      "overlap_or_useful_idea": "same-anchor PDE experts 与坐标组合",
+      "proposed_transfer_to_earthdelta": "所有天气候选共享 Fs；检验响应字典结构而非给月份专家强加语义",
+      "interpretation_limits": "受控 PDE 参数方向不自动变成真实大气机制",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2605.14546v1.html",
+          "sha256": "4f765610b2974abf7695b909126d182bb5bb06d4c7c5a332fd445c2f27d93387"
+        },
+        {
+          "path": "evidence/2605.14546v1.readable.txt",
+          "sha256": "a6011940ef7a79fa2487f747871b5ded283baa3df9b790bd117bbeb9561ccf66"
+        }
+      ]
+    },
+    {
+      "reference_id": "L11",
+      "arxiv_id": "2609.12278v1",
+      "short_name": "CLAW",
+      "title": "Amortized Low-Rank Adaptation for Model-Based Reinforcement Learning",
+      "authors": [
+        "Fernando Palafox",
+        "David Fridovich-Keil"
+      ],
+      "published": "2026-09-10T23:16:40Z",
+      "updated": "2026-09-10T23:16:40Z",
+      "primary_url": "https://arxiv.org/abs/2609.12278v1",
+      "domain": "world models/RL",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Section 4",
+      "overlap_or_useful_idea": "transition context 到分块 LoRA 的 hypernetwork",
+      "proposed_transfer_to_earthdelta": "作为直接条件化适配的挑战者，暂缓重训 backbone/hypernetwork",
+      "interpretation_limits": "原文联合预训练设置与当前固定 Stormer 不同",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.12278v1.html",
+          "sha256": "e8aad2e56c81b241dd81bfce6ec8e583d5cf06f44200927b2d8d94eddc6c1f6d"
+        },
+        {
+          "path": "evidence/2609.12278v1.readable.txt",
+          "sha256": "630e3e38bfc0020c8c3bf2007408d79732836dbb2a40838b1c1f49d66e5b6dbf"
+        }
+      ]
+    },
+    {
+      "reference_id": "L12",
+      "arxiv_id": "2609.13257v1",
+      "short_name": "CVA",
+      "title": "Sampling headroom is not selection gain: a compute-value audit of test-time scaling for video world models",
+      "authors": [
+        "Yuhua Jiang",
+        "Junjie Lu",
+        "Feifei Gao"
+      ],
+      "published": "2026-09-06T06:11:15Z",
+      "updated": "2026-09-06T06:11:15Z",
+      "primary_url": "https://arxiv.org/abs/2609.13257v1",
+      "domain": "CV/video world models",
+      "read_scope": "SELECTED_METHOD_RESULTS_LIMITATIONS",
+      "sections_read": "Selected compute accounting, selector, results and limitation paragraphs",
+      "overlap_or_useful_idea": "oracle headroom、合法选择收益与全部成本分开评价",
+      "proposed_transfer_to_earthdelta": "完整候选表、cheap legal、serving 成本和失败分母",
+      "interpretation_limits": "存在回顾性/重分析限制；采用实验纪律，不转述为普遍定理",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.13257v1.html",
+          "sha256": "bf55e8c94a0a9696e097199e0ed75adc95b3cc557726b8339e74bb6c94d7d7dc"
+        },
+        {
+          "path": "evidence/2609.13257v1.readable.txt",
+          "sha256": "73f3e7e4ea6cd4ceed676e74dfde3abff2bf165f8203d9255c2631f7e8f77066"
+        }
+      ]
+    },
+    {
+      "reference_id": "L13",
+      "arxiv_id": "2609.10954v1",
+      "short_name": "Counterfactual update utility protocol",
+      "title": "Measuring the Value of World-Model Updates: A Counterfactual Utility Protocol for Continual Adaptation",
+      "authors": [
+        "Anqi Peter Li",
+        "Kaden Kim"
+      ],
+      "published": "2026-09-10T01:22:57Z",
+      "updated": "2026-09-10T01:22:57Z",
+      "primary_url": "https://arxiv.org/abs/2609.10954v1",
+      "domain": "world models",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Method Section 3",
+      "overlap_or_useful_idea": "update/hold 配对分支、共同随机性、保留失败尝试",
+      "proposed_transfer_to_earthdelta": "Fs 稳定性对照和资格面板，全部尝试保留",
+      "interpretation_limits": "固定更新机制的因果比较范围有限，不证明任意适配机制有效",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.10954v1.html",
+          "sha256": "b5cca3b2e3287dee206e21c41be0ab0e902e8a547e64c33ecec885314be24b54"
+        },
+        {
+          "path": "evidence/2609.10954v1.readable.txt",
+          "sha256": "04083c4debbaf880ec9dfad2cc77713ec3c219127aae6665341d33d128add23a"
+        }
+      ]
+    },
+    {
+      "reference_id": "L14",
+      "arxiv_id": "2609.21740v1",
+      "short_name": "Sandwich-Residuals",
+      "title": "Sandwich-Residuals: Parameter-Efficient Test-time Adaptation of World Models",
+      "authors": [
+        "Krishnam Soni",
+        "Aditya Sehgal",
+        "Vedant Dave",
+        "Elmar Rueckert"
+      ],
+      "published": "2026-09-18T13:17:05Z",
+      "updated": "2026-09-18T13:17:05Z",
+      "primary_url": "https://arxiv.org/abs/2609.21740v1",
+      "domain": "CV/world-model adaptation",
+      "read_scope": "SELECTED_METHOD_RESULTS_LIMITATIONS",
+      "sections_read": "Selected method, matched-budget evaluation and limitation paragraphs",
+      "overlap_or_useful_idea": "冻结视觉 world model 周围的小型残差适配",
+      "proposed_transfer_to_earthdelta": "认真比较反馈/状态订正，避免声称只有参数编辑能改变轨迹",
+      "interpretation_limits": "本文未逐式核验全部结构，天气迁移仍是待检验假设",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.21740v1.html",
+          "sha256": "44bcb9b2a06cd4615b3f68c8b4b69698ee98e3c72bf3eeec8019416cab61fd10"
+        },
+        {
+          "path": "evidence/2609.21740v1.readable.txt",
+          "sha256": "346009d44f25912778dbc83e9d06aeb04c5edad62d82fe406f65ad5467a2a5f3"
+        }
+      ]
+    },
+    {
+      "reference_id": "L15",
+      "arxiv_id": "2609.18381v1",
+      "short_name": "Learned Atmospheric Critic",
+      "title": "Every Fixed Metric Has a Blind Spot: A Learned Atmospheric Critic for Scoring Forecast Realism",
+      "authors": [
+        "Younes Elberkennou",
+        "Dmitri Demler",
+        "Thierry Meier",
+        "Luca Rispoli",
+        "Fanny Lehmann",
+        "Joel Oskarsson"
+      ],
+      "published": "2026-09-16T09:36:15Z",
+      "updated": "2026-09-16T09:36:15Z",
+      "primary_url": "https://arxiv.org/abs/2609.18381v1",
+      "domain": "weather evaluation",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Critic construction, evaluation setup and limitations",
+      "overlap_or_useful_idea": "学习的分布真实性指标补充固定指标盲点",
+      "proposed_transfer_to_earthdelta": "主目标冻结后可作附加诊断，不增加 GAN 训练",
+      "interpretation_limits": "边际真实性不等于逐样本预报准确性；四个地面变量及专用 critic 范围有限",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.18381v1.html",
+          "sha256": "30acaab94c69cd88309b110bf2eea46568127df2331a368e4d991655dac65388"
+        },
+        {
+          "path": "evidence/2609.18381v1.readable.txt",
+          "sha256": "c010c194b94392e4b5698b1b82fa930394083a8d55e7490ea674c0ac0c528701"
+        }
+      ]
+    },
+    {
+      "reference_id": "L16",
+      "arxiv_id": "2606.19549v1",
+      "short_name": "MergeProbe",
+      "title": "Predicting Mergeability of Parameter-Efficient Fine-Tuning Updates",
+      "authors": [
+        "Lin Tang",
+        "Wei Zhang",
+        "Jing Li",
+        "Hongyu Chen",
+        "Ming Zhao",
+        "Yuxuan Wang"
+      ],
+      "published": "2026-06-17T19:40:51Z",
+      "updated": "2026-06-17T19:40:51Z",
+      "primary_url": "https://arxiv.org/abs/2606.19549v1",
+      "domain": "NLP/model merging",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Sections 2.4-4, experiment provenance and selected appendices",
+      "overlap_or_useful_idea": "早期权重/梯度/激活信号预测合并后效用；按 adapter/domain 划分",
+      "proposed_transfer_to_earthdelta": "借鉴便宜描述与防止 pair-row 泄漏；新库按库留出",
+      "interpretation_limits": "原文明示部分结果来自受控 simulator/pilot；不作为成熟大规模性能证据",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2606.19549v1.html",
+          "sha256": "5c917f4ff7b5f70cf3c2fc397142b7adb0c2ca34eef5adfd8eaf40cfb6adad31"
+        },
+        {
+          "path": "evidence/2606.19549v1.readable.txt",
+          "sha256": "b8cabcfe8f4dd8dc2670602f2defae0a90a43029c857790088ffd664da10c321"
+        }
+      ]
+    },
+    {
+      "reference_id": "L17",
+      "arxiv_id": "2604.15557v1",
+      "short_name": "LAP",
+      "title": "Predicting Where Steering Vectors Succeed",
+      "authors": [
+        "Jayadev Billa"
+      ],
+      "published": "2026-04-16T22:18:59Z",
+      "updated": "2026-04-16T22:18:59Z",
+      "primary_url": "https://arxiv.org/abs/2604.15557v1",
+      "domain": "NLP/steering",
+      "read_scope": "SELECTED_METHOD_RESULTS_LIMITATIONS",
+      "sections_read": "Selected formulation, Section 4.2 and depth-control paragraphs",
+      "overlap_or_useful_idea": "以读出对齐预测 steering 有效层，而非仅静态激活强度",
+      "proposed_transfer_to_earthdelta": "训练侧比较 block 的效果/代价，用于有预算的字典改良",
+      "interpretation_limits": "可读出性不自动给出天气收益或 off-target 保证",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2604.15557v1.html",
+          "sha256": "c9eb470c702dea3c7735493b983a380f6e70e7f30e4bf87961ed507adabc1ae9"
+        },
+        {
+          "path": "evidence/2604.15557v1.readable.txt",
+          "sha256": "5d882304801f592725f0979d2c447e81946917c26d21fefefa348aa9913ef29b"
+        }
+      ]
+    },
+    {
+      "reference_id": "L18",
+      "arxiv_id": "2609.22782v1",
+      "short_name": "Look Before You Steer",
+      "title": "Look Before You Steer: Geometry Predicts SAE Feature Steerability",
+      "authors": [
+        "Muhammad Khan",
+        "Shlok Channawar",
+        "Akshaj Gurugubelli",
+        "Girish Gupta",
+        "Aditya Shah"
+      ],
+      "published": "2026-09-19T05:29:00Z",
+      "updated": "2026-09-19T05:29:00Z",
+      "primary_url": "https://arxiv.org/abs/2609.22782v1",
+      "domain": "NLP/SAE steering",
+      "read_scope": "METHOD_AND_SELECTED_RESULTS",
+      "sections_read": "Sections 3-4.1 and abstract boundary conditions",
+      "overlap_or_useful_idea": "几何量能部分预测干预幅度，存在架构/层深边界",
+      "proposed_transfer_to_earthdelta": "把便宜权重描述作为基线，比较实际行为探针是否额外有用",
+      "interpretation_limits": "实验 feature 筛选含输出因果过滤；不声称整套过程完全无需前向或提供风险保证",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.22782v1.html",
+          "sha256": "4783ef6f765c9148a3b12db5a515c0a49265d8fcbbe6a6a0fcb106f904659f1d"
+        },
+        {
+          "path": "evidence/2609.22782v1.readable.txt",
+          "sha256": "7cf6a5fcfbcc0e9bfd8f80fe4f9ba0d43649762819a4839918ae3b63282b8785"
+        }
+      ]
+    },
+    {
+      "reference_id": "L19",
+      "arxiv_id": "2606.14222v1",
+      "short_name": "ORCA",
+      "title": "Learning the Context of Errors: Black-Box Online Adaptation of Time Series Foundation Models",
+      "authors": [
+        "Xilin Dai",
+        "Yiding Liu",
+        "Hongjie Xia",
+        "Yifan Hu",
+        "Zewei Dong",
+        "Jiang-Ming Yang",
+        "Qiang Xu"
+      ],
+      "published": "2026-06-12T08:02:03Z",
+      "updated": "2026-06-12T08:02:03Z",
+      "primary_url": "https://arxiv.org/abs/2606.14222v1",
+      "domain": "time-series adaptation",
+      "read_scope": "ABSTRACT_ONLY",
+      "sections_read": "API abstract; HTML retrieved but not method-audited",
+      "overlap_or_useful_idea": "输入和基础输出的误差上下文用于黑盒残差适配",
+      "proposed_transfer_to_earthdelta": "后续反馈订正基线的实现候选",
+      "interpretation_limits": "仅摘要级定位；实现前需读方法并确认因果可用信息",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2606.14222v1.html",
+          "sha256": "40fb44f716600b24c255350657fccd6ba50b2784327e5d17e639f9380808b927"
+        },
+        {
+          "path": "evidence/2606.14222v1.readable.txt",
+          "sha256": "bc8486bb5e280bf1ffb43ad8d9625956f09ac2e4bfdc4165d8c98654aef364a6"
+        }
+      ]
+    },
+    {
+      "reference_id": "L20",
+      "arxiv_id": "2609.03937v1",
+      "short_name": "RATL",
+      "title": "RATL: Learning from Retrieved Residuals for Robust Multivariate Time-Series Forecasting",
+      "authors": [
+        "Yuchen He",
+        "Yueyang Cang",
+        "Zhiyuan Ning",
+        "Ningyu Wang",
+        "Li Shi"
+      ],
+      "published": "2026-09-03T14:44:31Z",
+      "updated": "2026-09-03T14:44:31Z",
+      "primary_url": "https://arxiv.org/abs/2609.03937v1",
+      "domain": "time-series adaptation",
+      "read_scope": "ABSTRACT_ONLY",
+      "sections_read": "API abstract; HTML retrieved but not method-audited",
+      "overlap_or_useful_idea": "训练侧 residual memory 与路由",
+      "proposed_transfer_to_earthdelta": "若合法状态信息不足，后续才考虑已成熟真值的历史残差",
+      "interpretation_limits": "不在首轮引入 memory；时间可用性需独立核查",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.03937v1.html",
+          "sha256": "8aa443295df5d13394e4382f93f3bbac897a9e7e0320d28312722407d9e8d316"
+        },
+        {
+          "path": "evidence/2609.03937v1.readable.txt",
+          "sha256": "60bafe22acf53f27417ec5ad7f7b0a7e089b2de0025eb8b25ff80669dbacd93c"
+        }
+      ]
+    },
+    {
+      "reference_id": "L21",
+      "arxiv_id": "2506.06105v2",
+      "short_name": "Text-to-LoRA",
+      "title": "Text-to-LoRA: Instant Transformer Adaption",
+      "authors": [
+        "Rujikorn Charakorn",
+        "Edoardo Cetin",
+        "Yujin Tang",
+        "Robert Tjarko Lange"
+      ],
+      "published": "2025-06-06T14:11:27Z",
+      "updated": "2025-06-09T14:19:59Z",
+      "primary_url": "https://arxiv.org/abs/2506.06105v2",
+      "domain": "NLP/hypernetworks",
+      "read_scope": "ABSTRACT_ONLY",
+      "sections_read": "API abstract; v1/v2 HTML retrieved but not method-audited",
+      "overlap_or_useful_idea": "自然语言任务描述生成 LoRA",
+      "proposed_transfer_to_earthdelta": "说明 descriptor-to-adapter 的成熟方向；本轮优先效果预测",
+      "interpretation_limits": "未据本文给出天气实验主张；不声称逐节复核",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2506.06105v2.html",
+          "sha256": "f188c2c3123c21a0c62c1f8a6222c523e8dbf98929b04cbf361b6505ba94a6a3"
+        },
+        {
+          "path": "evidence/2506.06105v2.readable.txt",
+          "sha256": "a701aa926a1075a11e003adef6ea48b6e902b01155995fba0caf4bade1f82070"
+        }
+      ]
+    },
+    {
+      "reference_id": "L22",
+      "arxiv_id": "2609.08412v1",
+      "short_name": "SPW",
+      "title": "Stochastically Perturbed Weights: Ensembles from Deterministic Machine-Learning Weather Models",
+      "authors": [
+        "Simon Adamov",
+        "Oliver Fuhrer",
+        "Reto Knutti",
+        "Sebastian Schemm"
+      ],
+      "published": "2026-09-08T08:18:40Z",
+      "updated": "2026-09-08T08:18:40Z",
+      "primary_url": "https://arxiv.org/abs/2609.08412v1",
+      "domain": "weather ensembles",
+      "read_scope": "ABSTRACT_ONLY",
+      "sections_read": "API abstract; HTML retrieved but not method-audited",
+      "overlap_or_useful_idea": "随机权重扰动构造确定天气模型的集合",
+      "proposed_transfer_to_earthdelta": "若后续转概率预报，可参考扰动机制与集合评估",
+      "interpretation_limits": "集合/CRPS 收益不能等同当前确定性编辑的 native MSE 收益",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.08412v1.html",
+          "sha256": "2216405287dc61f56d94577822542a8c7be490c841c31bf0969a21f7c123d950"
+        },
+        {
+          "path": "evidence/2609.08412v1.readable.txt",
+          "sha256": "859fc208f9d8cc56f42e2128ac28762b7dbd1bdf2747a3e419a29d4843628fda"
+        }
+      ]
+    },
+    {
+      "reference_id": "L23",
+      "arxiv_id": "2605.22222v3",
+      "short_name": "ARC-STAR",
+      "title": "ARC-STAR: Auditable Post-Hoc Correction for PDE Foundation Models",
+      "authors": [
+        "Chengze Li",
+        "Lingwei Wei",
+        "Li Sun",
+        "Hongbo Lv",
+        "Jie Yang",
+        "Hanrong Zhang",
+        "Kening Zheng",
+        "Wei-Chieh Huang",
+        "Enze Ma",
+        "Philip S. Yu"
+      ],
+      "published": "2026-05-21T09:26:16Z",
+      "updated": "2026-05-25T07:06:51Z",
+      "primary_url": "https://arxiv.org/abs/2605.22222v3",
+      "domain": "PDE post-hoc correction",
+      "read_scope": "ABSTRACT_ONLY",
+      "sections_read": "API abstract; HTML retrieval failed",
+      "overlap_or_useful_idea": "冻结 host 的全局订正、局部精修及预算风险路由",
+      "proposed_transfer_to_earthdelta": "后续输出订正挑战者",
+      "interpretation_limits": "正文未取回，不作为具体算法细节或性能结论的依据",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": []
+    },
+    {
+      "reference_id": "L24",
+      "arxiv_id": "2609.21787v1",
+      "short_name": "Compact but Moving",
+      "title": "Compact but Moving: Intervention-Relevant Geometry in Recurrent World Models",
+      "authors": [
+        "Yuming Chen",
+        "Yang Liu"
+      ],
+      "published": "2026-09-18T14:03:05Z",
+      "updated": "2026-09-18T14:03:05Z",
+      "primary_url": "https://arxiv.org/abs/2609.21787v1",
+      "domain": "CV/recurrent world models",
+      "read_scope": "ABSTRACT_ONLY",
+      "sections_read": "API abstract; PDF downloaded, extraction unavailable",
+      "overlap_or_useful_idea": "低秩干预相关几何随 rollout 运输变化",
+      "proposed_transfer_to_earthdelta": "提示检查各时效响应基覆盖，不把 LoRA rank 当输出响应 rank",
+      "interpretation_limits": "原文是 latent-state 干预；正文未解析，不声称已验证其定理",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.21787v1.pdf",
+          "sha256": "a18e93f31cc3cd66d7fe9b619e72a257c823c32d11fa6064e30a960663ba0cb8"
+        }
+      ]
+    },
+    {
+      "reference_id": "L25",
+      "arxiv_id": "2609.17042v1",
+      "short_name": "Adapter Banks",
+      "title": "Learning Options for Compositional Motor Control with Adapter Banks",
+      "authors": [
+        "Sreejan Kumar",
+        "Marcelo Mattar",
+        "Lea Duncker"
+      ],
+      "published": "2026-09-15T11:49:30Z",
+      "updated": "2026-09-15T11:49:30Z",
+      "primary_url": "https://arxiv.org/abs/2609.17042v1",
+      "domain": "motor control/imitation",
+      "read_scope": "ABSTRACT_ONLY",
+      "sections_read": "API abstract; HTML retrieved but not method-audited",
+      "overlap_or_useful_idea": "共享 recurrent 模型上的 adapter options 和组合控制",
+      "proposed_transfer_to_earthdelta": "记录 adapter bank 近邻，避免泛化首次主张",
+      "interpretation_limits": "不是本轮必须复现的天气基线；不简单归类为纯 RL 回报路由",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.17042v1.html",
+          "sha256": "04363335095668a6c2b03a441f9ece80472cf1fc728cec42817b6390df8bfb20"
+        },
+        {
+          "path": "evidence/2609.17042v1.readable.txt",
+          "sha256": "b8f289e60f9151d40f92a58112b33cb2dfaa23368fc3c11b6ee0f5c4c1c9df4e"
+        }
+      ]
+    },
+    {
+      "reference_id": "L26",
+      "arxiv_id": "2609.11445v1",
+      "short_name": "FARM",
+      "title": "FARM: Reading Failure Signals from the Internal Predictive States of a Frozen Robotic World Model",
+      "authors": [
+        "Haoran Pei",
+        "Mingrui Luo",
+        "Senbao Wang",
+        "Haoran Lv",
+        "Jie Guo",
+        "Sheng Zhong",
+        "Ruixi Ci"
+      ],
+      "published": "2026-09-10T12:14:37Z",
+      "updated": "2026-09-10T12:14:37Z",
+      "primary_url": "https://arxiv.org/abs/2609.11445v1",
+      "domain": "robotic world-model readouts",
+      "read_scope": "ABSTRACT_ONLY",
+      "sections_read": "API abstract; HTML retrieved but not method-audited",
+      "overlap_or_useful_idea": "冻结 predictive features 的便宜 failure readout",
+      "proposed_transfer_to_earthdelta": "低容量合法状态基线，完整计入特征提取成本",
+      "interpretation_limits": "只测 readout 的低延迟不能代表 EarthDelta 完整 serving 路径",
+      "reported_results_independently_reproduced": false,
+      "primary_text_files": [
+        {
+          "path": "evidence/2609.11445v1.html",
+          "sha256": "059d63072bc39cbefe6682e704095cc48119b75409f4cc28eb219203a76258e3"
+        },
+        {
+          "path": "evidence/2609.11445v1.readable.txt",
+          "sha256": "017bfa086415cb824ddcb3cc86942f81e7f934e8adb55f93a93ca2d4068876af"
+        }
+      ]
+    }
+  ]
+}

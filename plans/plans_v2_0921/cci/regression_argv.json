@@ -1,0 +1,16 @@
+[
+  "env",
+  "CUDA_VISIBLE_DEVICES=",
+  "PYTHONPATH=@SNAPSHOT@:@ASSETS@/.pydeps",
+  "python3",
+  "-m",
+  "pytest",
+  "tests/test_metric_contract.py",
+  "tests/test_s0_fail_closed.py",
+  "tests/test_differentiable_rollout.py",
+  "-q",
+  "-rs",
+  "-p",
+  "no:cacheprovider",
+  "--junitxml=@OUTPUT@/pytest.xml"
+]

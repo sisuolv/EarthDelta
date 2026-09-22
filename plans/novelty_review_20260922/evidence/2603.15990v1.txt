@@ -1,0 +1,4120 @@
+W2T: LoRA Weights Already Know What They Can Do
+Xiaolong Han
+Affiliation:
+University of Surrey
+Ferrante Neri
+Zijian Jiang
+Affiliation:
+University of Surrey
+Fang Wu
+Affiliation:
+Stanford University
+Yanfang Ye
+Affiliation:
+University of Notre Dame
+*
+Correspondence:
+f.neri@surrey.ac.uk, zwang43@nd.edu
+Lu Yin
+Affiliation:
+University of Surrey
+Zehong Wang
+Abstract
+Each LoRA checkpoint compactly stores task-specific updates in low-rank weight matrices, offering an efficient way to adapt large language models to new tasks and domains.
+In principle, these weights already encode what the adapter does and how well it performs.
+In this paper, we ask whether this information can be read directly from the weights, without running the base model or accessing training data.
+A key obstacle is that a single LoRA update can be factorized in infinitely many ways.
+Without resolving this ambiguity, models trained on the factors may fit the particular factorization rather than the underlying update.
+To this end, we propose
+W2T
+(
+W
+eight-
+to
+-
+T
+oken), which maps each LoRA update to a provably canonical form via QR decomposition followed by SVD, so that all equivalent factorizations share the same representation.
+The resulting components are then tokenized and processed by a Transformer to produce a weight-space embedding.
+Across language and vision LoRA collections, W2T achieves strong results on attribute classification, performance prediction, and adapter retrieval, demonstrating that LoRA weights reliably indicate model behavior once factorization ambiguity is removed.
+Code is available
+here.
+Figure 1:
+LoRA updates already encode downstream behaviors, but reading them requires a symmetry-aware representation.
+(a) LoRA checkpoints trained from raw data are treated as data objects for downstream tasks.
+(b) Symmetry-agnostic processing of raw LoRA factors.
+(c) Symmetry-aware decomposition of LoRA updates into canonical components.
+1
+Introduction
+Large language models (LLMs) have shown strong performance across a wide range of domains
+(
+Wang et al., 2024
+;
+Wang et al., 2026b
+)
+.
+To specialize them for downstream tasks, additional adaptation is often needed.
+Low-Rank Adaptation (LoRA) has become a popular and efficient solution
+(
+Hu et al., 2022
+;
+Dettmers et al., 2023
+;
+Liu et al., 2024b
+)
+.
+Each LoRA checkpoint stores task-specific updates in a pair of low-rank matrices
+(
+𝐁
+,
+𝐀
+)
+(\mathbf{B},\mathbf{A})
+, making it compact and easy to save, share, and reuse.
+This has led to rapidly growing collections of LoRA checkpoints
+(
+Sheng et al., 2023
+;
+Gabrielsson et al., 2025
+;
+Huang et al., 2024
+)
+.
+In principle, the weights should already contain information about what the LoRA does and how well it performs.
+The question is whether we can read it.
+However, reading adapter weights is far from straightforward.
+Many shared LoRA checkpoints come with incomplete metadata, limited training details, or no accessible evaluation setup
+(
+Horwitz et al., 2025a
+)
+.
+In such cases, the weight file itself may be the only reliable source of information.
+The main alternative is to probe each checkpoint through LLM inference, but this is expensive at scale and sensitive to prompt design
+(
+Zhuo et al., 2024
+;
+Wang et al., 2025b
+;
+Wang et al., 2025c
+)
+.
+These constraints motivate a weight-space perspective:
+Can we infer the attributes of a LoRA checkpoint directly from its weights alone, without raw training data or LLM inference?
+A positive answer would enable scalable indexing, search, capability discovery, and performance estimation for large LoRA collections
+(
+Putterman et al., 2025
+;
+Schürholt et al., 2024
+;
+Kahana et al., 2025
+;
+Salama et al., 2024
+;
+Horwitz et al., 2025b
+;
+Horwitz et al., 2025a
+)
+.
+Making such weight-only inference reliable is difficult because LoRA weights do not have a unique factorization.
+For a LoRA update
+Δ
+​
+𝐖
+=
+𝐁𝐀
+\Delta\mathbf{W}=\mathbf{B}\mathbf{A}
+, any invertible matrix
+𝐆
+\mathbf{G}
+gives an equivalent factor pair
+(
+𝐁𝐆
+,
+𝐆
+−
+1
+​
+𝐀
+)
+(\mathbf{B}\mathbf{G},\,\mathbf{G}^{-1}\mathbf{A})
+with the same update matrix.
+This
+GL
+⁡
+(
+r
+)
+\mathrm{GL}(r)
+reparameterization symmetry means that the same LoRA update
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+can be represented by many different factor pairs
+(
+𝐁
+,
+𝐀
+)
+(\mathbf{B},\mathbf{A})
+.
+As a result, methods that operate directly on the factor pair
+(
+𝐁
+,
+𝐀
+)
+(\mathbf{B},\mathbf{A})
+, for example by flattening them, may fail to learn the true similarity between LoRAs, since two very different-looking factor pairs can correspond to the same
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+.
+Existing methods for learning from LoRA weights mainly follow two directions.
+One direction applies generic encoders such as MLPs, CNNs, or ViTs directly to raw or reshaped LoRA factors, without accounting for the underlying symmetry
+(
+Unterthiner et al., 2020
+;
+Schürholt et al., 2021
+;
+Jin et al., 2024
+;
+Wang et al., 2025a
+;
+Shahroz et al., 2025
+)
+.
+Another direction
+(
+Putterman et al., 2025
+)
+handles
+GL
+⁡
+(
+r
+)
+\mathrm{GL}(r)
+symmetry in the predictor architecture through dedicated equivariant layers.
+Despite this progress, a practical solution should simultaneously satisfy three requirements: resolving the non-identifiability induced by
+GL
+⁡
+(
+r
+)
+\mathrm{GL}(r)
+symmetry, preserving the structure of each LoRA update, and remaining compatible with standard scalable architectures.
+Existing methods address these requirements only partially, either learning from non-identifiable raw factors or relying on specialized equivariant architectures without canonicalizing the input parameterization itself.
+In this work, we propose
+W2T
+(
+W
+eight-
+to
+-
+T
+oken), a framework that meets all three requirements.
+The key idea is to resolve the LoRA symmetry before downstream modeling.
+Rather than learning directly from arbitrary factor pairs
+(
+𝐁
+,
+𝐀
+)
+(\mathbf{B},\mathbf{A})
+, W2T maps all factorizations of the same LoRA update
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+to a shared canonical decomposition.
+Concretely, W2T applies QR decomposition followed by singular value decomposition (SVD) to each LoRA update, producing a structured set of rank-wise components, each defined by an output direction, an input direction, and a singular value.
+This canonicalization removes factorization ambiguity at the data level, so that equivalent LoRA parameterizations are aligned before they are processed by the model.
+Built on top of this symmetry-resolved representation, W2T converts the components into tokens and uses a Transformer to yield a LoRA embedding for diverse downstream applications, including attribute prediction, behavior prediction, and retrieval.
+Our main contributions are as follows:
+•
+We identify LoRA factorization non-uniqueness as a core obstacle to LoRA weight-space learning and resolve it with a canonical representation of each LoRA.
+•
+We propose W2T, which canonically tokenizes LoRA updates and models them with a Transformer in weight space.
+•
+We validate W2T on diverse language and vision LoRA collections, showing strong results on attribute prediction, performance estimation, and similarity modeling.
+2
+Related Work
+Low-rank adaptation.
+LoRA models task-specific updates with a low-rank factorization,
+Δ
+​
+𝐖
+=
+𝐁𝐀
+\Delta\mathbf{W}=\mathbf{B}\mathbf{A}
+, enabling parameter-efficient adaptation of large language models
+(
+Hu et al., 2022
+)
+.
+Subsequent work has largely focused on improving LoRA as a fine-tuning method, from adaptation quality and efficiency to practical deployment.
+Some work targets training efficiency: QLoRA reduces the memory cost of fine-tuning through quantization
+(
+Dettmers et al., 2023
+)
+, while methods such as LoRA-FA
+(
+Zhang et al., 2023a
+)
+and LoRA+
+(
+Hayou et al., 2024
+)
+further reduce memory usage or improve optimization through factor-specific update schemes.
+Other work targets adaptation quality and parameterization: AdaLoRA reallocates rank budget across modules
+(
+Zhang et al., 2023b
+)
+, PiSSA initializes adapters from principal singular components of pretrained weights
+(
+Meng et al., 2024
+)
+, and DoRA decomposes magnitude and direction to better match full fine-tuning
+(
+Liu et al., 2024b
+)
+.
+More recent methods further explore pruning, expert allocation, and mixture-style low-rank adaptation
+(
+Zhou et al., 2025
+;
+Gao et al., 2025
+;
+Fan et al., 2025
+;
+Sun et al., 2025
+)
+.
+A related development shifts LoRA beyond its role as a fine-tuning method toward a reusable checkpoint format.
+Some work studies how to serve large collections of LoRA adapters efficiently
+(
+Sheng et al., 2023
+;
+Gabrielsson et al., 2025
+)
+, while other work studies how separately trained LoRAs can be reused or combined across tasks and concepts
+(
+Huang et al., 2024
+;
+Gu et al., 2023
+)
+.
+Recent analyses also identify shared spectral structure across large collections of LoRA checkpoints, providing further evidence that LoRA weights themselves carry meaningful structure
+(
+Kaushik et al., 2025
+)
+.
+Together, these developments make LoRA checkpoints abundant, lightweight, and increasingly reusable, making it natural to ask what can be learned from the LoRA weights themselves.
+Weight space learning.
+Weight Space Learning (WSL) treats model checkpoints as input data and learns representations directly in the weight space.
+Early studies showed that weights encode informative signals for downstream behavior, including model accuracy and class-level properties
+(
+Unterthiner et al., 2020
+;
+Eilertsen et al., 2020
+)
+.
+Subsequent work developed more advanced WSL models, including symmetry-aware architectures for deep weight spaces and neural functionals
+(
+Navon et al., 2023
+;
+Zhou et al., 2023
+;
+Zhou et al., 2024
+;
+Schürholt et al., 2024
+;
+Wang et al., 2026a
+)
+.
+In prior WSL on standard architectures, symmetry handling is mostly permutation-centric, whereas LoRA introduces a different, continuous
+GL
+⁡
+(
+r
+)
+\mathrm{GL}(r)
+reparameterization symmetry.
+For LoRA-specific weight modeling, recent work spans statistics-based inference, coordinate-space retrieval/editing, and conditional parameter generation
+(
+Salama et al., 2024
+;
+Liu et al., 2024a
+;
+Dravid et al., 2024
+;
+Jin et al., 2024
+;
+Wang et al., 2025a
+;
+Shahroz et al., 2025
+;
+Liang et al., 2025
+)
+.
+These studies show that LoRA checkpoints carry rich signals, yet most existing pipelines still rely on raw coordinates, leaving
+GL
+⁡
+(
+r
+)
+\mathrm{GL}(r)
+reparameterization ambiguity largely unresolved.
+GLNet handles this issue in the predictor architecture through specialized equivariant layers and nonlinear modules
+(
+Putterman et al., 2025
+)
+.
+However, it carries symmetry handling throughout the predictor and therefore places strict requirements on the model architecture.
+Taken together, these directions still leave an important gap.
+Some methods learn directly from non-identifiable raw factors, while symmetry-aware approaches rely on specialized equivariant architectures.
+What remains lacking is a solution that resolves the ambiguity induced by
+GL
+⁡
+(
+r
+)
+\mathrm{GL}(r)
+symmetry, preserves the internal structure of each LoRA update, and stays compatible with standard scalable architectures.
+W2T addresses this gap.
+Figure 2:
+Overview of the proposed W2T modeling framework for LoRA weight space.
+(a) LoRA factors are transformed into a canonical representation via symmetry-aware QR–SVD decomposition, yielding rank-wise components under a fixed deterministic convention.
+(b) Each rank-wise component is projected into a rank token through modulated tokenization.
+(c) Rank tokens within each position are seen as a set and aggregated via
+σ
+\sigma
+-guided pooling.
+(d) Position tokens are globally modeled to produce a weight-space embedding for downstream tasks.
+3
+Identifying Canonical Object of LoRA
+A LoRA update is parameterized by a factor pair
+𝐁
+∈
+ℝ
+d
+out
+×
+r
+\mathbf{B}\in\mathbb{R}^{d_{\text{out}}\times r}
+and
+𝐀
+∈
+ℝ
+r
+×
+d
+in
+\mathbf{A}\in\mathbb{R}^{r\times d_{\text{in}}}
+,
+with induced matrix update
+Δ
+​
+𝐖
+=
+𝐁𝐀
+\Delta\mathbf{W}=\mathbf{B}\mathbf{A}
+.
+Once LoRA checkpoints are treated as learning objects, the central question is no longer how to process a particular factor pair, but what should represent the update itself.
+This question arises because different factorizations can induce the same
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+, so raw factors depend on parameterization rather than on the update.
+We therefore seek a canonical decomposition of
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+that assigns every LoRA update a unique, deterministic representation, regardless of which factor pair
+(
+𝐁
+,
+𝐀
+)
+(\mathbf{B},\mathbf{A})
+produced it.
+Canonical object.
+Since
+rank
+⁡
+(
+Δ
+​
+𝐖
+)
+≤
+r
+\mathrm{rank}(\Delta\mathbf{W})\leq r
+, the update admits an exact
+r
+r
+-slot SVD,
+Δ
+​
+𝐖
+=
+𝐔
+r
+​
+𝚺
+r
+​
+𝐕
+r
+⊤
+=
+∑
+k
+=
+1
+r
+σ
+k
+​
+𝐮
+k
+​
+𝐯
+k
+⊤
+,
+\Delta\mathbf{W}=\mathbf{U}_{r}\boldsymbol{\Sigma}_{r}\mathbf{V}_{r}^{\top}=\sum_{k=1}^{r}\sigma_{k}\mathbf{u}_{k}\mathbf{v}_{k}^{\top},
+(1)
+with trailing zero components when
+rank
+⁡
+(
+Δ
+​
+𝐖
+)
+<
+r
+\mathrm{rank}(\Delta\mathbf{W})<r
+.
+We take this rank-wise singular decomposition as the canonical object of the LoRA update: it depends only on
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+, so equivalent factorizations yield the same singular values and singular subspaces, up to the standard sign and degeneracy ambiguities of SVD.
+Proposition 3.1
+(
+GL
+⁡
+(
+r
+)
+\mathrm{GL}(r)
+-invariance)
+.
+If
+(
+𝐁
+′
+,
+𝐀
+′
+)
+=
+(
+𝐁𝐆
+,
+𝐆
+−
+1
+​
+𝐀
+)
+(\mathbf{B}^{\prime},\mathbf{A}^{\prime})=(\mathbf{B}\mathbf{G},\,\mathbf{G}^{-1}\mathbf{A})
+for some
+𝐆
+∈
+GL
+⁡
+(
+r
+)
+\mathbf{G}\in\mathrm{GL}(r)
+, then
+𝐁
+′
+​
+𝐀
+′
+=
+𝐁𝐀
+\mathbf{B}^{\prime}\mathbf{A}^{\prime}=\mathbf{B}\mathbf{A}
+, and the decomposition in Eq. (
+1
+) is identical under a fixed sign and ordering convention.
+That is, regardless of which factor pair produces a given
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+, the canonical decomposition is the same.
+Construction from low-rank factors.
+In practice, only the low-rank factors
+(
+𝐁
+,
+𝐀
+)
+(\mathbf{B},\mathbf{A})
+are stored; explicitly forming
+Δ
+​
+𝐖
+∈
+ℝ
+d
+out
+×
+d
+in
+\Delta\mathbf{W}\in\mathbb{R}^{d_{\text{out}}\times d_{\text{in}}}
+is prohibitive.
+We show the canonical decomposition can be obtained directly from
+(
+𝐁
+,
+𝐀
+)
+(\mathbf{B},\mathbf{A})
+via thin QR factorizations and a small SVD.
+Let
+𝐁
+=
+𝐐
+B
+​
+𝐑
+B
+\mathbf{B}=\mathbf{Q}_{B}\mathbf{R}_{B}
+and
+𝐀
+⊤
+=
+𝐐
+A
+​
+𝐑
+A
+\mathbf{A}^{\top}=\mathbf{Q}_{A}\mathbf{R}_{A}
+be thin QR decompositions. Then
+Δ
+​
+𝐖
+=
+𝐁𝐀
+=
+𝐐
+B
+​
+(
+𝐑
+B
+​
+𝐑
+A
+⊤
+)
+⏟
+𝐌
+​
+𝐐
+A
+⊤
+,
+\Delta\mathbf{W}=\mathbf{B}\mathbf{A}=\mathbf{Q}_{B}\underbrace{(\mathbf{R}_{B}\mathbf{R}_{A}^{\top})}_{\mathbf{M}}\mathbf{Q}_{A}^{\top},
+(2)
+where
+𝐌
+∈
+ℝ
+r
+×
+r
+\mathbf{M}\in\mathbb{R}^{r\times r}
+is a small core matrix that captures the entire singular structure of
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+.
+Computing
+𝐌
+=
+𝐔
+^
+​
+𝚺
+​
+𝐕
+^
+⊤
+\mathbf{M}=\hat{\mathbf{U}}\boldsymbol{\Sigma}\hat{\mathbf{V}}^{\top}
+and setting
+𝐔
+=
+𝐐
+B
+​
+𝐔
+^
+\mathbf{U}=\mathbf{Q}_{B}\hat{\mathbf{U}}
+,
+𝐕
+=
+𝐐
+A
+​
+𝐕
+^
+\mathbf{V}=\mathbf{Q}_{A}\hat{\mathbf{V}}
+gives an exact SVD of
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+.
+Proposition 3.2
+(QR-based construction)
+.
+The SVD of
+𝐌
+=
+𝐑
+B
+​
+𝐑
+A
+⊤
+\mathbf{M}=\mathbf{R}_{B}\mathbf{R}_{A}^{\top}
+yields exactly the same singular values and singular subspaces as direct SVD on
+Δ
+​
+𝐖
+=
+𝐁𝐀
+\Delta\mathbf{W}=\mathbf{B}\mathbf{A}
+.
+Proposition
+3.2
+ensures the canonical decomposition is fully recoverable from the stored factors, with cost
+𝒪
+⁡
+(
+(
+d
+out
++
+d
+in
+)
+​
+r
+2
++
+r
+3
+)
+\mathcal{O}((d_{\text{out}}+d_{\text{in}})r^{2}+r^{3})
+instead of
+𝒪
+⁡
+(
+d
+out
+​
+d
+in
+​
+r
+)
+\mathcal{O}(d_{\text{out}}\,d_{\text{in}}\,r)
+.
+4
+W2T: Weight-to-Token Modeling
+Section
+3
+establishes that the canonical object of a LoRA update is its rank-wise singular decomposition
+{
+(
+𝐮
+p
+,
+k
+,
+𝐯
+p
+,
+k
+,
+σ
+p
+,
+k
+)
+}
+k
+=
+1
+r
+\{(\mathbf{u}_{p,k},\mathbf{v}_{p,k},\sigma_{p,k})\}_{k=1}^{r}
+, recoverable directly from the stored factors.
+We now describe W2T, which turns this canonical representation into a learnable embedding for downstream tasks.
+Framework overview.
+As illustrated in Figure
+2
+(a), W2T takes raw LoRA factors
+(
+𝐁
+,
+𝐀
+)
+(\mathbf{B},\mathbf{A})
+at every adapted weight matrix
+p
+p
+(e.g.,
+𝐖
+Q
+\mathbf{W}_{Q}
+in layer 3), applies the canonicalized decomposition from Section
+3
+to obtain the symmetry-aware canonical representation
+(
+𝐔
+,
+𝚺
+,
+𝐕
+⊤
+)
+(\mathbf{U},\boldsymbol{\Sigma},\mathbf{V}^{\top})
+, and converts each rank-wise component into a token
+𝝉
+p
+,
+k
+\boldsymbol{\tau}_{p,k}
+.
+These tokens are then processed by the W2T encoder, which operates in two hierarchical stages: a rank-level Transformer models interactions among rank tokens within each position and aggregates them into position tokens via
+σ
+\sigma
+-guided pooling; a position-level Transformer then models cross-position dependencies and produces a global embedding for downstream classification, prediction, and retrieval.
+Tokenization.
+Each rank component is mapped to a fixed-length token (Figure
+2
+(b)).
+Because
+𝐮
+p
+,
+k
+\mathbf{u}_{p,k}
+and
+𝐯
+p
+,
+k
+\mathbf{v}_{p,k}
+lie in different spaces (output and input, respectively), we encode them with separate projectors and fuse:
+𝐳
+p
+,
+k
+=
+𝐖
+fuse
+[
+ϕ
+u
+(
+𝐮
+p
+,
+k
+)
+∥
+ϕ
+v
+(
+𝐯
+p
+,
+k
+)
+]
+,
+\mathbf{z}_{p,k}=\mathbf{W}_{\mathrm{fuse}}\big[\phi_{u}(\mathbf{u}_{p,k})\,\|\,\phi_{v}(\mathbf{v}_{p,k})\big],
+(3)
+where
+ϕ
+u
+\phi_{u}
+,
+ϕ
+v
+\phi_{v}
+are learnable projectors and
+∥
+\|
+denotes concatenation.
+We then inject the singular value
+σ
+p
+,
+k
+\sigma_{p,k}
+via modulation.
+We first apply a stabilizing transform
+σ
+^
+p
+,
+k
+=
+log
+⁡
+(
+1
++
+σ
+p
+,
+k
+)
+\hat{\sigma}_{p,k}=\log(1+\sigma_{p,k})
+, then map it through an MLP to obtain scale and shift parameters
+(
+γ
+p
+,
+k
+,
+β
+p
+,
+k
+)
+=
+MLP
+σ
+​
+(
+σ
+^
+p
+,
+k
+)
+({\gamma}_{p,k},{\beta}_{p,k})=\mathrm{MLP}_{\sigma}(\hat{\sigma}_{p,k})
+:
+𝝉
+p
+,
+k
+=
+𝐳
+p
+,
+k
+⊙
+(
+1
++
+tanh
+⁡
+(
+γ
+p
+,
+k
+)
+)
++
+β
+p
+,
+k
+,
+\boldsymbol{\tau}_{p,k}=\mathbf{z}_{p,k}\odot\big(1+\tanh({\gamma}_{p,k})\big)+{\beta}_{p,k},
+(4)
+where
+⊙
+\odot
+is element-wise multiplication.
+The modulation lets
+σ
+p
+,
+k
+\sigma_{p,k}
+control how strongly each rank component is expressed in the token, without altering the directional content encoded in
+𝐳
+p
+,
+k
+\mathbf{z}_{p,k}
+.
+Rank-level modeling.
+Recall that each position
+p
+p
+corresponds to one LoRA-adapted weight matrix, yielding
+r
+r
+rank tokens
+𝝉
+p
+,
+1
+:
+r
+\boldsymbol{\tau}_{p,1:r}
+.
+A rank-level Transformer
+f
+rank
+f_{\mathrm{rank}}
+models interactions among these
+r
+r
+tokens within the same position (Figure
+2
+(c)).
+The enriched tokens are then aggregated into a single position token via
+σ
+\sigma
+-guided weighted pooling:
+𝐭
+p
+=
+RankPool
+(
+f
+rank
+(
+𝝉
+p
+,
+1
+:
+r
+)
+,
+σ
+p
+,
+1
+:
+r
+)
+,
+\mathbf{t}_{p}=\mathrm{RankPool}\!\left(f_{\mathrm{rank}}(\boldsymbol{\tau}_{p,1:r}),\,\sigma_{p,1:r}\right),
+(5)
+where
+RankPool
+\mathrm{RankPool}
+computes a weighted sum of rank tokens using the normalised singular values as weights, so that dominant components contribute more strongly to the position representation.
+Position-level modeling.
+Position tokens are augmented with learnable embeddings for layer depth and module type (Figure
+2
+(d)):
+𝐭
+~
+p
+=
+𝐭
+p
++
+𝐞
+layer
+​
+(
+ℓ
+⁡
+(
+p
+)
+)
++
+𝐞
+module
+​
+(
+m
+⁡
+(
+p
+)
+)
+,
+\tilde{\mathbf{t}}_{p}=\mathbf{t}_{p}+\mathbf{e}_{\mathrm{layer}}(\ell(p))+\mathbf{e}_{\mathrm{module}}(m(p)),
+(6)
+then processed by a position-level Transformer
+f
+pos
+f_{\mathrm{pos}}
+that captures cross-position dependencies:
+𝐠
+1
+:
+|
+𝒫
+|
+=
+f
+pos
+(
+𝐭
+~
+1
+:
+|
+𝒫
+|
+)
+.
+\mathbf{g}_{1:|\mathcal{P}|}=f_{\mathrm{pos}}(\tilde{\mathbf{t}}_{1:|\mathcal{P}|}).
+(7)
+Finally, attention pooling yields a global embedding
+𝐡
+=
+∑
+p
+∈
+𝒫
+α
+p
+​
+𝐠
+p
+\mathbf{h}=\sum_{p\in\mathcal{P}}\alpha_{p}\mathbf{g}_{p}
+, which serves as the LoRA checkpoint representation for downstream tasks.
+5
+Experiments
+Table 1:
+Attribute classification results (%). The best value in each column is highlighted in
+bold
+.
+Algorithm
+GoEmotions-LoRA
+CelebA-LoRA
+CUB-LoRA
+Macro-F1
+↑
+\uparrow
+Micro-F1
+↑
+\uparrow
+AUROC
+↑
+\uparrow
+Macro-F1
+↑
+\uparrow
+Micro-F1
+↑
+\uparrow
+AUROC
+↑
+\uparrow
+Macro-F1
+↑
+\uparrow
+Micro-F1
+↑
+\uparrow
+AUROC
+↑
+\uparrow
+MLP
+2.87
+2.87
+21.67
+21.67
+49.40
+49.40
+7.73
+7.73
+40.64
+40.64
+51.60
+51.60
+7.44
+7.44
+26.23
+26.23
+47.81
+47.81
+CNN
+0.00
+0.00
+0.00
+0.00
+51.78
+51.78
+15.61
+15.61
+50.15
+50.15
+60.66
+60.66
+1.40
+1.40
+18.48
+18.48
+50.22
+50.22
+ViT
+1.16
+1.16
+14.52
+14.52
+49.78
+49.78
+6.07
+6.07
+37.32
+37.32
+49.11
+49.11
+1.21
+1.21
+16.83
+16.83
+50.41
+50.41
+GLNet
+1.17
+1.17
+9.97
+9.97
+47.77
+47.77
+48.61
+48.61
+74.83
+74.83
+89.53
+89.53
+10.73
+10.73
+38.69
+38.69
+69.84
+69.84
+W2T (Ours)
+5.67
+24.84
+61.25
+50.38
+75.02
+89.64
+18.34
+43.24
+73.72
+5.1
+Setup
+Experimental Setting.
+Our experiments target the setting where the only input is a complete LoRA checkpoint. Each checkpoint is treated as one sample in a weight dataset, and supervision is attached at the checkpoint level. Concretely, the label of a LoRA sample denotes either the semantic attributes inherited from the data used to train that adapter, or the downstream evaluation scores measured from that adapter.
+LoRA datasets and tasks.
+Our main supervised collections span vision and language, with 8:1:1 train/val/test splits over LoRA samples. On the vision side, LoRAs are trained on Stable Diffusion v1.4
+(
+Rombach et al., 2022
+)
+from CelebA
+(
+Liu et al., 2015
+)
+and CUB
+(
+Wah et al., 2011
+)
+, yielding CelebA-LoRA and CUB-LoRA. On the language side, all LoRAs use Llama-3.2-3B
+(
+Grattafiori et al., 2024
+)
+. GoEmotions-LoRA
+(
+Demszky et al., 2020
+)
+supports semantic characterization, while ARC-LoRA supports performance prediction on ARC-Easy. Separately, for adapter retrieval, we build a mixed language adapter pool from four task datasets: ARC-Challenge
+(
+Clark et al., 2018
+)
+, BoolQ
+(
+Clark et al., 2019
+)
+, GSM8K
+(
+Cobbe et al., 2021
+)
+, and MBPP
+(
+Austin et al., 2021
+)
+.
+Detailed checkpoint-level label definitions, generation protocols, split rules, and retrieval pool construction are deferred to Appendix
+B
+.
+Baselines.
+We compare W2T with one symmetry-aware baseline and several symmetry-agnostic raw-factor encoders.
+GLNet
+(
+Putterman et al., 2025
+)
+is specifically designed to respect the intrinsic
+GL
+⁡
+(
+r
+)
+\mathrm{GL}(r)
+symmetry of LoRA factorization.
+MLP, CNN
+(
+Jin et al., 2024
+;
+Liang et al., 2025
+)
+, and ViT
+(
+Wang et al., 2025a
+;
+Shahroz et al., 2025
+)
+instead encode flattened or reshaped raw LoRA factors without explicit symmetry modeling.
+For generic baselines, we compare their encoder architectures rather than their original end-to-end application setups. The details of all baselines and their implementation in our setting are described in Appendix
+B.3
+.
+Evaluation metrics.
+For attribute classification, we report macro-F1, micro-F1, and area under the ROC curve (AUROC). For performance prediction, we report mean absolute error (MAE), root mean squared error (RMSE), Pearson correlation, and Spearman correlation. For adapter retrieval, we report normalized discounted cumulative gain at 10 (NDCG@10).
+All reported results are averaged over five independent runs.
+5.2
+What Can We Decode from LoRA Weights Alone?
+We test this question along three axes: attribute classification, performance prediction, and adapter retrieval, corresponding to adapter semantics, downstream quality, and task-level similarity.
+Attribute classification.
+Given a LoRA adapter trained on a subset of data defined by certain attributes (e.g., facial features in CelebA, bird species traits in CUB, or emotion categories in GoEmotions), we train a linear classifier to predict those attributes solely from the adapter’s weight representation.
+As shown in Table
+1
+, on CelebA-LoRA and CUB-LoRA, several baselines already obtain non-trivial scores, confirming that LoRA weights do encode semantic information about the training data.
+GoEmotions-LoRA is more challenging and exposes larger gaps between representations.
+Raw-factor baselines already recover some semantic information, but W2T achieves the strongest overall results and the most reliable performance across datasets.
+These results suggest that the main challenge is not whether semantic information exists in LoRA weights, but how effectively a representation can decode it.
+Performance prediction.
+Table 2:
+Performance prediction results (%) on ARC-LoRA. Best values are in
+bold
+.
+Method
+Split
+MAE
+↓
+\downarrow
+RMSE
+↓
+\downarrow
+Pearson
+↑
+\uparrow
+Spearman
+↑
+\uparrow
+MLP
+Valid
+1.58
+1.58
+4.75
+4.75
+68.12
+68.12
+70.49
+70.49
+Test
+1.29
+1.29
+3.31
+3.31
+71.88
+71.88
+71.55
+71.55
+CNN
+Valid
+0.92
+0.92
+1.98
+1.98
+94.29
+94.29
+75.62
+75.62
+Test
+0.89
+0.89
+2.04
+2.04
+89.48
+89.48
+75.39
+75.39
+ViT
+Valid
+0.80
+0.80
+2.00
+2.00
+94.23
+94.23
+70.94
+70.94
+Test
+0.77
+0.77
+1.76
+1.76
+92.17
+92.17
+71.30
+71.30
+GLNet
+Valid
+0.63
+0.63
+3.05
+3.05
+91.05
+91.05
+94.45
+94.45
+Test
+0.43
+0.43
+1.90
+1.90
+92.78
+92.78
+94.16
+94.16
+Valid
+0.34
+0.72
+99.37
+95.26
+W2T (Ours)
+Test
+0.32
+0.67
+98.98
+95.35
+Given a collection of LoRA adapters trained on ARC-Easy under diverse hyperparameter configurations, we train a regressor to predict each adapter’s downstream accuracy solely from its weight representation.
+Unlike attribute classification, where labels reflect training data identity, performance prediction requires the representation to encode quality signals that generalize across different training conditions.
+As shown in Table
+2
+, LoRA weights do encode how well the adapter will perform downstream.
+MAE and RMSE measure numerical fidelity, while Pearson and Spearman measure ranking consistency across checkpoints.
+W2T performs strongly on both error-based and rank-based metrics.
+The same symmetry-aware pattern appears here: methods that resolve reparameterization ambiguity consistently outperform raw-factor baselines.
+This indicates that representation quality mainly affects calibration and ordering accuracy, not only absolute error.
+Adapter retrieval
+Table 3:
+Adapter retrieval results (NDCG@10, %).
+All learned encoders are trained on ARC-Easy-LoRA performance prediction and transferred to retrieval without retrieval-specific tuning.
+RawCos is a training-free baseline that ranks adapters by cosine similarity in raw LoRA weight space. Best values are in
+bold
+.
+Method
+Average
+ARC-C
+BoolQ
+GSM8K
+MBPP
+RawCos
+35.73
+35.73
+39.90
+39.90
+45.17
+45.17
+33.41
+24.42
+24.42
+MLP
+27.82
+27.82
+35.61
+35.61
+0.00
+0.00
+0.00
+0.00
+75.65
+75.65
+CNN
+24.54
+24.54
+17.56
+17.56
+42.80
+42.80
+4.84
+4.84
+32.95
+32.95
+ViT
+25.33
+25.33
+13.32
+13.32
+33.15
+33.15
+29.55
+29.55
+25.30
+25.30
+GLNet
+43.97
+43.97
+77.84
+77.84
+0.00
+0.00
+16.65
+16.65
+81.39
+81.39
+W2T (Ours)
+65.71
+99.14
+50.76
+24.97
+24.97
+87.96
+Given a mixed pool of LoRA adapters spanning multiple downstream tasks, we ask whether weight-space representations can identify adapters associated with a target task using only weight-space similarity, without access to task labels or adapter outputs.
+This tests a transfer dimension absent from the previous two tasks: the encoder is trained on a different source task and must generalize to unseen task categories at retrieval time.
+Table
+3
+evaluates this setting: a weight-space encoder trained on one source task is used to retrieve adapters associated with related downstream tasks in a mixed pool.
+All learned encoders are trained only for ARC-Easy-LoRA performance prediction, then frozen and transferred to retrieval on a mixed adapter pool (ARC-Challenge, BoolQ, GSM8K, MBPP) without retrieval-specific tuning.
+We also include a training-free baseline, RawCos, which directly ranks by cosine similarity in raw LoRA weight space.
+W2T achieves the best average retrieval quality and is strongest on three of four datasets, indicating that canonical token representations transfer well beyond the source task.
+On GSM8K, RawCos is higher, which is consistent with target-shift effects: under a frozen transfer backbone trained on another task, distribution mismatch can hurt task-specific ranking, while raw similarity may remain competitive on outlier domains.
+Even with this outlier, W2T remains the best overall method by average NDCG@10.
+Figure 3:
+Local retrieval neighborhood for a 8-shot BoolQ query. Each subplot shows the same query (star) amid a shared pool. W2T places relevant adapters (dark) closest to the query with top-1 hit and rel@5=5, while baselines surface more irrelevant neighbors.
+Figure
+3
+illustrates this advantage from a local geometric perspective. For a fixed BoolQ query adapter, we visualize the shared gallery neighborhood retrieved across all models. W2T concentrates relevant adapters near the query, whereas baselines produce mixed neighborhoods with more irrelevant top-ranked results.
+Appendix
+C.2
+further analyzes this transfer from the cost–quality trade-off of adapter retrieval.
+Ablation study.
+Figure 4:
+Ablation on attribute classification. Results are reported on CelebA-LoRA. Removing QR–SVD causes the largest performance drop, while removing rank-level or position-level modeling leads to smaller but consistent degradations.
+Figure
+4
+gives a clear pattern.
+When rank-level modeling or position-level modeling is removed, performance drops in a consistent but limited way, which means both parts are useful.
+The much bigger change appears when canonicalized tokenization (QR–SVD) is removed and the raw
+𝐁
+\mathbf{B}
+and
+𝐀
+\mathbf{A}
+factors are instead flattened and concatenated as the input representation: metrics fall sharply and become close to raw-factor baselines.
+These results indicate that symmetry-aware canonicalization is the primary driver of W2T’s advantage over raw-factor baselines.
+Summary.
+Across classification, performance prediction, and retrieval, these results show that LoRA weights do contain usable signals about adapter semantics, downstream quality, and task-level similarity.
+W2T reads these signals most effectively, motivating a deeper analysis of whether explicit symmetry resolution is the key factor behind these gains.
+5.3
+Why Does Symmetry Resolution Drive the Performance Gap?
+The results above show a consistent advantage for symmetry-aware methods, but do not yet isolate
+why
+.
+We analyze this question at two levels: model behavior and decomposition fidelity.
+Figure 5:
+Practical GL(
+r
+r
+) invariance.
+The horizontal axis is perturbation strength
+α
+\alpha
+in random GL(
+r
+r
+) reparameterization (larger
+α
+\alpha
+means stronger perturbation).
+Left: embedding drift under increasing perturbation.
+Right: prediction consistency under the same perturbation schedule.
+Table 4:
+Practical equivalence of QR-based core SVD and direct SVD. Unless noted otherwise, values are per-pair medians; Factor cosine reports the mean of per-pair minimum subspace cosines.
+Property
+Value
+Singular-value gap
+δ
+σ
+↓
+\delta_{\sigma}\downarrow
+3.13
+×
+10
+−
+6
+3.13\times 10^{-6}
+Update gap
+δ
+Δ
+​
+W
+↓
+\delta_{\Delta W}\downarrow
+1.38
+×
+10
+−
+5
+1.38\times 10^{-5}
+Factor cosine
+(
+U
+/
+V
+)
+(U/V)
+(mean)
+↑
+\uparrow
+0.999946
+/
+0.999955
+0.999946/0.999955
+Time (ms), SVD / QR–SVD
+73.17
+/
+0.779
+73.17/0.779
+Speedup
+↑
+\uparrow
+93.18
+×
+93.18\times
+Figure 6:
+Scaling behavior from a training-data ratio of 0.7 onward. Markers are raw Macro-F1 values. Dashed curves are 3-point centered moving-average trends. The lower panel reports pointwise
+Δ
+\Delta
+. Over this displayed range, W2T follows a steeper upward trend than GLNet.
+Practical GL(
+r
+r
+) invariance.
+Figure
+5
+shows that canonical decomposition stabilizes both representation and prediction under
+GL
+⁡
+(
+r
+)
+\mathrm{GL}(r)
+reparameterization.
+Concretely, for each checkpoint we apply
+(
+B
+,
+A
+)
+↦
+(
+B
+​
+G
+,
+G
+−
+1
+​
+A
+)
+(B,A)\!\mapsto\!(BG,\,G^{-1}A)
+with random
+G
+G
+, where
+α
+\alpha
+controls the perturbation strength.
+Each point aggregates 30 random transforms at that
+α
+\alpha
+(mean with confidence interval), and
+α
+=
+1.0
+\alpha=1.0
+is the strongest setting.
+With QR–SVD canonicalization, embedding drift stays near zero and prediction agreement remains high; without it, both degrade sharply.
+This aligns with the ablation results in Section
+5.2
+, where removing QR–SVD causes by far the largest drop in downstream performance.
+Table
+4
+serves as an implementation check.
+Under float32 precision, reduced QR–SVD introduces only negligible numerical discrepancies relative to direct SVD while still reducing decomposition time by nearly two orders of magnitude, confirming that the efficient construction is faithful enough for practical use.
+These tiny gaps mainly come from finite-precision rounding and accumulated multiplication error along different decomposition paths, rather than a mismatch in the underlying representation.
+The prediction consistency in Figure
+5
+further shows that these numerical effects do not break the effective uniqueness of our representation under GL(
+r
+r
+) transformations.
+Scaling with Supervision.
+Figure
+6
+compares W2T and GLNet over the displayed training-data ratios, from 0.7 onward.
+It shows both raw Macro-F1 points and smoothed trends, where the trend is computed with a 3-point centered moving average (with edge padding at boundaries).
+We use the smoothed curves only for readability, while conclusions are drawn from the raw points.
+From a training-data ratio of 0.7 onward, the smoothed trend of W2T rises more steeply than that of GLNet, indicating that it benefits more from additional supervision.
+Since both methods are symmetry-aware, this pattern points to a difference in how they use supervision rather than whether they handle symmetry at all.
+A likely explanation is architectural: GLNet relies on equivariant linear layers, whereas W2T uses a Transformer over canonical tokens, whose higher modeling capacity appears to make better use of additional supervision.
+Table 5:
+Base-model transfer on CelebA-LoRA (%). All models are trained on SD1.4 LoRA checkpoints and evaluated zero-shot on SD1.5 at the same rank (
+r
+=
+8
+r=8
+). Oracle denotes the in-domain W2T result on SD1.5 under the same protocol.
+Method
+Macro-F1
+↑
+\uparrow
+Micro-F1
+↑
+\uparrow
+mAUROC
+↑
+\uparrow
+MLP
+11.51
+11.51
+43.91
+43.91
+52.25
+52.25
+CNN
+5.01
+5.01
+32.06
+32.06
+49.25
+49.25
+ViT
+6.08
+6.08
+37.32
+37.32
+49.70
+49.70
+GLNet
+46.41
+46.41
+73.70
+73.70
+89.16
+89.16
+W2T (Ours)
+48.06
+73.84
+89.23
+Oracle (SD1.5)
+50.24
+50.24
+74.82
+74.82
+89.30
+89.30
+5.4
+How Well Does the Learned Representation Transfer?
+The previous experiments operate within the training-time factorization and backbone configuration.
+We now test cross-backbone transfer by training on SD1.4 and evaluating zero-shot on SD1.5 at the same rank (
+r
+=
+8
+r=8
+).
+Table
+5
+reports this base-model transfer setting together with an in-domain oracle on SD1.5.
+Raw-factor baselines remain far below the symmetry-aware methods under this transfer.
+W2T slightly outperforms GLNet across all three metrics and remains close to the SD1.5 oracle.
+This suggests that the learned representation transfers across nearby base models rather than overfitting a single backbone instance.
+6
+Conclusion
+We presented W2T, a framework that canonicalizes LoRA updates via QR–SVD decomposition, tokenizes the resulting rank-wise components, and models them with a Transformer.
+Across attribute classification, performance prediction, adapter retrieval, and base-model transfer, W2T achieves strong results over raw-factor baselines and prior symmetry-aware alternatives, with ablations confirming that canonical decomposition is the primary driver of robustness.
+Our findings suggest that scalable inference from LoRA weights depends on constructing a canonical, structured representation that standard architectures can learn from effectively.
+Limitations
+Scope of the studied object.
+W2T studies standalone LoRA checkpoints as the object of weight-space inference. The current formulation assumes that each sample corresponds to a single LoRA update attached to a fixed backbone and adapter layout. It does not yet address settings such as merged adapters, composed checkpoints, or dynamic multi-adapter workflows, where the relation between stored weights and downstream behavior can be more complex.
+Empirical coverage.
+Our experiments focus on discriminative uses of LoRA representations, including classification, regression, and similarity-based retrieval. It remains unclear how the same canonicalized representation should be used in generative settings. In particular, if a model is trained to generate canonicalized weights rather than raw LoRA factors, the target space may no longer match the format that is most natural for storage, exchange, or direct deployment.
+Deployment considerations.
+Our retrieval study is still a proxy setting rather than a full retrieval system. The current encoder is trained through another supervised task and then reused to compute embedding similarity. A realistic large-scale retrieval model would likely require retrieval-specific training, indexing, negative sampling, and serving design. Building such a task-native retrieval pipeline remains an important direction for future work.
+Ethical Considerations
+This work is a piece of basic research on weight-space representation learning. All experiments are conducted on public datasets, public model families, and openly available LoRA-style training pipelines; we do not use private user data or domain-specific confidential data.
+The main ethical risk is not in the data source itself, but in what weight-space analysis could enable. Methods that infer semantics, performance, or similarity directly from checkpoints may eventually support large-scale profiling, filtering, or attribution of third-party adapters. For this reason, such tools should be used as analytical aids rather than definitive judgments about a model’s capability, intent, or safety.
+References
+Austin
+et al.
+(2021)
+J. Austin, A. Odena, M. Nye, M. Bosma, H. Michalewski, D. Dohan, E. Jiang, C. Cai, M. Terry, Q. Le,
+et al.
+Program synthesis with large language models
+.
+arXiv preprint arXiv:2108.07732
+.
+Cited by:
+§5.1
+.
+Clark
+et al.
+(2019)
+C. Clark, K. Lee, M. Chang, T. Kwiatkowski, M. Collins, and K. Toutanova
+Boolq: exploring the surprising difficulty of natural yes/no questions
+.
+In
+Proceedings of the 2019 conference of the north American chapter of the association for computational linguistics: Human language technologies, volume 1 (long and short papers)
+,
+pp. 2924–2936
+.
+Cited by:
+§5.1
+.
+Clark
+et al.
+(2018)
+P. Clark, I. Cowhey, O. Etzioni, T. Khot, A. Sabharwal, C. Schoenick, and O. Tafjord
+Think you have solved question answering? try arc, the ai2 reasoning challenge
+.
+arXiv preprint arXiv:1803.05457
+.
+Cited by:
+§5.1
+.
+Cobbe
+et al.
+(2021)
+K. Cobbe, V. Kosaraju, M. Bavarian, M. Chen, H. Jun, L. Kaiser, M. Plappert, J. Tworek, J. Hilton, R. Nakano,
+et al.
+Training verifiers to solve math word problems
+.
+arXiv preprint arXiv:2110.14168
+.
+Cited by:
+§5.1
+.
+Demszky
+et al.
+(2020)
+D. Demszky, D. Movshovitz-Attias, J. Ko, A. Cowen, G. Nemade, and S. Ravi
+GoEmotions: a dataset of fine-grained emotions
+.
+In
+Proceedings of the 58th annual meeting of the association for computational linguistics
+,
+pp. 4040–4054
+.
+Cited by:
+§5.1
+.
+Dettmers
+et al.
+(2023)
+T. Dettmers, A. Pagnoni, A. Holtzman, and L. Zettlemoyer
+Qlora: efficient finetuning of quantized llms
+.
+Advances in neural information processing systems
+36
+,
+pp. 10088–10115
+.
+Cited by:
+§1
+,
+§2
+.
+Dravid
+et al.
+(2024)
+A. Dravid, Y. Gandelsman, K. Wang, R. Abdal, G. Wetzstein, A. Efros, and K. Aberman
+Interpreting the weight space of customized diffusion models
+.
+Advances in Neural Information Processing Systems
+37
+,
+pp. 137334–137371
+.
+Cited by:
+§2
+.
+Eilertsen
+et al.
+(2020)
+G. Eilertsen, D. Jönsson, T. Ropinski, J. Unger, and A. Ynnerman
+Classifying the classifier: dissecting the weight space of neural networks
+.
+In
+European Conference on Artificial Intelligence (ECAI 2020)
+,
+Vol.
+325
+,
+pp. 1119–1126
+.
+Cited by:
+§2
+.
+Fan
+et al.
+(2025)
+C. Fan, Z. Lu, S. Liu, C. Gu, X. Qu, W. Wei, and Y. Cheng
+Make lora great again: boosting lora with adaptive singular values and mixture-of-experts optimization alignment
+.
+In
+International Conference on Machine Learning
+,
+pp. 15804–15832
+.
+Cited by:
+§2
+.
+Gabrielsson
+et al.
+(2025)
+R. B. Gabrielsson, J. Zhu, O. Bhardwaj, L. Choshen, K. Greenewald, M. Yurochkin, and J. Solomon
+Compress then serve: serving thousands of lora adapters with little overhead
+.
+In
+International Conference on Machine Learning
+,
+pp. 18062–18095
+.
+Cited by:
+§1
+,
+§2
+.
+Gao
+et al.
+(2025)
+C. Gao, K. Chen, J. Rao, R. Liu, B. Sun, Y. Zhang, D. Peng, X. Guo, and V. Subrahmanian
+MoLA: moe lora with layer-wise expert allocation
+.
+In
+Findings of the Association for Computational Linguistics: NAACL 2025
+,
+pp. 5097–5112
+.
+Cited by:
+§2
+.
+Grattafiori
+et al.
+(2024)
+A. Grattafiori, A. Dubey, A. Jauhri, A. Pandey, A. Kadian, A. Al-Dahle, A. Letman, A. Mathur, A. Schelten, A. Vaughan,
+et al.
+The llama 3 herd of models
+.
+arXiv preprint arXiv:2407.21783
+.
+Cited by:
+§5.1
+.
+Gu
+et al.
+(2023)
+Y. Gu, X. Wang, J. Z. Wu, Y. Shi, Y. Chen, Z. Fan, W. Xiao, R. Zhao, S. Chang, W. Wu, Y. Ge, Y. Shan, and M. Z. Shou
+Mix-of-show: decentralized low-rank adaptation for multi-concept customization of diffusion models
+.
+Advances in Neural Information Processing Systems
+36
+,
+pp. 15890–15902
+.
+Cited by:
+§2
+.
+Hayou
+et al.
+(2024)
+S. Hayou, N. Ghosh, and B. Yu
+LoRA+: efficient low rank adaptation of large models
+.
+In
+International Conference on Machine Learning
+,
+Cited by:
+§2
+.
+Horwitz
+et al.
+(2025a)
+E. Horwitz, B. Cavia, J. Kahana, and Y. Hoshen
+Learning on model weights using tree experts
+.
+In
+Proceedings of the Computer Vision and Pattern Recognition Conference
+,
+pp. 20468–20478
+.
+Cited by:
+§1
+.
+Horwitz
+et al.
+(2025b)
+E. Horwitz, N. Kurer, J. Kahana, L. Amar, and Y. Hoshen
+We should chart an atlas of all the world’s models
+.
+In
+The Thirty-Ninth Annual Conference on Neural Information Processing Systems Position Paper Track
+,
+Cited by:
+§1
+.
+Hu
+et al.
+(2022)
+E. J. Hu, yelong shen, P. Wallis, Z. Allen-Zhu, Y. Li, S. Wang, L. Wang, and W. Chen
+LoRA: low-rank adaptation of large language models
+.
+In
+International Conference on Learning Representations
+,
+Cited by:
+§1
+,
+§2
+.
+Huang
+et al.
+(2024)
+C. Huang, Q. Liu, B. Y. Lin, T. Pang, C. Du, and M. Lin
+LoraHub: efficient cross-task generalization via dynamic lora composition
+.
+In
+First Conference on Language Modeling
+,
+Cited by:
+§1
+,
+§2
+.
+Jin
+et al.
+(2024)
+X. Jin, K. Wang, D. Tang, W. Zhao, Y. Zhou, J. Tang, and Y. You
+Conditional lora parameter generation
+.
+arXiv preprint arXiv:2408.01415
+.
+Cited by:
+§1
+,
+§2
+,
+§5.1
+.
+Kahana
+et al.
+(2025)
+J. Kahana, O. Nathan, E. Horwitz, and Y. Hoshen
+Can this model also recognize dogs? zero-shot model search from weights
+.
+In
+Workshop on Neural Network Weights as a New Data Modality
+,
+Cited by:
+§1
+.
+Kaushik
+et al.
+(2025)
+P. Kaushik, S. Chaudhari, A. Vaidya, R. Chellappa, and A. Yuille
+The universal weight subspace hypothesis
+.
+arXiv preprint arXiv:2512.05117
+.
+Cited by:
+§2
+.
+Liang
+et al.
+(2025)
+Z. Liang, D. Tang, Y. Zhou, X. Zhao, M. Shi, W. Zhao, Z. Li, P. Wang, K. Schürholt, D. Borth, M. M. Bronstein, Y. You, Z. Wang, and K. Wang
+Drag-and-drop LLMs: zero-shot prompt-to-weights
+.
+In
+Advances in neural information processing systems
+,
+Cited by:
+§2
+,
+§5.1
+.
+Liu
+et al.
+(2024a)
+C. Liu, T. Takikawa, and A. Jacobson
+A lora is worth a thousand pictures
+.
+arXiv preprint arXiv:2412.12048
+.
+Cited by:
+§2
+.
+Liu
+et al.
+(2024b)
+S. Liu, C. Wang, H. Yin, P. Molchanov, Y. F. Wang, K. Cheng, and M. Chen
+DoRA: weight-decomposed low-rank adaptation
+.
+In
+International Conference on Machine Learning
+,
+pp. 32100–32121
+.
+Cited by:
+§1
+,
+§2
+.
+Liu
+et al.
+(2015)
+Z. Liu, P. Luo, X. Wang, and X. Tang
+Deep learning face attributes in the wild
+.
+In
+Proceedings of the IEEE international conference on computer vision
+,
+pp. 3730–3738
+.
+Cited by:
+§5.1
+.
+Meng
+et al.
+(2024)
+F. Meng, Z. Wang, and M. Zhang
+Pissa: principal singular values and singular vectors adaptation of large language models
+.
+Advances in Neural Information Processing Systems
+37
+,
+pp. 121038–121072
+.
+Cited by:
+§2
+.
+Navon
+et al.
+(2023)
+A. Navon, A. Shamsian, I. Achituve, E. Fetaya, G. Chechik, and H. Maron
+Equivariant architectures for learning in deep weight spaces
+.
+In
+International Conference on Machine Learning
+,
+pp. 25790–25816
+.
+Cited by:
+§2
+.
+Putterman
+et al.
+(2025)
+T. Putterman, D. Lim, Y. Gelberg, M. M. Bronstein, S. Jegelka, and H. Maron
+GL equivariant metanetworks for learning on low rank weight spaces
+.
+In
+The Fourth Learning on Graphs Conference
+,
+Cited by:
+§1
+,
+§1
+,
+§2
+,
+§5.1
+.
+Rombach
+et al.
+(2022)
+R. Rombach, A. Blattmann, D. Lorenz, P. Esser, and B. Ommer
+High-resolution image synthesis with latent diffusion models
+.
+In
+Proceedings of the IEEE/CVF conference on computer vision and pattern recognition
+,
+pp. 10684–10695
+.
+Cited by:
+§5.1
+.
+Salama
+et al.
+(2024)
+M. Salama, J. Kahana, E. Horwitz, and Y. Hoshen
+Dataset size recovery from lora weights
+.
+arXiv preprint arXiv:2406.19395
+.
+Cited by:
+§1
+,
+§2
+.
+Schürholt
+et al.
+(2021)
+K. Schürholt, D. Kostadinov, and D. Borth
+Self-supervised representation learning on neural network weights for model characteristic prediction
+.
+Advances in Neural Information Processing Systems
+34
+,
+pp. 16481–16493
+.
+Cited by:
+§1
+.
+Schürholt
+et al.
+(2024)
+K. Schürholt, M. W. Mahoney, and D. Borth
+Towards scalable and versatile weight space learning
+.
+In
+International Conference on Machine Learning
+,
+pp. 43947–43966
+.
+Cited by:
+§1
+,
+§2
+.
+Shahroz
+et al.
+(2025)
+R. Shahroz, D. Tang, P. Li, K. Wang, and T. Chen
+ORAL: prompting your large-scale loras via conditional recurrent diffusion
+.
+In
+Findings of the Association for Computational Linguistics: EMNLP 2025
+,
+pp. 1357–1370
+.
+Cited by:
+§1
+,
+§2
+,
+§5.1
+.
+Sheng
+et al.
+(2023)
+Y. Sheng, S. Cao, D. Li, C. Hooper, N. Lee, S. Yang, C. Chou, B. Zhu, L. Zheng, K. Keutzer, J. E. Gonzalez, and I. Stoica
+S-lora: serving thousands of concurrent lora adapters
+.
+arXiv preprint arXiv:2311.03285
+.
+Cited by:
+§1
+,
+§2
+.
+Sun
+et al.
+(2025)
+M. Sun, Y. Wang, T. Feng, D. Zhang, Y. Zhu, and J. Tang
+A stronger mixture of low-rank experts for fine-tuning foundation models
+.
+In
+International Conference on Machine Learning
+,
+pp. 57712–57727
+.
+Cited by:
+§2
+.
+Unterthiner
+et al.
+(2020)
+T. Unterthiner, D. Keysers, S. Gelly, O. Bousquet, and I. Tolstikhin
+Predicting neural network accuracy from weights
+.
+arXiv preprint arXiv:2002.11448
+.
+Cited by:
+§1
+,
+§2
+.
+Wah
+et al.
+(2011)
+C. Wah, S. Branson, P. Welinder, P. Perona, and S. Belongie
+The caltech-ucsd birds-200-2011 dataset
+.
+Technical report
+Technical Report
+CNS-TR-2011-001
+,
+California Institute of Technology
+.
+Cited by:
+§5.1
+.
+Wang
+et al.
+(2025a)
+K. Wang, D. Tang, W. Zhao, K. Schürholt, Z. Wang, and Y. You
+Scaling up parameter generation: a recurrent diffusion approach
+.
+In
+Advances in neural information processing systems
+,
+Cited by:
+§1
+,
+§2
+,
+§5.1
+.
+Wang
+et al.
+(2026a)
+Z. Wang, X. Han, Q. Yang, X. Tang, F. Wu, X. Guo, W. Sun, T. Ma, P. Lio, L. Cong, S. Wang, C. Zhang, and Y. Ye
+Molecular representations in implicit functional space via hyper-networks
+.
+arXiv preprint arXiv:2601.22327
+.
+Cited by:
+§2
+.
+Wang
+et al.
+(2026b)
+Z. Wang, F. Wu, H. Wang, X. Tang, B. Li, Z. Yin, Y. Ma, Y. Li, W. Sun, X. Chen,
+et al.
+Why reasoning fails to plan: a planning-centric analysis of long-horizon decision making in llm agents
+.
+arXiv preprint arXiv:2601.22311
+.
+Cited by:
+§1
+.
+Wang
+et al.
+(2024)
+Z. Wang, Z. Zhang, N. V. Chawla, C. Zhang, and Y. Ye
+Gft: graph foundation model with transferable tree vocabulary
+.
+Advances in neural information processing systems
+37
+,
+pp. 107403–107443
+.
+Cited by:
+§1
+.
+Wang
+et al.
+(2025b)
+Z. Wang, Z. Zhang, T. Ma, N. V. Chawla, C. Zhang, and Y. Ye
+Beyond message passing: neural graph pattern machine
+.
+In
+International Conference on Machine Learning
+,
+Cited by:
+§1
+.
+Wang
+et al.
+(2025c)
+Z. Wang, Z. Zhang, T. Ma, C. Zhang, and Y. Ye
+Generative graph pattern machine
+.
+In
+Advances in Neural Information Processing Systems
+,
+Cited by:
+§1
+.
+Zhang
+et al.
+(2023a)
+L. Zhang, L. Zhang, S. Shi, X. Chu, and B. Li
+Lora-fa: memory-efficient low-rank adaptation for large language models fine-tuning
+.
+arXiv preprint arXiv:2308.03303
+.
+Cited by:
+§2
+.
+Zhang
+et al.
+(2023b)
+Q. Zhang, M. Chen, A. Bukharin, P. He, Y. Cheng, W. Chen, and T. Zhao
+Adaptive budget allocation for parameter-efficient fine-tuning
+.
+In
+International Conference on Learning Representations
+,
+Cited by:
+§2
+.
+Zhou
+et al.
+(2024)
+A. Zhou, C. Finn, and J. Harrison
+Universal neural functionals
+.
+Advances in neural information processing systems
+37
+,
+pp. 104754–104775
+.
+Cited by:
+§2
+.
+Zhou
+et al.
+(2023)
+A. Zhou, K. Yang, K. Burns, A. Cardace, Y. Jiang, S. Sokota, J. Z. Kolter, and C. Finn
+Permutation equivariant neural functionals
+.
+Advances in neural information processing systems
+36
+,
+pp. 24966–24992
+.
+Cited by:
+§2
+.
+Zhou
+et al.
+(2025)
+H. Zhou, X. Lu, W. Xu, C. Zhu, T. Zhao, and M. Yang
+Lora-drop: efficient lora parameter pruning based on output evaluation
+.
+In
+Proceedings of the 31st International Conference on Computational Linguistics
+,
+pp. 5530–5543
+.
+Cited by:
+§2
+.
+Zhuo
+et al.
+(2024)
+J. Zhuo, S. Zhang, X. Fang, H. Duan, D. Lin, and K. Chen
+ProSA: assessing and understanding the prompt sensitivity of llms
+.
+In
+Findings of the Association for Computational Linguistics: EMNLP 2024
+,
+pp. 1950–1976
+.
+Cited by:
+§1
+.
+Appendix A
+Theoretical Proofs
+This appendix provides formal proofs for the two theoretical statements used in Section
+3
+: (i) Proposition
+3.1
+on the invariance of the canonical rank-wise decomposition under LoRA reparameterisation, and (ii) Proposition
+3.2
+on the QR-based construction of the same canonical object from low-rank factors.
+A.1
+Invariance of the Canonical Object under LoRA Reparameterisation
+Setup.
+For a LoRA update
+Δ
+​
+𝐖
+∈
+ℝ
+d
+out
+×
+d
+in
+\Delta\mathbf{W}\in\mathbb{R}^{d_{\text{out}}\times d_{\text{in}}}
+, LoRA parameterises
+Δ
+​
+𝐖
+=
+𝐁𝐀
+,
+𝐁
+∈
+ℝ
+d
+out
+×
+r
+,
+𝐀
+∈
+ℝ
+r
+×
+d
+in
+.
+\Delta\mathbf{W}=\mathbf{B}\mathbf{A},\qquad\mathbf{B}\in\mathbb{R}^{d_{\text{out}}\times r},\;\mathbf{A}\in\mathbb{R}^{r\times d_{\text{in}}}.
+(8)
+Definition A.1
+(LoRA Reparameterisation Symmetry)
+.
+Let
+GL
+⁡
+(
+r
+)
+\mathrm{GL}(r)
+denote the group of invertible
+r
+×
+r
+r\times r
+matrices.
+For any
+𝐆
+∈
+GL
+⁡
+(
+r
+)
+\mathbf{G}\in\mathrm{GL}(r)
+, define the transformation
+(
+𝐁
+,
+𝐀
+)
+↦
+(
+𝐁
+′
+,
+𝐀
+′
+)
+:=
+(
+𝐁𝐆
+,
+𝐆
+−
+1
+​
+𝐀
+)
+.
+(\mathbf{B},\mathbf{A})\ \mapsto\ (\mathbf{B}^{\prime},\mathbf{A}^{\prime}):=(\mathbf{B}\mathbf{G},\;\mathbf{G}^{-1}\mathbf{A}).
+(9)
+Canonical rank-wise decomposition.
+Let the SVD of
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+be
+Δ
+​
+𝐖
+=
+𝐔
+​
+𝚺
+​
+𝐕
+⊤
+,
+\Delta\mathbf{W}=\mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^{\top},
+(10)
+where
+𝐔
+∈
+ℝ
+d
+out
+×
+r
+\mathbf{U}\in\mathbb{R}^{d_{\text{out}}\times r}
+and
+𝐕
+∈
+ℝ
+d
+in
+×
+r
+\mathbf{V}\in\mathbb{R}^{d_{\text{in}}\times r}
+have orthonormal columns, and
+𝚺
+=
+diag
+⁡
+(
+σ
+1
+,
+…
+,
+σ
+r
+)
+\boldsymbol{\Sigma}=\mathrm{diag}(\sigma_{1},\dots,\sigma_{r})
+with
+σ
+1
+≥
+⋯
+≥
+σ
+r
+≥
+0
+\sigma_{1}\geq\dots\geq\sigma_{r}\geq 0
+.
+Under the
+r
+r
+-slot convention in Section
+3
+, this is exactly the canonical object of the LoRA update, namely its rank-wise singular decomposition in Eq. (
+1
+).
+Proof of Proposition
+3.1
+.
+Let
+(
+𝐁
+,
+𝐀
+)
+(\mathbf{B},\mathbf{A})
+and
+(
+𝐁
+′
+,
+𝐀
+′
+)
+(\mathbf{B}^{\prime},\mathbf{A}^{\prime})
+be related by a LoRA reparameterisation as defined in Definition
+A.1
+. Then
+𝐁
+′
+​
+𝐀
+′
+=
+(
+𝐁𝐆
+)
+​
+(
+𝐆
+−
+1
+​
+𝐀
+)
+=
+𝐁𝐀
+,
+\mathbf{B}^{\prime}\mathbf{A}^{\prime}=(\mathbf{B}\mathbf{G})(\mathbf{G}^{-1}\mathbf{A})=\mathbf{B}\mathbf{A},
+so the two parameterisations induce the same matrix
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+.
+Since the SVD depends only on
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+itself, both parameterisations induce the same rank-wise singular decomposition up to the intrinsic ambiguities of the SVD (sign flips and rotations within degenerate singular subspaces).
+Under the fixed deterministic post-processing used by W2T, the resulting representation is consistent up to floating-point precision.
+A.2
+QR-Based Construction of the Canonical Object
+QR-based construction.
+We prove that the QR-based reduction applied to LoRA factors
+(
+𝐁
+,
+𝐀
+)
+(\mathbf{B},\mathbf{A})
+recovers exactly the same canonical rank-wise decomposition as direct SVD on the induced update matrix
+Δ
+​
+𝐖
+=
+𝐁𝐀
+\Delta\mathbf{W}=\mathbf{B}\mathbf{A}
+.
+Proof of Proposition
+3.2
+.
+Let
+Δ
+​
+𝐖
+=
+𝐁𝐀
+\Delta\mathbf{W}=\mathbf{B}\mathbf{A}
+with
+𝐁
+∈
+ℝ
+d
+out
+×
+r
+\mathbf{B}\in\mathbb{R}^{d_{\text{out}}\times r}
+and
+𝐀
+∈
+ℝ
+r
+×
+d
+in
+\mathbf{A}\in\mathbb{R}^{r\times d_{\text{in}}}
+.
+Let thin QR decompositions be
+𝐁
+=
+𝐐
+B
+​
+𝐑
+B
+,
+𝐀
+⊤
+=
+𝐐
+A
+​
+𝐑
+A
+,
+\mathbf{B}=\mathbf{Q}_{B}\mathbf{R}_{B},\qquad\mathbf{A}^{\top}=\mathbf{Q}_{A}\mathbf{R}_{A},
+(11)
+where
+𝐐
+B
+∈
+ℝ
+d
+out
+×
+r
+\mathbf{Q}_{B}\in\mathbb{R}^{d_{\text{out}}\times r}
+and
+𝐐
+A
+∈
+ℝ
+d
+in
+×
+r
+\mathbf{Q}_{A}\in\mathbb{R}^{d_{\text{in}}\times r}
+have orthonormal columns
+(
+𝐐
+B
+⊤
+​
+𝐐
+B
+=
+𝐈
+r
+\mathbf{Q}_{B}^{\top}\mathbf{Q}_{B}=\mathbf{I}_{r}
+,
+𝐐
+A
+⊤
+​
+𝐐
+A
+=
+𝐈
+r
+\mathbf{Q}_{A}^{\top}\mathbf{Q}_{A}=\mathbf{I}_{r}
+),
+and
+𝐑
+B
+,
+𝐑
+A
+∈
+ℝ
+r
+×
+r
+\mathbf{R}_{B},\mathbf{R}_{A}\in\mathbb{R}^{r\times r}
+are upper triangular.
+Define the core matrix
+𝐌
+:=
+𝐑
+B
+​
+𝐑
+A
+⊤
+∈
+ℝ
+r
+×
+r
+,
+\mathbf{M}:=\mathbf{R}_{B}\mathbf{R}_{A}^{\top}\in\mathbb{R}^{r\times r},
+(12)
+and let its SVD be
+𝐌
+=
+𝐔
+^
+​
+𝚺
+​
+𝐕
+^
+⊤
+,
+\mathbf{M}=\hat{\mathbf{U}}\boldsymbol{\Sigma}\hat{\mathbf{V}}^{\top},
+(13)
+with
+𝚺
+=
+diag
+⁡
+(
+σ
+1
+,
+…
+,
+σ
+r
+)
+\boldsymbol{\Sigma}=\mathrm{diag}(\sigma_{1},\dots,\sigma_{r})
+non-negative and sorted.
+Then, defining
+𝐔
+:=
+𝐐
+B
+​
+𝐔
+^
+,
+𝐕
+:=
+𝐐
+A
+​
+𝐕
+^
+,
+\mathbf{U}:=\mathbf{Q}_{B}\hat{\mathbf{U}},\qquad\mathbf{V}:=\mathbf{Q}_{A}\hat{\mathbf{V}},
+(14)
+we have
+Δ
+​
+𝐖
+=
+𝐔
+​
+𝚺
+​
+𝐕
+⊤
+,
+\Delta\mathbf{W}=\mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^{\top},
+(15)
+and
+(
+𝐔
+,
+𝚺
+,
+𝐕
+)
+(\mathbf{U},\boldsymbol{\Sigma},\mathbf{V})
+forms an exact SVD of
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+.
+We proceed in two steps.
+Step 1: Reduction to an
+r
+×
+r
+r\times r
+core.
+Substituting the QR decompositions into
+Δ
+​
+𝐖
+=
+𝐁𝐀
+\Delta\mathbf{W}=\mathbf{B}\mathbf{A}
+gives
+Δ
+​
+𝐖
+\displaystyle\Delta\mathbf{W}
+=
+𝐁𝐀
+=
+(
+𝐐
+B
+​
+𝐑
+B
+)
+​
+𝐀
+=
+(
+𝐐
+B
+​
+𝐑
+B
+)
+​
+(
+𝐑
+A
+⊤
+​
+𝐐
+A
+⊤
+)
+\displaystyle=\mathbf{B}\mathbf{A}=(\mathbf{Q}_{B}\mathbf{R}_{B})\,\mathbf{A}=(\mathbf{Q}_{B}\mathbf{R}_{B})\,(\mathbf{R}_{A}^{\top}\mathbf{Q}_{A}^{\top})
+(16)
+=
+𝐐
+B
+​
+(
+𝐑
+B
+​
+𝐑
+A
+⊤
+)
+​
+𝐐
+A
+⊤
+=
+𝐐
+B
+​
+𝐌𝐐
+A
+⊤
+.
+\displaystyle=\mathbf{Q}_{B}(\mathbf{R}_{B}\mathbf{R}_{A}^{\top})\mathbf{Q}_{A}^{\top}=\mathbf{Q}_{B}\mathbf{M}\mathbf{Q}_{A}^{\top}.
+(17)
+Thus
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+is obtained from
+𝐌
+\mathbf{M}
+by left and right multiplication with column-orthonormal matrices
+𝐐
+B
+\mathbf{Q}_{B}
+and
+𝐐
+A
+\mathbf{Q}_{A}
+.
+Step 2: Singular values coincide and SVD factors lift exactly.
+(2a) Singular values:
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+and
+𝐌
+\mathbf{M}
+share the same non-zero singular values.
+Using (
+17
+),
+Δ
+​
+𝐖
+⊤
+​
+Δ
+​
+𝐖
+\displaystyle\Delta\mathbf{W}^{\top}\Delta\mathbf{W}
+=
+(
+𝐐
+B
+​
+𝐌𝐐
+A
+⊤
+)
+⊤
+​
+(
+𝐐
+B
+​
+𝐌𝐐
+A
+⊤
+)
+\displaystyle=(\mathbf{Q}_{B}\mathbf{M}\mathbf{Q}_{A}^{\top})^{\top}(\mathbf{Q}_{B}\mathbf{M}\mathbf{Q}_{A}^{\top})
+(18)
+=
+𝐐
+A
+​
+𝐌
+⊤
+​
+(
+𝐐
+B
+⊤
+​
+𝐐
+B
+)
+​
+𝐌
+​
+𝐐
+A
+⊤
+\displaystyle=\mathbf{Q}_{A}\,\mathbf{M}^{\top}(\mathbf{Q}_{B}^{\top}\mathbf{Q}_{B})\,\mathbf{M}\,\mathbf{Q}_{A}^{\top}
+(19)
+=
+𝐐
+A
+​
+(
+𝐌
+⊤
+​
+𝐌
+)
+​
+𝐐
+A
+⊤
+,
+\displaystyle=\mathbf{Q}_{A}\,(\mathbf{M}^{\top}\mathbf{M})\,\mathbf{Q}_{A}^{\top},
+(20)
+where we used
+𝐐
+B
+⊤
+​
+𝐐
+B
+=
+𝐈
+r
+\mathbf{Q}_{B}^{\top}\mathbf{Q}_{B}=\mathbf{I}_{r}
+.
+Equation (
+20
+) shows that
+Δ
+​
+𝐖
+⊤
+​
+Δ
+​
+𝐖
+\Delta\mathbf{W}^{\top}\Delta\mathbf{W}
+is an orthogonal (more precisely, column-orthonormal) congruence of
+𝐌
+⊤
+​
+𝐌
+\mathbf{M}^{\top}\mathbf{M}
+.
+Therefore,
+Δ
+​
+𝐖
+⊤
+​
+Δ
+​
+𝐖
+\Delta\mathbf{W}^{\top}\Delta\mathbf{W}
+and
+𝐌
+⊤
+​
+𝐌
+\mathbf{M}^{\top}\mathbf{M}
+have the same non-zero eigenvalues.
+Since the singular values are the square roots of the eigenvalues of these Gram matrices,
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+and
+𝐌
+\mathbf{M}
+share the same non-zero singular values.
+Consequently, the diagonal entries of
+𝚺
+\boldsymbol{\Sigma}
+obtained from the SVD of
+𝐌
+\mathbf{M}
+are exactly the singular values of
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+, under the same sorting convention.
+(2b) Lifting singular vectors: constructing an exact SVD of
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+.
+From the SVD of
+𝐌
+\mathbf{M}
+, we have
+𝐌
+=
+𝐔
+^
+​
+𝚺
+​
+𝐕
+^
+⊤
+\mathbf{M}=\hat{\mathbf{U}}\boldsymbol{\Sigma}\hat{\mathbf{V}}^{\top}
+.
+Substituting into (
+17
+) gives
+Δ
+​
+𝐖
+=
+𝐐
+B
+​
+(
+𝐔
+^
+​
+𝚺
+​
+𝐕
+^
+⊤
+)
+​
+𝐐
+A
+⊤
+=
+(
+𝐐
+B
+​
+𝐔
+^
+)
+​
+𝚺
+​
+(
+𝐐
+A
+​
+𝐕
+^
+)
+⊤
+.
+\Delta\mathbf{W}=\mathbf{Q}_{B}(\hat{\mathbf{U}}\boldsymbol{\Sigma}\hat{\mathbf{V}}^{\top})\mathbf{Q}_{A}^{\top}=(\mathbf{Q}_{B}\hat{\mathbf{U}})\,\boldsymbol{\Sigma}\,(\mathbf{Q}_{A}\hat{\mathbf{V}})^{\top}.
+(21)
+Define
+𝐔
+:=
+𝐐
+B
+​
+𝐔
+^
+\mathbf{U}:=\mathbf{Q}_{B}\hat{\mathbf{U}}
+and
+𝐕
+:=
+𝐐
+A
+​
+𝐕
+^
+\mathbf{V}:=\mathbf{Q}_{A}\hat{\mathbf{V}}
+.
+We now verify the SVD orthonormality conditions:
+𝐔
+⊤
+​
+𝐔
+\displaystyle\mathbf{U}^{\top}\mathbf{U}
+=
+𝐔
+^
+⊤
+​
+(
+𝐐
+B
+⊤
+​
+𝐐
+B
+)
+​
+𝐔
+^
+=
+𝐔
+^
+⊤
+​
+𝐈
+r
+​
+𝐔
+^
+=
+𝐈
+r
+,
+\displaystyle=\hat{\mathbf{U}}^{\top}(\mathbf{Q}_{B}^{\top}\mathbf{Q}_{B})\hat{\mathbf{U}}=\hat{\mathbf{U}}^{\top}\mathbf{I}_{r}\hat{\mathbf{U}}=\mathbf{I}_{r},
+(22)
+𝐕
+⊤
+​
+𝐕
+\displaystyle\mathbf{V}^{\top}\mathbf{V}
+=
+𝐕
+^
+⊤
+​
+(
+𝐐
+A
+⊤
+​
+𝐐
+A
+)
+​
+𝐕
+^
+=
+𝐕
+^
+⊤
+​
+𝐈
+r
+​
+𝐕
+^
+=
+𝐈
+r
+,
+\displaystyle=\hat{\mathbf{V}}^{\top}(\mathbf{Q}_{A}^{\top}\mathbf{Q}_{A})\hat{\mathbf{V}}=\hat{\mathbf{V}}^{\top}\mathbf{I}_{r}\hat{\mathbf{V}}=\mathbf{I}_{r},
+(23)
+where we used
+𝐐
+B
+⊤
+​
+𝐐
+B
+=
+𝐈
+r
+\mathbf{Q}_{B}^{\top}\mathbf{Q}_{B}=\mathbf{I}_{r}
+,
+𝐐
+A
+⊤
+​
+𝐐
+A
+=
+𝐈
+r
+\mathbf{Q}_{A}^{\top}\mathbf{Q}_{A}=\mathbf{I}_{r}
+, and
+𝐔
+^
+⊤
+​
+𝐔
+^
+=
+𝐈
+r
+\hat{\mathbf{U}}^{\top}\hat{\mathbf{U}}=\mathbf{I}_{r}
+,
+𝐕
+^
+⊤
+​
+𝐕
+^
+=
+𝐈
+r
+\hat{\mathbf{V}}^{\top}\hat{\mathbf{V}}=\mathbf{I}_{r}
+.
+Finally,
+𝚺
+\boldsymbol{\Sigma}
+is diagonal with non-negative entries by definition of the SVD of
+𝐌
+\mathbf{M}
+.
+Hence
+(
+𝐔
+,
+𝚺
+,
+𝐕
+)
+(\mathbf{U},\boldsymbol{\Sigma},\mathbf{V})
+satisfies the defining conditions of a singular value decomposition of
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+:
+Δ
+​
+𝐖
+\displaystyle\Delta\mathbf{W}
+=
+𝐔
+​
+𝚺
+​
+𝐕
+⊤
+,
+\displaystyle=\mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^{\top},
+(24)
+𝐔
+⊤
+​
+𝐔
+\displaystyle\mathbf{U}^{\top}\mathbf{U}
+=
+𝐈
+,
+𝐕
+⊤
+​
+𝐕
+=
+𝐈
+,
+\displaystyle=\mathbf{I},\quad\mathbf{V}^{\top}\mathbf{V}=\mathbf{I},
+(25)
+𝚺
+\displaystyle\boldsymbol{\Sigma}
+=
+diag
+⁡
+(
+σ
+1
+,
+…
+,
+σ
+r
+)
+,
+σ
+i
+≥
+0
+.
+\displaystyle=\mathrm{diag}(\sigma_{1},\dots,\sigma_{r}),\quad\sigma_{i}\geq 0.
+(26)
+Remark (Equality to direct-SVD outputs).
+Under a fixed deterministic implementation convention (same routine/backend, singular-value ordering, and sign normalisation), the QR-based output numerically matches direct SVD on the same
+Δ
+​
+𝐖
+\Delta\mathbf{W}
+up to floating-point precision.
+Table 6:
+Dataset-level summary of LoRA construction in Appendix B. Shared backbone choices are described in the surrounding text.
+Dataset
+Raw data
+→
+\rightarrow
+LoRA
+Key settings
+Size
+Checkpoint label
+CelebA
+one identity
+→
+\rightarrow
+one LoRA; 21 images per identity
+q/v;
+r
+=
+8
+r{=}8
+;
+α
+=
+27
+\alpha{=}27
+; lr 1e-4/3e-4/1e-3/3e-3; steps 100/133/167/200
+10,177
+40-d identity-level attribute vector
+CUB
+one image
+→
+\rightarrow
+one LoRA
+q/v;
+r
+=
+8
+r{=}8
+;
+α
+=
+27
+\alpha{=}27
+; lr 1e-4/3e-4/1e-3/3e-3; steps 100/150/200/250
+11,788
+312-d image-level attribute vector
+GoEmotions
+one train sample
+→
+\rightarrow
+one LoRA
+q/v;
+r
+=
+8
+r{=}8
+;
+α
+=
+16
+\alpha{=}16
+; lr 5e-6–3e-4; epoch 1–4; dropout 0–0.1
+20,000
+28-d emotion multi-hot vector
+ARC-Easy
+one full-data trial
+→
+\rightarrow
+one LoRA
+q/v;
+r
+=
+8
+r{=}8
+;
+α
+=
+16
+\alpha{=}16
+; lr 5e-6–3e-4; epoch 1–4; dropout 0–0.1
+10,000
+checkpoint accuracy
+ARC-Challenge
+BoolQ
+GSM8K
+MBPP
+Full-datasets runs
+→
+\rightarrow
+gallery LoRAs
+q/v;
+r
+=
+8
+r{=}8
+;
+α
+=
+16
+\alpha{=}16
+; lr 5e-6–3e-4; epoch 1–4; dropout 0–0.1
+1,296
+task identity
+few-shot runs
+→
+\rightarrow
+query LoRAs
+q/v;
+r
+=
+8
+r{=}8
+;
+α
+=
+16
+\alpha{=}16
+; lr 2e-4; epoch 3; dropout 0.05; shots 1/8/16/64/128/256; 25 queries per shot
+600
+task identity
+Appendix B
+LoRA Dataset Preparation
+Each benchmark item in our experiments is a complete LoRA checkpoint. The label is therefore attached to the checkpoint rather than to an individual image, token, or prompt. For attribute datasets, the label records semantic attributes inherited from the data used to train that adapter; for performance prediction, it records held-out downstream evaluation scores; for retrieval, it records the task identity used to define query–gallery relevance. Unless otherwise noted, downstream models operate on fixed 8:1:1 train/validation/test partitions over checkpoint names so that all encoders use identical splits.
+B.1
+Vision Tasks
+Base model, adapter injection, and training randomization.
+Table
+6
+summarizes, for each collection, how raw examples are converted into LoRA checkpoints, which key training settings vary across runs, and what checkpoint-level label is attached afterward.
+On the vision side, all main adapters use Stable Diffusion v1.4 with LoRA on the U-Net query/value projections,
+512
+×
+512
+512{\times}512
+resolution, batch size
+1
+1
+, constant learning rate, and no warmup.
+The transfer settings in the main text reuse the same pipeline with either SD1.4 or SD1.5.
+Checkpoint-level label construction is described separately for CelebA-LoRA and CUB-LoRA below.
+CelebA-LoRA.
+For CelebA-LoRA, we first group images by identity using the CelebA identity metadata, then create one LoRA concept per identity.
+For each identity, 21 images are selected; if an identity has fewer than 21 images, sampling with replacement is used and repeated images are materialized with suffixed filenames for deterministic bookkeeping.
+The label of an adapter is the identity-level attribute vector: image-level CelebA annotations are averaged over the selected images and thresholded at zero, so each of the 40 attributes records the majority sign within that identity-specific training set.
+This yields 10,177 LoRA samples, each supervised only by its checkpoint-level 40-dimensional binary label.
+CUB-LoRA.
+CUB-LoRA uses one image per LoRA run, so the checkpoint label is directly tied to the source image.
+Each run is launched from a temporary single-image folder, and the run name explicitly stores the CUB image ID for deterministic alignment after training.
+Attribute labels are built from the official annotations and converted into a per-image binary table.
+The resulting collection contains 11,788 LoRA checkpoints, each paired with 312 binary attributes.
+B.2
+Language Tasks
+Base model and adapter injection.
+All language-side adapters use Llama-3.2-3B, apply LoRA to the attention query/value projections, and follow a shared 512-token context limit. Table
+6
+summarizes the collection-specific raw-data mapping, compact training recipe, and checkpoint target used for language classification, performance prediction, and retrieval. As on the vision side, each checkpoint is stored together with its sampled hyperparameters and checkpoint-level supervision.
+GoEmotions-LoRA.
+GoEmotions-LoRA trains one adapter per sampled training text.
+The builder shuffles the train split, keeps 20,000 examples, and stores each checkpoint with its sorted 28-dimensional multi-hot emotion vector.
+ARC-Easy-LoRA.
+For performance prediction, ARC-Easy-LoRA is built from 10,000 full-data training trials on ARC-Easy under randomized hyperparameter plans.
+Each resulting adapter is evaluated on the task test split and stored together with the checkpoint-level targets accuracy.
+Table 7:
+Selected CelebA attributes (%) where W2T is strongest or near-best against image-based methods. Gain is computed against the best image baseline in each row.
+Attribute
+W2T
+Image-based
+Summary
+(ours)
+DMM-CNN
+PS-MCNN-LC
+GNAS
+Best img.
+Gain
+Wearing Necklace
+96.41
+88.03
+88.03
+88.98
+88.98
+87.61
+87.61
+88.98
+88.98
++7.43
+Narrow Eyes
+95.10
+87.73
+87.73
+89.07
+89.07
+87.66
+87.66
+89.07
+89.07
++6.03
+Big Lips
+76.47
+72.93
+72.93
+73.13
+73.13
+71.79
+71.79
+73.13
+73.13
++3.34
+Straight Hair
+88.24
+84.72
+84.72
+85.96
+85.96
+84.77
+84.77
+85.96
+85.96
++2.28
+Rosy Cheeks
+98.37
+95.32
+95.32
+96.92
+96.92
+95.01
+95.01
+96.92
+96.92
++1.45
+Blurry
+98.69
+96.40
+96.40
+98.00
+98.00
+96.42
+96.42
+98.00
+98.00
++0.69
+Pale Skin
+99.35
+97.00
+97.00
+98.84
+98.84
+97.24
+97.24
+98.84
+98.84
++0.51
+Gray Hair
+98.04
+98.27
+98.27
+98.66
+98.37
+98.37
+98.66
+98.66
+−
+0.62
+-0.62
+Male
+98.04
+98.29
+98.29
+98.81
+98.50
+98.50
+98.81
+98.81
+−
+0.77
+-0.77
+Table 8:
+Parameter counts of the representative CelebA models. Values are measured from the saved experiment checkpoints.
+W2T
+GLNet
+MLP
+CNN
+ViT
+Params (M)
+17.75
+23.16
+51.06
+77.75
+39.91
+Retrieval pool and few-shot queries.
+The retrieval benchmark reuses the same LLM LoRA pipeline on four datasets: ARC-Challenge, BoolQ, GSM8K, and MBPP.
+The gallery is formed from full-data adapters under this filtered pool, yielding 1,296 checkpoints in total (323 ARC-Challenge, 315 BoolQ, 328 GSM8K, and 330 MBPP).
+The query set is generated from fixed-hyperparameter few-shot plans in which only the sampled training subset changes across runs, across six shot levels
+{
+1
+,
+8
+,
+16
+,
+64
+,
+128
+,
+256
+}
+\{1,8,16,64,128,256\}
+.
+After capping each dataset-shot cell to at most 25 queries, the final benchmark contains 600 query adapters (150 per dataset).
+For retrieval, the checkpoint label is the downstream dataset name, and relevance is defined by shared task identity between query and gallery adapters.
+B.3
+Representative Implementation Details
+To make the encoder setup more concrete, we summarize the representative CelebA implementations used in the main attribute-classification experiments in Table
+8
+.
+For W2T, each checkpoint is first converted into its canonical rank-wise decomposition and then processed by a hierarchical Transformer with hidden dimension 128, one rank-level encoder layer, two layer-level encoder layers, four attention heads, and a 64-width classification head. We train for 45 epochs with batch size 64 using AdamW, and weight decay
+10
+−
+3
+10^{-3}
+. Training begins with a 4-epoch warmup stage that updates only the projector, embeddings, and classifier, followed by full-model optimization with cosine annealing.
+For the baseline encoders, we reuse their encoder backbones under the same CelebA-LoRA split and attach matched multilabel prediction heads. GLNet uses one equivariant layer with width 64 and an invariant head of width 64. The MLP and CNN baselines use hidden width 64 with a 16-width prediction head, while the ViT baseline uses token size 2048, embedding dimension 1024, depth 3, and four attention heads. All baselines are trained for 45 epochs with batch size 100 using AdamW, learning rate
+10
+−
+3
+10^{-3}
+, weight decay
+10
+−
+3
+10^{-3}
+, and cosine annealing.
+Algorithm
+1
+summarizes the task-agnostic forward path used by W2T. In the actual implementation,
+Tokenize
+corresponds to directional projection of left/right singular vectors, fusion, and singular-value FiLM modulation, while
+RankPool
+denotes the weighted rank pooling module used after optional rank-level self-attention.
+Algorithm 1
+Canonical Weight-to-Token encoding and prediction.
+1:
+Input:
+LoRA factors
+{
+(
+B
+p
+,
+A
+p
+)
+}
+p
+∈
+𝒫
+\{(B_{p},A_{p})\}_{p\in\mathcal{P}}
+with layer/module metadata
+2:
+for
+each position
+p
+∈
+𝒫
+p\in\mathcal{P}
+do
+3:
+Compute thin QR:
+B
+p
+=
+Q
+B
+​
+R
+B
+B_{p}=Q_{B}R_{B}
+,
+A
+p
+⊤
+=
+Q
+A
+​
+R
+A
+A_{p}^{\top}=Q_{A}R_{A}
+4:
+Form
+M
+p
+←
+R
+B
+​
+R
+A
+⊤
+M_{p}\leftarrow R_{B}R_{A}^{\top}
+and compute
+M
+p
+=
+U
+^
+​
+Σ
+​
+V
+^
+⊤
+M_{p}=\hat{U}\Sigma\hat{V}^{\top}
+5:
+Lift singular vectors:
+U
+p
+←
+Q
+B
+​
+U
+^
+U_{p}\leftarrow Q_{B}\hat{U}
+,
+V
+p
+←
+Q
+A
+​
+V
+^
+V_{p}\leftarrow Q_{A}\hat{V}
+6:
+for
+each rank component
+k
+k
+do
+7:
+τ
+p
+,
+k
+←
+Tokenize
+⁡
+(
+u
+p
+,
+k
+,
+v
+p
+,
+k
+,
+σ
+p
+,
+k
+)
+\tau_{p,k}\leftarrow\mathrm{Tokenize}(u_{p,k},v_{p,k},\sigma_{p,k})
+8:
+τ
+~
+p
+,
+1
+:
+r
+←
+f
+rank
+(
+τ
+p
+,
+1
+:
+r
+)
+\tilde{\tau}_{p,1:r}\leftarrow f_{\mathrm{rank}}(\tau_{p,1:r})
+9:
+T
+p
+←
+RankPool
+(
+τ
+~
+p
+,
+1
+:
+r
+,
+σ
+p
+,
+1
+:
+r
+)
+T_{p}\leftarrow\mathrm{RankPool}(\tilde{\tau}_{p,1:r},\sigma_{p,1:r})
+10:
+T
+~
+p
+←
+T
+p
++
+e
+layer
+​
+(
+ℓ
+⁡
+(
+p
+)
+)
++
+e
+module
+​
+(
+m
+⁡
+(
+p
+)
+)
+\tilde{T}_{p}\leftarrow T_{p}+e_{\mathrm{layer}}(\ell(p))+e_{\mathrm{module}}(m(p))
+11:
+G
+1
+:
+|
+𝒫
+|
+←
+f
+pos
+(
+T
+~
+1
+:
+|
+𝒫
+|
+)
+G_{1:|\mathcal{P}|}\leftarrow f_{\mathrm{pos}}(\tilde{T}_{1:|\mathcal{P}|})
+12:
+z
+←
+AttnPool
+(
+G
+1
+:
+|
+𝒫
+|
+)
+z\leftarrow\mathrm{AttnPool}(G_{1:|\mathcal{P}|})
+13:
+return
+y
+^
+←
+g
+⁡
+(
+z
+)
+\hat{y}\leftarrow g(z)
+(a)
+Gray Hair
+(b)
+High Cheekbones
+(c)
+Wearing Hat
+(d)
+Wearing Necklace
+Figure 7:
+Two-dimensional visualization of W2T weight-space embeddings for four highly separable CelebA attributes (
+Gray Hair
+,
+High Cheekbones
+,
+Wearing Hat
+, and
+Wearing Necklace
+). Each point represents one LoRA checkpoint and colors denote binary labels. Clear class-level clustering emerges across different attribute types, showing that LoRA weight space encodes semantically aligned structure.
+Appendix C
+Additional Experiments
+C.1
+Attribute Classification
+Contextual comparison to image-based attribute recognition.
+We include a small contextual comparison to image-based CelebA attribute recognition in order to illustrate what kind of semantic discrimination can be present in LoRA weight space. This is not a direct methodological comparison: image-based models observe raw pixels and are specifically designed for visual recognition, whereas W2T operates only on trained LoRA checkpoints.
+Table
+7
+reports a small subset of representative attributes together with several image-based reference models. The purpose of this table is not to claim superiority over image-based recognition systems, but to contextualize that LoRA checkpoints trained from the same underlying dataset can still retain attribute-discriminative signal in weight space.
+The comparison suggests that, for some attributes, directly modeling LoRA checkpoints as first-class data objects can recover surprisingly strong semantic distinctions even without pixel access at inference time. We therefore treat this table only as contextual evidence for the semantic content of LoRA weight space, rather than as a direct benchmark against image-based methods.
+Embedding analysis.
+We provide a qualitative view of the learned W2T embedding space on several representative CelebA attributes. For each attribute, we extract the global weight-space embedding produced by W2T and visualize it in two dimensions using UMAP, where each point corresponds to one LoRA checkpoint and colors denote binary labels.
+Figure
+7
+shows that several attributes induce visible class-level structure in the learned embedding space. Separation is strongest for attributes associated with relatively global appearance changes, such as Gray Hair, Wearing Hat, and Wearing Necklace, while attributes requiring subtler local cues, such as High Cheekbones, remain only moderately separable.
+These plots should be interpreted as qualitative evidence rather than a standalone proof. They are nevertheless consistent with the quantitative results in the main text, suggesting that W2T organizes LoRA checkpoints along semantically meaningful directions even when the model only observes weights and never accesses image pixels.
+C.2
+Retrieval Analysis
+All retrieval results in this appendix follow the same setting as the main text. The encoder is trained on ARC-Easy performance prediction, while retrieval is evaluated on ARC-Challenge, BoolQ, GSM8K, and MBPP. The final pool contains 1,296 gallery adapters and 600 few-shot query adapters.
+Table 9:
+W2T retrieval quality under varying query-shot budgets. Relative cost is normalized by the 256-shot setting.
+Shots
+Rel. cost
+Hit@1 (%)
+NDCG@10 (%)
+1
+1
+/
+256
+1/256
+38.00
+42.77
+8
+1
+/
+32
+1/32
+63.00
+60.94
+16
+1
+/
+16
+1/16
+62.00
+61.90
+64
+1
+/
+4
+1/4
+69.00
+65.71
+128
+1
+/
+2
+1/2
+65.00
+63.65
+256
+1
+1
+71.00
+72.03
+Figure 8:
+Marginal MRR gain between successive query-shot levels under W2T retrieval.
+Early budget increases produce the largest returns, while later increments yield smaller and more dataset-dependent improvements.
+Table
+9
+and Figure
+8
+serve different but complementary roles. Table
+9
+reports the overall trade-off between retrieval quality and relative query cost at each shot level, while Figure
+8
+highlights where additional shots still produce meaningful marginal gains. Taken together, they show that larger shot budgets do help, but the gain is highly nonlinear: most of the useful improvement is already obtained before the budget becomes large. In this sense, 8-shot and 16-shot remain favorable operating points, because they capture much of the achievable gain before the curve begins to flatten.
+Together, Table
+9
+and Figure
+8
+suggest that the practical value of 8-shot and 16-shot adapter retrieval comes not only from lower cost, but also from the fact that symmetry-aware embeddings already induce a sufficiently task-consistent local neighborhood around a weak query adapter (see Figure
+3
+in the main text).

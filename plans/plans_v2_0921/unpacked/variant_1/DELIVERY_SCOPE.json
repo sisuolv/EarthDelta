@@ -1,0 +1,28 @@
+{
+  "created_date": "2026-09-21",
+  "task_count": 5,
+  "current_task": "R2I-01",
+  "all_later_tasks": "LOCKED",
+  "provided_executable_tools": [
+    "tools/preflight.py",
+    "tools/validate_package.py"
+  ],
+  "planned_repository_code_status": "NOT_IMPLEMENTED_BY_THIS_DELIVERY; Codex implements after task authorization",
+  "repository_tests": "NOT_RUN",
+  "gpu_s0": "NOT_RUN",
+  "weather_experiments": "NOT_RUN",
+  "private_repo_changed": false,
+  "literature_review_repeated": false,
+  "core_files": [
+    "FINAL_RESEARCH_DECISION.md",
+    "EarthDelta_Codex_Execution_Plan.md",
+    "START_HERE_FOR_CODEX.md",
+    "CODEX_TASKS.md",
+    "codex_tasks.json",
+    "STOP_CONDITIONS.md",
+    "IMPLEMENTATION_AUDIT_ACTIONS.md",
+    "experiments/P0_SURVIVAL_EXPERIMENTS.md",
+    "experiments/BASELINES.md",
+    "research/ROUND2_REVIEW_SUMMARY.md"
+  ]
+}

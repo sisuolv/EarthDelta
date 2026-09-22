@@ -1,0 +1,5576 @@
+Learning the Context of Errors: Black-Box Online Adaptation of Time Series Foundation Models
+Xilin Dai
+Affiliation:
+Ant International
+Affiliation:
+The Chinese University of Hong Kong
+Email:
+daixilin.dxl@ant-intl.com
+Yiding Liu
+Affiliation:
+Ant International
+Email:
+zewei.dong@ant-intl.com
+Hongjie Xia
+Affiliation:
+Ant International
+Yifan Hu
+Affiliation:
+Ant International
+Zewei Dong
+Affiliation:
+Ant International
+Jiang-Ming Yang
+Affiliation:
+Ant International
+Qiang Xu
+Affiliation:
+The Chinese University of Hong Kong
+Abstract
+The rapid evolution of Time Series Foundation Models (TSFMs) has advanced zero-shot forecasting across diverse domains. Inspired by the current form of Large Language Models, future TSFMs may be offered as commercialized, closed-source API services. However, many existing online adaptation methods still rely on white-box access for parameter fine-tuning or gradient backpropagation. This paradigm mismatch raises a question:
+In black-box online adaptation for TSFMs, what should we learn?
+We answer this with an insight: the predictive errors of the base model are conditioned on both the input and output of the base model (i.e., the context of errors). To validate this insight, we propose
+ORCA
+(Online Residual Contextual Adaptation). We conduct extensive experiments across 5 state-of-the-art TSFMs and 8 datasets to demonstrate the effectiveness of our approach. Furthermore, through ablation studies, we quantitatively analyze the impact of different adapter learning hypotheses on the final adaptation performance in black-box online adaptation. Code available at https://github.com/Fifthky/ORCA.
+1
+Introduction
+Time series forecasting is a cornerstone task across diverse domains, including energy management, traffic planning, and meteorology
+(
+Miller et al., 2024
+;
+Liang et al., 2024
+;
+Dai et al., 2026b
+;
+Huang et al., 2026a
+)
+. Traditionally, time series forecasting has transitioned from classical statistical methods
+(
+Gardner Jr., 1985
+;
+Piccolo, 1990
+)
+to deep learning architectures
+(
+Zhou et al., 2021
+;
+Wu et al., 2022
+;
+Zeng et al., 2023
+)
+. Recently, inspired by the success of Large Language Models (LLMs), the forecasting paradigm is undergoing a shift towards Time Series Foundation Models (TSFMs)
+(
+Liang et al., 2024
+;
+Liu et al., 2026b
+)
+. Pre-trained on vast corpora of time series data spanning multiple domains, TSFMs demonstrate remarkable zero-shot capabilities when performing forecasting on unseen datasets
+(
+Aksu et al., 2024
+;
+Xu et al., 2026c
+)
+, including models such as the Chronos series
+(
+Ansari et al., 2024
+;
+Ansari et al., 2025
+)
+and the Moirai series
+(
+Woo et al., 2024
+;
+Liu et al., 2026a
+;
+Liu et al., 2025a
+)
+.
+Figure 1:
+Categorization of Time Series Online Adaptation Methods.
+Depending on the access level to the base model, existing approaches are grouped into three paradigms. In the coming era of commercialized TSFM APIs, only the Black-Box paradigm could provide a feasible solution.
+For TSFMs, online adaptation is particularly crucial: streaming data naturally suffers from temporal concept drift, and there remains a knowledge gap between the general pre-trained TSFMs and the specific dynamics of application scenarios
+(
+Zhang et al., 2024
+;
+Benechehab et al., 2025
+;
+Dai et al., 2026a
+;
+Lee et al., 2026
+)
+. Depending on the required access level to the base model, existing online adaptation can be categorized into three paradigms (as illustrated in Figure
+1
+): (1)
+Parameter Finetuning
+, exemplified by SOLID
+(
+Chen et al., 2024
+)
+and DSOF
+(
+Lau et al., 2024
+)
+, requires a local computation graph to explicitly modify internal weights or specific layers of the backbone network; (2)
+Frozen White-Box
+, which includes TAFAS
+(
+Kim et al., 2025
+)
+,
+δ
+\delta
+-Adapter
+(
+Liang et al., 2025
+)
+, and ADAPT-Z
+(
+Huang et al., 2025
+)
+, demands gradient backpropagation through the frozen foundation model to update input nudging or latent representations; (3)
+Black-Box
+, such as ELF
+(
+Lee et al., 2025
+)
+and the Ada-Y variant of
+δ
+\delta
+-Adapter
+Liang et al. (2025)
+, operates exclusively on the external interface.
+Inspired by the success and commercial value of LLMs, future TSFMs may increasingly be offered as commercialized, closed-source API services
+(
+Xu et al., 2026b
+)
+. Under this paradigm, users will only have black-box inference access. The strict API constraints render both Parameter Finetuning and Frozen White-Box methods unfeasible. Consequently, the Black-Box paradigm emerges as the only viable solution. However, current explorations in this area are limited. ELF
+(
+Lee et al., 2025
+)
+performs a parallel lightweight forecaster ensemble. However, its performance is bottlenecked by the absolute capacity of this backbone-agnostic forecaster, and its contribution becomes marginal when the base model consistently dominates. Meanwhile, Ada-Y, an output-side variant of the
+δ
+\delta
+-Adapter
+(
+Liang et al., 2025
+)
+, solely relies on the base model’s output, only capturing
+what
+errors the model makes, without the input context necessary to understand
+when
+those errors occur.
+This brings us to a question:
+In black-box online adaptation for TSFMs, what should we learn?
+We argue that we should learn both what the errors are and, more crucially, when the base model makes these errors (i.e.,
+learning the context of errors
+). Errors are not isolated noise; rather, they are conditioned on the inputs and outputs of the base model. Specifically, we should model the conditional distribution of the errors given both the input sequences and the base model’s predictions.
+To actualize this insight, we propose
+ORCA
+(Online Residual Contextual Adaptation), a plug-and-play black-box adaptation framework for streaming TSFM API inference of time series. Given the input and the output of the base model, ORCA learns the context-aware error representation. To mitigate overfitting on noisy residuals, ORCA utilizes a
+Linear Adapter
+with strong structural bias as its core component. To facilitate continuous learning, we design a buffer training mechanism with historical forgetting decay, alongside a predictive-space Bayesian loss. Furthermore, to utilize historical errors, we introduce a
+Boltzmann Router
+. The router treats historical errors from both the base and the adapted predictions as Boltzmann energy states, dynamically deriving a confidence value to fuse them into a final combined output. The contributions of our work are summarized as follows:
+•
+Black-Box Online Adaptation for TSFMs:
+We conduct black-box online adaptation analyses utilizing the latest generation of TSFMs, establishing a timely foundation for future research in commercialized API forecasting.
+•
+The ORCA Framework:
+We introduce
+ORCA
+, a black-box online adaptation framework for TSFMs. ORCA utilizes a Linear Adapter with structural bias to provide context-aware residual corrections, integrating a buffer training mechanism with historical forgetting decay, a predictive-space Bayesian loss, and a dynamic Boltzmann Router.
+•
+Contextual Error Modeling and “What to Learn” :
+We propose that adapters should learn the context of errors, both
+what
+the errors are and
+when
+the base model makes them. Through ablation studies on the adapter’s input configurations, we quantitatively analyze the impact of different learning hypotheses.
+2
+Related Works
+2.1
+Deep Learning for Time Series Forecasting
+Historically, the evolution of time series forecasting has transitioned from classical statistical methods
+(
+Gardner Jr., 1985
+;
+Piccolo, 1990
+)
+to deep learning architectures, including Recurrent Neural Networks (RNNs), Convolutional Neural Networks (CNNs)
+(
+Connor et al., 1994
+;
+Hochreiter and Schmidhuber, 1997
+;
+Lai et al., 2018
+;
+Dai et al., 2025b
+)
+, and subsequently, advanced structures like Transformers
+(
+Zhou et al., 2021
+;
+Wu et al., 2022
+;
+Liu et al., 2022
+;
+Nie et al., 2022
+;
+Liu et al., 2023
+;
+Wang et al., 2024
+)
+and state-space models
+(
+Ahamed and Cheng, 2024
+;
+Ma et al., 2024
+)
+. Researchers have also questioned the necessity of complex attention mechanisms, showing that simple linear models
+(
+Zeng et al., 2023
+;
+Xu et al., 2023
+;
+Dai et al., 2025a
+)
+can achieve competitive results.
+2.2
+Time Series Foundation Models (TSFMs)
+Driven by the success of pre-training in natural language and vision, the community has begun to focus on Time Series Foundation Models (TSFMs)
+(
+Liang et al., 2024
+;
+Meyer et al., 2025
+;
+Miller et al., 2024
+)
+, which aim to provide universal, zero-shot forecasting capabilities. Popular paradigms involve reprogramming existing LLMs for time series or pre-training transformers from scratch with cross-domain time series data, such as Time-LLM
+(
+Jin et al., 2023
+)
+, Chronos family
+(
+Ansari et al., 2024
+;
+Ansari et al., 2025
+)
+, Lag-Llama
+(
+Rasul et al., 2024
+)
+, and other architectures
+(
+Das et al., 2024
+;
+Zhou et al., 2023
+;
+Chen et al., 2025
+)
+. Concurrent developments have also introduced TimeGPT-1
+Garza et al. (2024)
+, the Moirai series (Moirai 1.0, 2.0, and Moirai-MoE)
+Woo et al. (2024)
+;
+Liu et al. (2026a)
+;
+Liu et al. (2025a)
+, the Timer family (Timer, Timer-S1)
+Liu et al. (2024)
+;
+Liu et al. (2026c)
+, Sundial
+Liu et al. (2025b)
+, TiRex
+Auer et al. (2025)
+, and lightweight models like Tiny Time Mixers (TTM)
+Ekambaram et al. (2024)
+. The static nature of these models leaves them vulnerable to temporal concept drifts and the knowledge gap between pre-training data and real-world applications.
+2.3
+Online Learning in Time Series
+Real-world time series data is intrinsically non-stationary, frequently experiencing concept drift
+(
+Besnard and Ragot, 2024
+;
+Zhang et al., 2024
+)
+. To mitigate catastrophic forgetting
+(
+Kirkpatrick et al., 2017
+)
+and maintain plasticity
+(
+Dohare et al., 2024
+;
+Ao and Fayek, 2023
+;
+Verwimp et al., 2023
+;
+Behrouz et al., 2025
+)
+, continual and online learning methods update models sequentially as new data arrives. Classical deep online forecasting methods include FSNet
+(
+Pham et al., 2022
+)
+and OneNet
+(
+Zhang et al., 2023
+)
+, as independent online evolving forecasters. When discussing time series online adapters, depending on the required access level to the base model, existing approaches can be categorized into three paradigms: (1)
+Parameter Finetuning
+, such as SOLID
+(
+Chen et al., 2024
+)
+and DSOF
+(
+Lau et al., 2024
+)
+; (2)
+Frozen White-Box
+, which includes TAFAS
+(
+Kim et al., 2025
+)
+,
+δ
+\delta
+-Adapter
+(
+Liang et al., 2025
+)
+, ADAPT-Z
+(
+Huang et al., 2025
+)
+, PETSA
+(
+Medeiros et al., 2025
+)
+and DynaTTA
+(
+Grover and Etemad, 2025
+)
+; (3)
+Black-Box
+, such as ELF
+(
+Lee et al., 2025
+)
+and the Ada-Y variant of
+δ
+\delta
+-Adapter
+(
+Liang et al., 2025
+)
+. Additionally, broader explorations in other domains like traffic and spatial-temporal forecasting have introduced methods like FORESEE
+(
+Huang et al., 2026b
+)
+, and ADCSD
+(
+Guo et al., 2025
+)
+. However, current literature specifically exploring online adaptation for TSFMs mainly includes TAFAS
+Kim et al. (2025)
+, ELF
+Lee et al. (2025)
+,
+δ
+\delta
+-Adapter
+Liang et al. (2025)
+, and remain insufficiently explored.
+2.4
+Comparison with Online Learning in NLP
+While fine-tuning and online learning for LLMs such as
+Hu et al. (2021)
+;
+Biderman et al. (2024)
+;
+Houlsby et al. (2019)
+;
+Pfeiffer et al. (2020)
+;
+Li and Liang (2021)
+;
+Xu et al. (2026a)
+have been widely analyzed, the online adaptation of TSFMs presents a different paradigm. The primary divergence lies in the availability of feedback during online inference. In typical NLP applications, exact ground truth is rarely immediately accessible during test-time generation. In contrast, in time series forecasting, the ground truth reveals itself as time progresses, and this distinction motivates our
+ORCA
+methodology.
+Figure 2:
+The overall architecture of ORCA. The history input
+𝑿
+t
+\boldsymbol{X}_{t}
+is fed into a frozen black-box TSFM to obtain the base output
+𝒀
+t
+base
+\boldsymbol{Y}_{t}^{\mathrm{base}}
+. The Linear Adapter learns to generate the residual via Moving Average Decomposition, followed by Trend and Seasonal Layers. The Boltzmann Router dynamically calculates the confidence score
+𝒄
+t
+\boldsymbol{c}_{t}
+to mix
+𝒀
+t
+ada
+\boldsymbol{Y}_{t}^{\mathrm{ada}}
+and
+𝒀
+t
+base
+\boldsymbol{Y}_{t}^{\mathrm{base}}
+into the final adapted output
+𝒀
+t
+comb
+\boldsymbol{Y}_{t}^{\mathrm{comb}}
+.
+3
+Methodology
+3.1
+Problem Formulation
+Consider a streaming time series forecasting scenario where data arrives sequentially. At each time step
+t
+t
+, we observe a historical input matrix
+𝐗
+t
+∈
+ℝ
+D
+×
+L
+\mathbf{X}_{t}\in\mathbb{R}^{D\times L}
+, where
+D
+D
+is the number of channels (variates) and
+L
+L
+is the look-back window length. The objective is to forecast the future values over a horizon
+H
+H
+. A pre-trained, frozen black-box TSFM takes
+𝐗
+t
+\mathbf{X}_{t}
+as input and generates a base prediction
+𝐘
+t
+base
+∈
+ℝ
+D
+×
+H
+\mathbf{Y}_{t}^{\mathrm{base}}\in\mathbb{R}^{D\times H}
+. Due to the non-stationarity of real-world environments and the knowledge gap between the pre-trained TSFM and the application scenario, the base model’s prediction deviates from the ground truth
+𝐘
+t
+GT
+∈
+ℝ
+D
+×
+H
+\mathbf{Y}_{t}^{\mathrm{GT}}\in\mathbb{R}^{D\times H}
+. We define the true prediction error as
+𝐄
+obs
+,
+t
+=
+𝐘
+t
+GT
+−
+𝐘
+t
+base
+\mathbf{E}_{\mathrm{obs},t}=\mathbf{Y}_{t}^{\mathrm{GT}}-\mathbf{Y}_{t}^{\mathrm{base}}
+. Because the base TSFM is treated as a black box (e.g., accessed via an API without access to internal gradients), we can only apply output-side corrections. Our goal is to learn an adapter function
+f
+θ
+f_{\theta}
+that predicts the residual
+Δ
+​
+𝐘
+^
+t
+\Delta\hat{\mathbf{Y}}_{t}
+to refine the base prediction, ultimately yielding an adapted output
+𝐘
+t
+ada
+=
+𝐘
+t
+base
++
+Δ
+​
+𝐘
+^
+t
+\mathbf{Y}_{t}^{\mathrm{ada}}=\mathbf{Y}_{t}^{\mathrm{base}}+\Delta\hat{\mathbf{Y}}_{t}
+.
+3.2
+Context Conditioned Learning
+ORCA aims to precisely capture the context in which base model errors occur. Conceptually, we aim to model the conditional error distribution
+P
+⁡
+(
+𝐄
+t
+∣
+𝐗
+t
+,
+𝐘
+t
+base
+)
+P(\mathbf{E}_{t}\mid\mathbf{X}_{t},\mathbf{Y}_{t}^{\mathrm{base}})
+, where
+𝐄
+t
+\mathbf{E}_{t}
+denotes the true residual matrix at time
+t
+t
+. Instead of relying on explicit probabilistic generative modeling, we pull this concept back into a deterministic forecasting paradigm. Let the contextual condition be denoted as
+𝐂
+t
+=
+[
+𝐗
+t
+,
+𝐘
+t
+base
+]
+\mathbf{C}_{t}=[\mathbf{X}_{t},\mathbf{Y}_{t}^{\mathrm{base}}]
+, and our Linear Adapter as a deterministic mapping
+Δ
+​
+𝐘
+^
+t
+=
+f
+⁡
+(
+𝐂
+t
+)
+\Delta\hat{\mathbf{Y}}_{t}=f(\mathbf{C}_{t})
+. By optimizing the Mean Squared Error (MSE) loss during adaptation, we are minimizing the expected prediction risk. As derived in Appendix
+B.1
+, minimizing this risk mathematically dictates that the optimal deterministic mapping
+f
+∗
+​
+(
+𝐂
+t
+)
+f^{*}(\mathbf{C}_{t})
+is exactly the conditional expectation:
+f
+∗
+(
+𝐂
+t
+)
+=
+𝔼
+[
+𝐄
+t
+∣
+𝐗
+t
+,
+𝐘
+t
+base
+]
+f^{*}(\mathbf{C}_{t})=\mathbb{E}[\mathbf{E}_{t}\mid\mathbf{X}_{t},\mathbf{Y}_{t}^{\mathrm{base}}]
+(1)
+This standard property of MSE optimization formalizes our objective: it allows us to rigorously translate the probabilistic modeling of
+P
+⁡
+(
+𝐄
+t
+∣
+𝐗
+t
+,
+𝐘
+t
+base
+)
+P(\mathbf{E}_{t}\mid\mathbf{X}_{t},\mathbf{Y}_{t}^{\mathrm{base}})
+into a purely deterministic residual regression task. Guided by this, our Linear Adapter takes the concatenation of the historical input
+𝐗
+t
+\mathbf{X}_{t}
+and the base prediction
+𝐘
+t
+base
+\mathbf{Y}_{t}^{\mathrm{base}}
+as its context, ensuring the model conditions on the relevant variables to estimate this expected residual.
+3.3
+Linear Adapter
+As illustrated in Figure
+2
+, the Linear Adapter utilizes a linear architecture. Because the residual signal is highly noisy, we deliberately choose a linear architecture with strong inductive bias to provide the regularization and avoid overfitting. Specifically, the contextual input
+𝐂
+t
+\mathbf{C}_{t}
+is first processed through a Moving Average Decomposition block, which separates the temporal dynamics into a trend component and a seasonal component. These components are independently processed by a Trend Layer and a Seasonal Layer. Finally, Linear Channel Mixing layers across the channel dimension capture cross-variate dependencies, outputting the predicted residual. The adapter output is then added to the base prediction to form the adapted output:
+𝐘
+t
+ada
+=
+𝐘
+t
+base
++
+Δ
+​
+𝐘
+^
+t
+\mathbf{Y}_{t}^{\mathrm{ada}}=\mathbf{Y}_{t}^{\mathrm{base}}+\Delta\hat{\mathbf{Y}}_{t}
+.
+3.4
+Boltzmann Routing Mechanism
+To prevent negative optimization and ensure that the online adaptation performs no worse than the base model, we introduce the
+Boltzmann Router
+. Drawing inspiration from statistical mechanics, where the Boltzmann distribution defines the probability of a system being in a specific state as a function of its energy, we analogously treat the smoothed predictive error as the energy of a model state. A lower error corresponds to a lower energy state, thus yielding a higher routing probability (confidence score). Let
+𝐞
+t
+base
+\mathbf{e}_{t}^{\mathrm{base}}
+and
+𝐞
+t
+ada
+\mathbf{e}_{t}^{\mathrm{ada}}
+denote the instantaneous absolute error vectors (across
+D
+D
+channels) for the base model and the adapter, respectively. We track their exponential moving averages (EMA) to estimate the smoothed errors (energies):
+{
+ε
+^
+t
+−
+1
+ada
+=
+α
+​
+𝐞
+t
+−
+1
+ada
++
+(
+1
+−
+α
+)
+​
+ε
+^
+t
+−
+2
+ada
+ε
+^
+t
+−
+1
+base
+=
+α
+​
+𝐞
+t
+−
+1
+base
++
+(
+1
+−
+α
+)
+​
+ε
+^
+t
+−
+2
+base
+\begin{cases}\mathbf{\hat{\varepsilon}}_{t-1}^{\mathrm{ada}}=\alpha\mathbf{e}_{t-1}^{\mathrm{ada}}+(1-\alpha)\mathbf{\hat{\varepsilon}}_{t-2}^{\mathrm{ada}}\\
+\mathbf{\hat{\varepsilon}}_{t-1}^{\mathrm{base}}=\alpha\mathbf{e}_{t-1}^{\mathrm{base}}+(1-\alpha)\mathbf{\hat{\varepsilon}}_{t-2}^{\mathrm{base}}\end{cases}
+(2)
+where
+α
+∈
+(
+0
+,
+1
+)
+\alpha\in(0,1)
+is the momentum coefficient. The channel-wise routing confidence vector
+𝐜
+t
+∈
+ℝ
+D
+\mathbf{c}_{t}\in\mathbb{R}^{D}
+is then calculated via a Boltzmann softmax function with temperature
+τ
+\tau
+:
+𝐜
+t
+=
+exp
+(
+−
+ε
+^
+t
+−
+1
+ada
+/
+τ
+)
+exp
+(
+−
+ε
+^
+t
+−
+1
+base
+/
+τ
+)
++
+exp
+(
+−
+ε
+^
+t
+−
+1
+ada
+/
+τ
+)
+\mathbf{c}_{t}=\frac{\exp(-\mathbf{\hat{\varepsilon}}_{t-1}^{\mathrm{ada}}/\tau)}{\exp(-\mathbf{\hat{\varepsilon}}_{t-1}^{\mathrm{base}}/\tau)+\exp(-\mathbf{\hat{\varepsilon}}_{t-1}^{\mathrm{ada}}/\tau)}
+(3)
+During inference, this confidence vector
+𝐜
+t
+\mathbf{c}_{t}
+gates the integration of the adapter’s correction:
+𝐘
+t
+comb
+=
+𝐘
+t
+base
+⊙
+(
+𝟏
+−
+𝐜
+t
+)
++
+𝐘
+t
+ada
+⊙
+𝐜
+t
+\mathbf{Y}_{t}^{\mathrm{comb}}=\mathbf{Y}_{t}^{\mathrm{base}}\odot(\mathbf{1}-\mathbf{c}_{t})+\mathbf{Y}_{t}^{\mathrm{ada}}\odot\mathbf{c}_{t}
+(4)
+where
+⊙
+\odot
+denotes element-wise multiplication broadcasted along the sequence dimension. From the perspective of online learning, this weighting mechanism connects to Prediction with Expert Advice and the Multiplicative Weights Update (MWU) framework
+(
+Freund and Schapire, 1997
+)
+, acting to track the best expert in non-stationary environments
+(
+Herbster and Warmuth, 1998
+)
+. During online training, the channel-mean of this confidence vector,
+c
+¯
+t
+=
+mean
+⁡
+(
+𝐜
+t
+)
+\bar{c}_{t}=\mathrm{mean}(\mathbf{c}_{t})
+, naturally acts as the prior regularization weight in our subsequent Bayesian loss function. A detailed theoretical analysis, including the regret bound of this Boltzmann routing mechanism, is provided in the Appendix
+B.3
+.
+3.5
+Predictive-Space Bayesian Update
+A pivotal challenge in online learning is the plasticity-stability dilemma. Instead of imposing complex regularization on model parameters
+θ
+\theta
+, we formulate the optimization as a Bayesian update directly in the predictive space. We define the belief over the conditional error distribution
+P
+⁡
+(
+𝐄
+t
+∣
+𝐂
+t
+)
+P(\mathbf{E}_{t}\mid\mathbf{C}_{t})
+. At step
+t
+t
+, we assume the observation likelihood follows an isotropic Gaussian distribution centered at the true error with noise variance
+σ
+obs
+2
+\sigma_{\mathrm{obs}}^{2}
+, denoted as
+P
+⁡
+(
+𝐄
+obs
+,
+t
+∣
+𝐄
+t
+,
+𝐂
+t
+)
+∼
+𝒩
+⁡
+(
+𝐄
+t
+,
+σ
+obs
+2
+​
+𝐈
+)
+P(\mathbf{E}_{\mathrm{obs},t}\mid\mathbf{E}_{t},\mathbf{C}_{t})\sim\mathcal{N}(\mathbf{E}_{t},\sigma_{\mathrm{obs}}^{2}\mathbf{I})
+, where the observed error is
+𝐄
+obs
+,
+t
+=
+𝐘
+t
+GT
+−
+𝐘
+t
+base
+\mathbf{E}_{\mathrm{obs},t}=\mathbf{Y}_{t}^{\mathrm{GT}}-\mathbf{Y}_{t}^{\mathrm{base}}
+. To prevent catastrophic forgetting, we construct a prior distribution based on the prediction of the previous cycle’s model,
+θ
+prior
+\theta_{\mathrm{prior}}
+. The prior is defined as
+P
+⁡
+(
+𝐄
+t
+∣
+𝐂
+t
+,
+ℋ
+t
+−
+1
+)
+∼
+𝒩
+⁡
+(
+𝐄
+prior
+,
+t
+,
+σ
+prior
+2
+​
+𝐈
+)
+P(\mathbf{E}_{t}\mid\mathbf{C}_{t},\mathcal{H}_{t-1})\sim\mathcal{N}(\mathbf{E}_{\mathrm{prior},t},\sigma_{\mathrm{prior}}^{2}\mathbf{I})
+, where
+𝐄
+prior
+,
+t
+=
+f
+θ
+prior
+​
+(
+𝐂
+t
+)
+\mathbf{E}_{\mathrm{prior},t}=f_{\theta_{\mathrm{prior}}}(\mathbf{C}_{t})
+denotes the expected error predicted by the historical model, and
+σ
+prior
+2
+\sigma_{\mathrm{prior}}^{2}
+represents the variance of this prior belief.
+By applying Bayes’ theorem and maximizing the posterior (MAP estimation), minimizing the negative log-posterior is mathematically equivalent to minimizing the
+L
+2
+L_{2}
+distance to both the observation and the prior, weighted by the precision ratio
+λ
+t
+=
+σ
+obs
+2
+/
+σ
+prior
+2
+\lambda_{t}=\sigma_{\mathrm{obs}}^{2}/\sigma_{\mathrm{prior}}^{2}
+. As expanded in Appendix
+B.2
+, by transforming the errors back into the target time series space, we arrive at the Bayesian-inspired loss function defined on a training snapshot
+s
+t
+=
+{
+𝐗
+t
+,
+𝐘
+t
+base
+,
+𝐘
+t
+GT
+}
+s_{t}=\{\mathbf{X}_{t},\mathbf{Y}_{t}^{\mathrm{base}},\mathbf{Y}_{t}^{\mathrm{GT}}\}
+:
+ℒ
+⁡
+(
+s
+t
+,
+θ
+)
+=
+1
+H
+×
+D
+​
+(
+‖
+𝐘
+t
+GT
+−
+𝐘
+t
+ada
+‖
+F
+2
++
+c
+¯
+t
+​
+‖
+𝐘
+t
+ada
+−
+𝐘
+t
+prior
+‖
+F
+2
+)
+\mathcal{L}(s_{t},\theta)=\frac{1}{H\times D}\left(\|\mathbf{Y}_{t}^{\mathrm{GT}}-\mathbf{Y}_{t}^{\mathrm{ada}}\|_{F}^{2}+\bar{c}_{t}\|\mathbf{Y}_{t}^{\mathrm{ada}}-\mathbf{Y}_{t}^{\mathrm{prior}}\|_{F}^{2}\right)
+(5)
+where
+𝐘
+t
+prior
+=
+𝐘
+t
+base
++
+𝐄
+prior
+,
+t
+\mathbf{Y}_{t}^{\mathrm{prior}}=\mathbf{Y}_{t}^{\mathrm{base}}+\mathbf{E}_{\mathrm{prior},t}
+, and the Linear Adapter output constructs
+𝐘
+t
+ada
+=
+𝐘
+t
+base
++
+Δ
+​
+𝐘
+^
+t
+\mathbf{Y}_{t}^{\mathrm{ada}}=\mathbf{Y}_{t}^{\mathrm{base}}+\Delta\hat{\mathbf{Y}}_{t}
+.
+We substitute the precision ratio
+λ
+t
+\lambda_{t}
+with
+c
+¯
+t
+=
+mean
+⁡
+(
+𝐜
+t
+)
+\bar{c}_{t}=\mathrm{mean}(\mathbf{c}_{t})
+, the scalar channel-mean derived from the Boltzmann Router. As theoretically analyzed in Appendix
+B.2
+, solving for the root of the loss gradient reveals that this substitution structurally aligns the optimal adapter output with the analytical mean of the product of two Gaussian distributions. As prior variance is computationally impractical and boundless,
+c
+¯
+t
+\bar{c}_{t}
+serves as a stable surrogate. Practically, the exponential moving average of historical errors serves as a first-order proxy for localized predictive variance, and the Boltzmann Softmax smoothly maps this into a relative precision score. When the adapter performs well (
+c
+¯
+t
+→
+1
+\bar{c}_{t}\to 1
+), the prior precision is high, anchoring the model to historical beliefs. Conversely, the increase of adapter errors causes
+c
+¯
+t
+→
+0
+\bar{c}_{t}\to 0
+to drop the prior, forcing the adapter to quickly digest new patterns.
+3.6
+Inference and Online Training Pipeline
+ORCA operates through a step-by-step inference and periodic cycle-training pipeline, utilizing a First-In-First-Out (FIFO) replay buffer
+ℬ
+\mathcal{B}
+(detailed in Appendix
+A.4
+). During continuous inference at each time step
+t
+t
+, the Linear Adapter conditions on the observable context
+𝐂
+t
+\mathbf{C}_{t}
+to generate the residual correction
+Δ
+​
+𝐘
+^
+t
+\Delta\hat{\mathbf{Y}}_{t}
+. Once the true horizon becomes fully observable, we construct a training snapshot
+s
+t
+s_{t}
+and push it into the FIFO buffer
+ℬ
+\mathcal{B}
+. ORCA executes cycle training periodically every horizon
+H
+H
+steps. During each training cycle, we draw batches from the buffer using random sampling with an exponential decay probability. This mechanism assigns a higher selection likelihood to more recent snapshots. Consequently, it guarantees that the Linear Adapter maintains high plasticity towards recent distribution shifts, while retaining a sufficient proportion of historical anchor points to stabilize the Bayesian prior. Once a training cycle is complete, the current adapter parameters
+θ
+\theta
+are frozen to update the delayed prior model
+θ
+prior
+\theta_{\mathrm{prior}}
+, preparing the Bayesian loss anchor for the subsequent cycle.
+4
+Experiments
+4.1
+Experimental Setup
+Datasets.
+We evaluate our proposed ORCA framework on eight widely used real-world time series benchmarks: ETTh1, ETTh2, ETTm1, ETTm2, Electricity
+(
+Zhou et al., 2021
+)
+, Exchange
+(
+Lai et al., 2018
+)
+, Weather, and Traffic
+(
+Wu et al., 2021
+)
+. The full set of eight datasets is employed for the main experiments to compare ORCA against various baselines, as in previous work
+(
+Liang et al., 2025
+)
+. However, given the computational cost associated with online evaluation across all datasets for all base models, our ablation studies and hyperparameter sensitivity analyses are conducted on a subset of six datasets. This subset excludes the high-dimensional Traffic and Electricity datasets, which aligns with the evaluation protocols adopted by prior works
+(
+Kim et al., 2025
+)
+.
+Base Models.
+Existing online adaptation works have primarily conducted experiments on first-generation time series foundation models
+Kim et al. (2025)
+;
+Lee et al. (2025)
+;
+Liang et al. (2025)
+. Consequently, there remains a lack of evaluations on the latest base models that currently dominate public leaderboards such as GIFT-Eval
+(
+Aksu et al., 2024
+)
+and fev-bench
+(
+Shchur et al., 2026
+)
+. To bridge this gap, we select five recent (released between 2025 and 2026), popular, and high-performing base models for our evaluation: Chronos-2
+Ansari et al. (2025)
+, Moirai 2.0
+Liu et al. (2026a)
+, TiRex
+Auer et al. (2025)
+, TimesFM-2.5 (the version released in September 2025)
+Das et al. (2024)
+, and Sundial
+Liu et al. (2025b)
+. Across all selected models, the input look-back window length is uniformly set to
+L
+=
+520
+L=520
+, and the testing horizons are set to
+H
+∈
+{
+30
+,
+96
+,
+336
+}
+H\in\{30,96,336\}
+(
+Lee et al., 2025
+)
+. Unless specified otherwise, results in this paper represent the average performance across these three horizons, a common practice in prior work
+(
+Liang et al., 2025
+)
+. While TSFMs output probabilistic forecasts, our framework focuses on operating on the median of the quantile or sampled outputs.
+Other Settings.
+The primary objective of this paper is to investigate the potential for performance enhancement when the foundation model operates strictly as a black box (e.g., accessed via a cloud API). However, because the most recognized and highly adopted TSFMs are currently still in the open-source stage, we utilize these open-source base models to simulate the API deployment environment by strictly disabling gradient backpropagation. Other experimental details are provided in Appendix
+A
+, such as the comprehensive ORCA settings (decomposition kernel, layer size, and optimizer), the online training/evaluation data framework, and settings of baselines.
+Table 1:
+Main experimental results comparing the vanilla zero-shot performance of five base TSFMs and their ORCA-refined counterparts. The results are averaged over three forecasting horizons (
+H
+∈
+{
+30
+,
+96
+,
+336
+}
+H\in\{30,96,336\}
+), with each horizon provided in Appendix
+C.2
+. A negative percentage indicates a reduction in MSE, meaning positive performance improvement.
+Model
+Chronos-2
+Moirai-2
+TiRex
+TimesFM-2.5
+Sundial
+Avg.
+ETTh1
+Vanilla
+0.2756
+0.2653
+0.2671
+0.2771
+0.2381
+Refined
+0.2605
+-5.5%
+0.2579
+-2.8%
+0.2579
+-3.5%
+0.2634
+-4.9%
+0.2460
+3.3%
+-2.7%
+ETTh2
+Vanilla
+0.0373
+0.0350
+0.0357
+0.0369
+0.0358
+Refined
+0.0366
+-1.8%
+0.0355
+1.3%
+0.0355
+-0.5%
+0.0366
+-0.9%
+0.0360
+0.6%
+-0.3%
+ETTm1
+Vanilla
+0.2197
+0.2538
+0.2564
+0.2229
+0.2103
+Refined
+0.2038
+-7.2%
+0.2164
+-14.7%
+0.2149
+-16.2%
+0.2053
+-7.9%
+0.2014
+-4.2%
+-10.1%
+ETTm2
+Vanilla
+0.0245
+0.0274
+0.0263
+0.0260
+0.0248
+Refined
+0.0224
+-8.7%
+0.0232
+-15.3%
+0.0233
+-11.4%
+0.0231
+-10.9%
+0.0232
+-6.5%
+-10.6%
+Exchange
+Vanilla
+0.0031
+0.0033
+0.0035
+0.0033
+0.0042
+Refined
+0.0031
+-0.0%
+0.0034
+2.0%
+0.0032
+-8.5%
+0.0032
+-3.1%
+0.0037
+-10.4%
+-4.0%
+Weather
+Vanilla
+0.0477
+0.0565
+0.0542
+0.0497
+0.0415
+Refined
+0.0435
+-8.9%
+0.0446
+-21.2%
+0.0463
+-14.5%
+0.0441
+-11.3%
+0.0408
+-1.7%
+-11.5%
+Electricity
+Vanilla
+0.0571
+0.0576
+0.0549
+0.0579
+0.0484
+Refined
+0.0517
+-9.5%
+0.0522
+-9.5%
+0.0503
+-8.5%
+0.0525
+-9.4%
+0.0453
+-6.4%
+-8.7%
+Traffic
+Vanilla
+0.2239
+0.2246
+0.2462
+0.2219
+0.2564
+Refined
+0.2202
+-1.7%
+0.2217
+-1.3%
+0.2367
+-3.8%
+0.2201
+-0.8%
+0.2425
+-5.4%
+-2.6%
+Models Avg.
+-5.4%
+-7.7%
+-8.4%
+-6.1%
+-3.8%
+-6.3%
+4.2
+Main Results
+We evaluate the overall performance of ORCA against the vanilla zero-shot TSFMs across a comprehensive matrix of 120 experimental configurations (8 datasets
+×
+\times
+5 base models
+×
+\times
+3 forecasting horizons). The averaged MSE results and the relative performance improvements are summarized in Table
+1
+. As illustrated, ORCA consistently reduces the forecasting error across the vast majority of scenarios. Across the 40 aggregated cases (8 datasets
+×
+\times
+5 TSFMs), ORCA successfully decreases the base models’ forecasting errors in 90% of the evaluations. Furthermore, regulated by the Boltzmann Router, the performance degradation in the few cases remains bounded, with the maximum error increase limited to 3.3%, whereas the maximum error reduction achieves up to 21.2%.
+Figure 3:
+Heatmaps illustrating the relative MSE drop (%) achieved by various online adaptation methods compared to the vanilla zero-shot TSFMs across 8 datasets and 5 base models. Green cells indicate a reduction in MSE (improvement), while red cells indicate an increase in MSE (degradation).
+4.3
+Comparison with Baselines
+To demonstrate the effectiveness of our proposed framework, we compare ORCA against comprehensive baselines, as in Figure
+3
+.
+(1) First,
+we compare SOTA (state-of-the-art) black-box online adaptation methods, including ELF
+(
+Lee et al., 2025
+)
+and
+δ
+\delta
+-Adapter (Ada-Y variant)
+(
+Liang et al., 2025
+)
+.
+(2) However,
+because general black-box online adaptation is still insufficiently explored, we have to introduce more baselines by adapting SOTA white-box into the black-box paradigm (DSOF
+Lau et al. (2024)
+, TAFAS
+Kim et al. (2025)
+, and SOLID
+Chen et al. (2024)
+),
+only as a supplement
+, detailed in Appendix
+A.5
+. Importantly, they are not traditional comparisons, but rather to underscore the
+research urgency and non-trivality
+for more black-box TSFM adaptation methods, by proving that direct modification from white-box methods fails.
+(3) Finally,
+for a fairer comparison than insufficient black-box methods and adapted white-box methods, we added statistical baselines including Ridge Regression
+(
+Hoerl and Kennard, 1970
+)
+and ETS
+(
+Hyndman et al., 2008
+)
+, with settings and results detailed in Appendix
+C.3
+. Without proper structural design, as in ORCA or ELF, statistical methods overfit to noise; despite occasional reductions in base model errors, they can increase errors by hundreds of percent, excluded in the heatmap for readability. ETS predicts future residuals from past residuals, as it requires identical input-output sequences. Notably, Ridge Regression conditioned on context outperforms ETS, further supporting our hypothesis of learning the context of errors.
+4.4
+Quantitative Analysis of Different Learning Hypotheses
+A question in online adaptation for black-box models is:
+What should the adapter learn?
+To quantitatively analyze different learning hypotheses, we conduct a comprehensive ablation study on the adapter’s input of the proposed ORCA. In Figure
+4
+, different input configuration of the adapter is supported by different learning hypotheses. Attempting to directly learn the historical error sequence itself yields highly suboptimal results, with an average performance drop of
+−
+0.7
+%
+-0.7\%
+. In several datasets, relying solely on past errors increases the forecasting error. Conversely, when we condition the adapter on either the Input or the Prediction, the performance improves. Notably, our proposed configuration, which utilizes both to obtain a comprehensive error context, achieves the optimal average improvement of
+6.5
+%
+6.5\%
+. Interestingly, incorporating the past error into this optimal set slightly degrades the average performance to
+6.1
+%
+6.1\%
+. These findings corroborate our core insight: errors follow a conditional distribution
+P
+⁡
+(
+E
+|
+𝑿
+t
+,
+𝒀
+t
+base
+)
+P(E|\boldsymbol{X}_{t},\boldsymbol{Y}_{t}^{\mathrm{base}})
+, and therefore we should learn from the context of errors.
+Figure 4:
+Ablation study on the adapter’s input combinations. The bars represent the MSE drop ratio (%) across different datasets and base models. Positive values indicate an improvement (error reduction) over the vanilla base model. Our proposed input (Base Model Input & Prediction) achieves the highest average improvement of
+6.5
+%
+6.5\%
+.
+4.5
+Ablation and Sensitivity Analysis
+Figure 5:
+Structural ablation study evaluating the impact of removing key components of the ORCA framework. The average MSE drop ratio falls from
+6.51
+%
+6.51\%
+to
+5.23
+%
+5.23\%
+without the Boltzmann Router, highlighting its critical role in harnessing online stability.
+As depicted in Figure
+5
+, removing any of the proposed components leads to a performance decline, especially the Boltzmann Router. This validates the effectiveness of the Boltzmann routing mechanism in safely harnessing the adaptation. Furthermore, the Linear Channel Mixing layers and the Bayesian prior loss also provide contributions. We also examine the role of the exponential decay FIFO buffer by testing a variant without a decay buffer, with a use-and-discard buffer (size 3000, batch size 256). It waits until 3000 samples are collected, triggers training, completely flushes all memory, and then waits to fill again. To further validate the necessity of the proposed Boltzmann routing, we tested a router variant, a hard binary router, detailed in Appendix
+C.1
+. With the same EMA error mechanism, the binary variant only achieves a MSE reduction of 3.80%, indicating the effectiveness of our Boltzmann router. Comparing the structural ablations with the input ablations from Section
+4.4
+, the wrong learning hypotheses reduce the performance more severely. This contrast proves our insight: in black-box online adaptation,
+what
+the model learns is rather impactful.
+Figure 6:
+Hyperparameter sensitivity analysis of ORCA across different base models in 6 datasets. The relative MSE drop (%) remains generally stable under varying routing temperatures
+τ
+\tau
+, EMA momentum
+α
+\alpha
+, FIFO buffer lengths, and sampling batch sizes.
+In the ORCA framework, the hyperparameters primarily involve the Boltzmann Router and the online training configuration. For the Boltzmann Router, the routing temperature
+τ
+\tau
+and the Exponential Moving Average (EMA) momentum
+α
+\alpha
+govern the confidence allocation. Guided by our theoretical analysis (detailed in Appendix
+B.3.2
+), we set the default values to
+τ
+=
+0.1
+\tau=0.1
+and
+α
+=
+0.2
+\alpha=0.2
+. Empirical evaluations, as illustrated in Figure
+6
+, demonstrate that the relative MSE drop across five base TSFMs and 6 datasets, as in Figure
+6
+, remains stable and insensitive under varying combinations of
+τ
+\tau
+and
+α
+\alpha
+. Beyond the router, controlling the data instances the adapter encounters during each training cycle is crucial for balancing plasticity and stability. The two primary parameters governing this mechanism are the length of the decay FIFO buffer and the random sampling batch size. As further illustrated in Figure
+6
+, varying the buffer length (from 2000 to 4000) and the batch size (from 128 to 512) also results in insignificant fluctuations in performance. Consequently, our default configuration of a buffer length of 3000 and a batch size of 256 was chosen directly based on device capacity.
+Table 2:
+Computational efficiency of ORCA on ETTh1 and Electricity datasets evaluated on a single NVIDIA B200 GPU with a forecasting horizon of
+H
+=
+96
+H=96
+.
+Dataset
+Chronos-2 Inference
+Time (ms per step)
+ORCA Inference (per step)
+ORCA Training (per cycle)
+Time (ms)
+FLOPS
+GPU Usage (MB)
+Time (ms)
+GPU Usage (MB)
+ETTh1
+121.45
+16.74
+2.5
+×
+10
+6
+2.5\times 10^{6}
+353.9
+2049.2
+463.0
+Electricity
+167.30
+12.61
+1.1
+×
+10
+8
+1.1\times 10^{8}
+4236.3
+2115.9
+6216.5
+4.6
+Performance and Efficiency Analysis
+We analyze the efficiency of ORCA on two datasets: ETTh1 (7 channels) and Electricity (321 channels). The evaluation is conducted on a single NVIDIA B200 GPU with a forecasting horizon of
+H
+=
+96
+H=96
+. As shown in Table
+2
+, we consider a non-overlapping evaluation setting where the online cycle training is executed once every 96 steps. By amortizing the periodic training time across the forecasting horizon, ORCA’s client-side processing easily satisfies
+100-ms
+single-step latency addition requirements. Furthermore, it is important to note that the reported base model inference time reflects a local hardware deployment. While actual closed-source TSFM API latencies may fluctuate, the client-side overhead introduced by ORCA remains lightweight.
+5
+Conclusion and Limitations
+Conclusion.
+We addressed the critical challenge of adapting frozen, black-box TSFMs to streaming data. We introduced ORCA, an online adaptation framework that enhances TSFM predictions without requiring access to internal model parameters. Extensive evaluations across diverse datasets and base models demonstrate that ORCA consistently reduces errors while maintaining low latency.
+Limitations.
+As a post-hoc corrector, ORCA’s performance relies on the base model providing reasonable forecasts. Furthermore, while we have established evaluations on standard benchmark datasets with deterministic metrics, future work will explore its deployment in more complex data featuring abrupt structural shifts and with probabilistic metrics.
+References
+Ahamed and Cheng (2024)
+M. A. Ahamed and Q. Cheng
+TimeMachine: A Time Series is Worth 4 Mambas for Long-term Forecasting
+.
+arXiv
+.
+External Links:
+2403.09898
+,
+Document
+Cited by:
+§2.1
+.
+Aksu
+et al.
+(2024)
+T. Aksu, G. Woo, J. Liu, X. Liu, C. Liu, S. Savarese, C. Xiong, and D. Sahoo
+GIFT-eval: a benchmark for general time series forecasting model evaluation
+.
+External Links:
+2410.10393
+Cited by:
+§1
+,
+§4.1
+.
+Ansari
+et al.
+(2025)
+A. F. Ansari, O. Shchur, J. Küken, A. Auer, B. Han, P. Mercado, S. S. Rangapuram, H. Shen, L. Stella, X. Zhang, M. Goswami, S. Kapoor, D. C. Maddix, P. Guerron, T. Hu, J. Yin, N. Erickson, P. M. Desai, H. Wang, H. Rangwala, G. Karypis, Y. Wang, and M. Bohlke-Schneider
+Chronos-2: From Univariate to Universal Forecasting
+.
+arXiv
+.
+External Links:
+2510.15821
+,
+Document
+Cited by:
+§1
+,
+§2.2
+,
+§4.1
+.
+Ansari
+et al.
+(2024)
+A. F. Ansari, L. Stella, A. C. Turkmen, X. Zhang, P. Mercado, H. Shen, O. Shchur, S. S. Rangapuram, S. P. Arango, S. Kapoor, J. Zschiegner, D. C. Maddix, H. Wang, M. W. Mahoney, K. Torkkola, A. G. Wilson, M. Bohlke-Schneider, and B. Wang
+Chronos: Learning the Language of Time Series
+.
+Transactions on Machine Learning Research
+.
+External Links:
+ISSN 2835-8856
+Cited by:
+§1
+,
+§2.2
+.
+Ao and Fayek (2023)
+S. Ao and H. Fayek
+Continual Deep Learning for Time Series Modeling
+.
+Sensors
+23
+(
+16
+),
+pp. 7167
+.
+External Links:
+ISSN 1424-8220
+,
+Document
+Cited by:
+§2.3
+.
+Auer
+et al.
+(2025)
+A. Auer, P. Podest, D. Klotz, S. Böck, G. Klambauer, and S. Hochreiter
+TiRex: Zero-Shot Forecasting Across Long and Short Horizons with Enhanced In-Context Learning
+.
+In
+The Thirty-ninth Annual Conference on Neural Information Processing Systems
+,
+Cited by:
+§2.2
+,
+§4.1
+.
+Behrouz
+et al.
+(2025)
+A. Behrouz, M. Razaviyayn, P. Zhong, and V. Mirrokni
+Nested Learning: The Illusion of Deep Learning Architectures
+.
+In
+The Thirty-ninth Annual Conference on Neural Information Processing Systems
+,
+Cited by:
+§2.3
+.
+Benechehab
+et al.
+(2025)
+A. Benechehab, V. Feofanov, G. Paolo, A. Thomas, M. Filippone, and B. Kégl
+AdaPTS: Adapting Univariate Foundation Models to Probabilistic Multivariate Time Series Forecasting
+.
+In
+Forty-Second International Conference on Machine Learning
+,
+Cited by:
+§1
+.
+Besnard and Ragot (2024)
+Q. Besnard and N. Ragot
+Continual Learning for Time Series Forecasting: A First Survey
+.
+Engineering Proceedings
+68
+(
+1
+),
+pp. 49
+.
+External Links:
+ISSN 2673-4591
+,
+Document
+Cited by:
+§2.3
+.
+Biderman
+et al.
+(2024)
+D. Biderman, J. Portes, J. J. G. Ortiz, M. Paul, P. Greengard, C. Jennings, D. King, S. Havens, V. Chiley, J. Frankle, C. Blakeney, and J. P. Cunningham
+LoRA Learns Less and Forgets Less
+.
+Transactions on Machine Learning Research
+.
+Cited by:
+§2.4
+.
+Chen
+et al.
+(2024)
+M. Chen, L. Shen, H. Fu, Z. Li, J. Sun, and C. Liu
+Calibration of Time-Series Forecasting: Detecting and Adapting Context-Driven Distribution Shift
+.
+In
+Proceedings of the 30th ACM SIGKDD Conference on Knowledge Discovery and Data Mining
+,
+KDD ’24
+,
+New York, NY, USA
+,
+pp. 341–352
+.
+External Links:
+Document
+Cited by:
+§1
+,
+§2.3
+,
+§4.3
+.
+Chen
+et al.
+(2025)
+M. Chen, L. Shen, Z. Li, X. J. Wang, J. Sun, and C. Liu
+VisionTS: Visual Masked Autoencoders Are Free-Lunch Zero-Shot Time Series Forecasters
+.
+In
+Forty-Second International Conference on Machine Learning
+,
+Cited by:
+§2.2
+.
+Connor
+et al.
+(1994)
+J.T. Connor, R.D. Martin, and L.E. Atlas
+Recurrent neural networks and robust time series prediction
+.
+IEEE Transactions on Neural Networks
+5
+(
+2
+),
+pp. 240–254
+.
+External Links:
+ISSN 1941-0093
+,
+Document
+Cited by:
+§2.1
+.
+Dai
+et al.
+(2026a)
+X. Dai, W. Cai, Z. Xu, and Q. Xu
+Position: universal time series foundation models rest on a category error
+.
+External Links:
+2602.05287
+,
+Link
+Cited by:
+§1
+.
+Dai
+et al.
+(2025a)
+X. Dai, Z. Xu, W. Cai, and Q. Xu
+From Samples to Scenarios: A New Paradigm for Probabilistic Forecasting
+.
+In
+The Fourteenth International Conference on Learning Representations
+,
+Cited by:
+§2.1
+.
+Dai
+et al.
+(2025b)
+X. Dai, R. Zhou, J. Zhang, K. He, F. Lin, and H. Ma
+SocNet: A Physics-Guided Neural Network for Battery State-of-Charge Estimation Robust to Temperature Variations and Sensor Noises
+.
+IEEE Transactions on Transportation Electrification
+11
+(
+5
+),
+pp. 11165–11176
+.
+Cited by:
+§2.1
+.
+Dai
+et al.
+(2026b)
+X. Dai, R. Zhou, J. Zhang, F. Lin, W. Zhang, and H. Ma
+SocGate: physics-gated neural network for stable multicycle estimation of battery state-of-charge
+.
+IEEE Transactions on Industrial Electronics
+73
+(
+4
+),
+pp. 5518–5529
+.
+Cited by:
+§1
+.
+Das
+et al.
+(2024)
+A. Das, W. Kong, R. Sen, and Y. Zhou
+A decoder-only foundation model for time-series forecasting
+.
+In
+Proceedings of the 41st International Conference on Machine Learning
+,
+ICML’24
+, Vol.
+235
+,
+Vienna, Austria
+,
+pp. 10148–10167
+.
+Cited by:
+§2.2
+,
+§4.1
+.
+Dohare
+et al.
+(2024)
+S. Dohare, J. F. Hernandez-Garcia, P. Rahman, A. R. Mahmood, and R. S. Sutton
+Maintaining Plasticity in Deep Continual Learning
+.
+arXiv
+.
+External Links:
+2306.13812
+,
+Document
+Cited by:
+§2.3
+.
+Ekambaram
+et al.
+(2024)
+V. Ekambaram, A. Jati, P. Dayama, S. Mukherjee, N. H. Nguyen, W. M. Gifford, C. Reddy, and J. Kalagnanam
+Tiny Time Mixers (TTMs): Fast Pre-trained Models for Enhanced Zero/Few-Shot Forecasting of Multivariate Time Series
+.
+In
+The Thirty-eighth Annual Conference on Neural Information Processing Systems
+,
+Cited by:
+§2.2
+.
+Freund and Schapire (1997)
+Y. Freund and R. E. Schapire
+A Decision-Theoretic Generalization of On-Line Learning and an Application to Boosting
+.
+Journal of Computer and System Sciences
+55
+(
+1
+),
+pp. 119–139
+.
+Cited by:
+§B.3.1
+,
+§3.4
+.
+Gardner Jr. (1985)
+E. S. Gardner Jr.
+Exponential smoothing: The state of the art
+.
+Journal of Forecasting
+4
+(
+1
+),
+pp. 1–28
+.
+External Links:
+ISSN 1099-131X
+,
+Document
+Cited by:
+§1
+,
+§2.1
+.
+Garza
+et al.
+(2024)
+A. Garza, C. Challu, and M. Mergenthaler-Canseco
+TimeGPT-1
+.
+arXiv
+.
+External Links:
+2310.03589
+,
+Document
+Cited by:
+§2.2
+.
+Grover and Etemad (2025)
+S. Grover and A. Etemad
+Shift-Aware Test Time Adaptation and Benchmarking for Time-Series Forecasting
+.
+In
+Second Workshop on Test-Time Adaptation: Putting Updates to the Test! At ICML 2025
+,
+Cited by:
+§2.3
+.
+Guo
+et al.
+(2025)
+P. Guo, P. Jin, Z. Li, L. Bai, and Y. Zhang
+Online Test-Time Adaptation of Spatial–Temporal Traffic Flow Forecasting
+.
+IEEE Transactions on Intelligent Transportation Systems
+26
+(
+10
+),
+pp. 15323–15333
+.
+Cited by:
+§2.3
+.
+Herbster and Warmuth (1998)
+M. Herbster and M. K. Warmuth
+Tracking the Best Expert
+.
+Machine Learning
+32
+(
+2
+),
+pp. 151–178
+.
+Cited by:
+§B.3.1
+,
+§3.4
+.
+Hochreiter and Schmidhuber (1997)
+S. Hochreiter and J. Schmidhuber
+Long Short-Term Memory
+.
+Neural Comput.
+9
+(
+8
+),
+pp. 1735–1780
+.
+External Links:
+ISSN 0899-7667
+,
+Document
+Cited by:
+§2.1
+.
+Hoerl and Kennard (1970)
+A. E. Hoerl and R. W. Kennard
+Ridge regression: biased estimation for nonorthogonal problems
+.
+Technometrics
+12
+(
+1
+),
+pp. 55–67
+.
+Cited by:
+§4.3
+.
+Houlsby
+et al.
+(2019)
+N. Houlsby, A. Giurgiu, S. Jastrzebski, B. Morrone, Q. D. Laroussilhe, A. Gesmundo, M. Attariyan, and S. Gelly
+Parameter-Efficient Transfer Learning for NLP
+.
+In
+Proceedings of the 36th International Conference on Machine Learning
+,
+pp. 2790–2799
+.
+External Links:
+ISSN 2640-3498
+Cited by:
+§2.4
+.
+Hu
+et al.
+(2021)
+E. J. Hu, Y. Shen, P. Wallis, Z. Allen-Zhu, Y. Li, S. Wang, L. Wang, and W. Chen
+LoRA: Low-Rank Adaptation of Large Language Models
+.
+In
+International Conference on Learning Representations
+,
+Cited by:
+§2.4
+.
+Huang
+et al.
+(2026a)
+X. Huang, S. Fang, S. Qiu, C. Yu, J. Du, and C. Yang
+TEFL: Prediction-Residual-Guided Rolling Forecasting for Multi-Horizon Time Series
+.
+arXiv
+.
+External Links:
+2602.22520
+,
+Document
+Cited by:
+§1
+.
+Huang
+et al.
+(2025)
+X. Huang, S. Qiu, J. Du, and C. Yang
+Online time series prediction using feature adjustment
+.
+In
+The Fourteenth International Conference on Learning Representations
+,
+Cited by:
+§1
+,
+§2.3
+.
+Huang
+et al.
+(2026b)
+X. Huang, Q. Yuan, and C. Yang
+Learning from Yesterday’s Error: An Efficient Online Learning Method for Traffic Demand Prediction
+.
+arXiv
+.
+External Links:
+2602.21757
+,
+Document
+Cited by:
+§2.3
+.
+Hyndman
+et al.
+(2008)
+R. Hyndman, A. Koehler, K. Ord, and R. Snyder
+Forecasting with Exponential Smoothing: The State Space Approach
+.
+Springer Series in Statistics
+,
+Springer
+,
+Berlin, Heidelberg
+.
+External Links:
+Document
+,
+ISBN 978-3-540-71916-8 978-3-540-71918-2
+Cited by:
+§4.3
+.
+Jin
+et al.
+(2023)
+M. Jin, S. Wang, L. Ma, Z. Chu, J. Y. Zhang, X. Shi, P. Chen, Y. Liang, Y. Li, S. Pan, and Q. Wen
+Time-LLM: Time Series Forecasting by Reprogramming Large Language Models
+.
+In
+The Twelfth International Conference on Learning Representations
+,
+Cited by:
+§2.2
+.
+Kim
+et al.
+(2025)
+H. Kim, S. Kim, J. Mok, and S. Yoon
+Battling the non-stationarity in time series forecasting via test-time adaptation
+.
+In
+Proceedings of the Thirty-Ninth AAAI Conference on Artificial Intelligence and Thirty-Seventh Conference on Innovative Applications of Artificial Intelligence and Fifteenth Symposium on Educational Advances in Artificial Intelligence
+,
+AAAI’25
+, Vol.
+39
+,
+pp. 17868–17876
+.
+External Links:
+Document
+,
+ISBN 978-1-57735-897-8
+Cited by:
+§1
+,
+§2.3
+,
+§4.1
+,
+§4.1
+,
+§4.3
+.
+Kirkpatrick
+et al.
+(2017)
+J. Kirkpatrick, R. Pascanu, N. Rabinowitz, J. Veness, G. Desjardins, A. A. Rusu, K. Milan, J. Quan, T. Ramalho, A. Grabska-Barwinska, D. Hassabis, C. Clopath, D. Kumaran, and R. Hadsell
+Overcoming catastrophic forgetting in neural networks
+.
+Proceedings of the National Academy of Sciences
+114
+(
+13
+),
+pp. 3521–3526
+.
+External Links:
+Document
+Cited by:
+§2.3
+.
+Lai
+et al.
+(2018)
+G. Lai, W. Chang, Y. Yang, and H. Liu
+Modeling Long- and Short-Term Temporal Patterns with Deep Neural Networks
+.
+In
+The 41st International ACM SIGIR Conference on Research & Development in Information Retrieval
+,
+SIGIR ’18
+,
+New York, NY, USA
+,
+pp. 95–104
+.
+External Links:
+Document
+,
+ISBN 978-1-4503-5657-2
+Cited by:
+§2.1
+,
+§4.1
+.
+Lau
+et al.
+(2024)
+Y. A. Lau, Z. Shao, and D. Yeung
+Fast and Slow Streams for Online Time Series Forecasting Without Information Leakage
+.
+In
+The Thirteenth International Conference on Learning Representations
+,
+Cited by:
+§1
+,
+§2.3
+,
+§4.3
+.
+Lee
+et al.
+(2026)
+T. L. Lee, E. M. Ponti, and A. Storkey
+Adapting Time Series Foundation Models through Data Mixtures
+.
+arXiv
+.
+External Links:
+2603.02840
+,
+Document
+Cited by:
+§1
+.
+Lee
+et al.
+(2025)
+T. L. Lee, W. Toner, R. Singh, A. Joosen, and M. Asenov
+Lightweight Online Adaption for Time Series Foundation Model Forecasts
+.
+In
+Forty-Second International Conference on Machine Learning
+,
+Cited by:
+§1
+,
+§1
+,
+§2.3
+,
+§4.1
+,
+§4.3
+.
+Li and Liang (2021)
+X. L. Li and P. Liang
+Prefix-Tuning: Optimizing Continuous Prompts for Generation
+.
+In
+Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers)
+,
+C. Zong, F. Xia, W. Li, and R. Navigli (Eds.)
+,
+Online
+,
+pp. 4582–4597
+.
+External Links:
+Document
+Cited by:
+§2.4
+.
+Liang
+et al.
+(2025)
+D. Liang, Q. Li, Y. Wang, J. Chen, H. Zhang, X. Cui, Q. Wang, and S. Li
+The Forecast After the Forecast: A Post-Processing Shift in Time Series
+.
+In
+The Fourteenth International Conference on Learning Representations
+,
+Cited by:
+§1
+,
+§1
+,
+§2.3
+,
+§4.1
+,
+§4.1
+,
+§4.3
+.
+Liang
+et al.
+(2024)
+Y. Liang, H. Wen, Y. Nie, Y. Jiang, M. Jin, D. Song, S. Pan, and Q. Wen
+Foundation Models for Time Series Analysis: A Tutorial and Survey
+.
+In
+Proceedings of the 30th ACM SIGKDD Conference on Knowledge Discovery and Data Mining
+,
+KDD ’24
+,
+New York, NY, USA
+,
+pp. 6555–6565
+.
+External Links:
+Document
+Cited by:
+§1
+,
+§2.2
+.
+Liu
+et al.
+(2026a)
+C. Liu, T. Aksu, J. Liu, X. Liu, H. Yan, Q. Pham, S. Savarese, D. Sahoo, C. Xiong, and J. Li
+Moirai 2.0: When Less Is More for Time Series Forecasting
+.
+arXiv
+.
+External Links:
+2511.11698
+,
+Document
+Cited by:
+§1
+,
+§2.2
+,
+§4.1
+.
+Liu
+et al.
+(2025a)
+X. Liu, J. Liu, G. Woo, T. Aksu, Y. Liang, R. Zimmermann, C. Liu, J. Li, S. Savarese, C. Xiong, and D. Sahoo
+Moirai-MoE: Empowering Time Series Foundation Models with Sparse Mixture of Experts
+.
+In
+Forty-second International Conference on Machine Learning
+,
+Cited by:
+§1
+,
+§2.2
+.
+Liu
+et al.
+(2026b)
+Y. Liu, Y. Hu, H. Xia, P. Liu, H. Chen, X. Dai, Z. Dong, and J. Yang
+Falcon-x: a time series foundation model for heterogeneous multivariate modeling
+.
+External Links:
+2605.27286
+,
+Link
+Cited by:
+§1
+.
+Liu
+et al.
+(2023)
+Y. Liu, T. Hu, H. Zhang, H. Wu, S. Wang, L. Ma, and M. Long
+iTransformer: Inverted Transformers Are Effective for Time Series Forecasting
+.
+In
+The Twelfth International Conference on Learning Representations
+,
+Cited by:
+§2.1
+.
+Liu
+et al.
+(2025b)
+Y. Liu, G. Qin, Z. Shi, Z. Chen, C. Yang, X. Huang, J. Wang, and M. Long
+Sundial: A Family of Highly Capable Time Series Foundation Models
+.
+In
+Forty-Second International Conference on Machine Learning
+,
+Cited by:
+§2.2
+,
+§4.1
+.
+Liu
+et al.
+(2026c)
+Y. Liu, X. Su, S. Wang, H. Zhang, H. Liu, Y. Wang, Z. Ye, Y. Xiang, J. Wang, and M. Long
+Timer-S1: A Billion-Scale Time Series Foundation Model with Serial Scaling
+.
+arXiv
+.
+External Links:
+2603.04791
+,
+Document
+Cited by:
+§2.2
+.
+Liu
+et al.
+(2022)
+Y. Liu, H. Wu, J. Wang, and M. Long
+Non-stationary transformers: exploring the stationarity in time series forecasting
+.
+In
+Proceedings of the 36th International Conference on Neural Information Processing Systems
+,
+NIPS ’22
+,
+Red Hook, NY, USA
+,
+pp. 9881–9893
+.
+External Links:
+ISBN 978-1-7138-7108-8
+Cited by:
+§2.1
+.
+Liu
+et al.
+(2024)
+Y. Liu, H. Zhang, C. Li, X. Huang, J. Wang, and M. Long
+Timer: generative pre-trained transformers are large time series models
+.
+In
+Proceedings of the 41st International Conference on Machine Learning
+,
+ICML’24
+, Vol.
+235
+,
+Vienna, Austria
+,
+pp. 32369–32399
+.
+Cited by:
+§2.2
+.
+Ma
+et al.
+(2024)
+H. Ma, Y. Chen, W. Zhao, J. Yang, Y. Ji, X. Xu, X. Liu, H. Jing, S. Liu, and G. Yang
+A Mamba Foundation Model for Time Series Forecasting
+.
+arXiv
+.
+External Links:
+2411.02941
+,
+Document
+Cited by:
+§2.1
+.
+Medeiros
+et al.
+(2025)
+H. R. Medeiros, H. Sharifi-Noghabi, G. L. Oliveira, and S. Irandoust
+Accurate Parameter-Efficient Test-Time Adaptation for Time Series Forecasting
+.
+In
+Second Workshop on Test-Time Adaptation: Putting Updates to the Test! At ICML 2025
+,
+Cited by:
+§2.3
+.
+Meyer
+et al.
+(2025)
+M. Meyer, S. Kaltenpoth, K. Zalipski, and O. Müller
+Time Series Foundation Models: Benchmarking Challenges and Requirements
+.
+arXiv
+.
+External Links:
+2510.13654
+,
+Document
+Cited by:
+§2.2
+.
+Miller
+et al.
+(2024)
+J. A. Miller, M. Aldosari, F. Saeed, N. H. Barna, S. Rana, I. B. Arpinar, and N. Liu
+A Survey of Deep Learning and Foundation Models for Time Series Forecasting
+.
+arXiv
+.
+External Links:
+2401.13912
+,
+Document
+Cited by:
+§1
+,
+§2.2
+.
+Nie
+et al.
+(2022)
+Y. Nie, N. H. Nguyen, P. Sinthong, and J. Kalagnanam
+A Time Series is Worth 64 Words: Long-term Forecasting with Transformers
+.
+In
+The Eleventh International Conference on Learning Representations
+,
+Cited by:
+§2.1
+.
+Pfeiffer
+et al.
+(2020)
+J. Pfeiffer, I. Vulić, I. Gurevych, and S. Ruder
+MAD-X: An Adapter-Based Framework for Multi-Task Cross-Lingual Transfer
+.
+In
+Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)
+,
+B. Webber, T. Cohn, Y. He, and Y. Liu (Eds.)
+,
+Online
+,
+pp. 7654–7673
+.
+External Links:
+Document
+Cited by:
+§2.4
+.
+Pham
+et al.
+(2022)
+Q. Pham, C. Liu, D. Sahoo, and S. Hoi
+Learning Fast and Slow for Online Time Series Forecasting
+.
+In
+The Eleventh International Conference on Learning Representations
+,
+Cited by:
+§2.3
+.
+Piccolo (1990)
+D. Piccolo
+A Distance Measure for Classifying Arima Models
+.
+Journal of Time Series Analysis
+11
+(
+2
+),
+pp. 153–164
+.
+External Links:
+ISSN 1467-9892
+,
+Document
+Cited by:
+§1
+,
+§2.1
+.
+Rasul
+et al.
+(2024)
+K. Rasul, A. Ashok, A. R. Williams, H. Ghonia, R. Bhagwatkar, A. Khorasani, M. J. D. Bayazi, G. Adamopoulos, R. Riachi, N. Hassen, M. Biloš, S. Garg, A. Schneider, N. Chapados, A. Drouin, V. Zantedeschi, Y. Nevmyvaka, and I. Rish
+Lag-Llama: Towards Foundation Models for Probabilistic Time Series Forecasting
+.
+arXiv
+.
+External Links:
+2310.08278
+,
+Document
+Cited by:
+§2.2
+.
+Shchur
+et al.
+(2026)
+O. Shchur, A. F. Ansari, C. Turkmen, L. Stella, N. Erickson, P. Guerron, M. Bohlke-Schneider, and Y. Wang
+Fev-bench: A Realistic Benchmark for Time Series Forecasting
+.
+arXiv
+.
+External Links:
+2509.26468
+,
+Document
+Cited by:
+§4.1
+.
+Verwimp
+et al.
+(2023)
+E. Verwimp, R. Aljundi, S. Ben-David, M. Bethge, A. Cossu, A. Gepperth, T. L. Hayes, E. Hüllermeier, C. Kanan, D. Kudithipudi, C. H. Lampert, M. Mundt, R. Pascanu, A. Popescu, A. S. Tolias, J. van de Weijer, B. Liu, V. Lomonaco, T. Tuytelaars, and G. M. van de Ven
+Continual Learning: Applications and the Road Forward
+.
+Transactions on Machine Learning Research
+.
+Cited by:
+§2.3
+.
+Wang
+et al.
+(2024)
+Y. Wang, H. Wu, J. Dong, G. Qin, H. Zhang, Y. Liu, Y. Qiu, J. Wang, and M. Long
+TimeXer: Empowering Transformers for Time Series Forecasting with Exogenous Variables
+.
+In
+The Thirty-eighth Annual Conference on Neural Information Processing Systems
+,
+Cited by:
+§2.1
+.
+Woo
+et al.
+(2024)
+G. Woo, C. Liu, A. Kumar, C. Xiong, S. Savarese, and D. Sahoo
+Unified training of universal time series forecasting transformers
+.
+In
+Proceedings of the 41st International Conference on Machine Learning
+,
+ICML’24
+, Vol.
+235
+,
+Vienna, Austria
+,
+pp. 53140–53164
+.
+Cited by:
+§1
+,
+§2.2
+.
+Wu
+et al.
+(2022)
+H. Wu, T. Hu, Y. Liu, H. Zhou, J. Wang, and M. Long
+TimesNet: Temporal 2D-Variation Modeling for General Time Series Analysis
+.
+In
+The Eleventh International Conference on Learning Representations
+,
+Cited by:
+§1
+,
+§2.1
+.
+Wu
+et al.
+(2021)
+H. Wu, J. Xu, J. Wang, and M. Long
+Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting
+.
+In
+Advances in Neural Information Processing Systems
+,
+Cited by:
+§4.1
+.
+Xu
+et al.
+(2026a)
+B. Xu, X. Dai, and K. Zhang
+Contextual agentic memory is a memo, not true memory
+.
+External Links:
+2604.27707
+,
+Link
+Cited by:
+§2.4
+.
+Xu
+et al.
+(2026b)
+B. Xu, F. Yang, X. Dai, D. Tang, and K. Zhang
+From internal diagnosis to external auditing: a vlm-driven paradigm for online test-time backdoor defense
+.
+External Links:
+2601.19448
+,
+Link
+Cited by:
+§1
+.
+Xu
+et al.
+(2026c)
+Z. Xu, W. Cai, X. Dai, Z. Deng, and Q. Xu
+Fidel-ts: a high-fidelity multimodal benchmark for time series forecasting
+.
+External Links:
+2509.24789
+,
+Link
+Cited by:
+§1
+.
+Xu
+et al.
+(2023)
+Z. Xu, A. Zeng, and Q. Xu
+FITS: Modeling Time Series with $10k$ Parameters
+.
+In
+The Twelfth International Conference on Learning Representations
+,
+Cited by:
+§2.1
+.
+Zeng
+et al.
+(2023)
+A. Zeng, M. Chen, L. Zhang, and Q. Xu
+Are Transformers Effective for Time Series Forecasting?
+.
+Proceedings of the AAAI Conference on Artificial Intelligence
+37
+(
+9
+),
+pp. 11121–11128
+.
+Cited by:
+§1
+,
+§2.1
+.
+Zhang
+et al.
+(2024)
+Y. Zhang, W. Chen, Z. Zhu, D. Qin, L. Sun, X. Wang, Q. Wen, Z. Zhang, L. Wang, and R. Jin
+Addressing Concept Shift in Online Time Series Forecasting: Detect-then-Adapt
+.
+arXiv
+.
+External Links:
+2403.14949
+,
+Document
+Cited by:
+§1
+,
+§2.3
+.
+Zhang
+et al.
+(2023)
+Y. Zhang, Q. Wen, X. Wang, W. Chen, L. Sun, Z. Zhang, L. Wang, R. Jin, and T. Tan
+OneNet: Enhancing Time Series Forecasting Models under Concept Drift by Online Ensembling
+.
+In
+Thirty-Seventh Conference on Neural Information Processing Systems
+,
+Cited by:
+§2.3
+.
+Zhou
+et al.
+(2021)
+H. Zhou, S. Zhang, J. Peng, S. Zhang, J. Li, H. Xiong, and W. Zhang
+Informer: Beyond Efficient Transformer for Long Sequence Time-Series Forecasting
+.
+Proceedings of the AAAI Conference on Artificial Intelligence
+35
+(
+12
+),
+pp. 11106–11115
+.
+Cited by:
+§1
+,
+§2.1
+,
+§4.1
+.
+Zhou
+et al.
+(2023)
+T. Zhou, P. Niu, X. Wang, L. Sun, and R. Jin
+One Fits All: Power General Time Series Analysis by Pretrained LM
+.
+In
+Thirty-Seventh Conference on Neural Information Processing Systems
+,
+Cited by:
+§2.2
+.
+Appendix
+Appendix A
+Experiment Details
+In addition, we split each dataset chronologically into training, validation, and testing sets following the standard 7:1:2 ratio. Since the evaluated TSFMs are zero-shot, no actual pre-training or fine-tuning of the base models is required. Our proposed ORCA adapter can seamlessly modify the base model’s output immediately after a brief warmup phase (i.e., the first time the FIFO decay buffer has acquired enough data as buffer length). However, to ensure a fair and aligned comparison with existing literature and baselines, all reported metrics are strictly evaluated on the testing set portion of the data. Mean Squared Error (MSE) serves as our primary evaluation metric. Detailed formulas for the metrics are provided in this appendix.
+A.1
+Online Training and Evaluation Framework
+In the streaming time series forecasting scenario, it is critical to prevent future data leakage. Our online training and evaluation framework adheres to chronological boundaries. At time step
+t
+t
+, the base model and the adapter only have access to the historical look-back window
+𝐗
+t
+\mathbf{X}_{t}
+to predict the future horizon
+𝐘
+t
+\mathbf{Y}_{t}
+. The ground truth for this prediction,
+𝐘
+t
+GT
+\mathbf{Y}_{t}^{\mathrm{GT}}
+, spans from
+t
+t
+to
+t
++
+H
+−
+1
+t+H-1
+. To avoid data leakage, this ground truth is not revealed to the model immediately. Instead, the framework waits until step
+t
++
+H
+t+H
+, when the true values of the entire horizon become fully observable. Only then is the complete snapshot paired and pushed into the FIFO replay buffer for cycle training. This mechanism ensures that the online adaptation relies solely on retrospective data, simulating real-world streaming deployments.
+A.2
+Model Configuration
+The complete ORCA model uses a standardized set of hyperparameters across all base models. Specifically, the Linear Adapter consists of 2 blocks with a hidden dimension of 128. The refiner context input concatenates the historical look-back
+𝐗
+t
+\mathbf{X}_{t}
+and the base model prediction
+𝐘
+t
+base
+\mathbf{Y}_{t}^{\mathrm{base}}
+. During the streaming cycle training, we maintain a FIFO replay buffer with a capacity of 3000 snapshots. At each training cycle, we draw batches of size 256. The optimizer is AdamW with a learning rate of
+1
+×
+10
+−
+4
+1\times 10^{-4}
+and a weight decay of
+1
+×
+10
+−
+5
+1\times 10^{-5}
+. Furthermore, to strictly align with the continuous online learning paradigm and maintain cycle efficiency, the adapter undergoes a fixed number of parameter update steps during each training cycle without employing any early stopping mechanisms. To enforce sparsity, the Bayesian loss regularization weight via the L1 channel mixer is set to
+1
+×
+10
+−
+3
+1\times 10^{-3}
+. The core kernel size parameter for the moving average decomposition is dynamically determined by the prediction length
+H
+H
+. Consistent with prior works, we set the kernel size to 25 when
+H
+>
+30
+H>30
+, and to 7 when
+H
+≤
+30
+H\leq 30
+. This configuration is specifically designed to effectively capture structural temporal patterns whenever sufficient contextual information is available. When a new base model begins its streaming inference, the adapter undergoes an initial warmup phase (first buffer settled) of 50 epochs on the buffer, after which it performs 10 gradient update steps per cycle. For the Boltzmann Router, the routing temperature is set to
+τ
+=
+0.1
+\tau=0.1
+, and the exponential moving average (EMA) momentum for tracking the errors is
+α
+=
+0.2
+\alpha=0.2
+. The update rule is configured to the Bayesian mode to anchor the adapter output to the historical prior.
+A.3
+Evaluation Metrics
+To evaluate the forecasting performance, we employ Mean Squared Error (MSE). Because different time series foundation models employ distinct internal normalization techniques that are embedded as black-box operations, their direct loss magnitudes are mathematically incompatible. To establish a fair comparison, we implement a global scalar normalization. For each dataset, we compute a single dataset-level scalar
+σ
+global
+\sigma_{\mathrm{global}}
+representing the overall scale of the time series. Both the base models’ predictions and the ORCA adapter’s refined predictions are first evaluated against the ground truth in the raw, unnormalized domain. Subsequently, the calculated errors are divided by this dataset-specific global scalar
+σ
+global
+\sigma_{\mathrm{global}}
+(or its squared value for MSE). The globally normalized metrics are defined as follows:
+MSE
+\displaystyle\mathrm{MSE}
+=
+1
+σ
+global
+2
+​
+1
+H
+×
+D
+​
+∑
+i
+=
+1
+H
+∑
+j
+=
+1
+D
+(
+Y
+i
+,
+j
+GT
+−
+Y
+i
+,
+j
+pred
+)
+2
+\displaystyle=\frac{1}{\sigma_{\mathrm{global}}^{2}}\frac{1}{H\times D}\sum_{i=1}^{H}\sum_{j=1}^{D}(Y_{i,j}^{\mathrm{GT}}-Y_{i,j}^{\mathrm{pred}})^{2}
+(6)
+This approach ensures that the improvements achieved by ORCA are consistently comparable across all combinations of datasets and base models. Furthermore, because this normalization applies a constant scalar multiplier to both the base model and the adapted model’s errors, the relative MSE drop ratio remains strictly identical before and after normalization. This guarantees that the reported performance improvements are solely attributed to our adaptation framework and not an artifact of the normalization process.
+A.4
+Online Training Pipeline Diagram
+This subsection illustrates the online training pipeline.
+Figure 7:
+The online training pipeline of ORCA. Snapshots
+s
+t
+s_{t}
+containing
+{
+𝑿
+t
+,
+𝒀
+t
+base
+,
+𝒀
+t
+GT
+}
+\{\boldsymbol{X}_{t},\boldsymbol{Y}_{t}^{\mathrm{base}},\boldsymbol{Y}_{t}^{\mathrm{GT}}\}
+are stored in a FIFO Buffer. Random sampling with an exponential decay probability prioritizes recent samples. The Bayesian Loss simultaneously aligns
+𝒀
+t
+ada
+\boldsymbol{Y}_{t}^{\mathrm{ada}}
+with the ground truth
+𝒀
+t
+GT
+\boldsymbol{Y}_{t}^{\mathrm{GT}}
+and anchors it to the prior prediction
+𝒀
+t
+prior
+\boldsymbol{Y}_{t}^{\mathrm{prior}}
+generated by the delayed model copy
+θ
+prior
+\theta_{\text{prior}}
+.
+As depicted in Figure
+7
+, snapshots are stored in a FIFO buffer. Random sampling with an exponential decay probability prioritizes recent samples during the cycle training. The Bayesian Loss aligns the adapted output with the ground truth and anchors it to the prior prediction generated by the delayed model copy
+θ
+prior
+\theta_{\text{prior}}
+.
+A.5
+Adaptation of White-Box Baselines to Black-Box Settings
+To rigorously benchmark our proposed framework, we selected state-of-the-art Test-Time Adaptation (TTA) methods originally designed for white-box settings and adapted them to the black-box contract. This contract strictly prohibits backpropagation through the base forecaster and avoids computationally expensive re-evaluations of the base model. Below, we detail the adaptations made for each baseline to ensure a fair comparison while preserving their core mechanisms.
+TAFAS.
+The original TAFAS framework introduces Periodicity-Aware Adaptation Scheduling (PAAS) alongside Input and Output Gated Calibration Modules (GCMs). It calibrates both the input context and the output predictions by continuously backpropagating through the source forecaster using partially observed ground truths. Under the black-box setting, we cannot backpropagate through the base forecaster or re-evaluate it with recalibrated inputs. Therefore, our adaptation retains only the Output GCM as a post-hoc residual calibrator. The core mechanism of the Output GCM—a variable-wise residual transformation regulated by a tanh gating mechanism initialized near zero—is fully preserved. Instead of PAAS, which relies on partial ground truth, the adapted TAFAS uses the same fully resolved ground truth training snapshots and warmup scheduling as our proposed framework, ensuring it operates strictly on observable retrospective data.
+SOLID.
+The Sample-level Contextualized Adapter (SOLID) constructs a contextualized dataset for each test sample by selecting historical instances with similar periodic phases and high Euclidean similarity in their look-back windows. It then fine-tunes the top linear prediction layer of the base forecaster using this contextualized dataset. Under the black-box contract, modifying the internal prediction layer of the base forecaster is strictly forbidden. Consequently, we replace the internal prediction layer fine-tuning with a lightweight post-hoc Affine Head (comprising scale and bias parameters) applied directly to the frozen base predictions. Our adaptation fully preserves SOLID’s core context-selection mechanism based on phase proximity and look-back similarity. For each test instance, we select the top-
+k
+k
+nearest historical neighbors from an online history pool. We then clone the globally trained Affine Head, perform local gradient descent adaptation using these contextualized neighbors, and apply the locally adapted head to the current prediction.
+DSOF.
+The Dual-Stream Framework for Online Time Series Forecasting (DSOF) introduces a teacher-student architecture operating on two distinct data streams. The fast stream employs temporal difference (TD) learning with pseudo-labels to rapidly adapt to recent data, while the slow stream stabilizes training via experience replay (ER) using fully observed ground truth sequences. In its original formulation, both the teacher and student models are fine-tuned. To align with the black-box contract, our adaptation strictly freezes the teacher model (i.e., the base forecaster) and relies entirely on a lightweight Residual Student MLP to calibrate predictions. The dual-stream mechanism is preserved in its entirety. The slow stream utilizes the same fully resolved ground truth training snapshots from our online FIFO buffer for experience replay. Concurrently, the fast stream immediately updates the student model using pseudo-labels, which are constructed by concatenating the most recent partial ground truth observations with the frozen teacher model’s predictions.
+Appendix B
+Theoretical Analysis
+B.1
+Context Conditioned Learning
+In Section
+3
+, we assert that the optimal deterministic adapter should learn the conditional expectation of the errors given the context
+𝐂
+t
+=
+[
+𝐗
+t
+,
+𝐘
+t
+base
+]
+\mathbf{C}_{t}=[\mathbf{X}_{t},\mathbf{Y}_{t}^{\mathrm{base}}]
+. Here, we provide the detailed mathematical derivation.
+We define the expected risk
+ℛ
+⁡
+(
+f
+)
+\mathcal{R}(f)
+under the Mean Squared Error (MSE) loss as the expected Frobenius norm of the difference between the true error matrix
+𝐄
+t
+\mathbf{E}_{t}
+and our adapter’s prediction
+f
+⁡
+(
+𝐂
+t
+)
+f(\mathbf{C}_{t})
+:
+ℛ
+⁡
+(
+f
+)
+=
+𝔼
+𝐂
+t
+,
+𝐄
+t
+​
+[
+‖
+𝐄
+t
+−
+f
+⁡
+(
+𝐂
+t
+)
+‖
+F
+2
+]
+\mathcal{R}(f)=\mathbb{E}_{\mathbf{C}_{t},\mathbf{E}_{t}}\left[\|\mathbf{E}_{t}-f(\mathbf{C}_{t})\|_{F}^{2}\right]
+(7)
+According to the law of total expectation, this risk can be decomposed by conditioning on the observable context
+𝐂
+t
+\mathbf{C}_{t}
+:
+ℛ
+⁡
+(
+f
+)
+=
+𝔼
+𝐂
+t
+​
+[
+𝔼
+𝐄
+t
+|
+𝐂
+t
+​
+[
+‖
+𝐄
+t
+−
+f
+⁡
+(
+𝐂
+t
+)
+‖
+F
+2
+∣
+𝐂
+t
+]
+]
+\mathcal{R}(f)=\mathbb{E}_{\mathbf{C}_{t}}\left[\mathbb{E}_{\mathbf{E}_{t}\mid\mathbf{C}_{t}}\left[\|\mathbf{E}_{t}-f(\mathbf{C}_{t})\|_{F}^{2}\mid\mathbf{C}_{t}\right]\right]
+(8)
+To find the optimal mapping
+f
+∗
+f^{*}
+that minimizes the global expected risk
+ℛ
+⁡
+(
+f
+)
+\mathcal{R}(f)
+, it is sufficient to minimize the inner conditional expectation for every realization of the context
+𝐂
+t
+\mathbf{C}_{t}
+. Let
+𝒥
+⁡
+(
+f
+⁡
+(
+𝐂
+t
+)
+)
+\mathcal{J}(f(\mathbf{C}_{t}))
+denote this inner objective, which can be expanded over the matrix elements:
+𝒥
+(
+f
+(
+𝐂
+t
+)
+)
+=
+𝔼
+𝐄
+t
+|
+𝐂
+t
+[
+∑
+i
+,
+j
+(
+E
+t
+,
+i
+​
+j
+−
+f
+i
+​
+j
+(
+𝐂
+t
+)
+)
+2
+|
+𝐂
+t
+]
+\mathcal{J}(f(\mathbf{C}_{t}))=\mathbb{E}_{\mathbf{E}_{t}\mid\mathbf{C}_{t}}\left[\sum_{i,j}\left(E_{t,ij}-f_{ij}(\mathbf{C}_{t})\right)^{2}\mathrel{\Bigg|}\mathbf{C}_{t}\right]
+(9)
+Since
+f
+⁡
+(
+𝐂
+t
+)
+f(\mathbf{C}_{t})
+is a deterministic function of
+𝐂
+t
+\mathbf{C}_{t}
+, we can take the partial derivative of
+𝒥
+\mathcal{J}
+with respect to each output element
+f
+i
+​
+j
+​
+(
+𝐂
+t
+)
+f_{ij}(\mathbf{C}_{t})
+and set it to zero:
+∂
+𝒥
+∂
+f
+i
+​
+j
+​
+(
+𝐂
+t
+)
+=
+−
+2
+​
+𝔼
+𝐄
+t
+|
+𝐂
+t
+​
+[
+E
+t
+,
+i
+​
+j
+−
+f
+i
+​
+j
+​
+(
+𝐂
+t
+)
+∣
+𝐂
+t
+]
+=
+0
+\frac{\partial\mathcal{J}}{\partial f_{ij}(\mathbf{C}_{t})}=-2\,\mathbb{E}_{\mathbf{E}_{t}\mid\mathbf{C}_{t}}\left[E_{t,ij}-f_{ij}(\mathbf{C}_{t})\mid\mathbf{C}_{t}\right]=0
+(10)
+Solving this yields the optimal element-wise mapping:
+f
+i
+​
+j
+∗
+​
+(
+𝐂
+t
+)
+=
+𝔼
+𝐄
+t
+|
+𝐂
+t
+​
+[
+E
+t
+,
+i
+​
+j
+∣
+𝐂
+t
+]
+f_{ij}^{*}(\mathbf{C}_{t})=\mathbb{E}_{\mathbf{E}_{t}\mid\mathbf{C}_{t}}\left[E_{t,ij}\mid\mathbf{C}_{t}\right]
+(11)
+Reconstructing the matrix form, we obtain the rigorously optimal mapping function:
+f
+∗
+(
+𝐂
+t
+)
+=
+𝔼
+[
+𝐄
+t
+∣
+𝐗
+t
+,
+𝐘
+t
+base
+]
+f^{*}(\mathbf{C}_{t})=\mathbb{E}[\mathbf{E}_{t}\mid\mathbf{X}_{t},\mathbf{Y}_{t}^{\mathrm{base}}]
+(12)
+While it is a well-known mathematical property that minimizing MSE targets the conditional mean, this derivation serves a specific structural purpose for ORCA. It rigorously justifies our use of the conditional formulation
+P
+⁡
+(
+𝐄
+t
+∣
+𝐗
+t
+,
+𝐘
+t
+base
+)
+P(\mathbf{E}_{t}\mid\mathbf{X}_{t},\mathbf{Y}_{t}^{\mathrm{base}})
+within a deterministic framework, demonstrating that adapting via a deterministic mapping
+f
+⁡
+(
+𝐂
+t
+)
+f(\mathbf{C}_{t})
+is mathematically equivalent to estimating the expected value of the probabilistic error distribution. Consequently, to effectively perform this residual regression, it is naturally appropriate to condition the adapter on the concatenated context of
+𝐗
+t
+\mathbf{X}_{t}
+and
+𝐘
+t
+base
+\mathbf{Y}_{t}^{\mathrm{base}}
+.
+B.2
+Predictive-Space Bayesian Update
+In Section
+3.5
+, we formulated our online adaptation as a predictive-space Bayesian update and substituted the exact precision ratio
+λ
+t
+\lambda_{t}
+with the Boltzmann routing confidence
+c
+¯
+t
+\bar{c}_{t}
+. This section provides the comprehensive mathematical proof and theoretical justification.
+B.2.1
+Maximum A Posteriori (MAP) Derivation
+At step
+t
+t
+, we seek to estimate the true residual
+𝐄
+t
+\mathbf{E}_{t}
+given the context
+𝐂
+t
+=
+[
+𝐗
+t
+,
+𝐘
+t
+base
+]
+\mathbf{C}_{t}=[\mathbf{X}_{t},\mathbf{Y}_{t}^{\mathrm{base}}]
+, the historical memory
+ℋ
+t
+−
+1
+\mathcal{H}_{t-1}
+, and the current observation
+𝐄
+obs
+,
+t
+\mathbf{E}_{\mathrm{obs},t}
+. According to Bayes’ theorem, the posterior distribution is:
+P
+⁡
+(
+𝐄
+t
+∣
+𝐂
+t
+,
+𝐄
+obs
+,
+t
+,
+ℋ
+t
+−
+1
+)
+∝
+P
+⁡
+(
+𝐄
+obs
+,
+t
+∣
+𝐄
+t
+,
+𝐂
+t
+)
+⋅
+P
+⁡
+(
+𝐄
+t
+∣
+𝐂
+t
+,
+ℋ
+t
+−
+1
+)
+P(\mathbf{E}_{t}\mid\mathbf{C}_{t},\mathbf{E}_{\mathrm{obs},t},\mathcal{H}_{t-1})\propto P(\mathbf{E}_{\mathrm{obs},t}\mid\mathbf{E}_{t},\mathbf{C}_{t})\cdot P(\mathbf{E}_{t}\mid\mathbf{C}_{t},\mathcal{H}_{t-1})
+(13)
+Assuming both the likelihood and the prior follow isotropic Gaussian distributions:
+Likelihood:
+P
+⁡
+(
+𝐄
+obs
+,
+t
+∣
+𝐄
+t
+,
+𝐂
+t
+)
+∝
+exp
+⁡
+(
+−
+1
+2
+​
+σ
+obs
+2
+​
+‖
+𝐄
+t
+−
+𝐄
+obs
+,
+t
+‖
+F
+2
+)
+\displaystyle P(\mathbf{E}_{\mathrm{obs},t}\mid\mathbf{E}_{t},\mathbf{C}_{t})\propto\exp\left(-\frac{1}{2\sigma_{\mathrm{obs}}^{2}}\|\mathbf{E}_{t}-\mathbf{E}_{\mathrm{obs},t}\|_{F}^{2}\right)
+(14)
+Prior:
+P
+⁡
+(
+𝐄
+t
+∣
+𝐂
+t
+,
+ℋ
+t
+−
+1
+)
+∝
+exp
+⁡
+(
+−
+1
+2
+​
+σ
+prior
+2
+​
+‖
+𝐄
+t
+−
+𝐄
+prior
+,
+t
+‖
+F
+2
+)
+\displaystyle P(\mathbf{E}_{t}\mid\mathbf{C}_{t},\mathcal{H}_{t-1})\propto\exp\left(-\frac{1}{2\sigma_{\mathrm{prior}}^{2}}\|\mathbf{E}_{t}-\mathbf{E}_{\mathrm{prior},t}\|_{F}^{2}\right)
+(15)
+To perform MAP estimation, we substitute the adapter’s deterministic prediction
+Δ
+​
+𝐘
+^
+t
+\Delta\hat{\mathbf{Y}}_{t}
+for
+𝐄
+t
+\mathbf{E}_{t}
+and minimize the negative logarithm of the posterior:
+−
+log
+⁡
+P
+∝
+1
+2
+​
+σ
+obs
+2
+​
+‖
+Δ
+​
+𝐘
+^
+t
+−
+𝐄
+obs
+,
+t
+‖
+F
+2
++
+1
+2
+​
+σ
+prior
+2
+​
+‖
+Δ
+​
+𝐘
+^
+t
+−
+𝐄
+prior
+,
+t
+‖
+F
+2
+-\log P\propto\frac{1}{2\sigma_{\mathrm{obs}}^{2}}\|\Delta\hat{\mathbf{Y}}_{t}-\mathbf{E}_{\mathrm{obs},t}\|_{F}^{2}+\frac{1}{2\sigma_{\mathrm{prior}}^{2}}\|\Delta\hat{\mathbf{Y}}_{t}-\mathbf{E}_{\mathrm{prior},t}\|_{F}^{2}
+(16)
+Since
+𝐄
+obs
+,
+t
+=
+𝐘
+t
+GT
+−
+𝐘
+t
+base
+\mathbf{E}_{\mathrm{obs},t}=\mathbf{Y}_{t}^{\mathrm{GT}}-\mathbf{Y}_{t}^{\mathrm{base}}
+, we have
+Δ
+​
+𝐘
+^
+t
+−
+𝐄
+obs
+,
+t
+=
+(
+𝐘
+t
+base
++
+Δ
+​
+𝐘
+^
+t
+)
+−
+𝐘
+t
+GT
+=
+𝐘
+t
+ada
+−
+𝐘
+t
+GT
+\Delta\hat{\mathbf{Y}}_{t}-\mathbf{E}_{\mathrm{obs},t}=(\mathbf{Y}_{t}^{\mathrm{base}}+\Delta\hat{\mathbf{Y}}_{t})-\mathbf{Y}_{t}^{\mathrm{GT}}=\mathbf{Y}_{t}^{\mathrm{ada}}-\mathbf{Y}_{t}^{\mathrm{GT}}
+. Similarly, for the prior term,
+Δ
+​
+𝐘
+^
+t
+−
+𝐄
+prior
+,
+t
+=
+𝐘
+t
+ada
+−
+𝐘
+t
+prior
+\Delta\hat{\mathbf{Y}}_{t}-\mathbf{E}_{\mathrm{prior},t}=\mathbf{Y}_{t}^{\mathrm{ada}}-\mathbf{Y}_{t}^{\mathrm{prior}}
+. By absorbing
+2
+​
+σ
+obs
+2
+2\sigma_{\mathrm{obs}}^{2}
+into the learning rate and dividing by the dimensions
+H
+×
+D
+H\times D
+, we define the theoretical precision ratio
+λ
+t
+=
+σ
+obs
+2
+/
+σ
+prior
+2
+\lambda_{t}=\sigma_{\mathrm{obs}}^{2}/\sigma_{\mathrm{prior}}^{2}
+. This rigorously transforms the error-space optimization into the final predictive-space time series loss:
+ℒ
+⁡
+(
+s
+t
+,
+θ
+)
+∝
+1
+H
+×
+D
+​
+(
+‖
+𝐘
+t
+GT
+−
+𝐘
+t
+ada
+‖
+F
+2
++
+λ
+t
+​
+‖
+𝐘
+t
+ada
+−
+𝐘
+t
+prior
+‖
+F
+2
+)
+\mathcal{L}(s_{t},\theta)\propto\frac{1}{H\times D}\left(\|\mathbf{Y}_{t}^{\mathrm{GT}}-\mathbf{Y}_{t}^{\mathrm{ada}}\|_{F}^{2}+\lambda_{t}\|\mathbf{Y}_{t}^{\mathrm{ada}}-\mathbf{Y}_{t}^{\mathrm{prior}}\|_{F}^{2}\right)
+(17)
+B.2.2
+Theoretical Justification of the Precision Surrogate
+In online time series forecasting, the precise prior variance
+σ
+prior
+2
+\sigma_{\mathrm{prior}}^{2}
+is unknown and highly non-stationary due to concept drifts. While rigorous estimation of the prior precision can be mathematically possible, it often introduces unacceptable computational overhead and numerical instability for real-time streaming adaptation. To maintain both efficiency and stability, ORCA dynamically substitutes the theoretical precision ratio
+λ
+t
+\lambda_{t}
+with an empirical surrogate
+c
+¯
+t
+=
+mean
+⁡
+(
+𝐜
+t
+)
+\bar{c}_{t}=\mathrm{mean}(\mathbf{c}_{t})
+. We validate its structural optimality by solving for the minimum of the substituted loss function
+ℒ
+∗
+=
+‖
+Δ
+​
+𝐘
+^
+t
+−
+𝐄
+obs
+,
+t
+‖
+F
+2
++
+c
+¯
+t
+​
+‖
+Δ
+​
+𝐘
+^
+t
+−
+𝐄
+prior
+,
+t
+‖
+F
+2
+\mathcal{L}^{*}=\|\Delta\hat{\mathbf{Y}}_{t}-\mathbf{E}_{\mathrm{obs},t}\|_{F}^{2}+\bar{c}_{t}\|\Delta\hat{\mathbf{Y}}_{t}-\mathbf{E}_{\mathrm{prior},t}\|_{F}^{2}
+.
+Taking the derivative with respect to
+Δ
+​
+𝐘
+^
+t
+\Delta\hat{\mathbf{Y}}_{t}
+and setting it to zero yields:
+∂
+ℒ
+∗
+∂
+Δ
+​
+𝐘
+^
+t
+=
+2
+​
+(
+Δ
+​
+𝐘
+^
+t
+−
+𝐄
+obs
+,
+t
+)
++
+2
+​
+c
+¯
+t
+​
+(
+Δ
+​
+𝐘
+^
+t
+−
+𝐄
+prior
+,
+t
+)
+=
+0
+\frac{\partial\mathcal{L}^{*}}{\partial\Delta\hat{\mathbf{Y}}_{t}}=2(\Delta\hat{\mathbf{Y}}_{t}-\mathbf{E}_{\mathrm{obs},t})+2\bar{c}_{t}(\Delta\hat{\mathbf{Y}}_{t}-\mathbf{E}_{\mathrm{prior},t})=0
+(18)
+Solving for the optimal adapter output
+Δ
+​
+𝐘
+^
+t
+∗
+\Delta\hat{\mathbf{Y}}_{t}^{*}
+gives:
+Δ
+​
+𝐘
+^
+t
+∗
+=
+1
+1
++
+c
+¯
+t
+​
+𝐄
+obs
+,
+t
++
+c
+¯
+t
+1
++
+c
+¯
+t
+​
+𝐄
+prior
+,
+t
+\Delta\hat{\mathbf{Y}}_{t}^{*}=\frac{1}{1+\bar{c}_{t}}\mathbf{E}_{\mathrm{obs},t}+\frac{\bar{c}_{t}}{1+\bar{c}_{t}}\mathbf{E}_{\mathrm{prior},t}
+(19)
+This formulation corresponds exactly to the analytical mean of the product of two Gaussian distributions:
+μ
+post
+=
+σ
+prior
+2
+​
+μ
+obs
++
+σ
+obs
+2
+​
+μ
+prior
+σ
+obs
+2
++
+σ
+prior
+2
+\mu_{\mathrm{post}}=\frac{\sigma_{\mathrm{prior}}^{2}\mu_{\mathrm{obs}}+\sigma_{\mathrm{obs}}^{2}\mu_{\mathrm{prior}}}{\sigma_{\mathrm{obs}}^{2}+\sigma_{\mathrm{prior}}^{2}}
+. Setting
+σ
+obs
+2
+=
+1
+\sigma_{\mathrm{obs}}^{2}=1
+and surrogate variance
+σ
+~
+prior
+2
+=
+1
+/
+c
+¯
+t
+\tilde{\sigma}_{\mathrm{prior}}^{2}=1/\bar{c}_{t}
+mathematically bridges our empirical formulation with the exact Bayesian posterior mean structure.
+Furthermore, utilizing the Boltzmann routing confidence as a surrogate provides significant advantages in online stability. Unlike the theoretical precision ratio
+λ
+t
+∈
+[
+0
+,
+∞
+)
+\lambda_{t}\in[0,\infty)
+, which can become unbounded and trigger gradient explosion under extreme distribution shifts,
+c
+¯
+t
+∈
+(
+0
+,
+1
+)
+\bar{c}_{t}\in(0,1)
+ensures a strictly bounded loss landscape. Additionally, the exponential moving average (EMA) of absolute errors acts as a robust proxy for predictive variance, offering superior resilience against heavy-tailed outliers compared to traditional squared variance estimation. Therefore,
+c
+¯
+t
+\bar{c}_{t}
+dynamically behaves as a regularized pre-conditioner that enables adaptive scaling without the burden of explicit variance tracking.
+B.3
+Boltzman Routing
+B.3.1
+Regret Bound of Boltzmann Routing
+Beyond training, the Boltzmann Router manages the inference-stage integration of
+𝐘
+t
+base
+\mathbf{Y}_{t}^{\mathrm{base}}
+and
+𝐘
+t
+ada
+\mathbf{Y}_{t}^{\mathrm{ada}}
+into the final output
+𝐘
+t
+comb
+\mathbf{Y}_{t}^{\mathrm{comb}}
+. This mechanism can be formally analyzed as an online
+Prediction with Expert Advice
+problem
+(
+Freund and Schapire, 1997
+)
+.
+Let
+N
+=
+2
+N=2
+be the number of experts, corresponding to the base model (Expert 1) and the adapter (Expert 2). At each step
+t
+t
+, the router assigns a normalized weight
+𝐜
+t
+∈
+[
+0
+,
+1
+]
+D
+\mathbf{c}_{t}\in[0,1]^{D}
+to the adapter and
+(
+𝟏
+−
+𝐜
+t
+)
+(\mathbf{1}-\mathbf{c}_{t})
+to the base model. To maintain plasticity in drifting environments, ORCA utilizes an Exponential Moving Average (EMA) of errors:
+{
+ε
+^
+t
+−
+1
+ada
+=
+α
+​
+𝐞
+t
+−
+1
+ada
++
+(
+1
+−
+α
+)
+​
+ε
+^
+t
+−
+2
+ada
+ε
+^
+t
+−
+1
+base
+=
+α
+​
+𝐞
+t
+−
+1
+base
++
+(
+1
+−
+α
+)
+​
+ε
+^
+t
+−
+2
+base
+\begin{cases}\mathbf{\hat{\varepsilon}}_{t-1}^{\mathrm{ada}}=\alpha\mathbf{e}_{t-1}^{\mathrm{ada}}+(1-\alpha)\mathbf{\hat{\varepsilon}}_{t-2}^{\mathrm{ada}}\\
+\mathbf{\hat{\varepsilon}}_{t-1}^{\mathrm{base}}=\alpha\mathbf{e}_{t-1}^{\mathrm{base}}+(1-\alpha)\mathbf{\hat{\varepsilon}}_{t-2}^{\mathrm{base}}\end{cases}
+(20)
+where
+α
+∈
+(
+0
+,
+1
+)
+\alpha\in(0,1)
+is the momentum coefficient. The channel-wise routing confidence vector
+𝐜
+t
+∈
+ℝ
+D
+\mathbf{c}_{t}\in\mathbb{R}^{D}
+is then calculated via a Boltzmann softmax function with temperature
+τ
+\tau
+:
+𝐜
+t
+=
+exp
+(
+−
+ε
+^
+t
+−
+1
+ada
+/
+τ
+)
+exp
+(
+−
+ε
+^
+t
+−
+1
+base
+/
+τ
+)
++
+exp
+(
+−
+ε
+^
+t
+−
+1
+ada
+/
+τ
+)
+\mathbf{c}_{t}=\frac{\exp(-\mathbf{\hat{\varepsilon}}_{t-1}^{\mathrm{ada}}/\tau)}{\exp(-\mathbf{\hat{\varepsilon}}_{t-1}^{\mathrm{base}}/\tau)+\exp(-\mathbf{\hat{\varepsilon}}_{t-1}^{\mathrm{ada}}/\tau)}
+(21)
+To derive the regret bound, we analyze the mechanism for a single channel, dropping the channel index for brevity. Let
+e
+t
+k
+∈
+[
+0
+,
+M
+]
+e_{t}^{k}\in[0,M]
+denote the instantaneous bounded error for expert
+k
+∈
+{
+base
+,
+ada
+}
+k\in\{\mathrm{base},\mathrm{ada}\}
+. Because standard error metrics (such as MSE) are convex, the loss of the combined prediction
+𝐘
+t
+comb
+=
+𝐜
+t
+⊙
+𝐘
+t
+ada
++
+(
+𝟏
+−
+𝐜
+t
+)
+⊙
+𝐘
+t
+base
+\mathbf{Y}_{t}^{\mathrm{comb}}=\mathbf{c}_{t}\odot\mathbf{Y}_{t}^{\mathrm{ada}}+(\mathbf{1}-\mathbf{c}_{t})\odot\mathbf{Y}_{t}^{\mathrm{base}}
+is upper-bounded by the expected loss under the routing distribution:
+ℒ
+t
+​
+(
+𝐘
+t
+comb
+)
+≤
+c
+t
+​
+e
+t
+ada
++
+(
+1
+−
+c
+t
+)
+​
+e
+t
+base
+\mathcal{L}_{t}(\mathbf{Y}_{t}^{\mathrm{comb}})\leq c_{t}e_{t}^{\mathrm{ada}}+(1-c_{t})e_{t}^{\mathrm{base}}
+(22)
+By expanding the recursive EMA formulation, the smoothed error is equivalent to a discounted sum of all past errors:
+ε
+^
+t
+−
+1
+k
+=
+α
+​
+∑
+s
+=
+1
+t
+−
+1
+(
+1
+−
+α
+)
+t
+−
+1
+−
+s
+​
+e
+s
+k
+\hat{\varepsilon}_{t-1}^{k}=\alpha\sum_{s=1}^{t-1}(1-\alpha)^{t-1-s}e_{s}^{k}
+. Substituting this into the Boltzmann softmax reveals that the routing probability is exactly proportional to:
+p
+t
+k
+∝
+exp
+(
+−
+α
+τ
+∑
+s
+=
+1
+t
+−
+1
+(
+1
+−
+α
+)
+t
+−
+1
+−
+s
+e
+s
+k
+)
+p_{t}^{k}\propto\exp\left(-\frac{\alpha}{\tau}\sum_{s=1}^{t-1}(1-\alpha)^{t-1-s}e_{s}^{k}\right)
+(23)
+This formulation proves that our EMA-based Boltzmann routing is mathematically equivalent to the
+Discounted Exponential Weights
+(DEW) algorithm
+(
+Herbster and Warmuth, 1998
+)
+, operating with a discount factor
+γ
+=
+1
+−
+α
+\gamma=1-\alpha
+and an effective learning rate
+η
+=
+α
+/
+τ
+\eta=\alpha/\tau
+.
+Let
+R
+T
+R_{T}
+denote the static regret over
+T
+T
+steps against the best single expert in hindsight. The discounting restricts the algorithm’s effective memory to approximately
+1
+/
+α
+1/\alpha
+steps. According to the standard theoretical analysis of DEW, the regret consists of the standard Exponential Weights bound over the effective window plus a tracking penalty bias proportional to the discount rate. Using Hoeffding’s lemma for bounded losses, the regret is bounded by:
+R
+T
+=
+∑
+t
+=
+1
+T
+ℒ
+t
+​
+(
+𝐘
+t
+comb
+)
+−
+min
+⁡
+∑
+t
+=
+1
+T
+k
+∈
+{
+base
+,
+ada
+}
+⁡
+e
+t
+k
+≤
+ln
+⁡
+2
+η
++
+η
+8
+​
+T
+​
+M
+2
++
+α
+​
+T
+​
+M
+R_{T}=\sum_{t=1}^{T}\mathcal{L}_{t}(\mathbf{Y}_{t}^{\mathrm{comb}})-\min_{k\in\{\mathrm{base},\mathrm{ada}\}}\sum_{t=1}^{T}e_{t}^{k}\leq\frac{\ln 2}{\eta}+\frac{\eta}{8}TM^{2}+\alpha TM
+(24)
+Substituting
+η
+=
+α
+/
+τ
+\eta=\alpha/\tau
+back into the inequality, we obtain the bound for the Boltzmann Router:
+R
+T
+≤
+τ
+​
+ln
+⁡
+2
+α
++
+α
+​
+T
+​
+M
+2
+8
+​
+τ
++
+α
+​
+T
+​
+M
+=
+τ
+​
+ln
+⁡
+2
+α
++
+α
+​
+T
+​
+(
+M
+2
+8
+​
+τ
++
+M
+)
+R_{T}\leq\frac{\tau\ln 2}{\alpha}+\frac{\alpha TM^{2}}{8\tau}+\alpha TM=\frac{\tau\ln 2}{\alpha}+\alpha T\left(\frac{M^{2}}{8\tau}+M\right)
+(25)
+To achieve a sublinear regret, we balance the terms with respect to
+T
+T
+. By applying the AM-GM inequality, the minimum of this upper bound is reached when the two terms are equal, yielding the optimal momentum coefficient
+α
+∗
+\alpha^{*}
+:
+α
+∗
+=
+8
+​
+τ
+2
+​
+ln
+⁡
+2
+T
+⁡
+(
+M
+2
++
+8
+​
+τ
+​
+M
+)
+=
+𝒪
+⁡
+(
+1
+T
+)
+\alpha^{*}=\sqrt{\frac{8\tau^{2}\ln 2}{T(M^{2}+8\tau M)}}=\mathcal{O}\left(\frac{1}{\sqrt{T}}\right)
+(26)
+Substituting
+α
+∗
+\alpha^{*}
+back into the inequality, the regret bound becomes sublinear:
+R
+T
+≤
+2
+​
+τ
+​
+ln
+⁡
+2
+⋅
+T
+⁡
+(
+M
+2
+8
+​
+τ
++
+M
+)
+=
+𝒪
+⁡
+(
+T
+)
+R_{T}\leq 2\sqrt{\tau\ln 2\cdot T\left(\frac{M^{2}}{8\tau}+M\right)}=\mathcal{O}(\sqrt{T})
+(27)
+Given
+N
+=
+2
+N=2
+, the logarithmic term
+ln
+⁡
+2
+\ln 2
+is a constant. This bound
+𝒪
+⁡
+(
+T
+)
+\mathcal{O}(\sqrt{T})
+guarantees that the time-averaged regret
+R
+T
+/
+T
+R_{T}/T
+converges to zero. In streaming scenarios where the horizon
+T
+T
+is not known, one can employ a time-varying momentum
+α
+t
+∝
+1
+/
+t
+\alpha_{t}\propto 1/\sqrt{t}
+to maintain this property. Consequently, if a distribution shift breaks the linear adapter (
+𝐞
+t
+ada
+≫
+𝐞
+t
+base
+\mathbf{e}_{t}^{\mathrm{ada}}\gg\mathbf{e}_{t}^{\mathrm{base}}
+), the Boltzmann routing mechanism ensures that
+𝐜
+t
+→
+𝟎
+\mathbf{c}_{t}\to\mathbf{0}
+, falling back to the base TSFM.
+B.3.2
+Hyperparameter Sensitivity Analysis of Boltzmann Routing
+The derived regret bound explicitly reveals the theoretical trade-offs governed by the two primary hyperparameters of the Boltzmann Router: the temperature
+τ
+\tau
+and the Exponential Moving Average (EMA) momentum
+α
+\alpha
+. By analyzing the inequality
+R
+T
+≤
+τ
+​
+ln
+⁡
+2
+α
++
+α
+​
+T
+​
+M
+2
+8
+​
+τ
++
+α
+​
+T
+​
+M
+R_{T}\leq\frac{\tau\ln 2}{\alpha}+\frac{\alpha TM^{2}}{8\tau}+\alpha TM
+, we can quantitatively evaluate the sensitivity of the adaptation mechanism.
+Sensitivity to Temperature (
+τ
+\tau
+):
+The temperature parameter dictates the strictness of the routing distribution. In the regret bound,
+τ
+\tau
+presents a clear dichotomy. A larger
+τ
+\tau
+inflates the first term
+τ
+​
+ln
+⁡
+2
+α
+\frac{\tau\ln 2}{\alpha}
+, which represents the penalty of slow convergence toward the optimal expert. Physically, a high temperature leads to a more uniform mixing of
+𝐘
+t
+base
+\mathbf{Y}_{t}^{\mathrm{base}}
+and
+𝐘
+t
+ada
+\mathbf{Y}_{t}^{\mathrm{ada}}
+, providing stability but diluting the adapter’s corrective potential. Conversely, a smaller
+τ
+\tau
+minimizes this initialization penalty but heavily inflates the variance term
+α
+​
+T
+​
+M
+2
+8
+​
+τ
+\frac{\alpha TM^{2}}{8\tau}
+. A low temperature forces the router to act greedily, making it highly sensitive to instantaneous noise and prone to oscillating drastically between the base model and the adapter.
+Sensitivity to EMA Momentum (
+α
+\alpha
+):
+The momentum parameter controls the effective memory length of the router, which is approximately proportional to
+1
+/
+α
+1/\alpha
+. A small
+α
+\alpha
+implies a long memory, which effectively suppresses the tracking penalties
+α
+​
+T
+​
+M
+2
+8
+​
+τ
+\frac{\alpha TM^{2}}{8\tau}
+and
+α
+​
+T
+​
+M
+\alpha TM
+, resulting in a highly stable routing trajectory that is robust to outlier errors. However, a heavily smoothed error drastically increases the first term
+τ
+​
+ln
+⁡
+2
+α
+\frac{\tau\ln 2}{\alpha}
+, causing a delayed response. If a sudden concept drift occurs, a small
+α
+\alpha
+prevents the router from rapidly shedding its historical confidence in a failing adapter. On the other hand, a large
+α
+\alpha
+allows for swift adaptation to recent shifts but exposes the router to high variance, potentially causing it to overreact to stochastic noise rather than genuine distribution changes.
+Consequently, achieving optimal online adaptation requires a delicate balance between
+τ
+\tau
+and
+α
+\alpha
+. The mathematical boundary demonstrates that while the Boltzmann Router is fundamentally robust, adjusting these hyperparameters allows the adaptation to be perfectly tailored to the specific non-stationary dynamics and noise levels of the target streaming environment. Based on this analysis, we empirically set our default parameters to
+τ
+=
+0.1
+\tau=0.1
+and
+α
+=
+0.2
+\alpha=0.2
+. An EMA momentum of
+α
+=
+0.2
+\alpha=0.2
+provides a half-life of approximately three to four steps, which is perfectly suited for tracking the high-frequency concept drifts typical in streaming time series while smoothing out immediate stochastic noise. Simultaneously, a routing temperature of
+τ
+=
+0.1
+\tau=0.1
+produces a sharp yet differentiable softmax distribution. This ensures that when the adapter’s error significantly deviates from the base model’s, the router swiftly shifts its confidence toward the superior forecaster, preventing negative optimization, while still allowing a probabilistic blend when their performances are comparable. Our numerical analysis in Figure
+6
+further corroborates that this optimal region is quite broad, making the model practically insensitive to minor deviations around these default values.
+Appendix C
+Supplement Experiment Results
+C.1
+A Router Variant Compared to the Boltzmann Router
+Table 3:
+Ablation study on the routing mechanism: Relative MSE drop (%) using a naive Hard Router instead of the proposed Boltzmann Router (
+H
+=
+96
+H=96
+).
+Model
+Chronos-2
+Moirai-2
+TiRex
+TimesFM-2
+Sundial
+Datasets Avg.
+ETTh1
+-4.40%
+-2.00%
+0.00%
+0.70%
+3.60%
+-0.40%
+ETTh2
+-1.80%
+0.60%
+1.80%
+-0.60%
+-0.40%
+-0.10%
+ETTm1
+-4.70%
+-11.30%
+-11.60%
+-3.60%
+0.70%
+-6.10%
+ETTm2
+-1.40%
+-8.30%
+-11.40%
+-8.80%
+-3.40%
+-6.70%
+Exchange
+-2.70%
+1.00%
+-7.20%
+-2.20%
+-9.50%
+-4.10%
+Weather
+-2.30%
+-12.90%
+-7.80%
+-5.50%
+2.30%
+-5.20%
+Models Avg.
+-2.90%
+-5.50%
+-6.10%
+-3.30%
+-1.10%
+-3.80%
+To further validate the necessity of the proposed Boltzmann routing mechanism, we conduct an additional ablation study by replacing it with a naive Hard Router. Under the identical experimental configuration with a forecasting horizon of
+H
+=
+96
+H=96
+, the Hard Router retains the exact same Exponential Moving Average (EMA) tracking rules and hyperparameters, but strictly outputs either the base model’s prediction or the adapted prediction based solely on whichever has the lower historical smoothed error. As demonstrated in Table
+3
+, this rigid binary selection strategy yields an overall average MSE reduction of only 3.80%. This performance is markedly inferior to the results achieved by our proposed Boltzmann Router. The comparison highlights that a hard switching mechanism is overly sensitive to instantaneous noise and local distribution shifts. In contrast, the Boltzmann Router provides a soft, probabilistic mixing mechanism that more safely and effectively harnesses the corrective potential of the online adapter.
+Table 4:
+Performance breakdown for forecasting horizon
+H
+=
+30
+H=30
+.
+Model
+Chronos-2
+Moirai-2
+TiRex
+TimesFM-2
+Sundial
+Avg.
+ETTh1
+Van.
+0.2086
+0.21
+0.2099
+0.2201
+0.1903
+Ref.
+0.2062
+-1.20%
+0.2066
+-1.60%
+0.2084
+-0.70%
+0.2143
+-2.60%
+0.1979
+4.00%
+-0.40%
+ETTh2
+Van
+0.0228
+0.022
+0.0222
+0.0233
+0.022
+Ref.
+0.0225
+-1.30%
+0.022
+0.00%
+0.0223
+0.50%
+0.023
+-1.30%
+0.0221
+0.50%
+-0.30%
+ETTm1
+Van
+0.1365
+0.1675
+0.1696
+0.1445
+0.1371
+Ref.
+0.1325
+-2.90%
+0.1495
+-10.70%
+0.1509
+-11.00%
+0.138
+-4.50%
+0.1344
+-2.00%
+-6.20%
+ETTm2
+Van
+0.0131
+0.0143
+0.0141
+0.0141
+0.0134
+Ref.
+0.0127
+-3.10%
+0.0132
+-7.70%
+0.0132
+-6.40%
+0.0133
+-5.70%
+0.013
+-3.00%
+-5.20%
+Exc.
+Van
+0.0007
+0.0007
+0.0007
+0.0007
+0.0008
+Ref.
+0.0007
+0.00%
+0.0007
+0.00%
+0.0007
+0.00%
+0.0007
+0.00%
+0.0008
+0.00%
+0.00%
+Wea.
+Van
+0.039
+0.0433
+0.0448
+0.0449
+0.0353
+Ref.
+0.0365
+-6.40%
+0.0376
+-13.20%
+0.0395
+-11.80%
+0.0391
+-12.90%
+0.0351
+-0.60%
+-9.00%
+Elc.
+Van
+0.0457
+0.0469
+0.0444
+0.0475
+0.0382
+Ref.
+0.041
+-10.30%
+0.0421
+-10.30%
+0.04
+-9.80%
+0.0428
+-9.90%
+0.0349
+-8.60%
+-9.80%
+Traffic
+Van
+0.1982
+0.2005
+0.2206
+0.2038
+0.2294
+Ref.
+0.1947
+-1.70%
+0.1975
+-1.50%
+0.2112
+-4.30%
+0.2011
+-1.30%
+0.2162
+-5.70%
+-2.90%
+Models Avg.
+-3.40%
+-5.60%
+-5.40%
+-4.80%
+-1.90%
+-4.20%
+C.2
+Horizon-wise Performance Breakdown
+In this section, we present the detailed forecasting performance of ORCA and the zero-shot base models broken down by individual forecasting horizons:
+H
+=
+30
+H=30
+(Table
+4
+),
+H
+=
+96
+H=96
+(Table
+5
+), and
+H
+=
+336
+H=336
+(Table
+6
+). In the tables of the appendix, the following abbreviations are used: Van. for Vanilla, Ref. for Refined, Exc. for Exchange, Elc. for Electricity, and Wea. for Weather.
+As demonstrated across the three tables, ORCA achieves consistent and robust MSE reductions regardless of the forecasting length. Importantly, there is no pronounced bias or trend indicating that the adaptation is disproportionately effective for only short or long horizons. This uniform stability can be directly attributed to our online cycle training scheme. Since the training cadence is dynamically linked to the horizon (i.e., triggered every
+H
+H
+steps when the full ground truth becomes observable), the learning regime scales naturally. Short-horizon forecasts trigger frequent, rapid updates to capture fast-evolving concept drifts, whereas long-horizon forecasts accumulate broader contexts before executing more comprehensive updates. Consequently, the adapter maintains its plasticity and calibration capacity optimally tailored to the intrinsic frequency of the targeted horizon.
+Table 5:
+Performance breakdown for forecasting horizon
+H
+=
+96
+H=96
+.
+Model
+Chronos-2
+Moirai-2
+TiRex
+TimesFM-2
+Sundial
+Avg.
+ETTh1
+Van.
+0.2942
+0.2789
+0.2777
+0.2913
+0.2467
+Ref.
+0.2731
+-7.20%
+0.2703
+-3.10%
+0.2684
+-3.30%
+0.2741
+-5.90%
+0.2548
+3.30%
+-3.20%
+ETTh2
+Van.
+0.0373
+0.0345
+0.0351
+0.0368
+0.0347
+Ref.
+0.0363
+-2.70%
+0.0345
+0.00%
+0.0351
+0.00%
+0.0358
+-2.70%
+0.035
+0.90%
+-0.90%
+ETTm1
+Van.
+0.2123
+0.2428
+0.2461
+0.2132
+0.2051
+Ref.
+0.1982
+-6.60%
+0.207
+-14.70%
+0.2096
+-14.80%
+0.1987
+-6.80%
+0.1957
+-4.60%
+-9.50%
+ETTm2
+Van.
+0.0224
+0.025
+0.0246
+0.0242
+0.0229
+Ref.
+0.0209
+-6.70%
+0.0217
+-13.20%
+0.0216
+-12.20%
+0.0217
+-10.30%
+0.0214
+-6.60%
+-9.80%
+Exc.
+Van.
+0.0019
+0.0022
+0.0021
+0.0021
+0.0027
+Ref.
+0.002
+5.30%
+0.0023
+4.50%
+0.0019
+-9.50%
+0.0021
+0.00%
+0.0024
+-11.10%
+-2.20%
+Wea.
+Van.
+0.0486
+0.0603
+0.0556
+0.0522
+0.042
+Ref.
+0.0445
+-8.40%
+0.0469
+-22.20%
+0.0479
+-13.80%
+0.0459
+-12.10%
+0.0417
+-0.70%
+-11.50%
+Elc.
+Van.
+0.0564
+0.0569
+0.054
+0.0575
+0.0479
+Ref.
+0.0511
+-9.50%
+0.0519
+-8.70%
+0.0497
+-8.00%
+0.0523
+-9.10%
+0.0448
+-6.40%
+-8.30%
+Traffic
+Van.
+0.2255
+0.2273
+0.2512
+0.2257
+0.2609
+Ref.
+0.2224
+-1.30%
+0.2255
+-0.80%
+0.2423
+-3.50%
+0.2248
+-0.40%
+0.247
+-5.30%
+-2.30%
+Models Avg.
+-4.60%
+-7.30%
+-8.20%
+-5.90%
+-3.80%
+-6.00%
+Table 6:
+Performance breakdown for forecasting horizon
+H
+=
+336
+H=336
+.
+Model
+Chronos-2
+Moirai-2
+TiRex
+TimesFM-2
+Sundial
+Avg.
+ETTh1
+Van.
+0.3239
+0.3069
+0.3138
+0.32
+0.2774
+Ref.
+0.3023
+-6.70%
+0.2969
+-3.30%
+0.2968
+-5.40%
+0.3019
+-5.70%
+0.2854
+2.90%
+-3.60%
+ETTh2
+Van.
+0.0518
+0.0485
+0.0498
+0.0507
+0.0508
+Ref.
+0.0511
+-1.40%
+0.0499
+2.90%
+0.0492
+-1.20%
+0.051
+0.60%
+0.051
+0.40%
+0.30%
+ETTm1
+Van.
+0.3103
+0.351
+0.3536
+0.311
+0.2887
+Ref.
+0.2808
+-9.50%
+0.2927
+-16.60%
+0.2841
+-19.70%
+0.2793
+-10.20%
+0.2741
+-5.10%
+-12.20%
+ETTm2
+Van.
+0.038
+0.0429
+0.0401
+0.0396
+0.038
+Ref.
+0.0335
+-11.80%
+0.0347
+-19.10%
+0.035
+-12.70%
+0.0344
+-13.10%
+0.0351
+-7.60%
+-12.90%
+Exc.
+Van.
+0.0067
+0.0071
+0.0078
+0.007
+0.009
+Ref.
+0.0066
+-1.50%
+0.0072
+1.40%
+0.0071
+-9.00%
+0.0067
+-4.30%
+0.008
+-11.10%
+-4.90%
+Wea.
+Van.
+0.0556
+0.066
+0.0622
+0.0521
+0.0473
+Ref.
+0.0494
+-11.20%
+0.0492
+-25.50%
+0.0516
+-17.00%
+0.0474
+-9.00%
+0.0457
+-3.40%
+-13.20%
+Elc.
+Van.
+0.0693
+0.0692
+0.0664
+0.0687
+0.0593
+Ref.
+0.0631
+-8.90%
+0.0625
+-9.70%
+0.061
+-8.10%
+0.0624
+-9.20%
+0.0563
+-5.10%
+-8.20%
+Traffic
+Van.
+0.2479
+0.246
+0.2666
+0.2361
+0.2789
+Ref.
+0.2433
+-1.90%
+0.2421
+-1.60%
+0.2566
+-3.80%
+0.2346
+-0.60%
+0.2642
+-5.30%
+-2.60%
+Models Avg.
+-6.60%
+-8.90%
+-9.60%
+-6.40%
+-4.30%
+-7.20%
+C.3
+Statistical Baselines: Setting and Results
+ETS.
+The ETS adapter is a lightweight channel-wise Holt-style smoother that operates on the residual sequence, rather than on the input-output context, because the classic ETS often requires that its input and output be identical sequences. At each update, it first forms the residual by subtracting the median base forecast from the ground truth, then clips extreme impulses with a residual scale factor, and updates a level-trend state with smoothing coefficients. In our final configuration, the effective settings are
+α
+=
+0.3
+\alpha=0.3
+,
+β
+=
+0.03
+\beta=0.03
+, damping factor
+0.98
+0.98
+, maximum residual history length
+12000
+12000
+, gain sensitivity
+1.0
+1.0
+, residual clipping scale
+3.0
+3.0
+, minimum history for gating
+5
+5
+, and warm-up steps
+3
+3
+. The prediction stage extrapolates the residual state forward and adds it back to the base forecast, with a stability gate computed from recent residual variability. This design is intentionally simple and fast, but it also assumes that the residual process is approximately homogeneous over time. Table
+7
+shows that this assumption is too restrictive for black-box online adaptation: ETS is consistently weak on average, with a dataset-averaged score of
+126.30
+%
+126.30\%
+, and it degrades substantially on ETTh2, ETTm1, ETTm2, and Exchange. These results suggest that modeling residuals in isolation is not sufficient when the error dynamics are nonstationary.
+Ridge Regression.
+The Ridge adapter follows a different philosophy: instead of modeling the residual sequence alone, it learns a correction from the concatenation of the past input window and the base model output along the feature dimension. In other words, the target is still the residual correction, but the predictor is conditioned on the XY context, which makes it a direct implementation of our learning hypothesis that adaptation should learn the context of errors rather than the residual process in isolation. The final implementation uses closed-form ridge regression with
+λ
+=
+10
+−
+3
+\lambda=10^{-3}
+, collects
+512
+512
+training windows before the first fit, refits once every horizon cycle, and keeps the same lightweight robustness mechanism as a safeguard, including residual-history gating, clipping, and warm-up control. Concretely, the runtime defaults are a maximum history length of
+2048
+2048
+, gain sensitivity
+1.0
+1.0
+, residual clipping scale
+3.0
+3.0
+, minimum gating history
+5
+5
+, and warm-up steps
+10
+10
+. Table
+8
+shows that this XY-conditioned formulation is much stronger than ETS: Ridge reduces the dataset-averaged score to
+68.78
+%
+68.78\%
+, which is far better than ETS’s
+126.30
+%
+126.30\%
+, and it achieves especially strong improvements on ETTh1 to ETTm2, where several backbones even obtain negative relative scores. The remaining failures on Exchange and Weather indicate that a purely linear model is still limited, but the overall pattern strongly supports the claim that conditioning on the main model’s XY-aligned context is more informative than predicting residuals from residuals alone. We assume that the successful error reduction on the ETT series comes from the periodic physical nature of electricity transformers. When it comes to more complicated systems like Exchange (based on society and economics) and Weather (a complex natural system), the Ridge regression is incapable.
+Table 7:
+ETS results for residual-to-residual online adaptation across backbones and datasets. The results are averaged over three forecasting horizons (
+H
+∈
+{
+30
+,
+96
+,
+336
+}
+H\in\{30,96,336\}
+). A negative percentage indicates a reduction in MSE, meaning positive performance improvement.
+Model
+Chronos-2
+Moirai-2
+TiRex
+TimesFM-2
+Sundial
+Datasets Avg.
+ETTh1
+109.30%
+100.60%
+104.60%
+99.60%
+97.20%
+102.26%
+ETTh2
+138.60%
+135.60%
+112.60%
+120.60%
+94.30%
+120.34%
+ETTm1
+156.60%
+156.80%
+148.60%
+159.10%
+142.40%
+152.70%
+ETTm2
+174.70%
+174.60%
+145.70%
+156.00%
+122.10%
+154.62%
+Exchange
+169.90%
+201.00%
+142.50%
+167.30%
+65.60%
+149.26%
+Weather
+95.50%
+78.90%
+74.70%
+69.10%
+74.80%
+78.60%
+Models Avg.
+140.77%
+141.25%
+121.45%
+128.62%
+99.40%
+126.30%
+Table 8:
+Ridge regression results for XY-conditioned residual correction across backbones and datasets. The results are averaged over three forecasting horizons (
+H
+∈
+{
+30
+,
+96
+,
+336
+}
+H\in\{30,96,336\}
+). A negative percentage indicates a reduction in MSE, meaning positive performance improvement.
+Model
+Chronos-2
+Moirai-2
+TiRex
+TimesFM-2
+Sundial
+Datasets Avg.
+ETTh1
+-3.00%
+-4.40%
+-2.70%
+-2.00%
+-0.10%
+-2.44%
+ETTh2
+-3.70%
+-3.20%
+-1.80%
+-4.20%
+0.60%
+-2.46%
+ETTm1
+-4.70%
+-7.80%
+-5.80%
+-3.50%
+-2.90%
+-4.94%
+ETTm2
+-5.70%
+-9.70%
+-6.70%
+-6.00%
+-2.70%
+-6.16%
+Exc.
+137.80%
+122.00%
+62.00%
+87.90%
+162.70%
+114.48%
+Wea.
+41.30%
+371.30%
+573.40%
+382.60%
+202.30%
+314.18%
+Models Avg.
+27.00%
+78.03%
+103.07%
+75.80%
+59.98%
+68.78%

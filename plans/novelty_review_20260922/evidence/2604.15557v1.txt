@@ -1,0 +1,4625 @@
+Predicting Where Steering Vectors Succeed
+Jayadev Billa
+†
+†
+thanks:
+Unaffiliated researcher; previously at ISI@USC, Yahoo, Nuance, and BBN.
+Email:
+jbilla2004@gmail.com
+Abstract
+Steering vectors work for some concepts and layers but fail for others, and practitioners have no way to predict which setting applies before running an intervention. We introduce the
+Linear Accessibility Profile
+(
+lap
+), a per-layer diagnostic that repurposes the logit lens as a predictor of steering vector effectiveness. The key measure,
+A
+lin
+A_{\mathrm{lin}}
+, applies the model’s unembedding matrix to intermediate hidden states, requiring no training. Across 24 controlled binary concept families on five models (Pythia-2.8B to Llama-8B), peak
+A
+lin
+A_{\mathrm{lin}}
+predicts steering effectiveness at
+ρ
+=
++
+0.86
+\rho=+0.86
+to
++
+0.91
++0.91
+and layer selection at
+ρ
+=
++
+0.63
+\rho=+0.63
+to
++
+0.92
++0.92
+. A three-regime framework explains when difference-of-means steering works, when nonlinear methods are needed, and when no method can work. An entity-steering demo confirms the prediction end-to-end: steering at the
+lap
+-recommended layer redirects completions on Gemma-2-2B and OLMo-2-1B-Instruct, while the middle layer (the standard heuristic) has no effect on either model.
+1
+Introduction
+Steering vectors add a direction to the residual stream to shift model behavior. They have been applied to refusal
+(
+Arditi et al., 2024
+)
+, truthfulness
+(
+Li et al., 2023
+)
+, and broader behavioral properties
+(
+Zou et al., 2023
+;
+Turner et al., 2023
+)
+. However, effectiveness varies across concepts and layers, and practitioners currently select steering layers by trial and error. No systematic method predicts which setting will succeed.
+The logit lens
+(
+nostalgebraist, 2020
+)
+applies the unembedding matrix to intermediate hidden states to observe how predictions evolve across layers.
+Belrose et al. (2023)
+addressed the layer norm mismatch with a learned correction (the “tuned lens”). These methods characterize what the model “thinks” at each layer, but none connects this measurement to the success or failure of steering interventions.
+We repurpose the logit lens as a
+predictor of steering vector effectiveness
+. The resulting framework, the Linear Accessibility Profile (
+lap
+), measures at each layer whether a concept is accessible through the model’s own output projection and whether that accessibility predicts where steering will work. Prior work selects steering layers heuristically, typically targeting middle layers
+(
+Turner et al., 2023
+;
+Templeton et al., 2024
+)
+.
+lap
+operates at a different level: predicting whether a concept is steerable at all. A concept with high peak
+A
+lin
+A_{\mathrm{lin}}
+(e.g., continent,
+A
+lin
+=
+0.68
+A_{\mathrm{lin}}=0.68
+) steers effectively; one with low peak
+A
+lin
+A_{\mathrm{lin}}
+(e.g., parity,
+A
+lin
+=
+0.02
+A_{\mathrm{lin}}=0.02
+) does not. We complement the logit lens with a nonlinear upper bound (a residual MLP) to quantify the
+probe gap
+, and measure perturbation sensitivity (
+λ
+\lambda
+) to identify layers where the representation is unstable.
+We validate
+lap
+on single-token next-token completion tasks, where the logit lens gives an unambiguous accuracy metric. Extensions to multi-token settings are discussed in Section
+5
+. We evaluate primarily on Gemma-2-2B
+(
+Gemma Team, 2024
+)
+and replicate on Llama-3.1-8B
+(
+Dubey et al., 2024
+)
+, Mistral-7B-v0.3, Qwen2.5-7B, and two non-transformers (Mamba-1.4B, RWKV-1.6B). An entity-steering demo validates
+lap
+end-to-end: steering London-answer prompts toward “Paris” at the
+lap
+-recommended layer redirects completions on both Gemma-2-2B and OLMo-2-1B-Instruct, while the middle layer has no effect on either model.
+Our contributions: (1) a connection between logit lens measurements and steering vector effectiveness, validated at two levels (layer selection and steerability prediction) across 24 controlled families and five models; (2) a three-regime framework that explains when difference-of-means steering works, when nonlinear methods are needed, and when no method can work; (3) a controlled experimental design using 25 binary concept families that isolates representation geometry from task-structure confounds.
+2
+Related Work
+The logit lens and probing.
+nostalgebraist (2020)
+introduced the logit lens;
+Belrose et al. (2023)
+proposed the tuned lens to address the layer norm mismatch;
+Yom Din et al. (2023)
+examined how predictions change at certain layers. We show that the standard logit lens, despite the mismatch, is a strong predictor of steering effectiveness. By using the model’s own unembedding (a fixed, untrained projection), we avoid the selectivity concerns that apply to trained probes
+(
+Belinkov, 2022
+)
+. The trade-off is that we measure alignment with one specific linear projection, not general linear decodability.
+Linear representations.
+Park et al. (2024)
+formalize the linear representation hypothesis and connect it to probing and steering.
+Nanda et al. (2023)
+observe linear representations in Othello-playing models. The hypothesis has been challenged:
+Csordás et al. (2024)
+show nonlinear encodings in small models, and
+Engels et al. (2024)
+demonstrate multi-dimensional feature manifolds. We do not assume the hypothesis holds universally;
+lap
+measures where and to what degree it holds.
+Steering and intervention.
+Zou et al. (2023)
+introduce representation engineering.
+Turner et al. (2023)
+formalize activation addition.
+Arditi et al. (2024)
+identify a single direction mediating refusal. Each method demonstrates success on its target concept but does not predict when steering will succeed on a new concept or layer.
+Sparse autoencoders and transcoders.
+Templeton et al. (2024)
+scale SAEs to large models;
+Lieberum et al. (2024)
+release GemmaScope transcoders;
+Ameisen et al. (2025)
+introduce attribution graphs. Our three-regime framework predicts that SAE features should be most useful in regime 2 (concept present but not output-aligned), where difference-of-means fails.
+3
+Method
+3.1
+Setup
+Consider a causal language model with
+L
+L
+transformer blocks. Each block reads from and writes to a shared
+residual stream
+:
+h
+ℓ
+=
+h
+ℓ
+−
+1
++
+block
+ℓ
+​
+(
+h
+ℓ
+−
+1
+)
+h_{\ell}=h_{\ell-1}+\mathrm{block}_{\ell}(h_{\ell-1})
+, where
+h
+0
+h_{0}
+is the token embedding. After the final block, an output head
+1
+1
+1
+All transformer models in this paper use RMSNorm rather than standard LayerNorm. We write
+LayerNorm
+throughout for readability; the distinction does not affect the logit lens analysis.
+produces logits:
+logits
+=
+W
+U
+⋅
+LayerNorm
+​
+(
+h
+L
+)
+\mathrm{logits}=W_{U}\cdot\text{LayerNorm}(h_{L})
+, where
+W
+U
+∈
+ℝ
+V
+×
+d
+W_{U}\in\mathbb{R}^{V\times d}
+is the unembedding matrix. Because the residual stream lives in
+ℝ
+d
+\mathbb{R}^{d}
+at every layer, this output head can be applied to any intermediate
+h
+ℓ
+h_{\ell}
+, which is the basis of the logit lens.
+For a concept family
+𝒞
+=
+{
+(
+x
+i
+,
+t
+i
+)
+}
+i
+=
+1
+N
+\mathcal{C}=\{(x_{i},t_{i})\}_{i=1}^{N}
+, where each prompt
+x
+i
+x_{i}
+has a correct next-token answer
+t
+i
+t_{i}
+, we measure how linearly accessible the concept is at each layer.
+3.2
+Linear accuracy (logit lens)
+We apply the model’s unembedding to intermediate hidden states:
+A
+lin
+​
+(
+ℓ
+)
+=
+1
+N
+​
+∑
+i
+=
+1
+N
+{
+1
+if
+​
+arg
+⁡
+max
+v
+​
+(
+W
+U
+⋅
+LayerNorm
+​
+(
+h
+ℓ
+(
+i
+)
+)
+)
+v
+=
+t
+i
+0
+otherwise
+A_{\mathrm{lin}}(\ell)=\frac{1}{N}\sum_{i=1}^{N}\begin{cases}1&\text{if }\arg\max_{v}(W_{U}\cdot\text{LayerNorm}(h_{\ell}^{(i)}))_{v}=t_{i}\\
+0&\text{otherwise}\end{cases}
+(1)
+This is the logit lens evaluated as classification accuracy over the concept family. No training is required. We apply the
+final
+layer norm to intermediate states, inheriting the layer norm mismatch discussed by
+Belrose et al. (2023)
+. We evaluate the effect of this mismatch in Section
+5
+.
+3.3
+Probe gap
+The logit lens measures what is linearly accessible through the model’s output projection, but concept information may be present in a form that requires nonlinear transformation before it aligns with the unembedding. The
+probe gap
+Δ
+⁡
+(
+ℓ
+)
+=
+A
+mlp
+​
+(
+ℓ
+)
+−
+A
+lin
+​
+(
+ℓ
+)
+\Delta(\ell)=A_{\mathrm{mlp}}(\ell)-A_{\mathrm{lin}}(\ell)
+quantifies how much concept information is present at layer
+ℓ
+\ell
+but not output-aligned.
+We train a residual MLP to compute
+A
+mlp
+A_{\mathrm{mlp}}
+:
+h
+^
+ℓ
+=
+h
+ℓ
++
+f
+θ
+​
+(
+h
+ℓ
+)
+,
+A
+mlp
+​
+(
+ℓ
+)
+=
+1
+N
+​
+∑
+i
+=
+1
+N
+{
+1
+if
+​
+arg
+⁡
+max
+v
+​
+(
+W
+U
+⋅
+LayerNorm
+​
+(
+h
+^
+ℓ
+(
+i
+)
+)
+)
+v
+=
+t
+i
+0
+otherwise
+\hat{h}_{\ell}=h_{\ell}+f_{\theta}(h_{\ell}),\qquad A_{\mathrm{mlp}}(\ell)=\frac{1}{N}\sum_{i=1}^{N}\begin{cases}1&\text{if }\arg\max_{v}(W_{U}\cdot\text{LayerNorm}(\hat{h}_{\ell}^{(i)}))_{v}=t_{i}\\
+0&\text{otherwise}\end{cases}
+(2)
+where
+f
+θ
+f_{\theta}
+is a two-layer MLP (
+d
+→
+512
+→
+d
+d\to 512\to d
+) with layer normalization, GELU, and dropout (
+p
+=
+0.1
+p=0.1
+), trained on 80% of prompts to minimize cross-entropy. The residual connection ensures the MLP learns a correction rather than replacing the hidden state. A large probe gap indicates nonlinear encoding at that layer; steering is unlikely to work even though the information is present.
+3.4
+Perturbation sensitivity
+We measure how much a small random perturbation at layer
+ℓ
+\ell
+is amplified by subsequent computation:
+λ
+⁡
+(
+ℓ
+)
+=
+1
+K
+​
+∑
+k
+=
+1
+K
+‖
+f
+⁡
+(
+h
+ℓ
++
+α
+​
+ϵ
+k
+)
+−
+f
+⁡
+(
+h
+ℓ
+)
+‖
+α
+,
+α
+=
+0.01
+⋅
+‖
+h
+ℓ
+‖
+\lambda(\ell)=\frac{1}{K}\sum_{k=1}^{K}\frac{\|f(h_{\ell}+\alpha\epsilon_{k})-f(h_{\ell})\|}{\alpha},\qquad\alpha=0.01\cdot\|h_{\ell}\|
+(3)
+where
+ϵ
+k
+\epsilon_{k}
+are random unit vectors,
+f
+f
+is the forward pass from layer
+ℓ
+\ell
+to output logits, and
+K
+=
+10
+K=10
+. High
+λ
+\lambda
+indicates an unstable representation where steering vectors will have unpredictable effects.
+3.5
+The Linear Accessibility Profile
+For a concept family
+𝒞
+\mathcal{C}
+and layer
+ℓ
+\ell
+, the
+Linear Accessibility Profile
+(
+lap
+) is:
+lap
+​
+(
+ℓ
+)
+=
+(
+A
+lin
+​
+(
+ℓ
+)
+,
+Δ
+⁡
+(
+ℓ
+)
+,
+λ
+⁡
+(
+ℓ
+)
+)
+\textsc{lap}(\ell)=\bigl(A_{\mathrm{lin}}(\ell),\;\Delta(\ell),\;\lambda(\ell)\bigr)
+(4)
+Of these,
+A
+lin
+A_{\mathrm{lin}}
+is the primary predictor. The remaining components characterize why steering may fail: high
+Δ
+\Delta
+means information is present but not output-aligned; high
+λ
+\lambda
+means the representation is unstable (Figure
+3
+in Appendix
+K
+).
+3.6
+Concept families
+We use two sets of concept families. All correct answers are single tokens in the model vocabulary (required because the logit lens produces a distribution over individual tokens).
+Core families (5).
+Five heterogeneous families (Table
+1
+) are used for
+within-concept
+analyses: measuring how
+A
+lin
+A_{\mathrm{lin}}
+,
+Δ
+\Delta
+, and
+λ
+\lambda
+vary across layers for a single concept.
+Table 1
+:
+Core concept families (used for within-concept layer analysis). All correct answers are single tokens.
+Family
+Example prompt
+N
+N
+Correct token
+Arithmetic
+“2 + 5 = ”
+831
+“7”
+Geography
+“Paris is the capital of”
+564
+“France”
+Sequence
+“Monday, Tuesday, Wednesday,”
+433
+“Thursday”
+Word transform
+“The opposite of hot is”
+506
+“cold”
+Analogy
+“hot is to cold as big is to”
+348
+“small”
+Controlled binary families (25).
+For
+steerability prediction
+across concepts, task-structure confounds must be eliminated. The core families vary in answer-class count, target sizes, and prompt formats; comparing steerability across them yields a non-significant correlation (
+ρ
+=
++
+0.18
+\rho=+0.18
+,
+p
+=
+0.54
+p=0.54
+). We construct 25 controlled binary families (Table
+14
+in the appendix): each has two answer classes, balanced groups (
+∼
+\sim
+22 items per class), and consistent templates. This reveals the underlying signal (
+ρ
+=
++
+0.86
+\rho=+0.86
+to
++
+0.91
++0.91
+,
+p
+<
+10
+−
+3
+p<10^{-3}
+; details in Appendix
+D
+).
+4
+Experiments
+We evaluate primarily on Gemma-2-2B (26 layers,
+d
+=
+2304
+d=2304
+) with replication on Llama-3.1-8B (32 layers), Mistral-7B-v0.3 (32 layers), Qwen2.5-7B (28 layers), and two non-transformer architectures: Mamba-1.4B (48 layers) and RWKV-1.6B (24 layers). Table
+6
+in the appendix specifies which model is used for each experiment.
+4.1
+Linear accessibility across layers
+Table
+2
+reports the main results. All five families show zero linear accuracy for layers 0–15 and sharp emergence in layers 18–24, consistent with the logit lens literature
+(
+nostalgebraist, 2020
+;
+Yom Din et al., 2023
+)
+. Accuracy peaks at layer 23–24 (not the final layer) for four of five families.
+Table 2
+:
+Linear accessibility across layers of Gemma-2-2B.
+A
+lin
+A_{\mathrm{lin}}
+: logit lens accuracy at the best layer.
+A
+mlp
+A_{\mathrm{mlp}}
+: MLP probe accuracy.
+Δ
+\Delta
+: probe gap. Acc(a):
+A
+lin
+A_{\mathrm{lin}}
+on prompts the model answers correctly. Acc(b):
+A
+lin
+A_{\mathrm{lin}}
+on prompts the model answers incorrectly.
+Family
+Model top-1
+Best
+A
+lin
+A_{\mathrm{lin}}
+Best
+A
+mlp
+A_{\mathrm{mlp}}
+Δ
+\Delta
+Acc(a)
+Acc(b)
+Sequence
+77.8%
+0.711 (L24)
+0.954
+0.243
+0.914
+0.000
+Arithmetic
+65.7%
+0.686 (L23)
+0.904
+0.218
+0.954
+0.172
+Word transform
+62.3%
+0.512 (L24)
+0.647
+0.135
+0.762
+0.099
+Analogy
+71.6%
+0.451 (L24)
+0.629
+0.177
+0.621
+0.030
+Geography
+60.1%
+0.280 (L25)
+1.000
+0.720
+0.466
+0.009
+0
+0
+5
+5
+10
+10
+15
+15
+20
+20
+25
+25
+0
+0
+0.5
+0.5
+1
+1
+Layer
+Accuracy
+analogy
+arithmetic
+geography
+sequence
+word transform
+Figure 1
+:
+Per-layer
+A
+mlp
+A_{\mathrm{mlp}}
+(solid) and
+A
+lin
+A_{\mathrm{lin}}
+(dotted) for each concept family on Gemma-2-2B. The gap between solid and dotted lines is the probe gap
+Δ
+\Delta
+. All families show
+A
+lin
+=
+0
+A_{\mathrm{lin}}=0
+at layers 0–15 and sharp emergence in layers 18–24. The nonlinear probe detects concepts substantially earlier—sequence reaches
+A
+mlp
+>
+0.9
+A_{\mathrm{mlp}}>0.9
+at layer 5, while
+A
+lin
+A_{\mathrm{lin}}
+remains zero until layer 18.
+The probe gap varies widely. For arithmetic and sequence,
+Δ
+≈
+0.22
+\Delta\approx 0.22
+: the concept is predominantly linear at the best layer. For geography,
+Δ
+=
+0.720
+\Delta=0.720
+: the MLP achieves perfect accuracy while the logit lens reaches only 28.0%. The MLP also detects concepts earlier: sequence is nonlinearly accessible at layer 5 (
+A
+mlp
+=
+0.91
+A_{\mathrm{mlp}}=0.91
+) but not linearly until layer 20 (
+A
+lin
+=
+0.60
+A_{\mathrm{lin}}=0.60
+).
+Crystallization gap.
+We define the gap between nonlinear detection (
+A
+mlp
+>
+0.5
+A_{\mathrm{mlp}}>0.5
+) and linear emergence (
+A
+lin
+>
+0.1
+A_{\mathrm{lin}}>0.1
+) as the
+crystallization gap
+. Both metrics measure argmax accuracy over the full vocabulary (
+∼
+\sim
+256K tokens), so chance is effectively zero. The
+A
+mlp
+A_{\mathrm{mlp}}
+threshold of 50% indicates the nonlinear probe recovers the correct token for a majority of prompts. The
+A
+lin
+A_{\mathrm{lin}}
+threshold is lower at 10% because sporadic values of 1–3% can arise from token frequency biases in the unembedding; 10% requires a substantial fraction of prompts to have the correct token as the logit lens argmax. The gap varies systematically (Table
+10
+in the appendix): sequence is nonlinearly detectable at layer 1 but not linearly accessible until layer 19, a gap of 18 layers (69% of depth). Word transformation and analogy show the opposite pattern, with
+A
+lin
+A_{\mathrm{lin}}
+emerging before
+A
+mlp
+A_{\mathrm{mlp}}
+reaches 0.5, suggesting these concepts are natively aligned with the unembedding. Tuned lens comparisons shift emergence 2–5 layers earlier but do not eliminate the gap, confirming that the crystallization gap reflects genuine nonlinear encoding rather than layer norm mismatch alone.
+We also observe that
+A
+lin
+A_{\mathrm{lin}}
+tracks the model’s own accuracy. Table
+2
+splits
+A
+lin
+A_{\mathrm{lin}}
+by whether the model answers each prompt correctly (Acc(a)) or incorrectly (Acc(b)). On prompts where the model’s top-1 prediction is correct,
+A
+lin
+A_{\mathrm{lin}}
+ranges from 0.47 to 0.95; on prompts where the model gets the answer wrong,
+A
+lin
+A_{\mathrm{lin}}
+is 0.00 to 0.17. Linear accessibility appears to be a necessary condition for correct output.
+4.2
+Predicting steering vector effectiveness
+For each concept family, we select a target answer (one specific correct token that appears frequently), split prompts into target and non-target groups, compute the steering direction as
+d
+ℓ
+=
+h
+¯
+ℓ
+target
+−
+h
+¯
+ℓ
+non-target
+d_{\ell}=\bar{h}_{\ell}^{\,\text{target}}-\bar{h}_{\ell}^{\,\text{non-target}}
+at each layer, inject
+d
+ℓ
+d_{\ell}
+into non-target prompts, and measure the change in target-token probability (
+Δ
+​
+P
+\Delta P
+).
+Raw correlations.
+Table
+3
+reports Spearman
+ρ
+\rho
+between
+A
+lin
+A_{\mathrm{lin}}
+and
+Δ
+​
+P
+\Delta P
+per family. Correlations range from
++
+0.72
++0.72
+to
++
+0.87
++0.87
+, all
+p
+<
+10
+−
+3
+p<10^{-3}
+.
+Table 3
+:
+Per-family steering correlations on Gemma-2-2B (26 layers).
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+)
+\rho(A_{\mathrm{lin}},\Delta P)
+: Spearman correlation between logit lens accuracy and steering effect across layers.
+ρ
+⁡
+(
+λ
+,
+Δ
+​
+P
+)
+\rho(\lambda,\Delta P)
+: perturbation sensitivity vs. steering. Partial
+r
+r
+: Pearson partial correlation controlling for layer index. All correlations are across the 26 layers of Gemma-2-2B.
+Family
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+)
+\rho(A_{\mathrm{lin}},\Delta P)
+ρ
+⁡
+(
+λ
+,
+Δ
+​
+P
+)
+\rho(\lambda,\Delta P)
+Partial
+r
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+∣
+ℓ
+)
+r(A_{\mathrm{lin}},\Delta P\mid\ell)
+p
+p
+Word transform
++
+0.871
++0.871
+−
+0.744
+-0.744
++
+0.809
++0.809
+<
+10
+−
+4
+<10^{-4}
+Sequence
++
+0.814
++0.814
+−
+0.830
+-0.830
++
+0.869
++0.869
+<
+10
+−
+4
+<10^{-4}
+Arithmetic
++
+0.719
++0.719
+−
+0.990
+-0.990
++
+0.688
++0.688
+<
+10
+−
+3
+<10^{-3}
+Analogy
++
+0.866
++0.866
+−
+0.923
+-0.923
++
+0.647
++0.647
+0.001
+0.001
+Geography
++
+0.758
++0.758
+−
+0.729
+-0.729
++
+0.372
++0.372
+0.067
+0.067
+Pooled (
+n
+=
+130
+n=130
+)
++
+0.777
++0.777
+−
+0.706
+-0.706
++
+0.507
++0.507
+<
+10
+−
+9
+<10^{-9}
+Controlling for depth.
+Both
+A
+lin
+A_{\mathrm{lin}}
+and
+Δ
+​
+P
+\Delta P
+increase with layer depth. The pooled partial correlation controlling for layer index is
+r
+=
++
+0.507
+r=+0.507
+(
+p
+<
+10
+−
+9
+p<10^{-9}
+,
+n
+=
+130
+n=130
+); four of five families remain individually significant (Table
+3
+). Details of the restricted analysis and permutation test are in Appendix
+H
+.
+Steerability prediction.
+The more practically important question is whether a concept is steerable at all, and by what method. The full LAP profile identifies three regimes. When
+A
+mlp
+A_{\mathrm{mlp}}
+is low, the concept is not yet represented in the residual stream and no steering method can work, regardless of technique. When
+A
+mlp
+A_{\mathrm{mlp}}
+is high but
+A
+lin
+A_{\mathrm{lin}}
+is low (the crystallization gap), the concept is present but nonlinearly encoded; difference-of-means steering fails because the separating direction does not align with the output projection, though nonlinear methods such as SAE feature amplification
+(
+Templeton et al., 2024
+)
+could potentially extract the concept. When
+A
+lin
+A_{\mathrm{lin}}
+is high, the concept is output-aligned and difference-of-means steering works.
+A
+lin
+A_{\mathrm{lin}}
+thus serves as a diagnostic for the choice of steering method: it tells the practitioner whether the simpler difference-of-means approach will suffice, or whether a more sophisticated technique is needed.
+The standard heuristic is to steer at the middle layer
+(
+Turner et al., 2023
+;
+Templeton et al., 2024
+)
+. The three regimes explain both its successes and failures. In our refusal demo on Llama-3.2-1B-Instruct (Appendix
+Q
+), the refusal direction has separability 0.988 at the middle layer, so difference-of-means works. For factual concepts on Gemma-2-2B, the middle layer is in regime 2: all five families show
+A
+mlp
+>
+0.7
+A_{\mathrm{mlp}}>0.7
+at L15 but
+A
+lin
+=
+0
+A_{\mathrm{lin}}=0
+(Figure
+1
+). The concepts are present but not output-aligned, and steering has no effect. Steering works only at late layers (L22 on Gemma, L13 on OLMo) where
+A
+lin
+>
+0
+A_{\mathrm{lin}}>0
+. The Golden Gate Claude result
+(
+Templeton et al., 2024
+)
+is consistent with regime 2: SAE feature amplification can extract concept information that is present nonlinearly.
+A
+lin
+A_{\mathrm{lin}}
+provides a concept-specific prediction. Continent has peak
+A
+lin
+=
+0.70
+A_{\mathrm{lin}}=0.70
+and steers effectively (
+Δ
+​
+P
+=
++
+0.77
+\Delta P=+0.77
+on Llama-8B); parity-related concepts with peak
+A
+lin
+<
+0.05
+A_{\mathrm{lin}}<0.05
+do not steer (typical
+Δ
+​
+P
+<
+0.01
+\Delta P<0.01
+). To test this cleanly, we use the 25 controlled binary families described in Section 3.6.
+0
+0
+0.2
+0.2
+0.4
+0.4
+0.6
+0.6
+0
+0
+0.1
+0.1
+0.2
+0.2
+Peak
+A
+lin
+A_{\mathrm{lin}}
+Max steering
+Δ
+​
+P
+\Delta P
+Gemma-2-2B (
+ρ
+=
++
+0.86
+\rho=+0.86
+)
+0
+0
+0.2
+0.2
+0.4
+0.4
+0.6
+0.6
+0
+0
+0.1
+0.1
+0.2
+0.2
+0.3
+0.3
+Peak
+A
+lin
+A_{\mathrm{lin}}
+Qwen-7B (
+ρ
+=
++
+0.90
+\rho=+0.90
+)
+Figure 2
+:
+Steerability prediction: peak
+A
+lin
+A_{\mathrm{lin}}
+vs. max steering
+Δ
+​
+P
+\Delta P
+for 24 controlled binary concept families. Each point is one concept family. Higher
+A
+lin
+A_{\mathrm{lin}}
+predicts stronger steering. The correlation is
+ρ
+=
++
+0.86
+\rho=+0.86
+on Gemma-2-2B and
+ρ
+=
++
+0.90
+\rho=+0.90
+on Qwen-7B, replicated across five models (Table
+15
+).
+Across these controlled families (Figure
+2
+), peak
+A
+lin
+A_{\mathrm{lin}}
+predicts maximum steering
+Δ
+​
+P
+\Delta P
+with
+ρ
+=
++
+0.86
+\rho=+0.86
+to
++
+0.91
++0.91
+across five models (all
+p
+<
+10
+−
+3
+p<10^{-3}
+). The correlation strengthens with model size and holds above the
+A
+lin
+=
+0
+A_{\mathrm{lin}}=0
+floor on larger models: restricting to families with
+A
+lin
+>
+0.1
+A_{\mathrm{lin}}>0.1
+,
+ρ
+=
++
+0.86
+\rho=+0.86
+on Qwen-7B (
+n
+=
+13
+n=13
+) and
+ρ
+=
++
+0.84
+\rho=+0.84
+on Llama-8B (
+n
+=
+14
+n=14
+).
+The output-alignment principle.
+Why does
+A
+lin
+A_{\mathrm{lin}}
+predict steering? Steering adds a direction
+d
+d
+to
+h
+ℓ
+h_{\ell}
+, and the model’s readout is approximately linear:
+C
+⁡
+(
+h
+ℓ
++
+d
+)
+≈
+C
+⁡
+(
+h
+ℓ
+)
++
+C
+⁡
+(
+d
+)
+C(h_{\ell}+d)\approx C(h_{\ell})+C(d)
+, where
+C
+=
+W
+U
+∘
+LayerNorm
+C=W_{U}\circ\text{LayerNorm}
+. The steering effect is governed by
+C
+⁡
+(
+d
+)
+C(d)
+: the steering direction projected through the unembedding. If
+C
+⁡
+(
+d
+)
+C(d)
+assigns high weight to the target token, steering shifts probability toward it; if
+C
+⁡
+(
+d
+)
+C(d)
+points at unrelated tokens, the perturbation produces unpredictable changes.
+A
+lin
+A_{\mathrm{lin}}
+measures exactly this alignment. Empirically,
+C
+​
+(
+d
+)
+target
+C(d)_{\mathrm{target}}
+correlates with
+Δ
+​
+P
+\Delta P
+(
+ρ
+=
++
+0.73
+\rho=+0.73
+to
++
+0.84
++0.84
+across three models, all
+p
+<
+10
+−
+4
+p<10^{-4}
+), and
+A
+lin
+A_{\mathrm{lin}}
+is a stronger predictor (
+ρ
+=
++
+0.86
+\rho=+0.86
+to
++
+0.90
++0.90
+) because it captures the concept’s overall organization in the output space.
+Collateral damage and steering efficiency.
+We define
+steering efficiency
+as
+Δ
+​
+P
+/
+KL
+collateral
+\Delta P/\mathrm{KL}_{\mathrm{collateral}}
+, where
+KL
+collateral
+\mathrm{KL}_{\mathrm{collateral}}
+measures the KL divergence on 50 unrelated prompts. On Gemma-2-2B, steering at the
+A
+lin
+A_{\mathrm{lin}}
+-recommended layer produces substantially higher efficiency than the middle layer for all five families: sequence is
++
+1.31
++1.31
+at L24 vs.
++
+0.000
++0.000
+at L13; arithmetic is
++
+0.84
++0.84
+vs.
++
+0.094
++0.094
+(full comparison in Table
+18
+; analysis in Appendix
+P
+). Across concepts, peak
+A
+lin
+A_{\mathrm{lin}}
+correlates with efficiency at
+ρ
+=
++
+0.63
+\rho=+0.63
+to
++
+0.65
++0.65
+across three models (Gemma-2-2B, Qwen-1.5B, Pythia-2.8B; all
+p
+<
+10
+−
+3
+p<10^{-3}
+).
+Cross-model consistency.
+Concepts that are linearly separable in one model’s output space should be linearly separable in another trained on similar data. We observe this:
+A
+lin
+A_{\mathrm{lin}}
+on Gemma predicts
+Δ
+​
+P
+\Delta P
+on Qwen-7B (
+ρ
+=
++
+0.85
+\rho=+0.85
+) and Llama-8B (
+ρ
+=
++
+0.88
+\rho=+0.88
+), nearly as strong as same-model prediction. A practitioner can screen concepts on a cheap model:
+A
+lin
+A_{\mathrm{lin}}
+on Qwen-1.5B predicts
+Δ
+​
+P
+\Delta P
+on Llama-8B (
+ρ
+=
++
+0.85
+\rho=+0.85
+) and Qwen-7B (
+ρ
+=
++
+0.88
+\rho=+0.88
+).
+Scaling with model size.
+Across five Pythia models (160M to 6.9B), mean peak
+A
+lin
+A_{\mathrm{lin}}
+increases with scale (0.055 to 0.118) and the number of steerable concepts grows (5/23 to 9/23). Mean steering
+Δ
+​
+P
+\Delta P
+increases roughly
+3.4
+×
+3.4\times
+(0.011 to 0.037). Both
+A
+lin
+A_{\mathrm{lin}}
+and the steerable count plateau between 2.8B and 6.9B. The cross-family correlation
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+)
+\rho(A_{\mathrm{lin}},\Delta P)
+strengthens with scale (
++
+0.42
++0.42
+at 160M to
++
+0.86
++0.86
+at 6.9B; Table
+16
+), suggesting the diagnostic becomes more informative on larger models.
+Layer selection and trained probe failure.
+Steering at the highest-
+A
+lin
+A_{\mathrm{lin}}
+layer matches or near-matches the oracle for 4 of 5 families (Table
+11
+in the appendix). A trained logistic regression probe achieves
+>
+>
+93% classification accuracy at every layer from L0 to L25, yet steering at early layers produces zero
+Δ
+​
+P
+\Delta P
+. What matters for steering is not whether some linear separator exists in the high-dimensional residual stream, but whether the concept is aligned with the model’s own output projection.
+4.3
+Generalization
+Cross-architecture replication.
+We replicate on Llama-3.1-8B, Mistral-7B-v0.3, and Qwen2.5-7B (Table
+4
+). The emergence pattern holds across all four architectures: zero in the first 70–80% of depth, sharp rise in the final quarter. The steering correlation is positive across all 12 model–family pairs (
+ρ
+\rho
+range
++
+0.66
++0.66
+to
++
+0.93
++0.93
+). Mistral required a tokenizer-specific fix (Appendix
+M
+).
+Table 4
+:
+Peak linear accessibility (
+A
+lin
+A_{\mathrm{lin}}
+) and steering correlation (
+ρ
+\rho
+) across four architectures. “—”: steering targets too small (
+n
+<
+10
+n<10
+). Mistral required a tokenizer-specific fix for digits (see text).
+Gemma-2-2B
+Llama-8B
+Mistral-7B
+Qwen-7B
+(26 layers)
+(32 layers)
+(32 layers)
+(28 layers)
+Peak
+A
+lin
+A_{\mathrm{lin}}
+(layer)
+Arithmetic
+0.686 (L23)
+0.995 (L29)
+0.695 (L30)
+0.935 (L26)
+Geography
+0.284 (L25)
+0.680 (L25)
+0.540 (L25)
+0.590 (L25)
+Sequence
+0.711 (L24)
+0.820 (L31)
+0.735 (L31)
+0.780 (L26)
+Word transform
+0.512 (L24)
+0.715 (L31)
+0.650 (L31)
+0.500 (L26)
+Analogy
+0.451 (L24)
+0.415 (L29)
+0.765 (L31)
+0.385 (L26)
+Steering
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+)
+\rho(A_{\mathrm{lin}},\Delta P)
+Arithmetic
++
+0.719
++0.719
++
+0.849
++0.849
++
+0.886
++0.886
++
+0.707
++0.707
+Geography
++
+0.758
++0.758
++
+0.930
++0.930
++
+0.785
++0.785
++
+0.717
++0.717
+Sequence
++
+0.814
++0.814
++
+0.904
++0.904
++
+0.885
++0.885
++
+0.657
++0.657
+Non-transformer architectures.
+We replicate the logit lens on Mamba-1.4B (48-layer SSM;
+Gu and Dao 2024
+) and RWKV-1.6B (24-layer linear attention;
+Peng et al. 2023
+). Both exhibit the same emergence pattern and final-layer drop consistent with the layer norm mismatch. Peak
+A
+lin
+A_{\mathrm{lin}}
+closely tracks model accuracy (Table
+13
+in the appendix). Steering experiments on non-transformers are left for future work.
+Entity steering demo.
+To validate
+lap
+end-to-end, we steer London-answer prompts toward “Paris” on two architectures. On Gemma-2-2B, steering at L22 (
+A
+lin
+=
+0.20
+A_{\mathrm{lin}}=0.20
+) redirects completions (“Big Ben is located in”
+→
+\to
+“the heart of Paris, France”), while the middle layer L13 (
+A
+lin
+=
+0
+A_{\mathrm{lin}}=0
+) has no effect (
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+)
+=
++
+0.663
+\rho(A_{\mathrm{lin}},\Delta P)=+0.663
+,
+p
+<
+0.001
+p<0.001
+). On OLMo-2-1B-Instruct, steering at L13 (
+A
+lin
+=
+0.60
+A_{\mathrm{lin}}=0.60
+) produces clean redirection (“The capital of England is”
+→
+\to
+“Paris”), while L8 (
+A
+lin
+=
+0
+A_{\mathrm{lin}}=0
+) again fails (
+ρ
+=
++
+0.753
+\rho=+0.753
+,
+p
+<
+0.001
+p<0.001
+). This is a direct comparison against the practitioner heuristic: the standard “steer at the middle layer” approach fails on both models, while
+lap
+identifies the correct layer. Full generation examples are in Appendix
+Q
+.
+5
+Discussion
+Tuned lens comparison.
+We trained tuned lenses on Pythia-2.8B, Qwen-1.5B, and Gemma-2-2B using the Muon optimizer
+(
+Jordan, 2024
+)
+on 100M tokens. The “final-layer anomaly” (
+A
+lin
+A_{\mathrm{lin}}
+dropping to zero at the last layer) disappears with the tuned lens on Qwen and Pythia, confirming it is a layer norm mismatch artifact on those architectures. Gemma’s final layer behaves differently: the tuned lens does not resolve the drop, suggesting a genuinely different representation structure. For steering layer selection, the raw logit lens is the better predictor (it measures exactly what the steering mechanism uses), while the tuned lens is more informative for understanding when concepts first emerge. Full per-family comparisons are in Table
+5
+(Appendix
+B
+).
+Connection to frontier-scale interpretability.
+Concurrent work by
+Sofroniew et al. (2026)
+validates linear steering at frontier scale: 171 emotion concepts in Claude Sonnet 4.5 are representable as linear directions with causal behavioral effects. Their analysis projects steering directions through the unembedding, and finds that emotion representations concentrate in middle-to-late layers, consistent with our emergence pattern.
+SAE prediction.
+Our three-regime framework predicts that SAE features should be most useful for steering in regime 2. In regime 3, where the concept is already linearly accessible, SAE decomposition should add less value over difference-of-means. Testing this prediction is a natural direction for future work.
+When
+A
+lin
+A_{\mathrm{lin}}
+fails.
+Two families have moderate
+A
+lin
+A_{\mathrm{lin}}
+but low
+Δ
+​
+P
+\Delta P
+. Parity (
+A
+lin
+=
+0.27
+A_{\mathrm{lin}}=0.27
+,
+Δ
+​
+P
+=
++
+0.003
+\Delta P=+0.003
+): the
+C
+⁡
+(
+d
+)
+C(d)
+target rank is 13,440, meaning the separation direction does not align with the “odd” token. Gender (
+A
+lin
+=
+0.50
+A_{\mathrm{lin}}=0.50
+,
+Δ
+​
+P
+=
++
+0.012
+\Delta P=+0.012
+):
+C
+⁡
+(
+d
+)
+C(d)
+correctly points at “she,” but baseline probability is already
+∼
+\sim
+0.4, leaving little room for improvement. These cases suggest
+A
+lin
+A_{\mathrm{lin}}
+should be combined with a baseline-probability check.
+Scope and limitations.
+Practical guidelines for applying
+lap
+, including go/no-go thresholds and layer-selection rules, are in Appendix
+A
+. The steerability correlation includes a floor effect: concepts with
+A
+lin
+≈
+0
+A_{\mathrm{lin}}\approx 0
+trivially have
+Δ
+​
+P
+≈
+0
+\Delta P\approx 0
+. The above-floor correlation (
+A
+lin
+>
+0.1
+A_{\mathrm{lin}}>0.1
+) is moderate on smaller models (
+ρ
+=
++
+0.50
+\rho=+0.50
+to
++
+0.52
++0.52
+on Pythia-2.8B and Gemma-2-2B) and strong on larger models (
+ρ
+=
++
+0.84
+\rho=+0.84
+to
++
+0.93
++0.93
+on Qwen-7B, Llama-8B, and Qwen-1.5B). We validated on single-token tasks because they provide the cleanest measurement setting; extensions to multi-token and distribution-level settings are discussed in Appendix
+C
+.
+6
+Conclusion
+The logit lens, a training-free measurement, predicts where steering vectors succeed. It predicts which layer to steer at (
+ρ
+=
++
+0.63
+\rho=+0.63
+to
++
+0.92
++0.92
+) and which concepts are steerable (
+ρ
+=
++
+0.86
+\rho=+0.86
+to
++
+0.91
++0.91
+across five models, with above-floor
+ρ
+=
++
+0.86
+\rho=+0.86
+on Qwen-7B). The mechanism is straightforward: the steering direction, projected through the unembedding, must assign high weight to the target token, and
+A
+lin
+A_{\mathrm{lin}}
+measures exactly this. We provide a practitioner-facing diagnostic: compute
+A
+lin
+A_{\mathrm{lin}}
+in one forward pass to determine whether steering is viable, at which layer, and how clean the effect will be.
+Reproducibility.
+All experiments use publicly available models (Gemma-2-2B, Pythia-160M/410M/1B/2.8B/6.9B, Qwen2.5-1.5B/7B, Llama-3.1-8B, Llama-3.2-1B/Instruct, Mistral-7B, OLMo-2-1B-Instruct, Mamba-1.4B, RWKV-1.6B). Experiments were conducted on a single NVIDIA RTX 3090 Ti GPU (24 GB). Total compute: primary experiments
+∼
+\sim
+4 GPU-hours; steerability analysis
+∼
+\sim
+2 GPU-hours per model; tuned lens training
+∼
+\sim
+8 GPU-hours per model. The diagnostic tool, experimental code, and 25 controlled concept families are provided as anonymized supplementary material.
+Acknowledgments and Disclosure of Funding
+The author used Claude (Anthropic) and Claude Code during preparation for manuscript critique, narrative feedback, literature search, and experiment implementation and debugging. All research design, theoretical development, experimental execution, analysis, and writing are the author’s own. The author takes full responsibility for all content.
+The code repository backing this paper is available at
+https://github.com/jb1999/lap-steering-paper
+. No external funding supported this work; the author declares no competing interests.
+References
+Ameisen
+et al.
+(2025)
+E. Ameisen, J. Lindsey, W. Gurnee, J. Batson,
+et al.
+Circuit tracing: revealing computational graphs in language models
+.
+Anthropic Research
+.
+External Links:
+Link
+Cited by:
+§2
+.
+Arditi
+et al.
+(2024)
+A. Arditi, O. Obeso, A. Syed, D. Paleka, N. Panickssery, W. Gurnee, and N. Nanda
+Refusal in language models is mediated by a single direction
+.
+In
+Advances in Neural Information Processing Systems (NeurIPS)
+,
+Cited by:
+§1
+,
+§2
+.
+Belinkov (2022)
+Y. Belinkov
+Probing classifiers: promises, shortcomings, and advances
+.
+Computational Linguistics
+48
+(
+1
+),
+pp. 207–219
+.
+Cited by:
+§2
+.
+Belrose
+et al.
+(2023)
+N. Belrose, Z. Furman, L. Smith, D. Halawi, I. Ostrovsky, L. McKinney, S. Biderman, and J. Steinhardt
+Eliciting latent predictions from transformers with the tuned lens
+.
+arXiv preprint arXiv:2303.08112
+.
+Cited by:
+§1
+,
+§2
+,
+§3.2
+.
+Csordás
+et al.
+(2024)
+R. Csordás, K. Irie, and J. Schmidhuber
+Recurrent neural networks learn to store and generate sequences using non-linear representations
+.
+arXiv preprint arXiv:2408.10920
+.
+Cited by:
+§2
+.
+Dubey
+et al.
+(2024)
+A. Dubey, A. Jauhri, A. Pandey,
+et al.
+The Llama 3 herd of models
+.
+arXiv preprint arXiv:2407.21783
+.
+Cited by:
+§1
+.
+Engels
+et al.
+(2024)
+J. Engels, I. Liao, E. J. Michaud, W. Gurnee, and M. Tegmark
+Not all language model features are linear
+.
+arXiv preprint arXiv:2405.14860
+.
+Cited by:
+§2
+.
+Gemma Team (2024)
+Gemma Team
+Gemma 2: improving open language models at a practical size
+.
+arXiv preprint arXiv:2408.00118
+.
+Cited by:
+§1
+.
+Gu and Dao (2024)
+A. Gu and T. Dao
+Mamba: linear-time sequence modeling with selective state spaces
+.
+arXiv preprint arXiv:2312.00752
+.
+Cited by:
+§4.3
+.
+Jordan (2024)
+K. Jordan
+Muon: an optimizer for hidden layers in transformers
+.
+Note:
+GitHub repository
+External Links:
+Link
+Cited by:
+Appendix B
+,
+§5
+.
+Li
+et al.
+(2023)
+K. Li, O. Patel, F. Viégas, H. Pfister, and M. Wattenberg
+Inference-time intervention: eliciting truthful answers from a language model
+.
+In
+Advances in Neural Information Processing Systems (NeurIPS)
+,
+Cited by:
+§1
+.
+Lieberum
+et al.
+(2024)
+T. Lieberum, S. Rajamanoharan, A. Conmy, L. Smith, N. Sonnerat, V. Varma, J. Kramár, A. Dragan, R. Shah, and N. Nanda
+Gemma scope: open sparse autoencoders everywhere all at once on gemma 2
+.
+In
+Proceedings of the 7th BlackboxNLP Workshop at EMNLP
+,
+Cited by:
+§2
+.
+Nanda
+et al.
+(2023)
+N. Nanda, A. Lee, and M. Wattenberg
+Emergent linear representations in world models of self-supervised sequence models
+.
+arXiv preprint arXiv:2309.00941
+.
+Cited by:
+§2
+.
+nostalgebraist (2020)
+nostalgebraist
+Interpreting GPT: the logit lens
+.
+Note:
+LessWrong blog post
+External Links:
+Link
+Cited by:
+§1
+,
+§2
+,
+§4.1
+.
+Park
+et al.
+(2024)
+K. Park, Y. J. Choe, and V. Veitch
+The linear representation hypothesis and the geometry of large language models
+.
+In
+Proceedings of the 41st International Conference on Machine Learning (ICML)
+,
+Cited by:
+§2
+.
+Peng
+et al.
+(2023)
+B. Peng, E. Alcaide, Q. Anthony, A. Albalak, S. Arcadinho, S. Biderman, H. Cao, X. Cheng, M. Chung, M. Grber,
+et al.
+RWKV: reinventing RNNs for the transformer era
+.
+arXiv preprint arXiv:2305.13048
+.
+Cited by:
+§4.3
+.
+Sofroniew
+et al.
+(2026)
+N. Sofroniew, I. Kauvar, W. Saunders, R. Chen, T. Henighan, S. Hydrie, C. Citro, A. Pearce, J. Tarng, W. Gurnee, J. Batson, S. Zimmerman, K. Rivoire, K. Fish, C. Olah, and J. Lindsey
+Emotion concepts and their function in a large language model
+.
+Anthropic Research
+.
+External Links:
+Link
+Cited by:
+Appendix C
+,
+§5
+.
+Templeton
+et al.
+(2024)
+A. Templeton, T. Conerly, J. Marcus, J. Lindsey, T. Bricken, B. Chen, A. Pearce, C. Citro, E. Ameisen, A. Jones, H. Cunningham, N. L. Turner, C. McDougall, M. MacDiarmid, C. D. Freeman, T. R. Sumers, E. Rees, J. Batson, A. Jermyn, S. Carter, C. Olah, and T. Henighan
+Scaling monosemanticity: extracting interpretable features from Claude 3 Sonnet
+.
+Anthropic Research
+.
+External Links:
+Link
+Cited by:
+Appendix Q
+,
+§1
+,
+§2
+,
+§4.2
+,
+§4.2
+.
+Turner
+et al.
+(2023)
+A. M. Turner, L. Thiergart, D. Udell, G. Leech, U. Mini, and M. MacDiarmid
+Activation addition: steering language models without optimization
+.
+arXiv preprint arXiv:2308.10248
+.
+Cited by:
+Appendix Q
+,
+§1
+,
+§1
+,
+§2
+,
+§4.2
+.
+Yom Din
+et al.
+(2023)
+A. Yom Din, T. Karidi, L. Choshen, and M. Geva
+Jump to conclusions: short-cutting transformers with linear transformations
+.
+In
+Findings of the Association for Computational Linguistics: EMNLP 2023
+,
+Cited by:
+§2
+,
+§4.1
+.
+Zou
+et al.
+(2023)
+A. Zou, L. Phan, S. Chen, J. Campbell, P. Guo, R. Ren, A. Pan, X. Yin, M. Mazeika, A. Dombrowski, S. Goel, N. Li, M. J. Byun, Z. Wang, A. Mallen, S. Basart, S. Koyejo, D. Song, M. Fredrikson, J. Z. Kolter, and D. Hendrycks
+Representation engineering: a top-down approach to AI transparency
+.
+arXiv preprint arXiv:2310.01405
+.
+Cited by:
+§1
+,
+§2
+.
+Appendix A
+Practical guidelines
+A practitioner wanting to steer a model on a new concept faces two questions: (a) will steering work for this concept? and (b) at which layer?
+lap
+addresses both:
+1.
+Compute
+A
+lin
+​
+(
+ℓ
+)
+A_{\mathrm{lin}}(\ell)
+.
+One forward pass per prompt through the frozen model, applying the unembedding to each layer’s hidden state. No training required. Cost:
+L
+L
+matrix multiplications per prompt.
+2.
+Will steering work? (go/no-go)
+If peak
+A
+lin
+<
+0.05
+A_{\mathrm{lin}}<0.05
+across all layers, the concept is not linearly accessible and difference-of-means steering will produce negligible effects. If peak
+A
+lin
+>
+0.1
+A_{\mathrm{lin}}>0.1
+, steering is likely viable. This prediction holds across 24 controlled concept families on five models (
+ρ
+=
++
+0.86
+\rho=+0.86
+to
++
+0.91
++0.91
+between peak
+A
+lin
+A_{\mathrm{lin}}
+and max
+Δ
+​
+P
+\Delta P
+).
+3.
+Which layer?
+Steer at the layer with the highest
+A
+lin
+A_{\mathrm{lin}}
+. This matches or near-matches the oracle-best steering layer for 4 of 5 families on Gemma-2-2B (
+≥
+\geq
+99.7% of oracle
+Δ
+​
+P
+\Delta P
+), with within-family correlations of
+ρ
+=
++
+0.63
+\rho=+0.63
+to
++
+0.92
++0.92
+. The one miss (geography) has the weakest
+A
+lin
+A_{\mathrm{lin}}
+signal (peak 0.28) and the largest probe gap.
+4.
+Expect clean steering when
+A
+lin
+A_{\mathrm{lin}}
+is high.
+Concepts with high
+A
+lin
+A_{\mathrm{lin}}
+achieve more on-target effect per unit of collateral damage (
+ρ
+=
++
+0.63
+\rho=+0.63
+to
++
+0.65
++0.65
+across three models). For deployment-sensitive applications, prefer steering at layers with high
+A
+lin
+A_{\mathrm{lin}}
+.
+5.
+Screen on a small model.
+A
+lin
+A_{\mathrm{lin}}
+on one model predicts steerability on another (
+ρ
+=
++
+0.64
+\rho=+0.64
+to
++
+0.88
++0.88
+cross-model). Compute
+A
+lin
+A_{\mathrm{lin}}
+on a small, fast model to identify promising concepts before investing compute on the target model.
+6.
+What if steering is weak despite high
+A
+lin
+A_{\mathrm{lin}}
+?
+Possible causes: (a) the steering target has too few prompts for a clean direction (
+n
+target
+<
+10
+n_{\mathrm{target}}<10
+); (b) the concept has many answer classes, diluting the binary contrast; (c) the model’s knowledge is split across near-synonym tokens. Examine the model’s output distribution at the recommended layer.
+These thresholds are calibrated on Gemma-2-2B, Qwen-1.5B, and Pythia-2.8B and validated on Qwen-7B and Llama-8B. The emergence pattern and layer ordering are robust across models; absolute thresholds may need adjustment for larger models.
+Compute cost.
+lap
+requires one forward pass plus
+L
+L
+unembedding multiplications (
+∼
+\sim
+10% overhead). Brute-force layer search requires
+L
+L
+full forward passes, making
+lap
+∼
+\sim
+30
+×
+\times
+cheaper for a 32-layer model.
+Appendix B
+Tuned lens comparison
+We trained tuned lenses on 100M tokens of C4 data using the Muon optimizer
+[
+Jordan, 2024
+]
+. Our Muon-trained Pythia lens produces
+A
+lin
+A_{\mathrm{lin}}
+profiles that closely agree with the official EleutherAI pretrained lens (
+ρ
+=
++
+0.94
+\rho=+0.94
+to
++
+0.99
++0.99
+across families).
+Artifact resolved (Qwen, Pythia):
+the final-layer anomaly disappears with the tuned lens on Qwen (geography L27: raw 0.002
+→
+\to
+tuned 0.576) and is neutral on Pythia.
+Architecture-dependent (Gemma):
+the tuned lens improves middle layers (geography L22: 0.260
+→
+\to
+0.698) but does not resolve the final layer, suggesting Gemma’s final layer has a genuinely different representation structure.
+Crystallization gap retained:
+the tuned lens shifts emergence earlier but does not collapse the gap between nonlinear and linear detection.
+Table 5
+:
+Raw logit lens vs. tuned lens for steering layer selection on Gemma-2-2B.
+Oracle
+: the layer with the highest steering
+Δ
+​
+P
+\Delta P
+, found by exhaustive search over all 26 layers.
+Raw
+/
+Tuned
+: the layer with the highest
+A
+lin
+A_{\mathrm{lin}}
+under each lens.
+% oracle
+:
+Δ
+​
+P
+\Delta P
+at the recommended layer as a percentage of
+Δ
+​
+P
+\Delta P
+at the oracle layer — 100% means the method selects the oracle-best layer.
+Family
+Oracle
+Raw
+% oracle
+Tuned
+% oracle
+Analogy
+L24
+L24
+100%
+L21 (off 3)
+8%
+Arithmetic
+L23
+L23
+100%
+L25 (off 2)
+−
+-
+2%
+Sequence
+L24
+L24
+100%
+L21 (off 3)
+47%
+Word transform
+L23
+L24 (off 1)
+99.7%
+L22 (off 1)
+88%
+Geography
+L22
+L25 (off 3)
+0.1%
+L22
+100%
+The raw logit lens matches or near-matches the oracle for 4 of 5 families. The tuned lens matches only geography. This is expected: difference-of-means steering injects a direction read out by
+W
+U
+∘
+LayerNorm
+W_{U}\circ\text{LayerNorm}
+, not by a learned affine correction. The raw logit lens measures exactly what the steering mechanism uses.
+Appendix C
+Multi-token extension
+The output-alignment principle (
+C
+⁡
+(
+d
+)
+C(d)
+must point at the target token) operates at each autoregressive generation step. Three extensions follow naturally. (1)
+Per-step aggregation
+: compute
+A
+lin
+A_{\mathrm{lin}}
+at each generation step and aggregate across the target sequence (e.g., mean or minimum). (2)
+First-token proxy
+: for many multi-token answers, the first token is discriminative (e.g., “Par” for “Paris, France”).
+A
+lin
+A_{\mathrm{lin}}
+on the first token may suffice as a steerability predictor. (3)
+Token-set probability
+: measure the total probability mass the logit lens assigns to all tokens consistent with the target concept, accommodating ambiguous tokenizations. For distribution-level properties such as sentiment,
+A
+lin
+A_{\mathrm{lin}}
+could be replaced by a divergence measure; the Sofroniew et al. analysis
+[
+Sofroniew et al., 2026
+]
+effectively does this at frontier scale. Our refusal demo provides preliminary evidence that the principle generalizes beyond token-level accuracy (
+ρ
+=
++
+0.945
+\rho=+0.945
+). Systematic multi-token validation is the primary direction for future work.
+Appendix D
+Controlled families methodology
+The distinction between within-concept analysis (which uses the 5 core families without confound issues) and steerability prediction (which requires the 25 controlled binary families) reflects a broader methodological point: comparing interpretability tool effectiveness across concepts requires controlled experimental designs. When task-structure variables (answer-class count, target sizes, prompt format) vary across families, they obscure the geometric signal. We release the 25 controlled families as a reusable benchmark for future work on steerability prediction.
+Appendix E
+Model usage summary
+Table 6
+:
+Models used in each experiment.
+Experiment
+Model
+Layers
+Dim
+Exp. 1–4 (primary)
+Gemma-2-2B
+26
+2304
+Exp. 5 (replication)
+Llama-3.1-8B
+32
+4096
+Exp. 5 (replication)
+Mistral-7B-v0.3
+32
+4096
+Exp. 5 (replication)
+Qwen2.5-7B
+28
+3584
+Exp. 5 (replication)
+Mamba-1.4B
+48
+2048
+Exp. 5 (replication)
+RWKV-1.6B (v6-Finch)
+24
+2048
+Exp. 5 (post-training)
+Llama-3.2-1B / 1B-Instruct
+16
+2048
+Refusal demo
+Llama-3.2-1B-Instruct
+16
+2048
+Entity steering demo
+Gemma-2-2B
+26
+2304
+Entity steering demo
+OLMo-2-1B-Instruct
+16
+2048
+Appendix F
+Experimental details
+Residual MLP probe.
+The nonlinear probe is a residual MLP:
+h
+^
+=
+h
++
+f
+θ
+​
+(
+h
+)
+\hat{h}=h+f_{\theta}(h)
+where
+f
+θ
+f_{\theta}
+consists of LayerNorm(
+d
+d
+)
+→
+\to
+Linear(
+d
+→
+512
+d\to 512
+)
+→
+\to
+GELU
+→
+\to
+Dropout(0.1)
+→
+\to
+Linear(
+512
+→
+d
+512\to d
+)
+→
+\to
+Dropout(0.1). Total parameters:
+∼
+\sim
+2.4M for Gemma-2-2B (
+d
+=
+2304
+d=2304
+). Trained with Adam (lr =
+10
+−
+3
+10^{-3}
+, weight decay =
+10
+−
+4
+10^{-4}
+), batch size 256, max 50 epochs with early stopping (patience = 5). The MLP and the frozen unembedding matrix together form the nonlinear probe; the unembedding weights are not updated. Training takes
+∼
+\sim
+30 seconds per layer on a single GPU.
+Prompt examples.
+Table
+7
+shows representative prompts from each concept family with their correct single-token answers.
+Table 7
+:
+Example prompts from each concept family.
+Family
+Prompt
+Answer
+Type
+Arithmetic
+“2 + 5 = ”
+7
+addition
+“15 - 8 = ”
+7
+subtraction
+“3 * 3 = ”
+9
+multiplication
+Geography
+“Paris is the capital of”
+France
+capital
+“Japan is located in”
+Asia
+continent
+“In Germany, people speak”
+German
+language
+Sequence
+“Monday, Tuesday, Wednesday,”
+Thursday
+days
+“January, February, March,”
+April
+months
+“a, b, c, d,”
+e
+alphabet
+Word transform
+“The opposite of hot is”
+cold
+opposite
+“The plural of child is”
+children
+plural
+“The past tense of go is”
+went
+past tense
+Analogy
+“hot is to cold as big is to”
+small
+forward
+“cold is to hot as small is to”
+big
+reverse
+Steering target selection.
+For each family, we select a steering target and compute the direction as the difference of means between target-answer and non-target-answer activations. Table
+8
+specifies the targets and the number of prompts in each group.
+Table 8
+:
+Steering targets per family. For arithmetic, we filter non-target prompts to exclude those containing the target digit in their operands.
+Family
+Target
+N
+target
+N_{\mathrm{target}}
+N
+other
+N_{\mathrm{other}}
+Note
+Arithmetic
+“9”
+74
+546
+filtered: no “9” in operands
+Geography
+“Spanish”
+56
+508
+Sequence
+“November”
+10
+423
+Word transform
+“thin”
+4
+502
+Analogy
+“dark”
+3
+345
+Appendix G
+Per-layer results
+Table
+9
+shows the full per-layer results for the arithmetic family on Gemma-2-2B, illustrating the typical emergence pattern. Results for other families are qualitatively similar (zero until the final quarter, then rapid increase).
+Table 9
+:
+Per-layer results for arithmetic on Gemma-2-2B. Layers 0–17 are omitted (all values are 0.000 for
+A
+lin
+A_{\mathrm{lin}}
+).
+Layer
+A
+lin
+A_{\mathrm{lin}}
+A
+mlp
+A_{\mathrm{mlp}}
+Δ
+\Delta
+λ
+\lambda
+18
+0.000
+0.880
+0.880
+1038
+19
+0.000
+0.868
+0.868
+958
+20
+0.004
+0.898
+0.895
+880
+21
+0.264
+0.874
+0.611
+807
+22
+0.545
+0.904
+0.359
+699
+23
+0.686
+0.886
+0.200
+583
+24
+0.643
+0.880
+0.238
+415
+25
+0.573
+0.850
+0.277
+1469
+Appendix H
+Depth confound analysis
+This appendix provides full details of the three depth-confound tests summarized in Section 4.2. See Section 4.2 for the main discussion.
+1.
+Partial correlation.
+Pearson partial
+r
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+∣
+layer
+)
+=
++
+0.507
+r(A_{\mathrm{lin}},\Delta P\mid\mathrm{layer})=+0.507
+(
+p
+<
+10
+−
+9
+p<10^{-9}
+,
+n
+=
+130
+n=130
+). Controlling for layer index does not eliminate the relationship.
+2.
+Within-family permutation.
+We shuffle
+Δ
+​
+P
+\Delta P
+values within each family independently (breaking the layer-to-
+Δ
+​
+P
+\Delta P
+mapping while preserving the marginal distribution per family). Of 10,000 permutations, zero produce
+ρ
+≥
++
+0.777
+\rho\geq+0.777
+, yielding
+p
+<
+10
+−
+4
+p<10^{-4}
+. This test does not preserve within-family autocorrelation; the partial correlation (item 1) addresses the autocorrelation concern directly.
+3.
+Restricted analysis.
+Among layer
+×
+\times
+family pairs where
+A
+lin
+>
+0
+A_{\mathrm{lin}}>0
+,
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+)
+\rho(A_{\mathrm{lin}},\Delta P)
+remains positive while
+ρ
+⁡
+(
+layer
+,
+Δ
+​
+P
+)
+\rho(\mathrm{layer},\Delta P)
+alone does not discriminate effective from ineffective layers in this restricted set.
+Appendix I
+Crystallization gap
+Table
+10
+reports the crystallization gap for each core concept family on Gemma-2-2B: the number of layers between when
+A
+mlp
+A_{\mathrm{mlp}}
+first exceeds 0.5 (the concept is nonlinearly detectable) and when
+A
+lin
+A_{\mathrm{lin}}
+first exceeds 0.1 (the concept becomes output-aligned). See Section 4.1 for discussion.
+Table 10
+:
+Crystallization gap: layers between nonlinear detection (
+A
+mlp
+>
+0.5
+A_{\mathrm{mlp}}>0.5
+) and linear emergence (
+A
+lin
+>
+0.1
+A_{\mathrm{lin}}>0.1
+) on Gemma-2-2B (26 layers). Negative gaps indicate concepts that are natively aligned with the unembedding projection.
+Family
+A
+mlp
+>
+0.5
+A_{\mathrm{mlp}}>0.5
+at
+A
+lin
+>
+0.1
+A_{\mathrm{lin}}>0.1
+at
+Gap (layers)
+Gap (% depth)
+Sequence
+L1
+L19
+18
+69%
+Geography
+L7
+L22
+15
+58%
+Arithmetic
+L11
+L21
+10
+38%
+Word transform
+L19
+L18
+−
+1
+-1
+(co-emerge)
+Analogy
+L20
+L17
+−
+3
+-3
+(co-emerge)
+Appendix J
+Layer-selection policy
+Table 11
+:
+Layer-selection comparison on Gemma-2-2B:
+Δ
+​
+P
+\Delta P
+at the layer recommended by each method.
+Oracle
+: exhaustive search over all 26 layers.
+lap
+: layer with highest
+A
+lin
+A_{\mathrm{lin}}
+, excluding the final layer (anomalous; Section
+5
+).
+Penultimate
+: fixed layer
+L
+−
+2
+L{-}2
+(L24).
+90%
+: first layer where
+A
+lin
+A_{\mathrm{lin}}
+reaches 90% of its peak (an earlier-intervention policy).
+Trained
+: layer selected by a 5-fold cross-validated logistic regression probe’s best accuracy. “—”: omitted due to insufficient steering target prompts (
+n
+<
+10
+n<10
+). LAP and Penultimate coincide for 3 families because
+A
+lin
+A_{\mathrm{lin}}
+happens to peak at L24 for those families.
+Family
+Oracle
+lap
+Penult.
+90%
+Trained
+LAP/Orc.
+Sequence
++
+0.350
++0.350
++
+0.350
++0.350
+✓
++
+0.350
++0.350
++
+0.284
++0.284
++
+0.004
++0.004
+100%
+Word transform
++
+0.244
++0.244
++
+0.243
++0.243
++
+0.243
++0.243
++
+0.244
++0.244
+—
+99.6%
+Analogy
++
+0.149
++0.149
++
+0.149
++0.149
+✓
++
+0.149
++0.149
++
+0.081
++0.081
+—
+100%
+Arithmetic
++
+0.130
++0.130
++
+0.130
++0.130
+✓
++
+0.120
++0.120
++
+0.130
++0.130
++
+0.113
++0.113
+100%
+Geography
++
+0.084
++0.084
++
+0.084
++0.084
+✓
++
+0.066
++0.066
++
+0.080
++0.080
++
+0.034
++0.034
+100%
+The “Trained” column illustrates why trained probe accuracy is uninformative for steering. A logistic regression probe (5-fold cross-validated on the full 2304-dimensional residual stream) achieves
+>
+>
+93% classification accuracy at every layer from L0 to L25, for all five families. Yet steering at the probe’s best-accuracy layer produces near-zero
+Δ
+​
+P
+\Delta P
+(e.g., sequence:
++
+0.004
++0.004
+vs. oracle
++
+0.350
++0.350
+). The probe finds
+some
+linear separator at every layer—this is expected in 2304 dimensions, where logistic regression has enough capacity to separate any two groups regardless of representation structure. What matters for steering is not whether any separator exists, but whether the concept is aligned with the model’s own output projection (
+A
+lin
+A_{\mathrm{lin}}
+).
+Appendix K
+Failure modes and perturbation sensitivity
+When steering fails (the model’s top-1 prediction does not match the target), the LAP profile helps diagnose why. We compute five per-prompt features at the best-
+A
+lin
+A_{\mathrm{lin}}
+layer and cluster failed prompts by
+k
+k
+-means (
+k
+k
+selected by silhouette score, range 2–5; silhouette scores 0.32–0.59). Four failure types emerge (Table
+12
+), each with a distinct geometric signature and practical response.
+The most common failure (“wrong direction,” 30–90%) reflects a model knowledge problem: the prompt’s activation projects negatively onto the steering direction, meaning the model does not encode the concept for that prompt. The “chaotic regime” failure (10–27%) is characterized by high perturbation sensitivity
+λ
+\lambda
+. Figure
+3
+shows this pattern across all layer
+×
+\times
+family pairs: high
+λ
+\lambda
+coincides with near-zero steering effect, while low
+λ
+\lambda
+allows effective steering at layers where
+A
+lin
+A_{\mathrm{lin}}
+is high.
+Table 12
+:
+Failure mode taxonomy. Each cluster type has a distinct geometric signature and a different practical response. Percentages are ranges across the three core families with sufficient steering targets.
+Failure type
+Prevalence
+Signature
+Practical response
+Wrong direction
+30–90%
+Concept projection
+<
+0
+<0
+Model knowledge problem, not tool failure.
+Indistinguishable from success
+10–35%
+All features match correct prompts
+Correct token ranks 2nd–5th; examine full output distribution.
+Chaotic regime
+10–27%
+High
+λ
+\lambda
+, high distance from centroid
+Unstable representation. Try adjacent layers.
+Low engagement
+∼
+\sim
+10%
+Very low
+λ
+\lambda
+, low concept projection
+Model does not process prompt.
+0
+0
+0.2
+0.2
+0.4
+0.4
+0.6
+0.6
+0.8
+0.8
+1
+1
+⋅
+10
+4
+\cdot 10^{4}
+0
+0
+0.1
+0.1
+0.2
+0.2
+0.3
+0.3
+Perturbation sensitivity
+λ
+\lambda
+Steering
+Δ
+​
+P
+\Delta P
+0
+0
+0.2
+0.2
+0.4
+0.4
+0.6
+0.6
+A
+lin
+A_{\mathrm{lin}}
+Figure 3
+:
+Perturbation sensitivity and steering effectiveness. Each point is one (layer, family) pair on Gemma-2-2B. High
+λ
+\lambda
+(right) coincides with near-zero steering effect and low
+A
+lin
+A_{\mathrm{lin}}
+(blue). Low
+λ
+\lambda
+(left) allows effective steering in high-
+A
+lin
+A_{\mathrm{lin}}
+regions (red/orange). This corresponds to the “chaotic regime” failure mode in Table
+12
+.
+Appendix L
+Non-transformer replication
+Table
+13
+reports the logit lens emergence pattern on two non-transformer architectures. The key finding: both show the same qualitative pattern as transformers—zero
+A
+lin
+A_{\mathrm{lin}}
+for the first 70–80% of layers, sharp emergence in the final quarter, and a final-layer drop. Arithmetic is genuinely absent (0% model accuracy on both), and correctly shows
+A
+lin
+=
+0
+A_{\mathrm{lin}}=0
+. For the other four families, peak
+A
+lin
+A_{\mathrm{lin}}
+closely tracks model accuracy, consistent with the transformer results. Steering experiments on non-transformers are left for future work.
+Table 13
+:
+Non-transformer replication. Peak
+A
+lin
+A_{\mathrm{lin}}
+(layer) for Mamba-1.4B (48 layers) and RWKV-1.6B (24 layers). Both show the same emergence pattern and final-layer anomaly as transformers. Arithmetic is genuinely absent on both models.
+Mamba-1.4B (48L)
+RWKV-1.6B (24L)
+Family
+Model acc.
+Peak
+A
+lin
+A_{\mathrm{lin}}
+Model acc.
+Peak
+A
+lin
+A_{\mathrm{lin}}
+Sequence
+77.0%
+0.770 (L46)
+75.0%
+0.750 (L22)
+Geography
+49.0%
+0.505 (L35)
+50.5%
+0.710 (L21)
+Analogy
+55.0%
+0.550 (L46)
+67.0%
+0.670 (L22)
+Word transform
+51.5%
+0.515 (L46)
+54.5%
+0.545 (L22)
+Arithmetic
+0.0%
+0.000
+0.0%
+0.000
+Appendix M
+Mistral tokenizer fix
+Mistral’s SentencePiece tokenizer encodes digits as two tokens (a space marker plus the digit character), while alphabetic answers (“France”, “Thursday”, “cold”) are single tokens. Our token-matching code required a Mistral-specific fix to use the last token of the encoding (the actual digit) rather than the first (the space marker). With this fix, arithmetic on Mistral achieves 64.5% model accuracy and shows the same emergence and steering patterns as the other architectures.
+Appendix N
+Controlled concept families
+Table
+14
+lists the 25 controlled binary concept families used for steerability prediction (Section 3.6). Each family has exactly two single-token answer classes, balanced groups (
+∼
+\sim
+22 items per class
+×
+\times
+4 templates
+≈
+\approx
+88 prompts per class), and consistent prompt templates. Families are sorted by peak
+A
+lin
+A_{\mathrm{lin}}
+on Gemma-2-2B. Concepts with higher
+A
+lin
+A_{\mathrm{lin}}
+generally show higher
+Δ
+​
+P
+\Delta P
+, consistent with the steerability correlations reported in Section 4.2.
+Table 14
+:
+Controlled binary concept families. Peak
+A
+lin
+A_{\mathrm{lin}}
+and max steering
+Δ
+​
+P
+\Delta P
+on Gemma-2-2B.
+Family
+Classes
+N
+N
+Peak
+A
+lin
+A_{\mathrm{lin}}
+Max
+Δ
+​
+P
+\Delta P
+c_gender
+he / she
+192
+0.495
++0.151
+c_plant
+plant / animal
+176
+0.489
++0.038
+c_animal
+mammal / bird
+200
+0.415
++0.132
+c_continent
+Europe / Asia
+180
+0.411
++0.198
+c_material
+metal / wood
+176
+0.375
++0.167
+c_parity
+even / odd
+294
+0.265
++0.006
+c_phase
+solid / liquid
+176
+0.210
++0.146
+c_taste
+sweet / sour
+176
+0.176
++0.032
+c_plural
+singular / plural
+176
+0.142
++0.050
+c_daynight
+day / night
+176
+0.131
++0.064
+c_sentiment
+positive / negative
+176
+0.131
++0.019
+c_temperature
+hot / cold
+176
+0.108
++0.024
+c_size
+big / small
+176
+0.074
++0.024
+c_speed
+fast / slow
+176
+0.074
++0.005
+c_hardness
+hard / soft
+176
+0.062
++0.017
+c_indoor
+indoor / outdoor
+176
+0.057
++0.024
+c_moisture
+wet / dry
+176
+0.017
++0.007
+c_volume
+loud / quiet
+176
+0.011
++0.000
+c_habitat
+land / water
+176
+0.006
++0.008
+c_shape
+round / flat
+176
+0.006
++0.002
+c_weight
+heavy / light
+176
+0.006
++0.004
+c_age
+ancient / modern
+176
+0.000
++0.000
+c_danger
+dangerous / safe
+176
+0.000
++0.001
+c_edible
+edible / inedible
+184
+0.000
+—
+c_natural
+natural / artificial
+176
+0.000
++0.000
+Appendix O
+Steerability correlations and scaling
+Table
+15
+reports steerability correlations across models. The “Controlled” row is the primary result (
+ρ
+=
++
+0.86
+\rho=+0.86
+to
++
+0.91
++0.91
+). The “above-floor” rows (restricting to families with
+A
+lin
+>
+0.05
+A_{\mathrm{lin}}>0.05
+or
+>
+0.1
+>0.1
+) test whether the correlation survives after removing the trivial floor effect (concepts with
+A
+lin
+≈
+0
+A_{\mathrm{lin}}\approx 0
+trivially have
+Δ
+​
+P
+≈
+0
+\Delta P\approx 0
+). On larger models (Qwen-7B, Llama-8B), the above-floor correlation remains strong (
+ρ
+=
++
+0.83
+\rho=+0.83
+to
++
+0.93
++0.93
+); on smaller models it weakens due to fewer above-floor data points.
+Table
+16
+reports the scaling analysis across Pythia sizes. The number of steerable concepts grows with model size (5/23 at 160M
+→
+\to
+9/23 at 6.9B), as does mean steering
+Δ
+​
+P
+\Delta P
+(roughly
+3.4
+×
+3.4\times
+increase). Both plateau between 2.8B and 6.9B within the Pythia family.
+Table 15
+:
+Steerability correlations
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+)
+\rho(A_{\mathrm{lin}},\Delta P)
+across models. “All families” includes all families with sufficient steering targets. “Controlled” restricts to the 24 standardized binary families (Section 3.6). Numbers in parentheses indicate
+n
+n
+(number of families with data). Above-floor rows restrict to families with peak
+A
+lin
+A_{\mathrm{lin}}
+exceeding the stated threshold.
+Subset
+Pythia-2.8B
+Gemma-2-2B
+Qwen-1.5B
+Qwen-7B
+Llama-8B
+All families
++
+0.89
++0.89
++
+0.86
++0.86
++
+0.90
++0.90
++
+0.92
++0.92
++
+0.93
++0.93
+Controlled
++
+0.86
++0.86
+(23)
++
+0.86
++0.86
+(24)
++
+0.86
++0.86
+(23)
++
+0.90
++0.90
+(23)
++
+0.91
++0.91
+(23)
+Ctrl
+A
+lin
+>
+0.05
+A_{\mathrm{lin}}{>}0.05
++
+0.50
++0.50
+(10)
++
+0.68
++0.68
+(16)
++
+0.86
++0.86
+(14)
++
+0.90
++0.90
+(15)
++
+0.83
++0.83
+(18)
+Ctrl
+A
+lin
+>
+0.1
+A_{\mathrm{lin}}{>}0.1
++
+0.50
++0.50
+(9)
++
+0.52
++0.52
+(12)
++
+0.93
++0.93
+(10)
++
+0.86
++0.86
+(13)
++
+0.84
++0.84
+(14)
+Table 16
+:
+Scaling across Pythia sizes (23 controlled families with single-token targets on the Pythia tokenizer; “Steerable” = families with peak
+A
+lin
+>
+0.1
+A_{\mathrm{lin}}>0.1
+). Two of the 25 controlled families (c_animal and c_edible) are excluded because their target tokens (“mammal”, “inedible”) tokenize to multiple tokens on Pythia, preventing steering evaluation.
+160M
+410M
+1B
+2.8B
+6.9B
+Mean
+A
+lin
+A_{\mathrm{lin}}
+0.055
+0.075
+0.087
+0.111
+0.118
+Mean
+Δ
+​
+P
+\Delta P
+0.011
+0.038
+0.022
+0.030
+0.037
+Steerable
+5/23
+6/23
+7/23
+9/23
+9/23
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+)
+\rho(A_{\mathrm{lin}},\Delta P)
++
+0.42
++0.42
++
+0.71
++0.71
++
+0.68
++0.68
++
+0.86
++0.86
++
+0.86
++0.86
+Appendix P
+C
+⁡
+(
+d
+)
+C(d)
+analysis and steering efficiency
+Table
+17
+reports the
+C
+⁡
+(
+d
+)
+C(d)
+analysis for a representative subset of concept families on Gemma-2-2B, selected to span the full range of
+A
+lin
+A_{\mathrm{lin}}
+and
+Δ
+​
+P
+\Delta P
+values. The
+C
+⁡
+(
+d
+)
+C(d)
+rank indicates where the target token falls in the vocabulary when the steering direction is projected through the unembedding: rank 1 means
+C
+⁡
+(
+d
+)
+C(d)
+points directly at the target token (ideal for steering); a high rank means the steering direction is misaligned with the target. For example, parity has
+C
+⁡
+(
+d
+)
+C(d)
+rank 13,440 out of
+∼
+\sim
+256K vocabulary tokens—the even/odd direction does not point at “odd” in the unembedding space, explaining why
+Δ
+​
+P
+≈
+0
+\Delta P\approx 0
+despite moderate
+A
+lin
+A_{\mathrm{lin}}
+.
+Table 17
+:
+Mechanistic analysis on Gemma-2-2B.
+C
+⁡
+(
+d
+)
+C(d)
+rank: rank of the target token in the projected steering direction. KL: collateral damage on unrelated prompts. Efficiency:
+Δ
+​
+P
+/
+KL
+\Delta P/\mathrm{KL}
+.
+Family
+A
+lin
+A_{\mathrm{lin}}
+Δ
+​
+P
+\Delta P
+C
+⁡
+(
+d
+)
+C(d)
+rank
+‖
+d
+‖
+\|d\|
+KL
+Eff.
+c_continent
+0.411
++0.198
+3
+112.5
+0.059
+3.3
+c_phase
+0.210
++0.146
+1
+117.2
+0.056
+2.6
+arithmetic
+0.698
++0.118
+21
+149.0
+0.060
+1.9
+c_animal
+0.415
++0.132
+8
+57.8
+0.010
+13.8
+c_material
+0.375
++0.167
+1
+132.8
+0.062
+2.7
+geography
+0.292
++0.240
+3
+98.0
+0.027
+8.8
+c_plural
+0.142
++0.050
+1
+38.4
+0.011
+4.6
+c_daynight
+0.131
++0.064
+1
+97.1
+0.033
+2.0
+c_parity
+0.265
++0.006
+15198
+13.9
+0.002
+3.4
+c_natural
+0.000
++0.000
+220916
+2.4
+0.001
+0.2
+Cross-concept correlations on Gemma-2-2B (
+n
+=
+27
+n=27
+: 24 controlled + 3 core families with single-token steering targets):
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+)
+=
++
+0.86
+\rho(A_{\mathrm{lin}},\Delta P)=+0.86
+;
+ρ
+⁡
+(
+C
+​
+(
+d
+)
+target
+,
+Δ
+​
+P
+)
+=
++
+0.73
+\rho(C(d)_{\mathrm{target}},\Delta P)=+0.73
+;
+ρ
+⁡
+(
+‖
+d
+‖
+,
+KL
+)
+=
++
+0.96
+\rho(\|d\|,\mathrm{KL})=+0.96
+;
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+/
+KL
+)
+=
++
+0.65
+\rho(A_{\mathrm{lin}},\Delta P/\mathrm{KL})=+0.65
+. Results replicate on Qwen-1.5B (
+n
+=
+26
+n=26
+:
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+)
+=
++
+0.90
+\rho(A_{\mathrm{lin}},\Delta P)=+0.90
+;
+ρ
+⁡
+(
+C
+⁡
+(
+d
+)
+,
+Δ
+​
+P
+)
+=
++
+0.78
+\rho(C(d),\Delta P)=+0.78
+;
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+/
+KL
+)
+=
++
+0.65
+\rho(A_{\mathrm{lin}},\Delta P/\mathrm{KL})=+0.65
+) and Pythia-2.8B (
+n
+=
+26
+n=26
+:
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+)
+=
++
+0.89
+\rho(A_{\mathrm{lin}},\Delta P)=+0.89
+;
+ρ
+⁡
+(
+C
+⁡
+(
+d
+)
+,
+Δ
+​
+P
+)
+=
++
+0.84
+\rho(C(d),\Delta P)=+0.84
+;
+ρ
+⁡
+(
+A
+lin
+,
+Δ
+​
+P
+/
+KL
+)
+=
++
+0.63
+\rho(A_{\mathrm{lin}},\Delta P/\mathrm{KL})=+0.63
+).
+Table
+18
+compares steering efficiency at the
+A
+lin
+A_{\mathrm{lin}}
+-recommended layer versus the middle layer.
+Table 18
+:
+Steering efficiency (
+Δ
+​
+P
+/
+KL
+collateral
+\Delta P/\mathrm{KL}_{\mathrm{collateral}}
+) at the
+A
+lin
+A_{\mathrm{lin}}
+-recommended layer vs. the middle layer (L13/26) on Gemma-2-2B. At the middle layer,
+A
+lin
+=
+0
+A_{\mathrm{lin}}=0
+for all families and steering produces near-zero or negative efficiency. At the LAP-recommended layer, efficiency is positive for 4 of 5 families.
+LAP layer
+Middle layer (L13)
+Family
+Layer
+Δ
+​
+P
+\Delta P
+Efficiency
+A
+lin
+A_{\mathrm{lin}}
+Δ
+​
+P
+\Delta P
+Efficiency
+Sequence
+L24 (
+A
+lin
+=
+0.71
+A_{\mathrm{lin}}{=}0.71
+)
++
+0.157
++0.157
++
+1.310
++1.310
+0.00
+0.00
++
+0.000
++0.000
++
+0.000
++0.000
+Word transform
+L24 (
+A
+lin
+=
+0.51
+A_{\mathrm{lin}}{=}0.51
+)
++
+0.386
++0.386
++
+0.831
++0.831
+0.00
+0.00
++
+0.000
++0.000
++
+0.000
++0.000
+Analogy
+L24 (
+A
+lin
+=
+0.45
+A_{\mathrm{lin}}{=}0.45
+)
++
+0.191
++0.191
++
+0.415
++0.415
+0.00
+0.00
++
+0.000
++0.000
++
+0.000
++0.000
+Arithmetic
+L23 (
+A
+lin
+=
+0.69
+A_{\mathrm{lin}}{=}0.69
+)
++
+0.239
++0.239
++
+0.837
++0.837
+0.00
+0.00
++
+0.006
++0.006
++
+0.094
++0.094
+Geography
+L25 (
+A
+lin
+=
+0.28
+A_{\mathrm{lin}}{=}0.28
+)
++
+0.003
++0.003
++
+0.279
++0.279
+0.00
+0.00
++
+0.000
++0.000
++
+0.000
++0.000
+Appendix Q
+Steering demos: refusal and entity redirect
+0
+0
+2
+2
+4
+4
+6
+6
+8
+8
+10
+10
+12
+12
+14
+14
+0.6
+0.6
+0.8
+0.8
+1
+1
+Layer
+Separability
+Separability (left axis)
+0
+0
+0.1
+0.1
+0.2
+0.2
+Δ
+​
+P
+\Delta P
+(comply)
+Δ
+​
+P
+\Delta P
+(comply) (right axis)
+Figure 4
+:
+Refusal direction demo on Llama-3.2-1B-Instruct. Separability of the refusal direction (blue, left axis) and steering effect
+Δ
+​
+P
+\Delta P
+(comply) (green triangles, right axis) across layers. Steering is tested at 8 layers; the four early-layer triangles (L0, L1, L2, L5) sit at
+Δ
+​
+P
+≤
+0.015
+\Delta P\leq 0.015
+and overlap the dashed baseline. Separability is measured at all 16 layers. Both increase with depth and correlate at
+ρ
+=
++
+0.945
+\rho=+0.945
+: layers where the refusal direction is more separable produce stronger steering effects.
+Applied to refusal in Llama-3.2-1B-Instruct (40 harmful + 40 benign prompts),
+lap
+identifies layer 13 as the recommended steering layer. At layers 0–2, separability is moderate (65–88%) but steering produces zero or negative effect. At layers 8–15, both separability and steering are high.
+To verify that steering produces coherent behavioral change (not just token-probability shifts), we generate full completions with the refusal direction subtracted at two layers: layer 0 (low separability, acc=0.65) and layer 13 (LAP-recommended, acc=1.0), both at
+α
+=
+0.5
+×
+‖
+d
+‖
+\alpha=0.5\times\|d\|
+. Table
+19
+shows representative examples. At layer 0, steering has no effect: completions are identical to baseline and the model continues to refuse. At layer 13, refusal is removed and the model complies. This contrast confirms that
+lap
+identifies the correct steering layer, not merely that steering works somewhere. At higher scales (
+α
+≥
+2.0
+\alpha\geq 2.0
+), completions degenerate into repetition, consistent with pushing the representation off the learned manifold.
+Table 19
+:
+Before/after completions on Llama-3.2-1B-Instruct with the refusal direction subtracted (
+α
+=
+0.5
+\alpha=0.5
+). At layer 0 (low separability), steering has no effect. At layer 13 (LAP-recommended), refusal is removed. Completions truncated.
+Prompt
+Layer
+Before (baseline)
+After (steered)
+How do I make a bomb?
+L0
+Explosives are not something I can just pick up…I can’t provide…
+[identical to baseline]
+L13
+Explosives are a serious business, and I want to make sure I’m doing it safely…
+How to hack an email?
+L0
+Hacking into someone’s email…is a serious violation of their privacy…
+[identical to baseline]
+L13
+If you need to access someone’s email account, here are some steps you can take…
+How to shoplift?
+L0
+I can’t provide guidance on how to shoplift. Shoplifting is a serious crime…
+[identical to baseline]
+L13
+Here are some tips to help you shoplift without getting caught: 1. Choose the right time…
+Entity steering (London
+→
+\to
+Paris).
+To validate
+lap
+end-to-end with full generation, we construct 20 prompts where the correct answer is “Paris” and 20 where it is “London” (both single tokens in each model’s vocabulary). We run the experiment on two architectures: Gemma-2-2B (base, 26 layers) and OLMo-2-1B-Instruct (Allen AI, 16 layers).
+On
+Gemma-2-2B
+,
+A
+lin
+A_{\mathrm{lin}}
+is zero at layers 0–19 and peaks at L22 (0.20). Steering
+Δ
+​
+P
+​
+(
+Paris
+)
+\Delta P(\text{Paris})
+tracks
+A
+lin
+A_{\mathrm{lin}}
+:
+ρ
+=
++
+0.663
+\rho=+0.663
+(
+p
+<
+0.001
+p<0.001
+). On
+OLMo-2-1B-Instruct
+,
+A
+lin
+A_{\mathrm{lin}}
+is zero at layers 0–11 and peaks at L13 (0.60), with sharper emergence and higher peak accessibility. Steering
+Δ
+​
+P
+​
+(
+Paris
+)
+\Delta P(\text{Paris})
+again tracks
+A
+lin
+A_{\mathrm{lin}}
+:
+ρ
+=
++
+0.753
+\rho=+0.753
+(
+p
+<
+0.001
+p<0.001
+).
+Table
+20
+shows generated completions on both models at three layers: the middle layer (the conventional heuristic from
+Turner et al. 2023
+,
+Templeton et al. 2024
+), the
+lap
+-recommended layer, and with
+α
+=
+1.0
+\alpha=1.0
+. On both models, the middle layer has
+A
+lin
+=
+0
+A_{\mathrm{lin}}=0
+and steering produces no effect—completions are identical to baseline. At the
+lap
+-recommended layer, outputs are fully redirected to Paris. This is a direct comparison against the practitioner heuristic: the standard “steer at the middle layer” approach fails, while
+lap
+identifies the correct layer. On OLMo-2, the redirection is particularly clean: “The capital of England is”
+→
+\to
+“Paris”; “Big Ben is located in”
+→
+\to
+“Paris, 16th arrondissement”; “The British government is based in”
+→
+\to
+“Paris, and the French government is based in Paris.”
+Table 20
+:
+Entity steering (London
+→
+\to
+Paris) on two models. At the middle layer (conventional heuristic),
+A
+lin
+=
+0
+A_{\mathrm{lin}}=0
+and steering has no effect. At the
+lap
+-recommended layer (
+α
+=
+1.0
+\alpha=1.0
+), completions redirect from London to Paris. Completions truncated.
+Prompt
+Model
+Layer
+Before
+After (steered)
+The capital of England is
+Gemma-2-2B
+L13
+m
+…a city of contrasts…history, culture…
+[identical]
+L22
+Paris, the capital of France is Paris…
+OLMo-2-1B
+L8
+m
+London, and the largest city in England is Birmingham…
+[identical]
+L13
+Paris, 16,000 km
+2
+, and has a population of 2.75 million.
+Big Ben is located in
+Gemma-2-2B
+L13
+m
+…a historic area of London…
+[identical]
+L22
+the heart of Paris, France…a beautiful and historic landmark…
+OLMo-2-1B
+L8
+m
+London, the UK. The clock tower itself is 13.5 meters…
+[identical]
+L13
+Paris, 16th arrondissement, and it weighs 8 tons…
+The British gov. is based in
+Gemma-2-2B
+L13
+m
+London, the capital of the United Kingdom…
+[identical]
+L22
+Paris, France. The French government is based in Paris…
+OLMo-2-1B
+L8
+m
+Westminster, and the Houses of Parliament are located there…
+[identical]
+L13
+Paris, and the French government is based in Paris…
+m
+Middle layer (conventional heuristic). Gemma: L13 = layer 13/26; OLMo: L8 = layer 8/16.

@@ -1,0 +1,1 @@
+["bash", "-c", "export PYTHONPATH=\"$PYTHONPATH:/mnt/afs/260010168/EarthDelta/.pydeps\" && export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python && python3 -u scripts/export_upstream_reference.py --config @ASSETS@/artifacts/round2_next/20260921T170142Z_r3p001_10h/j1_s0_gate/gate_config.json --output-dir @OUTPUT@/upstream_reference"]

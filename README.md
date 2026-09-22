@@ -136,11 +136,13 @@ requires the summary operator to be linear). Read the module docstring before th
   place of `xformers.ops.memory_efficient_attention` (verified numerically equivalent,
   ≤1e-5, in `tests/test_bridge.py`).
 - `stormer_bridge.py` loads the official Lightning checkpoints with `strict=True` (zero
-  missing/unexpected keys is the structural-equivalence proof), reproduces the official
-  normalization → diff-predict → denormalize → accumulate → renormalize rollout loop
-  bit-for-bit against `reference/stormer/`, and injects `ExpertLoRA` coefficients on
-  `attn.proj` in blocks 18–23 via `controlled_rollout` — verified to be an exact no-op at
-  zero coefficients (`no_state_leak` test).
+  missing/unexpected keys is the structural-equivalence proof), implements the official
+  normalization → diff-predict → denormalize → accumulate → renormalize rollout loop,
+  and injects `ExpertLoRA` coefficients on `attn.proj` in blocks 18–23 via
+  `controlled_rollout`. Zero coefficients are an exact no-op (`no_state_leak` test).
+  Real H100 S0 evidence currently passes one-step parity after the inverse-normalization
+  repair but still fails the frozen `1e-5` tolerance at 4 and 12 steps; downstream
+  scientific runs therefore remain gated.
 
 ## Data pipeline
 
@@ -187,8 +189,8 @@ resolution).
 | Core package (110 unit tests) | contracts, factorization, selection, LoRA experts | ✅ done |
 | Stormer bridge (CPU, random weights) | SDPA≡softmax, zero-edit no-op, normalization round-trip | ✅ done |
 | ERA5 data pipeline | 2020 pulled, rechunked, split manifest built | ✅ done |
-| **S0 gate** (`scripts/s0_gate.py`, GPU) | strict real-ckpt load, zero-edit == official `forward_validation` (≤1e-6), 6h/24h RMSE vs. paper | ⏳ next — needs an ACP GPU job |
-| S1+ | training the `e0`/`du` heads, budget selection experiments | not started |
+| **S0 gate** (`scripts/s0_gate.py`, GPU) | strict real-ckpt load, zero-edit parity, and multistep rollout checks at a frozen `1e-5` tolerance | ⚠️ blocked: one-step PASS, 4/12-step parity FAIL on H100 |
+| S1+ | expert training, qualification, candidate cache, and holdout evaluation | STOPPED until S0 multistep parity is closed |
 
 The S0 gate is the real go/no-go: it's the first point where predictions from this
 codebase are checked against the official Stormer implementation on real weights and

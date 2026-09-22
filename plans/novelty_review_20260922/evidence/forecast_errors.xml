@@ -1,0 +1,901 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/F+MdGwCG0m5dRHNswGesgbO5GUc</id>
+  <title>arXiv Query: search_query=(all:"forecast error" OR all:"error correction") AND (all:"test-time" OR all:memory OR all:context) AND (all:forecast OR all:dynamics) AND submittedDate:"202501010000 TO 202609222359"&amp;id_list=&amp;start=0&amp;max_results=35</title>
+  <updated>2026-09-22T02:56:44Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(all:%22forecast+error%22+OR+all:%22error+correction%22)+AND+((all:%22test-time%22+OR+(all:memory+OR+all:context))+AND+((all:forecast+OR+all:dynamics)+AND+submittedDate:%22202501010000+TO+202609222359%22))&amp;start=0&amp;max_results=35&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>35</opensearch:itemsPerPage>
+  <opensearch:totalResults>101</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2609.19768v1</id>
+    <title>OceanMoE: Structured Conditional Sparse Computation for Long-Horizon Multivariate Ocean Forecasting</title>
+    <updated>2026-09-17T06:36:39Z</updated>
+    <link href="https://arxiv.org/abs/2609.19768v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.19768v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multivariate ocean forecasting must exploit shared evolution in a coupled ocean system while adapting to the heterogeneous statistical and dynamical characteristics of different prediction variables and locations. Fully shared models may lack the flexibility to handle this heterogeneity, whereas fully independent models discard the common ocean context shared across variables. The key question is how to retain shared context in a unified model while allowing computation to specialize according to the prediction target and local state. We propose OceanMoE, a structured conditional sparse Mixture-of-Experts framework that combines sharing and specialization for multivariate ocean forecasting. OceanMoE fuses cross-variable information to construct target-specific local representations and uses them to perform content-conditioned sparse routing at each spatial location, with the number of active experts adapted to router confidence. In the decoder, routing is augmented with a learned geographic bias parameterized by spherical-harmonic spatial bases, while shared residual and seasonal pathways provide common cross-variable and month-dependent context. Experiments on long-horizon autoregressive ORAS5 forecasting show that OceanMoE lowers aggregate forecasting error in both evaluated settings and maintains lower geometric-mean normalized RMSE than the corresponding baselines over most later rollout months. Routing analyses further show that expert allocation varies with prediction targets and spatial locations. These results support structured conditional computation as a modeling strategy for balancing shared ocean context with adaptive specialization.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-17T06:36:39Z</published>
+    <arxiv:comment>15 pages, 4 figures. Yishun Zhu and Jian Wang contributed equally to this research</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Yishun Zhu</name>
+    </author>
+    <author>
+      <name>Jian Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.11206v1</id>
+    <title>CryptoL: Towards Scale Dominance and Physics Constraints Mitigation in Financial Multivariate Time Series Forecasting</title>
+    <updated>2026-09-10T08:12:59Z</updated>
+    <link href="https://arxiv.org/abs/2609.11206v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.11206v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Cryptocurrency forecasting presents a distinctive combination of extreme cross-asset scale heterogeneity, non-stationary dynamics, and structural dependencies among Open, High, Low, and Close (OHLC) variables. We present CryptoL, a unified framework designed to address these challenges within multivariate time-series forecasting. CryptoL evaluates forecasting error in context-normalized coordinates within the RevIN pipeline, preventing inverse normalization from introducing an additional squared-scale weighting into the MSE objective. We formally characterize this effect through the empirical risk and parameter-gradient geometry, establishing the conditions under which large-scale assets can disproportionately influence shared-model optimization. Beyond loss-space normalization, CryptoL examines channel-independent and channel-dependent normalization for OHLC data, showing that a shared channel-dependent affine transformation preserves candle-order relations that independent channel transformations need not preserve. The framework further incorporates scale-adaptive numerical stabilization to reduce distortions caused by a fixed normalization constant across assets spanning many orders of magnitude, together with a soft feasibility loss that penalizes violations of the defining OHLC inequalities. Experiments across heterogeneous cryptocurrency assets evaluate these components through controlled ablations and demonstrate improvements in forecasting accuracy, training stability, and the frequency of financially valid OHLC predictions relative to the considered baselines. CryptoL therefore provides an integrated approach to scale-balanced optimization, structure-preserving normalization, numerical stabilization, and constraint-aware cryptocurrency forecasting.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-10T08:12:59Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Yalda Taheri</name>
+    </author>
+    <author>
+      <name>Mohammad Hassan Heydari</name>
+    </author>
+    <author>
+      <name>Armon Rasooli</name>
+    </author>
+    <author>
+      <name>Maryam Amirshahkarami</name>
+    </author>
+    <author>
+      <name>Mohammad Ebrahim Mahdavi</name>
+    </author>
+    <author>
+      <name>Hossein Karshenas</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.08117v1</id>
+    <title>DriveMotion: A Large-Scale Multi-Source Benchmark for Driver Motion Sequence Modeling and Forecasting</title>
+    <updated>2026-09-08T01:49:18Z</updated>
+    <link href="https://arxiv.org/abs/2609.08117v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.08117v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Driver motion can provide cues to ongoing behavior, attention, and near-term driving intent. However, most existing driver-centric datasets focus on recognizing predefined driver behaviors from short video clips, while human motion forecasting benchmarks largely target motion outside the vehicle. We introduce DriveMotion, a multi-source benchmark for continuous driver motion forecasting. DriveMotion contains 393 hours of 133-keypoint motion sequences at 10 Hz from 360 drivers, integrating naturalistic driving data, curated public in-cabin videos, and the AIDE dataset into a unified representation with per-joint validity masks and synchronized driving context. Naturalistic driving contains long periods of limited body movement, making uniformly sampled evaluation dominated by persistence and less sensitive to brief but behaviorally meaningful motion. To address this, we use dynamics-anchored evaluation, placing forecasting windows around vehicle maneuvers identified offline from CAN signals without providing CAN to the model at inference. Arm motion in pre-maneuver windows is 3.4x greater than in route-matched stable-driving controls. On these anchored windows, learned models reduce forecasting error over persistence by up to 15%, while maneuver-enriched training improves forecast-derived Part-State F1 by 44% over the zero-motion reference. Training on the full multi-source corpus further reduces forecasting error on held-out web drivers by 38% compared with BATON-only training. DriveMotion provides identity-disjoint splits, fixed evaluation subsets, and reference implementations for reproducible evaluation of continuous driver motion forecasting. The dataset and benchmark are available at https://huggingface.co/datasets/HenryYHW/DriveMotion</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-08T01:49:18Z</published>
+    <arxiv:comment>21 pages, 7 figures, 18 tables. Dataset and benchmark: https://huggingface.co/datasets/HenryYHW/DriveMotion; project page: https://wangyuhang-cmd.github.io/drivemotion/</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Yuhang Wang</name>
+    </author>
+    <author>
+      <name>Chuheng Wei</name>
+    </author>
+    <author>
+      <name>Jingxin Yang</name>
+    </author>
+    <author>
+      <name>Xishun Liao</name>
+    </author>
+    <author>
+      <name>Hao Zhou</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.05235v1</id>
+    <title>PRICE: A Systematic Study of LLM Adaptation Choices for Bitcoin Price Forecasting</title>
+    <updated>2026-09-04T15:01:38Z</updated>
+    <link href="https://arxiv.org/abs/2609.05235v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.05235v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Cryptocurrency markets exhibit extreme volatility and non-stationary dynamics that challenge conventional forecasting methods. Although Large Language Models (LLMs) have shown promise for time series forecasting, the combined effects of adaptation choices remain largely unexplored in financial settings. This study introduces PRICE, a structured approach for adapting LLMs to short-term Bitcoin price forecasting. Built on a 4-bit quantized LLaMA-3 8B model, PRICE investigates how fine-tuning, numerical representation, prompting, inference, and decoding jointly influence forecasting performance. PRICE integrates Parameter-efficient fine-tuning with Low-Rank Adaptation (LoRA), Recursive multi-step inference, Integer-rounded numerical representation, Context-Task-Format (CTF) prompting, and Exact zero-temperature decoding. Ablation studies show that each component contributes to forecasting accuracy and reliability. LoRA enables efficient training on limited hardware, recursive inference improves accuracy, integer-rounded values reduce errors, CTF prompting outperforms Chain-of-Thought, Implicit Chain-of-Thought (iCoT), and few-shot prompting, and zero-temperature decoding improves stability during recursive forecasting. Comparative evaluation against eight transformer-based and time-series foundation models shows that PRICE achieves the lowest forecasting errors on both validation and test sets while maintaining robust performance across evaluation periods. Despite being based on a model primarily pretrained on text rather than time-series data, PRICE achieves competitive or superior performance relative to specialized foundation models. These findings demonstrate that adaptation choices critically determine the accuracy and robustness of LLMs for numerical time-series forecasting.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.NA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-04T15:01:38Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Maryam Fakhari</name>
+    </author>
+    <author>
+      <name>Mehran Safayani</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.03937v1</id>
+    <title>RATL: Learning from Retrieved Residuals for Robust Multivariate Time-Series Forecasting</title>
+    <updated>2026-09-03T14:44:31Z</updated>
+    <link href="https://arxiv.org/abs/2609.03937v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.03937v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Retrieval-augmented generation (RAG) complements parametric models with retrieved external evidence. The same idea is attractive for continuous-output regression, but directly reusing retrieved target values is often not robust when samples differ in output level, numerical scale, or local dynamics. Moreover, conventional forecasting pipelines generally use residuals for model optimization and error diagnosis, but do not retain individual historical residual examples as memory that can be accessed at inference time.For multivariate time-series forecasting, we propose RATL, a plug-in residual-retrieval and feedback-correction method. RATL freezes a base forecaster to construct retrieval keys and turns its historical forecast residuals into a train-only memory specific to that base model. At inference time, RATL retrieves residual trajectories from similar historical contexts subject to causal availability constraints, then uses a set-aware router operating over forecast blocks and variables to select and combine these trajectories. Experiments show that historical residuals matched to the current context contain reusable forecasting information and that RATL improves frozen base forecasters in most experimental settings. Ablations further show that learned routing strengthens raw residual feedback, while validation-based correction-strength selection limits residual over-injection.On real-world benchmarks, we use iTransformer as the primary frozen base forecaster, compare against multiple strong forecasting baselines, and test transferability across backbones. The results show that RATL can further improve base-forecaster performance in most settings.Overall, RATL shifts the retrieved object from historical target values to base-model-specific historical forecast errors, providing a plug-in, residual-memory-based paradigm for learned feedback correction in continuous-output forecasting.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-03T14:44:31Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Yuchen He</name>
+    </author>
+    <author>
+      <name>Yueyang Cang</name>
+    </author>
+    <author>
+      <name>Zhiyuan Ning</name>
+    </author>
+    <author>
+      <name>Ningyu Wang</name>
+    </author>
+    <author>
+      <name>Li Shi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.03703v1</id>
+    <title>Fractalizing spacetime: Floquet codes with fractonic excitations that are immobile in space and time</title>
+    <updated>2026-09-03T11:41:21Z</updated>
+    <link href="https://arxiv.org/abs/2609.03703v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.03703v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We generalize fractalization, a procedure for the construction of fracton models, from space to spacetime. We apply spacetime fractalization to construct fracton floquet codes with syndrome excitations that have limited mobility in space and time. This extends the notion of fracton order to intrinsically dynamical quantum phases of matter that are inequivalent to static fracton phases. We find spacetime type-II fracton floquet codes which have no topological excitations that are mobile in space or time. These codes exhibit an extreme form of quantum discrete time crystal order with response periods that scale exponentially in their linear system sizes. In this context, the no-strings rule that characterizes type-II fractons leads to a superlinear scaling of the floquet code fault-distance with time, potentially lowering the time overhead required for quantum error correction.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.str-el" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-03T11:41:21Z</published>
+    <arxiv:comment>14 + 3 pages, 15 figures</arxiv:comment>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Juliette Soule</name>
+    </author>
+    <author>
+      <name>Dominic J. Williamson</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.03048v1</id>
+    <title>Resource-adaptive distributed fault tolerance with very noisy Bell pairs</title>
+    <updated>2026-09-02T18:23:12Z</updated>
+    <link href="https://arxiv.org/abs/2609.03048v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.03048v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Distributed architectures have been proposed as a pathway to large-scale quantum computers. Combined with the need for fault-tolerance, such architectures require distributed quantum error correction (DQEC) and distributed logical gates. An important challenge is how to realize DQEC primitives in the setting where interaction between modules is restricted to shared Bell pairs that are significantly noisier than on-chip operations. We extend the framework known as fault tolerance by construction to this setting, deriving different strategies for handling the additional noise. Through fault-improvement we recover conventional entanglement distillation, and also find more dynamical protocols that enable space-time trade-offs. We show that integrated decoding halves the required distillation code distance compared to entanglement distillation implemented using separate decoding, thus requiring significantly fewer Bell pairs. As a main focus of the work, we synthesize efficient circuits for an important primitive in distributed fault tolerance: distributed stabilizer measurements. These circuits can be adapted to resource constraints, e.g. on the Bell pair generation rate or the space available for on-chip auxiliary qubits. Noting that full local fault-tolerance is not always needed to preserve the correct scaling of logical error rates, we further optimize the circuits depending on the surrounding context. We consider in particular the surface code and the color code, both as distributed memories and in the case of lattice surgery across separate modules. Here, robustness to certain hook and readout errors reduces the number of required Bell pairs even further, compared to the context-free setting. We numerically benchmark the resulting implementations under circuit level noise with additional interconnect noise.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-02T18:23:12Z</published>
+    <arxiv:comment>69 pages, 31 figures</arxiv:comment>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Moritz Schmidt</name>
+    </author>
+    <author>
+      <name>Martin Moureau</name>
+    </author>
+    <author>
+      <name>Benjamin Rodatz</name>
+    </author>
+    <author>
+      <name>Boldizsár Poór</name>
+    </author>
+    <author>
+      <name>Elie Mounzer</name>
+    </author>
+    <author>
+      <name>Linnea Grans-Samuelsson</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.20865v1</id>
+    <title>Parameters Overshadowed by Price Lags: Load, Climate, and Calendar Effects in ERCOT Day-Ahead Price Formation</title>
+    <updated>2026-08-21T08:33:11Z</updated>
+    <link href="https://arxiv.org/abs/2608.20865v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.20865v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Accurate electricity price forecasting is critical for smart grid stability, yet the heavy reliance on historical price lags in modern predictive models often obscures the fundamental physical drivers of market volatility. This paper proposes a regime-sensitive, explainable artificial intelligence (XAI) framework to unmask the hidden roles of load, climate, and calendar variables in the ERCOT Day-Ahead Market (2014-2024). Utilizing a Histogram-based Gradient Boosting Regressor (HGBR), we introduce a Suppression Ratio to quantify how price lags overshadow physical parameters. Our analysis reveals that while lags provide short-term memory during normal conditions, they fail to capture extreme dynamics; notably, their inclusion increased forecasting error (MAE/RMSE) during price spikes. By isolating these effects, the study revealed that price spikes are not merely the result of continuously rising temperatures, but rather emerge from the system reacting sharply within a specific temperature range. These findings underscore the importance of moving beyond lag-based models to uncover the true drivers of extreme price events.</summary>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-21T08:33:11Z</published>
+    <arxiv:comment>Accepted at IEEE SmartGridComm 2026</arxiv:comment>
+    <arxiv:primary_category term="eess.SY"/>
+    <author>
+      <name>Yunus Bicen</name>
+    </author>
+    <author>
+      <name>Eman Hammad</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.20164v1</id>
+    <title>Architecture and Compilation Co-Design for High-Rate Quantum Product Codes on Neutral Atom Arrays</title>
+    <updated>2026-08-20T15:20:53Z</updated>
+    <link href="https://arxiv.org/abs/2608.20164v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.20164v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Achieving fault-tolerant quantum computing at a practical scale demands quantum error correction (QEC) codes with high encoding rates. Quantum low-density parity-check (qLDPC) codes emerge as a promising candidate, especially given the rise of neutral atom arrays that provide dynamic long-range connectivity via atom movements. In general, synthesizing valid and efficient physical execution plans for QEC is a provably hard combinatorial problem, forming a critical compilation bottleneck that worsens as code sizes grow. To overcome this complexity, we focus on an important product family of qLDPC codes with dimension-reduction properties, and propose ONEX. This framework decomposes complex 2D physical execution planning into independent 1D subproblems, each solved to optimal execution depth within practical compilation time. First, we formulate the 1D execution plan with an explicit satisfiability modulo theories (SMT) encoding. This protocol produces provably depth-optimal solutions with substantial duration reduction. Second, we develop a multi-stage compilation pipeline featuring anytime optimization, movement compaction, and iterative feedback. This pipeline maintains practical wall-clock times while providing progressive refinement and on-demand retrieval of quality solutions. Third, we evaluate ONEX in the application of hypergraph product (HGP) code memory mapped onto neutral atom arrays, achieving 3.7x to 6.1x and 29.8x to 42.1x higher clock rates than the constructive 1D algorithm and the general 2D compiler, respectively, while scaling efficiently to codes with 2,500 data qubits. Finally, we extend ONEX to zoned layouts, revealing architectural insights into the associated trade-offs, and demonstrate its applicability to the broader lifted-product (LP) code family through a representative example.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-20T15:20:53Z</published>
+    <arxiv:comment>20 pages, 16 figures</arxiv:comment>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Adrian Liu</name>
+    </author>
+    <author>
+      <name>Wan-Hsuan Lin</name>
+    </author>
+    <author>
+      <name>Daniel Bochen Tan</name>
+    </author>
+    <author>
+      <name>Qian Xu</name>
+    </author>
+    <author>
+      <name>Jason Cong</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.10087v1</id>
+    <title>Long-lived memory effects in the defect bath of superconducting qubits</title>
+    <updated>2026-08-10T18:01:15Z</updated>
+    <link href="https://arxiv.org/abs/2608.10087v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.10087v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We reveal long-lived memory effects in the defect bath of a superconducting transmon qubit through electric-field tuning of two-level system (TLS) defects coupled to the qubit. Using a fast TLS mapping method we observe several hysteretic effects in the TLS environment with memory timescales of the order of seconds, far beyond the lifetimes of individual TLS defects. The observations can be explained by TLS coupling to electric field-polarised charge fluctuators in the defect bath. Our method enables detailed mapping of the dynamics of the bath's coupled microscopic degrees of freedom and the associated memory effects which can introduce temporally correlated noise. This information may be used to improve qubit-stabilisation and quantum error correction protocols.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-10T18:01:15Z</published>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Abhishek Agarwal</name>
+    </author>
+    <author>
+      <name>Masum Uddin</name>
+    </author>
+    <author>
+      <name>Shroya Vaidya</name>
+    </author>
+    <author>
+      <name>Lachlan P. Lindoy</name>
+    </author>
+    <author>
+      <name>Ehsaneh Daghigh Ahmadi</name>
+    </author>
+    <author>
+      <name>Tobias Lindström</name>
+    </author>
+    <author>
+      <name>Sebastian E. de Graaf</name>
+    </author>
+    <author>
+      <name>Ivan Rungger</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.04765v3</id>
+    <title>Explicit Language Memory for Long-Horizon Planning in Vision-Language-Action Models</title>
+    <updated>2026-09-17T04:13:43Z</updated>
+    <link href="https://arxiv.org/abs/2608.04765v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.04765v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Vision-language-action (VLA) models provide a unified paradigm for connecting visual perception, language understanding, and robotic control. However, existing VLA models still face major challenges in long-horizon tasks: sparse expert demonstrations constrain cross-task compositional generalization; the non-Markovian nature of long-horizon tasks makes it difficult for policies conditioned only on current observations to maintain temporal consistency; limited closed-loop error correction allows execution errors to accumulate; and end-to-end action fine-tuning may weaken the high-level semantic representations of vision-language model (VLM) backbones. To address these issues, we propose a hierarchical long-horizon VLA architecture with an explicit language-memory module. The central idea is to convert discrete temporal observations into a coherent textual memory sequence with temporal logic. The system is decoupled into a high-level VLM and a low-level VLA: the high-level VLM performs semantic reasoning through a visual question answering training paradigm, while the low-level VLA executes precise continuous control conditioned on subtask instructions and visual observations. The high-level VLM recursively updates both language memory and subtask instructions using the previous memory as a contextual anchor, enabling persistent temporal tracking and dynamic correction during long-horizon execution. We evaluate the proposed method in multiple simulation environments and conduct sim-to-real experiments on a real robotic platform. The results demonstrate that explicit language memory improves the success rate and robustness of VLA models on complex long-horizon tasks while providing an interpretable semantic account of the decision process.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-05T12:32:15Z</published>
+    <arxiv:comment>This submission has been withdrawn by the authors, because the manuscript was uploaded to arXiv without the awareness of the remaining co-authors</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Houze Xu</name>
+    </author>
+    <author>
+      <name>Jizhong Li</name>
+    </author>
+    <author>
+      <name>Ziyi Ye</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.01088v1</id>
+    <title>Twenty-one characterizations of reversible quantum channels</title>
+    <updated>2026-08-02T08:41:03Z</updated>
+    <link href="https://arxiv.org/abs/2608.01088v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.01088v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Reversible quantum channels play a fundamental role in quantum dynamics and quantum information processing. A quantum channel is reversible if there exists another quantum channel acting as its left inverse. Due to their intrinsic significance and wide applications, it is desirable to characterize reversible quantum channels from diverse perspectives. In this work, we study reversible quantum channels on finite-dimensional Hilbert spaces, with particular emphasis on the case of different input and output dimensions. We systematically present twenty-one equivalent characterizations of reversible quantum channels from algebraic, geometrical, and information-theoretical perspectives. Among these characterizations, some are well known, while others, implicit in the literature or formulated in other contexts, are clarified here; the Choi-state characterization is derived in this work. Specifically, we prove that the Choi states of reversible quantum channels admit three equivalent forms: the spectral, direct-sum, and tensor-product representations. These twenty-one equivalent characterizations establish a comprehensive framework for reversible quantum channels, provide diverse insights into the structural and information-theoretic properties of quantum channels, and facilitate applications of reversibility in quantum information processing such as quantum error correction, quantum teleportation, and quantum thermodynamics.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-02T08:41:03Z</published>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Nan Li</name>
+    </author>
+    <author>
+      <name>Yuan Li</name>
+    </author>
+    <author>
+      <name>Hanyu Yang</name>
+    </author>
+    <author>
+      <name>Shunlong Luo</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.25875v4</id>
+    <title>A2TTA: Anchored-and-Agile Test-Time Adaptation for Evolving Traffic Sensor Networks</title>
+    <updated>2026-08-31T05:07:54Z</updated>
+    <link href="https://arxiv.org/abs/2607.25875v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.25875v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Traffic forecasting is important for efficient traffic management and route planning in smart cities. Existing traffic forecasting studies typically assume fixed sensor graphs, overlooking the continuous evolution of real-world traffic networks, e.g., ongoing road network construction and evolving human mobility patterns. These dynamic changes can substantially degrade conventional forecasting models, motivating test-time adaptation (TTA) to efficiently adapt pretrained models during deployment. However, applying TTA to evolving traffic sensor networks remains challenging in two aspects. First, topology expansion introduces new sensors and connections, continuously reshaping the sensor graph. Second, tem- poral shifts vary in time scale and stability, requiring differentiated adaptation to long-term and short-term shifts. In this study, we address these challenges by proposing A2TTA, an Anchored-and-Agile Test-Time Adaptation framework for evolving traffic sensor networks, which transforms topology-induced forecasting errors into an expandable output calibration problem and separates tem- poral adaptation into persistent global correction and agile context-specific specialization. By jointly addressing topology evolution and multi-scale temporal shifts, A2TTA enables efficient and robust adaptation to continuously evolving traffic environments. Extensive experiments on ten real-world traffic networks demonstrate that A2TTA consistently improves forecasting performance across different backbones, datasets, and prediction horizons. Our code is available in https://github.com/lixus7/A2TTA.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-28T15:38:27Z</published>
+    <arxiv:comment>Under Review</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Du Yin</name>
+    </author>
+    <author>
+      <name>Xiachong Lin</name>
+    </author>
+    <author>
+      <name>Yue Tan</name>
+    </author>
+    <author>
+      <name>Jinliang Deng</name>
+    </author>
+    <author>
+      <name>Estrid He</name>
+    </author>
+    <author>
+      <name>Hao Xue</name>
+    </author>
+    <author>
+      <name>Flora D. Salim</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.20268v1</id>
+    <title>PoTRE: Test-Time Reasoning inspired by Cognitive Heterogeneity</title>
+    <updated>2026-07-22T15:20:53Z</updated>
+    <link href="https://arxiv.org/abs/2607.20268v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.20268v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>While Large Language Models (LLMs) excel at many tasks, they frequently struggle with complex reasoning that requires long-horizon planning and iterative error correction. Furthermore, standard single-stream prompting proves brittle when models encounter novel abstractions or rigorous domain constraints. We introduce PoTRE (Poly-Topological Reasoning Ensembles), a heterogeneous framework that decouples inference into four agents: (1) Adversarial Refinement Agent, (2) Hierarchical strategic Planning Agent, (3) Spectrum Search Agent, and (4) Direct Chain Agent. A final Task-Adaptive Aggregation Layer dynamically reconciles these perspectives -- via final candidate selection, semantic synthesis, or neuro-symbolic verification -- to produce a robust global solution. We evaluate PoTRE on three frontier benchmarks: ARC-AGI-2, Humanity's Last Exam (HLE), and PRBench Finance. PoTRE achieves state-of-the-art accuracy of 49.92% on HLE, surpassing the previous best official score. We demonstrate that this architectural heterogeneity achieves improved reasoning performance using similar or fewer inference tokens compared to heavily scaled homogeneous baselines.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-22T15:20:53Z</published>
+    <arxiv:comment>Accepted at Transactions on Machine Learning Research (TMLR 2026)</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <arxiv:journal_ref>Transactions on Machine Learning Research, 2026</arxiv:journal_ref>
+    <author>
+      <name>Anmol Kankariya</name>
+    </author>
+    <author>
+      <name>Sercan Ö. Arık</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.18530v1</id>
+    <title>Censoring-Aware In-Context Learning for Generalized Supplier Lead Time Estimation in Supply Chain Planning</title>
+    <updated>2026-07-20T21:45:43Z</updated>
+    <link href="https://arxiv.org/abs/2607.18530v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.18530v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Supplier lead time forecasting is a central input to material requirements planning, inventory optimization, and supply chain risk management. However, many industrial lead time datasets are naturally right-censored: at the time forecasts are required, some orders have not yet arrived. Standard regression and classification approaches discard this information, while conventional survival models require task-specific modeling. We propose LeadTime-ICL (LT-ICL), a censoring-aware in-context learning model for probabilistic lead time forecasting. LT-ICL combines a transformer backbone with a conditional normalizing-flow head, producing a full predictive distribution over lead times. The model is pretrained on synthetic right-censored lead time tasks, enabling in-context adaptation to new industrial datasets without task-specific parameter updates. We provide theoretical support for this formulation by showing that excess CRPS is bounded by prior misspecification and amortized approximation errors, providing clear direction for improving forecasting performance. We evaluate LT-ICL on 24 proprietary supply-chain datasets spanning seven industries. LT-ICL achieves the lowest point-forecasting error on 15 of the 24 datasets, and the lowest probabilistic forecasting error on 14 datasets, yielding the best average rank across both. These results support right-censored probabilistic forecasting as a practical formulation for supplier lead time prediction and demonstrate that pretrained in-context models can provide accurate, low-adaptation-cost forecasting for industrial planning systems.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-20T21:45:43Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Christopher Wang</name>
+    </author>
+    <author>
+      <name>Sebastien Ouellet</name>
+    </author>
+    <author>
+      <name>Behrouz Haji Soleimani</name>
+    </author>
+    <author>
+      <name>Ali Etemad</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.16042v1</id>
+    <title>Reducing Power Consumption of Embedded Dynamic Memories with ECCs</title>
+    <updated>2026-07-17T15:16:15Z</updated>
+    <link href="https://arxiv.org/abs/2607.16042v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.16042v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Gain-cell embedded dynamic random-access memory (GCRAM) offers dense and energy-efficient on-chip storage, but retention-time variations force frequent refresh operations to cover worst-case bits. Error-correction codes (ECCs) can alleviate this limitation by masking bit errors from weak cells and thereby reduce refresh cost. However, the trade-off between the additional access and logic energy introduced by ECCs and the power savings from longer refresh intervals is nontrivial, especially considering the wide range of available ECC options. To optimize overall power consumption, we propose an ECC selection method that combines a refresh-interval model with power analysis to identify the minimum-power ECC configurations under a given yield constraint. Across different memory bandwidths, activity factors, and read/write ratios, the evaluation results show that the best ECC option shifts from stronger codes in refresh-dominated operating regions to lower-overhead codes in access-dominated regions and achieves 46.8% to 94.8% reduction in total power relative to the no-ECC reference.</summary>
+    <category term="cs.IT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-17T15:16:15Z</published>
+    <arxiv:primary_category term="cs.IT"/>
+    <author>
+      <name>Wenqing Song</name>
+    </author>
+    <author>
+      <name>Yifei Shen</name>
+    </author>
+    <author>
+      <name>Andreas Burg</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.15705v1</id>
+    <title>A Benchmark for Electrical Load Forecasting Across Grid Levels: Time-Series Transformers Outperform Established Methods</title>
+    <updated>2026-07-17T07:32:52Z</updated>
+    <link href="https://arxiv.org/abs/2607.15705v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.15705v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Accurate load forecasting at multiple grid levels is essential for future smart grids, ranging from aggregated control area forecasts for balancing supply and demand to forecasts of individual end-consumer loads for demand-side management and energy management systems. We present a comprehensive benchmark for load forecasting across grid levels, comprising three datasets that represent a transmission system operator control area, low-voltage grid feeders, and individual end consumers. We evaluate ten methods for short-term load forecasting and find that Transformer-based approaches consistently outperform established methods, reducing forecast error by 6.6-10.7 %. To analyze the impact of architectural design, we introduce YAformer, a flexible Transformer architecture that integrates modifications from prior work and is optimized via hyperparameter optimization. However, the standard Transformer achieves superior performance, suggesting that these architectural modifications are not required for accurate load forecasting. We further evaluate the Transformer-based time-series foundation model Chronos-2, which demonstrates competitive zero-shot performance on two datasets but fails to accurately capture special events in the TSO data. Detailed analyses reveal model-specific strengths and weaknesses, and ablation studies highlight the importance of long input contexts, covariates and continuous retraining - aspects that are often overlooked in the time-series forecasting literature.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-17T07:32:52Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Matthias Hertel</name>
+    </author>
+    <author>
+      <name>Sebastian Pütz</name>
+    </author>
+    <author>
+      <name>Jonathan Kolar</name>
+    </author>
+    <author>
+      <name>Benjamin Schäfer</name>
+    </author>
+    <author>
+      <name>Ralf Mikut</name>
+    </author>
+    <author>
+      <name>Veit Hagenmeyer</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.18978v1</id>
+    <title>Code-Visible Liouvillian Modes and Coherent Logical Errors in Quantum Codes</title>
+    <updated>2026-07-16T19:45:46Z</updated>
+    <link href="https://arxiv.org/abs/2609.18978v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.18978v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Coherent Hamiltonian drifts and systematic errors can pass through quantum error correction differently than stochastic Pauli noise: they generate phase components of the logical channel that are lost under full Pauli twirling. We consider the Lindbladian dynamics of \(n\) physical qubits propagated through an effective logical channel of a fixed encoding, recovery, and decoding scheme. The work is methodological in character: standard ideas of observability and minimal realization from linear systems theory are applied to the channel \[
+  ω
+  \mapsto
+  Φ_t(ω)
+  =
+  \cD e^{t\cL}\cE(ω), \] where \(\cE\) encodes the logical state and \(\cD\) is the chosen recovery map with final decoding. The minimal code-visible space \(\cK_{\rm code}\) is defined as the Krylov closure of the decodable logical observables with respect to \(\cL^\dagger\); its observable factorization yields a minimal realization of the logical channel. In this form, the Knill--Laflamme conditions serve as a short-time consistency check, Pauli noise on stabilizer codes reduces to a chain on syndrome-logical classes, and the choice of recovery map acts as a spectral filter on the visible modes. For quantum memory, the same language yields an estimate of the storage time in terms of the dominant visible eigenvalues of the logical channel of the correction cycle. Particular attention is paid to the spectral signatures of coherent noise and to how these signatures depend on the chosen decoder.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-16T19:45:46Z</published>
+    <arxiv:comment>29 pages</arxiv:comment>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Marina Gordeychuk</name>
+    </author>
+    <author>
+      <name>Oleg Kiselev</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.13975v1</id>
+    <title>Universal Quantum Computation with Multi-Mode Schrödinger Cat States Stabilized by Non-Local Dissipation Engineering</title>
+    <updated>2026-07-15T16:01:38Z</updated>
+    <link href="https://arxiv.org/abs/2607.13975v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.13975v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Schrödinger cat states provide a hardware-efficient platform for bosonic quantum error correction by encoding logical information in protected manifolds of harmonic oscillators. While previous work has demonstrated the dissipative stabilization of multi-mode Schrödinger cat states as robust quantum memories, a framework for universal quantum computation has remained unavailable. Here we extend this approach by introducing a universal gate set for dissipatively stabilized multi-mode cat qubits. Using a chain of Kerr non-linear oscillators coupled through engineered non-local dissipation and an effective low-dimensional description, we show how arbitrary single-qubit control can be achieved through arbitrary rotation around the $X$-axis and $π/2$-rotation around the $Z$-axis. We further show how coupling two such stabilized arrays through just one oscillator on each respective array enables coherent entangling operations through implementation of the $XX(π/2)$ gate. Numerical simulations demonstrate high-fidelity gate dynamics and entanglement generation under realistic parameters. Finally, we analyze the effects of induced and intrinsic photon loss, disorder, and the validity regime of the effective low-dimensional theory. Our results establish dissipatively stabilized multi-mode Schrödinger cat states as a potential architecture for universal bosonic quantum computation.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-15T16:01:38Z</published>
+    <arxiv:comment>10 pages, 5 figures</arxiv:comment>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Jesper Lind-Olsen</name>
+    </author>
+    <author>
+      <name>Jonas Lidal</name>
+    </author>
+    <author>
+      <name>Tron Omland</name>
+    </author>
+    <author>
+      <name>Joakim Bergli</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.04691v1</id>
+    <title>From Open Loop to Closed Loop: A Test-Time Iterative Optimization Framework for Reference-Consistent Image Generation</title>
+    <updated>2026-07-06T05:36:30Z</updated>
+    <link href="https://arxiv.org/abs/2607.04691v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.04691v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>While controllable image generation has made significant strides by incorporating visual reference conditions, existing methods predominantly operate as open-loop systems. They inject control signals in a strictly feed-forward manner, failing to guarantee strict fidelity to the reference due to the absence of active feedback and error correction mechanisms. To address this fundamental limitation, we propose a novel test-time iterative optimization framework that reformulates reference-consistent generation as a closed-loop dynamic tracking problem. By treating the pre-trained generative model as a control plant, our framework employs a sensor-controller architecture driven by a modified Proportional-Integral-Derivative (PID) algorithm. This mechanism iteratively optimizes the latent control signals at test time based on the sensed discrepancy between the generated output and the reference target. Notably, this approach is entirely training-free, model-agnostic, and integrates seamlessly around existing diffusion pipelines. Extensive evaluations across ID-preserving, pose-controlled, and depth-controlled generation tasks validate the universality of our method. Empirical results demonstrate improvements over computation-matched open-loop baselines, achieving relative performance gains of up to 25.36\% for facial similarity, alongside spatial error reductions of up to 27.71\% for pose alignment and 28.50\% for depth consistency. More broadly, this work offers a new conceptual perspective: it demonstrates that controllable generation can be effectively managed as a dynamic feedback system, bringing the rigorous principles of classical control theory into the optimization of generative models. Code is available at https://github.com/zzdrill/From-Open-Loop-to-Closed-Loop.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-06T05:36:30Z</published>
+    <arxiv:comment>24 pages, 15 figures. Accepted at ECCV 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Baixuan Zhao</name>
+    </author>
+    <author>
+      <name>Xinyu Zhang</name>
+    </author>
+    <author>
+      <name>Huayu Zheng</name>
+    </author>
+    <author>
+      <name>Shuaicheng Liu</name>
+    </author>
+    <author>
+      <name>Xiongkuo Min</name>
+    </author>
+    <author>
+      <name>Guangtao Zhai</name>
+    </author>
+    <author>
+      <name>Xiaohong Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.02804v2</id>
+    <title>Fault-tolerant quantum computation with static atomic buses</title>
+    <updated>2026-09-04T03:15:04Z</updated>
+    <link href="https://arxiv.org/abs/2607.02804v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.02804v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Efficient quantum error correction and fault-tolerant quantum computing require scalable, high-fidelity long-range connectivity. In neutral-atom quantum computers, this is commonly achieved through atom transport, but shuttling introduces latency and motional heating that worsen with system size. Here, we introduce a neutral-atom architecture based on static atomic buses, in which auxiliary mediator atoms enable long-range entangling operations without qubit transport. The architecture naturally supports long-range stabilizer measurements in high-rate LDPC codes and transversal logical gates between neighboring surface-code patches, enabling a modular framework for efficient logical memories, Clifford computation, and magic-state distillation. To realize these capabilities, we co-design optimal-control protocols for bus-mediated controlled-Z gates that incorporate both microscopic neutral-atom dynamics and architectural constraints. We obtain smooth bus-mediated gates with fidelities approaching 99.9% and durations of a few hundred nanoseconds by combining time-optimal control with interaction-flatness and robustness constraints. Large-scale simulations of quantum error correction and logical entangling operations between neighboring surface-code patches predict more than an order-of-magnitude improvement in logical error rates compared with atom-shuttling architectures under realistic noise. The architecture achieves logical gate times of approximately 100 us and quantum-error-correction cycle times of about 1 ms for code distances d&lt;12. These results establish static atomic buses as a practical alternative to atom shuttling for scalable fault-tolerant neutral-atom quantum computing.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-02T22:34:55Z</published>
+    <arxiv:comment>27 pages, 10 figures, v2 - revised</arxiv:comment>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Matteo Bergonzoni</name>
+    </author>
+    <author>
+      <name>Laura Pecorari</name>
+    </author>
+    <author>
+      <name>Sam Norrell</name>
+    </author>
+    <author>
+      <name>Cody Poole</name>
+    </author>
+    <author>
+      <name>Guido Pupillo</name>
+    </author>
+    <author>
+      <name>Mark Saffman</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.01548v1</id>
+    <title>Evolutionary Feature Engineering for Structured Data</title>
+    <updated>2026-07-02T00:11:29Z</updated>
+    <link href="https://arxiv.org/abs/2607.01548v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.01548v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language models are increasingly used as open-ended search operators in evolutionary optimization. We introduce Evolutionary Feature Engineering (EFE), a framework for using LLM-based evolution to discover preprocessing transformations for structured data. EFE represents transformations as Python programs with a standardized fit/transform interface, allowing them to be inserted directly into existing machine learning pipelines. During evolution, candidate programs are refined using dataset context, summary statistics, and downstream performance feedback on validation set. We instantiate EFE in two settings. For time-series forecasting, EFE-Time learns invertible, dataset-specific normalizations that improve off-the-shelf time-series foundation models. It reduces forecasting errors (MASE, WQL, MAE) 3% or more when averaged across datasets and improvements are as much as 19% on the COVID-Deaths dataset. Notably, these improvements occur with recent TSFMs such as Chronos-2. For tabular prediction, EFE-Tab evolves compact feature programs that add useful interpretable features and remove redundant ones, improving or matching existing LLM-based feature-engineering methods. We found EFE-Tab to be particularly effective on classical decision trees, where small sets of evolved features yield competitive accuracy while preserving interpretability. Overall, EFE demonstrates that LLM-based evolution can improve both accuracy and interpretability when automatically tackling structured data.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-02T00:11:29Z</published>
+    <arxiv:comment>9 page main content, 41 pages in total</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Ege Onur Taga</name>
+    </author>
+    <author>
+      <name>Yilin Zhuang</name>
+    </author>
+    <author>
+      <name>M. Emrullah Ildiz</name>
+    </author>
+    <author>
+      <name>Petros Mol</name>
+    </author>
+    <author>
+      <name>Abhimanyu Das</name>
+    </author>
+    <author>
+      <name>Karthik Duraisamy</name>
+    </author>
+    <author>
+      <name>Samet Oymak</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.19026v1</id>
+    <title>A Hybrid LSTM--Vision Transformer Architecture for Predicting HRRR Forecast Errors</title>
+    <updated>2026-06-17T12:51:46Z</updated>
+    <link href="https://arxiv.org/abs/2606.19026v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.19026v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Forecast errors in high-resolution numerical weather prediction (NWP) systems are often linked to unresolved planetary boundary layer (PBL) processes, convection, terrain-induced circulations, and other vertically structured atmospheric phenomena. Previous work demonstrated that Long Short-Term Memory (LSTM) networks can successfully predict forecast errors in the High-Resolution Rapid Refresh (HRRR) model using mesonet observations, but we believe performance degradation is linked to periods of complex vertical atmospheric evolution. To address this limitation, we develop a hybrid LSTM-Vision Transformer (LSTM-ViT) framework that combines temporal sequence learning from surface observations with atmospheric profiles from the New York State Mesonet profiler network. The LSTM-ViT framework is trained to predict HRRR hourly precipitation, 10 m wind speed, and 2 m temperature forecast errors at individual mesonet stations. Across all three predictors, incorporation of profiler-derived atmospheric structure improves forecast error prediction skill relative to the baseline LSTM architecture, with the largest gains occurring at shorter forecast lead times and during periods of enhanced PBL activity. Improvements are particularly pronounced for precipitation forecast error, where the LSTM-ViT framework achieves approximately a twofold increase in predictive skill relative to the baseline LSTM while better capturing convectively driven error evolution and reducing degradation associated with PBL processes. These results demonstrate that combining temporal sequence learning with vertically informed attention mechanisms provides a physically meaningful pathway for improving forecast error prediction in operational NWP systems. Our research offers forecasters enhanced guidance regarding model bias and forecast confidence.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-17T12:51:46Z</published>
+    <arxiv:comment>This manuscript is a preprint and has been submitted for peer review to the Artificial Intelligence for the Earth Systems journal. The content is subject to change based on the outcome of the peer review process and should not be considered final or definitive. Copyright in this Work may be transferred without further notice</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>David Aaron Evans</name>
+    </author>
+    <author>
+      <name>Jay C. Rothenberger</name>
+    </author>
+    <author>
+      <name>Kara J. Sulia</name>
+    </author>
+    <author>
+      <name>Nick P. Bassill</name>
+    </author>
+    <author>
+      <name>Chris D. Thorncroft</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.15701v1</id>
+    <title>Robust Transformer-Based One-Step Stock Index Forecasting via Shifted Data Augmentation</title>
+    <updated>2026-06-14T09:30:41Z</updated>
+    <link href="https://arxiv.org/abs/2606.15701v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.15701v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Transformers have shown remarkable success in sequence modeling, yet their direct application to financial time series remains challenging due to noisy signals, short-memory dynamics, and distributional shifts. This paper proposes a modified Transformer architecture for one-step stock index forecasting, combined with advanced learning-rate scheduling and a novel Shifted Data Augmentation (SDA) technique. We evaluate the proposed framework on two benchmark stock index datasets, VN30 and S&amp;P 500. Experimental results demonstrate that cosine annealing with warmup consistently improves forecasting accuracy over the generalized inverse-power scheduler. Furthermore, SDA substantially reduces forecasting errors and run-to-run variability while improving robustness to hyperparameter selection. The combination of cosine annealing scheduling and SDA achieved the best performance on both datasets, indicating that data augmentation can play a more important role than increasing model complexity in Transformer-based financial forecasting. These findings provide a practical and computationally efficient approach for robust stock index forecasting in noisy financial environments.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-14T09:30:41Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Tien Thanh Thach</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.14034v1</id>
+    <title>All about quantum error correction: distillation, mitigation, self-correction and beyond</title>
+    <updated>2026-06-12T02:17:44Z</updated>
+    <link href="https://arxiv.org/abs/2606.14034v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.14034v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this work, it is shown that many quantum error-manipulating techniques, such as distillation, error mitigation, and dynamical decoupling, are special cases of the most general framework for quantum error correction. This unifying perspective is achieved by extending quantum error correction to include state-adaptive and channel-adaptive settings, as well as multi-stage coding scenarios. Based on this insight, a model of self-correcting quantum memory is also proposed. This work clarifies the relationship among these techniques and illustrates, through explicit constructions, how the unified perspective can guide the design of reliable quantum information systems.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.str-el" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-12T02:17:44Z</published>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>D. -S. Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.12687v1</id>
+    <title>Forecasting Is Not Attribution: Localizing Decoder Bypass in Graph-Based Neural Marketing Mix Models</title>
+    <updated>2026-06-10T21:21:46Z</updated>
+    <link href="https://arxiv.org/abs/2606.12687v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.12687v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Marketing mix models are used to forecast business outcomes and to attribute those outcomes to marketing channels, but these goals are not equivalent. We study a failure mode in graph-based neural MMM called attribution bypass: a high-capacity decoder can obtain low forecasting error through target autoregression, dense communication, co-movement, context, or latent memory while failing to route counterfactual sensitivity through the graph used as the attribution object. We introduce DICE-MMM as a bounded diagnostic and training framework. We do not claim that observational neural MMM identifies causal effects. Instead, DICE separates three questions often conflated in graph-based MMM: graph recovery, forecasting accuracy, and whether the trained decoder's perturbation-induced influence is graph aligned. Stage 1 trains a graph encoder with a restricted graph-mediated decoder. Stage 2 freezes the selected encoder and trains a graph-safe latent decoder whose cross-node communication must pass through the supplied graph. Decoder use is evaluated with CIG, AR-CIG, and graph-swap tests. Across controlled R/d/T swaps and an external multi-graph rawlog stress test, DICE improves stable graph recovery over CausalMMM. The experiments show that forecasting accuracy is not an attribution certificate: in a sparse-target benchmark, no-graph and full-graph decoders achieve MSE@7 around 0.004 while AR-CIG nAUPRC remains near or below zero, whereas an oracle graph reaches 0.807 +/- 0.129 at comparable MSE. Frozen graph-swap localizes the bottleneck: the same DICE-hard-trained decoder moves from nAUPRC -0.044 +/- 0.006 under learned graph inputs to 0.894 +/- 0.027 with the oracle graph. The contribution is a stress test and failure-localization framework showing that low MSE can hide attribution bypass and that the unresolved bottleneck is graph-support selection, not forecasting or decoder capacity.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-10T21:21:46Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Yunbo Wang</name>
+    </author>
+    <author>
+      <name>Bolbi Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.08601v1</id>
+    <title>InA-Probe: Instruction-Aware Active Probing for Time Series Forecasting with LLMs</title>
+    <updated>2026-06-07T12:27:13Z</updated>
+    <link href="https://arxiv.org/abs/2606.08601v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.08601v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large Language Models (LLMs) have recently demonstrated impressive potential for time series forecasting. However, existing methods predominantly rely on passive modality alignment or static task reprogramming, which often fail to capture fine-grained, non-stationary temporal patterns or to adapt to nuanced task intents. In this paper, we propose Instruction-aware Active Probing (InA-Probe), which shifts the paradigm from passive alignment toward an active, instruction-driven probing mechanism. Specifically, we design a Multi-Level Instruction Injection mechanism that enriches the model with both global task objectives and fine-grained, patch-level semantic priors. Building on this, an Adaptive Query Generation module produces sample-specific probes that are dynamically modulated by the temporal context. These probes are then refined through a dual-stage attention process: they first internalize task-specific intents via Instruction-Aware Self-Attention, and subsequently interrogate the projected temporal representations through Temporal Cross-Attention to extract salient patterns. Comprehensive experiments on seven real-world benchmarks show that InA-Probe consistently outperforms state-of-the-art deep learning and LLM-based baselines, excelling in both one-for-all generalization and zero-shot transfer while reducing forecasting error by up to 37\% in challenging cross-domain scenarios. Ablation studies further confirm that the synergy between adaptive querying and fine-grained instructions is key to unlocking the reasoning power of LLMs for complex time series.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-07T12:27:13Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Peiliang Gong</name>
+    </author>
+    <author>
+      <name>Emadeldeen Eldele</name>
+    </author>
+    <author>
+      <name>Chenyu Liu</name>
+    </author>
+    <author>
+      <name>Ziyu Jia</name>
+    </author>
+    <author>
+      <name>Yi Ding</name>
+    </author>
+    <author>
+      <name>Xinliang Zhou</name>
+    </author>
+    <author>
+      <name>Lianchao Gu</name>
+    </author>
+    <author>
+      <name>Qi Zhu</name>
+    </author>
+    <author>
+      <name>Yang Liu</name>
+    </author>
+    <author>
+      <name>Daoqiang Zhang</name>
+    </author>
+    <author>
+      <name>Xiaoli Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.05664v1</id>
+    <title>Gauging the Spacetime Code</title>
+    <updated>2026-06-04T03:47:21Z</updated>
+    <link href="https://arxiv.org/abs/2606.05664v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.05664v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In recent years, the spacetime code has arisen as a candidate for a unifying view of fault tolerance in space and time. On the other hand, the recent study of dynamical phases has increasingly turned its attention to fault tolerance as a notion of a dynamically stable process. In this work, I explore one pathway between the two, achieved by gauging the spacetime code. This gives rise to a lattice gauge theory that inherits the elements of fault tolerance associated with a circuit, with Gauss laws corresponding to equivalence relations between configurations of spacetime errors and Wilson loops corresponding to detectors. The obtained gauge theory finds a surprisingly wide array of applications, from quantum error correction to condensed matter physics, and even learning theory: (1) It contains in its description foliated computation, and hence gives rise to one version of a gauge theory for measurement-based quantum computation. (2) For a class of topologically ordered mixed states, it gives us a gauge-theoretic language to describe the classical memory associated with the state. (3) The gauge-invariant observables of the theory which describe detectors also coincide with the learnable degrees of freedom of circuit Pauli noise.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-04T03:47:21Z</published>
+    <arxiv:comment>40 pages, 17 figures</arxiv:comment>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Gideon Lee</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.05150v1</id>
+    <title>Multi-Column RBF Neural Network Using Adaptive and Non-Adaptive Particle Swarm Optimization</title>
+    <updated>2026-06-03T17:53:48Z</updated>
+    <link href="https://arxiv.org/abs/2606.05150v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.05150v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The radial basis function neural network (RBFN) trained with a gradient descending algorithm provides an effective fully connected structure in both shallow and deep networks. The error correction (ErrCor), a state-of-the-art gradient-based training method, selects optimal hidden units to improve accuracy. Alternatively, as a population-based algorithm, the particle swarm optimization algorithm (PSO) uses the swarm experience to optimize RBFN parameters, offering global search and robustness to local minima. Adaptive PSO (APSO) has emerged as an improved variant of PSO. APSO algorithm improves convergence speed by dynamically adjusting swarm parameters during optimization. Both ErrCor and PSO demonstrate improved results and competitive convergence. However, with large datasets, these methods face scalability challenges such as excessive kernel computations and large hidden layer structures. A recent multi-column RBFN approach (MCRN) improves ErrCor performance by deploying small RBFNs in a parallel system. Inspired by MCRN's success, we propose two novel approaches to improve PSO performance: the multi-column RBFN with PSO (MC-PSO) and the multi-column RBFN with APSO (MC-APSO). These methods introduce parallel RBFN structures trained using evolutionary swarm methods. Each RBFN is independently trained on a specific spatial subset of the dataset using either PSO or APSO algorithms. These resulting specialist-trained RBFNs are tailored to their respective subsets. During testing, only selected RBFNs, where the test instance neighbors are located, contribute to the multi-column output. This specialization improves accuracy, while parallelism enhances speed. We evaluate the proposed methods on various benchmark datasets. The MC-PSO and MC-APSO outperform ErrCor, PSO, APSO, and MCRN in terms of accuracy and recall. They also demonstrate faster training and testing times in most experiments.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-03T17:53:48Z</published>
+    <arxiv:comment>15 Page, Under Review</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Ammar Hoori</name>
+    </author>
+    <author>
+      <name>Yuichi Motai</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.24100v1</id>
+    <title>Bit flips, saturation, and quantum chaos in dissipative cat qubits</title>
+    <updated>2026-05-22T18:05:44Z</updated>
+    <link href="https://arxiv.org/abs/2605.24100v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.24100v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Bosonic cat qubits promise hardware-efficient quantum error correction because their logical bit-flip rate is exponentially suppressed with the photon number of the cat state. However, several experiments report a saturation of this suppression at large photon numbers, thus limiting the achievable protection. Combining quantum-trajectory simulations, semiclassical analysis, and Liouvillian spectral methods, we investigate the properties of bit flips in realistic dissipative cat qubits, where a memory mode hosting quantum information interacts with a dissipative buffer cavity. We show that bit flips are dynamical processes inherently involving both the memory and buffer, and therefore cannot be captured by single-mode approximate descriptions. We identify a reflection symmetry, resulting in a phase-locking condition at the semiclassical level and for quantum trajectories, as the main requirement for regular bit-flip dynamics. Its breakdown is the origin of the saturation, and we find that it occurs when two conditions are met. First, the adiabatic approximation, where the state of the buffer instantaneously follows that of the memory, must not be valid, which typically happens at large photon numbers. Second, key parameters such as the cross-Kerr interaction and dephasing must be present, leading to irregular dynamics in which memory fluctuations are amplified by the buffer during bit flips. In this regime, we find that bit flips manifest as chaotic bursts within otherwise regular dynamics, as evidenced by both changes in the topology of quantum trajectories and in the Liouvillian spectrum and its associated eigenmodes involved in these switching events. Finally, we verify our predictions against experimental data, highlighting the detrimental role of dissipative chaotic behavior in bosonic error-correcting codes.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-22T18:05:44Z</published>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Filippo Ferrari</name>
+    </author>
+    <author>
+      <name>Joachim Cohen</name>
+    </author>
+    <author>
+      <name>Vincenzo Savona</name>
+    </author>
+    <author>
+      <name>Fabrizio Minganti</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.21088v1</id>
+    <title>Reviving Error Correction in Modern Deep Time-Series Forecasting</title>
+    <updated>2026-05-20T12:22:18Z</updated>
+    <link href="https://arxiv.org/abs/2605.21088v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.21088v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Modern deep-learning models have achieved remarkable success in time-series forecasting. Yet, their performance degrades in long-term prediction due to error accumulation in autoregressive inference, where predictions are recursively used as inputs. While classical error correction mechanisms (ECMs) have long been used in statistical methods, their applicability to deep learning models remains limited or ineffective. In this work, we revisit the error accumulation problem in deep time-series forecasting and investigate the role and necessity of ECMs in this new context. We propose a simple, architecture-agnostic error correction model that can be integrated with any existing forecaster without requiring retraining. By explicitly decomposing predictions into trend and seasonal components and training the corrector to adjust each separately, we introduce the Universal Error Corrector with Seasonal-Trend Decomposition (UEC-STD), which significantly improves correction accuracy and robustness across 4 backbones and 10 datasets. Our findings provide a practical tool for enhancing forecasts while offering new insights into mitigating autoregressive errors in deep time-series models. Code is available at https://github.com/DA2I2-SLM/UEC-STD.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-20T12:22:18Z</published>
+    <arxiv:comment>27 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Minh Hoang Nguyen</name>
+    </author>
+    <author>
+      <name>Dai Do</name>
+    </author>
+    <author>
+      <name>Huu Hiep Nguyen</name>
+    </author>
+    <author>
+      <name>Dung Nguyen</name>
+    </author>
+    <author>
+      <name>Kien Do</name>
+    </author>
+    <author>
+      <name>Hung Le</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.24019v1</id>
+    <title>MGVQ: Synergizing Multi-dimensional Sensitivity-Aware and Gradient-Hessian Fusion for Vector Quantization</title>
+    <updated>2026-05-20T06:11:25Z</updated>
+    <link href="https://arxiv.org/abs/2605.24019v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.24019v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Vision-Language Models (VLMs) achieve outstanding performance, yet their huge model size severely hinders deployment on edge devices with limited resources. As an efficient model compression technique, vector quantization (VQ) excels in ultra-low-bit representation, which maps model weights to discrete codewords in a compact codebook to cut memory consumption and transmission overhead while preserving model capability. Direct VQ application to VLMs still has two core limitations. First, cross-modality weight distribution differences brought by visual and textual inputs cannot be well fitted by a single unified codebook. Second, current second-order error compensation ignores first-order gradient information, causing weight deviation from pre-trained optimal states, gradient drift and biased compensation results. This work proposes MGVQ, a novel vector quantization framework integrating multi-dimensional sensitivity perception and gradient-Hessian fusion. It consists of two core modules: sensitivity-guided structured mixed-precision quantization dynamically assigns different bit-widths according to channel sensitivity via combined global and local sensitivity analysis for refined resource allocation; gradient-aware second-order error compensation embeds first-order gradients into error correction, and adopts Kronecker and Block-LDL decomposition to ensure low computational cost. Extensive experiments on mainstream VLMs including LLaVA-onevision, InternVL2 and Qwen2-VL verify the effectiveness of MGVQ. In 2-bit quantization settings, MGVQ surpasses existing advanced post-training quantization methods significantly, achieving a maximum accuracy improvement of 4.9 points (71.4% vs 67.0% on InternVL2-26B). The proposed method realizes stable and efficient ultra-low-bit VLM quantization, greatly promoting the practical deployment of multimodal large models in resource-limited environments.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-20T06:11:25Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Zhong Wang</name>
+    </author>
+    <author>
+      <name>Zukang Xu</name>
+    </author>
+    <author>
+      <name>Xing Hu</name>
+    </author>
+    <author>
+      <name>Dawei Yang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.19748v2</id>
+    <title>Memory-Augmented Reinforcement Learning Agent for CAD Generation</title>
+    <updated>2026-08-11T08:01:49Z</updated>
+    <link href="https://arxiv.org/abs/2605.19748v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.19748v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Automatic generation of computer-aided design (CAD) models is a core technology for enabling intelligence in advanced manufacturing. Existing generation methods based on large language models (LLMs) often fall short when handling complex CAD models characterized by long operation sequences, diverse operation types, and strong geometric constraints, primarily because reasoning chains break and effective error-correction mechanisms are lacking. To address this problem, this paper proposes a memory-augmented reinforcement learning framework for CAD generation agents. The framework encapsulates the underlying geometric kernel into a structured toolchain callable by the agent and builds a closed-loop mechanism of design intent understanding, global planning, execution, and multi-dimensional verification. It also designs a dual-track memory module consisting of a case library and a skill library, and proposes a dynamic utility retrieval algorithm. By introducing reinforcement learning into retrieval and policy optimization, the agent can effectively avoid retrieval traps in which examples are semantically similar but geometrically infeasible, enabling online self-correction and continual evolution without additional large-scale annotated data. Experiments show that the proposed method significantly improves both the success rate and geometric consistency on complex CAD model generation tasks.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-19T12:16:31Z</published>
+    <arxiv:comment>We are withdrawing this manuscript because we have identified issues in the current analysis that require substantial revision. Until these issues are resolved, we do not consider the present version suitable for citation</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Yin Xiaolong</name>
+    </author>
+    <author>
+      <name>Liu Yu</name>
+    </author>
+    <author>
+      <name>Shen Jiahang</name>
+    </author>
+    <author>
+      <name>Lu Xingyu</name>
+    </author>
+    <author>
+      <name>Ni Jingzhe</name>
+    </author>
+    <author>
+      <name>Fan Fengxiao</name>
+    </author>
+    <author>
+      <name>Sang Fan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.18259v1</id>
+    <title>Caring Without Feeling: Affective Dynamics as the Control Layer of Human-AI Agent Collaboration</title>
+    <updated>2026-05-08T05:10:38Z</updated>
+    <link href="https://arxiv.org/abs/2606.18259v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.18259v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>AI agents that plan, retain memory across sessions, invoke external tools and act with partial autonomy are transforming human--AI collaboration. Research on affective computing, simulated empathy in large language models, trust in automation and AI safety has illuminated important design principles, yet these literatures remain fragmented. No integrated account explains how affective cues operate within agentic collaboration -- settings in which humans delegate, monitor and correct consequential tasks. This Review synthesises computational and interactional mechanisms of affective dynamics: the processes through which affective cues, emotion-like behaviour and perceived agent affect shape trust calibration, delegation decisions, error correction, dependence and governance. We trace how model-generated affective signals enter interaction loops that govern reliance, repair and oversight, and propose a framework that treats affect not as an internal property of AI but as a coordination layer through which humans and agents negotiate capability, uncertainty and responsibility. The framework provides a foundation for calibrated measurement, purposeful design and informed governance.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-08T05:10:38Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Junjie Xu</name>
+    </author>
+    <author>
+      <name>Xingjiao Wu</name>
+    </author>
+    <author>
+      <name>Zihao Zhang</name>
+    </author>
+    <author>
+      <name>Yujia Xu</name>
+    </author>
+    <author>
+      <name>Yuzhe Yang</name>
+    </author>
+    <author>
+      <name>Jin Zhu</name>
+    </author>
+    <author>
+      <name>Luwei Xiao</name>
+    </author>
+    <author>
+      <name>Wen Wu</name>
+    </author>
+    <author>
+      <name>Liang He</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.05978v3</id>
+    <title>Efficient event-driven retrieval in high-capacity kernel Hopfield networks</title>
+    <updated>2026-09-15T08:57:36Z</updated>
+    <link href="https://arxiv.org/abs/2605.05978v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.05978v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>High-capacity associative memory models, such as Kernel Logistic Regression (KLR) Hopfield networks, have demonstrated strong storage capabilities but typically rely on computationally expensive synchronous updates. This reliance poses a bottleneck for deployment on energy-efficient, event-driven neuromorphic hardware. In this paper, we investigate the asynchronous retrieval dynamics of KLR Hopfield networks. We show empirically that, under appropriately tuned kernel parameters, asynchronous sequential updates exhibit trajectories that are statistically indistinguishable from those of synchronous dynamics, while maintaining high recall accuracy within the tested regime for random patterns. Furthermore, we find that the asynchronous network achieves empirical storage capacities approaching $P/N \approx 30$ in static random pattern regimes, exceeding classical limits. To evaluate computational efficiency, we analyze the total number of state transitions (bit flips) required for error correction. The results show that the network converges using a number of events close to the initial Hamming distance from the target pattern, without observable spurious oscillations. These findings suggest that the large-margin attractors induced by KLR learning create a smooth energy landscape suited for sparse, event-driven computation, providing a basis for scalable and low-power associative memory on neuromorphic architectures.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-07T10:21:18Z</published>
+    <arxiv:comment>12 pages, 5 figures. Accepted by NOLTA, IEICE</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Akira Tamamori</name>
+    </author>
+  </entry>
+</feed>

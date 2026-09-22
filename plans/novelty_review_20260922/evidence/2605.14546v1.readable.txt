@@ -1,0 +1,641 @@
+Discovering Physical Directions in Weight Space: Composing Neural PDE Experts
+
+Recent advances in neural operators have made partial differential equation (PDE) surrogate modeling increasingly scalable and transferable through large-scale pretraining and in-context adaptation. However, after a shared operator is fine-tuned to multiple regimes within a continuous physical family, it remains unclear whether the resulting weight-space updates merely form isolated regime experts or reveal reusable physical structure. Starting from a shared family anchor, we fine-tune low- and high-regime endpoint experts and show that their updates can be separated into a family-shared adaptation and a direction aligned with the underlying physical parameter. This separation reinterprets endpoint experts as finite-difference probes of a local physical direction in weight space, explaining why static averaging can interpolate between regimes but attenuates endpoint-specific physics. Building on this perspective, we propose Calibration-Conditioned Merge (CCM) , a post-hoc coordinate readout method for composing neural PDE experts along this physical direction. Given physical metadata, a calibrated coordinate mapping, or a short observed rollout prefix, CCM infers the target composition coordinate and deploys a single merged checkpoint for the remaining rollout. This enables training-free regime transfer without ensembling, routing, or target-regime-specific fine-tuning. We evaluate CCM on the reaction–diffusion system, viscosity-parameterized two-dimensional Navier–Stokes equations, and radial dam-break dynamics. Across these benchmarks, CCM achieves its strongest gains in extrapolative regimes, reducing out-of-distribution rollout error relative to the family anchor by 54.2%, 42.8%, and 13.8%, respectively. Further experiments across FNO scales, a DPOT-style backbone, and ablations confirm that endpoint fine-tuning is not arbitrary checkpoint drift, but reveals a calibratable physical direction for training-free transfer across PDE regimes.
+
+1 Introduction
+
+Neural operators have emerged as a key methodological framework for constructing efficient surrogate solvers for parametric partial differential equations (PDEs) [ 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ] . Whereas early work often targeted narrow equation classes and limited parameter ranges, real scientific problems [ 11 , 12 , 1 , 13 , 14 ] require surrogate solvers that remain accurate and stable under changes in material and model coefficients, domain geometry, boundary conditions, spatial and temporal resolution, and overall simulation regime. To improve such transferability, recent work has advanced PDE foundation models [ 15 , 16 , 17 , 18 , 19 , 20 , 21 ] as well as physics-oriented benchmarks and datasets [ 22 , 23 , 24 ] spanning diverse governing equations, geometries, and physical regimes. These developments make neural operators increasingly scalable and reusable, but they leave open a basic question about adaptation: after a shared operator is fine-tuned to multiple regimes within the same physical family, do the resulting weight updates merely define isolated regime experts, or do they reveal reusable physical structure?
+
+Adaptation across physical regimes remains difficult. A single shared base solver may perform well near its training distribution, but its rollout accuracy often deteriorates when key problem parameters, such as viscosity or diffusivity, move into out-of-distribution (OOD) regimes [ 25 , 26 , 27 , 28 , 29 , 30 , 31 , 32 , 33 ] . Existing adaptation strategies largely follow two paths. The first learns conditional operators that take regime information as input [ 3 , 34 , 15 , 16 , 18 ] , but this requires the architecture, training corpus, and conditioning variables to cover the relevant physical state space with sufficient fidelity. The second fine-tunes a shared base solver into multiple regime-specific experts [ 25 , 26 , 27 , 28 , 29 , 30 , 31 , 32 , 33 ] , which can reuse an existing model but produces a fragmented set of checkpoints and offers no principled way to compose them for unseen regimes. Generic model-merging methods provide useful tools for combining fine-tuned models [ 35 , 36 , 37 , 38 , 39 , 40 , 41 , 42 , 43 ] , yet they typically treat downstream tasks as unordered and select merge coefficients as validation-tuned weights rather than as physically meaningful coordinates.
+
+In this paper, we revisit expert fine-tuning from a physical-coordinate perspective. In a parametric PDE family, downstream regimes are not arbitrary tasks but ordered points along an underlying physical axis. If the ideal solver changes smoothly along this axis, then experts fine-tuned from a common family anchor may trace a local trajectory in weight space. Endpoint experts can therefore be viewed as finite-difference probes of how the shared solver should change from low to high physical regimes. This leads to our central question: do same-anchor PDE experts simply represent isolated checkpoints, or do their endpoint–anchor residuals define a reusable direction aligned with the underlying physical parameter?
+
+We answer this question by decomposing low- and high-regime endpoint updates relative to the same anchor. The mean endpoint residual captures adaptation shared across the PDE family, while the signed residual contrast defines a candidate physical direction in weight space. This decomposition explains why static averaging can be effective when the shared component dominates, but can also attenuate endpoint-specific physics when the target regime requires a directed shift along the physical axis. It also turns expert composition into a calibrated coordinate-selection problem: rather than choosing among isolated checkpoints, we can compose a single checkpoint at the coordinate corresponding to the target regime.
+
+Building on this perspective, we propose C alibration- C onditioned M erge ( CCM ), a post-hoc coordinate readout method for training-free transfer across PDE regimes. Given either physical metadata, a calibrated coordinate mapping, or a short observed rollout prefix, CCM infers a target composition coordinate along the endpoint-defined direction and deploys one merged checkpoint for the remaining rollout. The procedure requires no target-regime fine-tuning, dynamic expert routing, or inference-time ensembling. Thus, CCM is not merely a merging heuristic; it operationalizes the hypothesis that same-anchor endpoint fine-tuning exposes a calibratable physical direction in weight space.
+
+We evaluate CCM on reaction–diffusion dynamics, viscosity-parameterized two-dimensional Navier–Stokes equations, and radial dam-break dynamics. Across these benchmarks, endpoint residuals consistently separate family-shared solver adaptation from signed physical variation. CCM achieves its strongest gains in extrapolative regimes, reducing OOD rollout error relative to the family anchor by 54.2%, 42.8%, and 13.8%, respectively. Further experiments across FNO scales, a DPOT-style backbone, reversed-ordering controls, seed reruns, ablations, and physics diagnostics confirm that the observed gains do not arise from arbitrary checkpoint interpolation. Instead, endpoint fine-tuning reveals a physically oriented and calibratable weight-space direction for training-free regime transfer.
+
+We summarize the main contributions of this work as follows.
+
+A physical-coordinate view of PDE expert fine-tuning. We formulate same-anchor endpoint experts as finite-difference probes of a local solver trajectory, asking whether endpoint–anchor residuals encode reusable physical structure rather than isolated checkpoint drift.
+
+Calibration-Conditioned Merge. We propose CCM, a post-hoc coordinate readout method that composes a single checkpoint from low- and high-regime experts using physical metadata, calibrated coordinates, or a short rollout prefix, without target-regime training, routing, or ensembling.
+
+Evidence for a calibratable physical direction. We validate CCM across reaction–diffusion, Navier–Stokes, radial dam break, FNO scales, a DPOT-style backbone, wrong-sign controls, seed reruns, ablations, and physics diagnostics, showing that endpoint fine-tuning reveals a signed physical direction useful for interpolation and extrapolation.
+
+2 Preliminaries and Problem Setting
+
+Parametric PDE family. Here we consider time-dependent PDE families on two-dimensional spatial domains \Omega\subset\mathbb{R}^{2} and a discrete time grid 0=t_{0}<t_{1}<\cdots<t_{T} . The state has C_{u} physical channels, u(t,\cdot):\Omega\to\mathbb{R}^{C_{u}} , and the discretized trajectory on an H\times W grid is u_{0:T}\in\mathbb{R}^{(T+1)\times H\times W\times C_{u}} . The initial condition is x=u_{0}\in\mathcal{X} . Each physical regime is indexed by a scalar family parameter \lambda\in\Lambda\subset\mathbb{R} , such as diffusivity, viscosity, or a dam-height coordinate in our experiments. Given x , the trajectory solves the compact residual equation
+
+\mathcal{R}_{\lambda}(u;x)=0,\qquad u(0)=x, (1)
+
+where \mathcal{R}_{\lambda} collects the PDE operator, coefficients, forcing, and boundary conditions for regime \lambda . This defines a rollout solution operator \mathcal{G}_{\lambda}:\mathcal{X}\to\mathcal{Y}_{T} , \mathcal{G}_{\lambda}(x)=u_{1:T} , where \mathcal{Y}_{T} is the future-trajectory space with the same spatial and channel dimensions.
+
+Rollout evaluation. The neural operator with weights \theta induces an autoregressive rollout operator \mathcal{F}_{\theta}:\mathcal{X}\to\mathcal{Y}_{T} , with \mathcal{F}_{\theta}(x)=\hat{u}^{\theta}_{1:T}(x) , whose discretized shape matches \mathcal{G}_{\lambda}(x) . For an evaluation index set \mathcal{I}\subseteq\{1,\ldots,T\} , we measure the mean rollout L2 error
+
+\mathcal{L}_{\lambda,\mathcal{I}}(\theta)=\mathbb{E}_{x\sim\mathcal{D}_{\lambda}}\left[\left|\mathcal{F}_{\theta}(x)-\mathcal{G}_{\lambda}(x)\right|_{\mathcal{I}}\right]. (2)
+
+Here \mathcal{D}_{\lambda} is the initial-condition or trajectory distribution for regime \lambda , and |\cdot|_{\mathcal{I}} denotes the benchmark-normalized rollout L2 over the selected time indices, spatial grid, and state channels. The full-rollout L2 used in most tables is \mathcal{L}_{\lambda,\mathcal{I}_{\mathrm{full}}} with \mathcal{I}_{\mathrm{full}}=\{1,\ldots,T\} . When a K -step calibration prefix is observed, the prefix selector uses \mathcal{I}_{\mathrm{cal}}=\{1,\ldots,K\} and the reported future-rollout L2 uses \mathcal{I}_{\mathrm{fut}}=\{K+1,\ldots,T\} .
+
+Physical-axis extrapolation. For each family, we fix two endpoint regimes \lambda_{\mathrm{low}}<\lambda_{\mathrm{high}} before any target-regime evaluation. These two regimes define both the coordinate scale and the endpoint experts introduced below; interpolation and OOD evaluation targets are not used to choose them. We normalize the physical coordinate by
+
+s(\lambda)=c(\lambda)=\frac{2(\lambda-\lambda_{\mathrm{mid}})}{\lambda_{\mathrm{high}}-\lambda_{\mathrm{low}}},\qquad\lambda_{\mathrm{mid}}=\frac{\lambda_{\mathrm{low}}+\lambda_{\mathrm{high}}}{2}. (3)
+
+With this normalization, the endpoint regimes, and hence their experts, are at s=\pm 1 , interpolation has |s|\leq 1 , and extrapolation |s|>1 . We use OOD only for extrapolation along this physical axis, not arbitrary distribution shift. An OOD-high target lies beyond the high-parameter expert. This ties the merge coordinate to an external physical reference, independent of learned weights or validation loss.
+
+Controlled same-base setting. A base neural operator with weights \theta_{0} is trained on support regimes \Lambda_{\mathrm{sup}}\subset\Lambda . From this base, the endpoint experts \theta_{\mathrm{low}} and \theta_{\mathrm{high}} are obtained by fine-tuning only on data from \lambda_{\mathrm{low}} and \lambda_{\mathrm{high}} , respectively. They are fixed once by the family construction rather than selected by target validation loss or by a merge sweep. At test time, these weights are composed into a single checkpoint. Because all checkpoints share the same architecture, normalization, and rollout protocol, their weight displacements are directly comparable. This shared lineage defines the composition path in Sec. 3 .
+
+Allowed test-time information. We evaluate three controlled PDE families: reaction–diffusion dynamics, 2D incompressible Navier–Stokes flow, and radial dam-break transients. At test time, checkpoint selection may use physical metadata or a short observed rollout prefix, but no gradient updates are allowed on the target regime. When using a prefix of frames K , \mathcal{I}_{\mathrm{cal}} is used only for calibration and the future-rollout reported L2 is calculated in \mathcal{I}_{\mathrm{fut}} .
+
+3 Calibration-Conditioned Merge
+
+Calibration-Conditioned Merge implements the mechanism proposed in the introduction: same-anchor endpoint experts can reveal a local physical coordinate in weight space. The method starts from the fixed objects in Sec. 2 : a family anchor \theta_{0} and two endpoint experts \theta_{\mathrm{low}} and \theta_{\mathrm{high}} . The endpoints are chosen by the physical family construction before target evaluation. Concretely, \theta_{\mathrm{low}} is fine-tuned from \theta_{0} on the low endpoint regime \lambda_{\mathrm{low}} , and \theta_{\mathrm{high}} is fine-tuned from \theta_{0} on the high endpoint regime \lambda_{\mathrm{high}} . The two endpoints use the same architecture, normalization, rollout metric, and fine-tuning protocol, and they are not chosen by target-regime validation or by an \alpha sweep. This separates endpoint selection from coordinate selection: CCM only selects \hat{\alpha} on the fixed endpoint-defined line. Because the endpoint regimes are placed on an external physical axis with normalized coordinates s=-1 and s=+1 , their residual contrast can be treated as a signed low-to-high direction rather than an arbitrary checkpoint difference. Our local working hypothesis is that, near the family anchor, same-lineage endpoint fine-tuning defines a first-order physical coordinate,
+
+\theta^{\star}(s)\approx\theta_{0}+\Delta^{+}+s\Delta^{-},\qquad|s|\ \text{near the endpoint interval}, (4)
+
+where \Delta^{+} denotes the adaptation shared by endpoint experts, and \Delta^{-} denotes signed low-to-high physical variation. CCM builds two components from endpoint experts, then selects a coordinate for the target regime. App. A provides a conditional local secant interpretation of this construction.
+
+3.1 Endpoint residuals define a coordinate family
+
+For endpoint experts fine-tuned from the same anchor, define the endpoint–anchor residuals
+
+\Delta_{\mathrm{low}}=\theta_{\mathrm{low}}-\theta_{0},\qquad\Delta_{\mathrm{high}}=\theta_{\mathrm{high}}-\theta_{0}. (5)
+
+Because both residuals are measured from the same anchor and the endpoints are ordered along the physical axis, we decompose them into
+
+\Delta^{+}=\frac{\Delta_{\mathrm{low}}+\Delta_{\mathrm{high}}}{2},\qquad\Delta^{-}=\frac{\Delta_{\mathrm{high}}-\Delta_{\mathrm{low}}}{2}. (6)
+
+The shared component \Delta^{+} captures what both endpoint experts agree to change from the anchor. The signed component \Delta^{-} captures the low-to-high variation oriented along the physical axis. For any composition coordinate \alpha , CCM defines the checkpoint family
+
+\theta(\alpha)=\theta_{0}+\Delta^{+}+\alpha\Delta^{-}=\frac{1-\alpha}{2}\theta_{\mathrm{low}}+\frac{1+\alpha}{2}\theta_{\mathrm{high}}. (7)
+
+Thus, \alpha=-1 and \alpha=+1 recover the low and high endpoint experts, respectively. The value \alpha=0 gives the arithmetic average of the two endpoint experts, while |\alpha|>1 extrapolates beyond the endpoint interval along the same signed direction.
+
+This parameterization separates two effects that static averaging conflates. If endpoint fine-tuning mainly learns a family-shared solver correction, then \Delta^{+} should dominate and \alpha=0 should be competitive. If target regimes require endpoint-specific physics, then \Delta^{-} should matter and nonzero \alpha should improve rollout behavior. The extrapolation gains at |\alpha|>1 are especially informative because they test whether the signed residual carries useful physical variation beyond the trained endpoints.
+
+3.2 Selecting the composition coordinate
+
+The family \theta(\alpha) defines a one-dimensional coordinate line in weight space. CCM asks whether a useful coordinate can be selected from information available at test time:
+
+\hat{\alpha}=\pi_{\mathrm{CCM}}(\mathcal{I}_{\lambda}),\qquad\hat{\theta}_{\lambda}=\theta(\hat{\alpha}), (8)
+
+where \mathcal{I}_{\lambda} denotes the allowed calibration information for the target regime. After selection, rollout uses one checkpoint and one forward path. The clipping bounds \alpha_{\min} and \alpha_{\max} are fixed before test evaluation by the deployment range or by the finite coordinate bank used in the corresponding experiment.
+
+CCM-Coord. This selector directly tests whether the signed residual follows the measured physical axis. When the normalized physical coordinate is known and calibrated to the endpoint scale, CCM uses
+
+\hat{\alpha}_{\mathrm{coord}}(\lambda)=\mathrm{clip}\!\left(s(\lambda),\alpha_{\min},\alpha_{\max}\right). (9)
+
+Here the endpoint construction fixes s(\lambda_{\mathrm{low}})=-1 and s(\lambda_{\mathrm{high}})=+1 ; targets inside this interval use interpolation coordinates, while OOD targets use extrapolation coordinates before clipping.
+
+CCM-Scale. The physical coordinate may have the correct ordering but a mismatched weight-space scale. CCM therefore uses a globally scaled coordinate,
+
+\hat{\alpha}_{\mathrm{scale}}(\lambda)=\mathrm{clip}\!\left(\gamma s(\lambda),\alpha_{\min},\alpha_{\max}\right). (10)
+
+The scalar \gamma is selected once on held-out validation regimes and then fixed for all inference regimes.
+
+CCM-Prefix. When metadata are limited or missing, CCM chooses a coordinate from a finite bank \mathcal{A} based on a short observed rollout prefix:
+
+\hat{\alpha}_{\mathrm{prefix}}(x)=\arg\min_{\alpha\in\mathcal{A}}\widehat{\mathcal{L}}_{x,\mathcal{I}_{\mathrm{cal}}}\!\left(\theta(\alpha)\right),\qquad\mathcal{I}_{\mathrm{cal}}=\{1,\ldots,K\}, (11)
+
+where \widehat{\mathcal{L}}_{x,\mathcal{I}_{\mathrm{cal}}} denotes the single-trajectory prefix loss defined by the rollout metric in Sec. 2 . The chosen checkpoint is subsequently assessed on \mathcal{I}_{\mathrm{fut}}=\{K+1,\ldots,T\} , excluding the calibration frames from the reported future-rollout error. Hence, CCM-Prefix uses the short prefix solely to select \alpha ; it does not perform any weight updates, and the protocol details, including coordinate banks and prefix lengths, are given in App. C .
+
+Diagnostic oracle coordinate.
+
+For analysis only, we also report
+
+\alpha^{\star}_{\mathcal{A}}(\lambda)=\arg\min_{\alpha\in\mathcal{A}}\mathcal{L}_{\lambda,\mathcal{I}}\!\left(\theta(\alpha)\right), (12)
+
+where \mathcal{I} is the evaluation window for the corresponding task. It measures whether the endpoint-defined line contains useful target-regime solvers and separates the capacity of the line from the difficulty of selecting its coordinate. Fig. 4.2 compares this diagnostic coordinate with the independently specified physical coordinate s(\lambda) .
+
+4 Experiments
+
+In this section, we evaluate whether the endpoint-residual coordinate defined in Sec. 3 is both physically readable and useful for rollout. The experiments follow a mechanism-driven sequence: (i) whether endpoint residuals separate shared solver adaptation from signed physical variation; (ii) whether the signed coordinate tracks an independently specified physical axis; (iii) whether deployable CCM selectors improve beyond-endpoint rollout; and (iv) whether the behavior persists across controls, architectures, and physics-aware diagnostics.
+
+Experimental setting. We evaluate our framework on three PDE families with distinct dynamics: reaction–diffusion equations [ 22 ] , two-dimensional Navier–Stokes flow parameterized by viscosity [ 1 ] , and radial dam-break equations (RDB) [ 22 ] . For each family, we split a scalar physical axis into support, endpoint, and evaluation regimes. A family base is trained exclusively on the support regimes, from which low- and high-regime experts are subsequently fine-tuned. All model compositions are then executed post hoc and evaluated by the autoregressive rollout metric defined in Sec. 2 . To preclude information leakage in the RDB CCM-Prefix evaluation, the K=4 observed prefix is used only for coefficient selection; the future-rollout L2 is computed on the remaining horizon. More detailed hyperparameters and data construction are recorded in App. C , App. D , and App. F .
+
+Backbones and baselines. Our primary architecture is FNO [ 1 , 13 , 14 ] . We also use a DPOT-style backbone [ 15 ] to test whether the residual geometry we observe depends on the operator architecture. Base denotes the shared family model, while Expert-low and Expert-high are the two endpoint fine-tuned models. The endpoint average is the checkpoint obtained by averaging the endpoints at \alpha=0 . The best fixed \alpha is a single mixing coefficient shared across all targets in a family. Oracle \alpha is tuned per target and used only diagnostically to assess the expressivity of the endpoint residual line. CCM-Coord, CCM-Scale, and CCM-Prefix denote plain coordinate conditioning, scale-normalized coordinate conditioning, and selection from a finite bank based on a rollout prefix, respectively. We also report generic post-hoc merging baselines: Task Arithmetic, TIES, and DARE [ 35 , 36 , 37 , 38 , 40 ] . Conditional operators and target-specific retraining tackle a complementary adaptation setting [ 3 , 34 , 16 , 18 ] : they evaluate newly trained target-conditioned solvers, not the structure encoded in endpoint updates from a shared base model.
+
+4.1 Endpoint residuals separate shared adaptation from signed physical variation
+
+We first use controlled DiffReact axes as a mechanism test. Each experiment varies one physical parameter while keeping the PDE family and the model protocol fixed. The k and D_{v} axes test whether endpoint averaging captures the solution adaptation shared by both experts. The harder D_{u} medium-gap axis tests whether transfer requires signed low-to-high residual contrast.
+
+Fig. 4.1 shows how the same endpoint construction can produce two regimes. On the k and D_{v} axes, endpoint averaging improves over the base and is close to, or identical with, the best static point on the \alpha sweep. For example, on the D_{v} medium-gap axis, the error decreases from 0.1775 to 0.1422 , and the sweep is minimized at \alpha=0 . This is the shared-adaptation regime: both endpoint experts learn a similar family-wide correction to the anchor.
+
+The D_{u} medium-gap setting behaves differently. Endpoint averaging yields a slightly higher error than the baseline ( 0.2529 versus 0.2505 ), whereas introducing a nonzero coordinate with \alpha=1.50 decreases the error to 0.243 . Although the absolute improvement is smaller than that observed in the merge-friendly axes, the sign of the effect is crucial: averaging suppresses information that is beneficial for the target regime, while traversing the signed direction partially restores this information. Consequently, endpoint averaging and coordinate-conditioned composition interrogate different components of the endpoint residuals, rather than constituting mutually exclusive merging heuristics. This distinction provides the first empirical evidence in favor of the shared/signed decomposition.
+
+4.2 The signed coefficient tracks an independent physical axis
+
+We next examine whether the signed residual direction is accessible to physical interpretation. For each target regime, we compare two independently obtained quantities: (i) the diagnostic oracle coordinate selected from the coordinate bank via rollout loss, and (ii) the normalized physical coordinate provided by the data generator or defined by the benchmark construction. If \Delta^{-} aligns with the physical family axis, these two quantities are expected to covary.
+
+Panels A, C, and E of Fig. 4.2 show that the diagnostic coordinate closely tracks the physical axis in both DiffReact and NS2D. For DiffReact, the alignment is effectively perfect at the shown precision ( r=1.00 ), and NS2D also shows a very strong correspondence ( r=0.99 ). These high correlations are the main coordinate-readout evidence: the rollout-selected coefficient is not an arbitrary validation weight but covaries systematically with an independently defined physical coordinate. By contrast, RDB shows a weaker relationship ( r=0.79 ), indicating that scalar metadata alone do not fully parameterize the free-surface transient and that a dynamic calibration signal is required.
+
+Panels B, D, and F show smooth loss profiles along the endpoint-defined coordinate axis. This smoothness is essential because CCM-Prefix searches a finite coordinate bank; if the loss landscape were irregular or misaligned with the task, prefix selection would be unstable. Instead, the profiles reveal a structured valley, with the loss-minimizing coordinate shifting systematically as the target regime changes. Thus, the weaker RDB coordinate relationship does not undermine the endpoint-defined axis; it instead motivates prefix-based coordinate selection when static metadata are insufficient.
+
+Coordinate choice also affects predictive performance. Along the dense DiffReact axis, CCM-Coord reduces mean full-rollout L2 from 0.1316 to 0.0824 (a 37.4\% decrease). On the OOD slice, averaging endpoints barely helps, changing error from 0.188 to 0.183 , whereas CCM-Coord attains 0.086 . Thus, the coordinate is most useful when the target lies away from the center and the sign of the physical variation matters. A coordinate law with the wrong sign provides a negative control: it keeps the same checkpoints and magnitudes but flips orientation, increasing error by factors of 2.61 overall and 3.91 on OOD tasks. This rules out a naive “any interpolation helps” view: performance depends on choosing the physically correct direction, not merely moving along the checkpoint line.
+
+4.3 Coordinate selection improves beyond-endpoint rollouts
+
+We next assess extrapolation along the family axis, where target regimes lie outside the interval spanned by the training endpoints. This is the setting in which static averaging is expected to attenuate endpoint-specific phenomena, since it effectively removes the signed residual direction. It also probes whether the endpoint-defined coordinate remains informative beyond the regimes for which the endpoint experts were trained. We consider three distinct information configurations. DiffReact dense represents a calibrated-coordinate scenario: the underlying physical coordinate is known, and CCM-Coord directly uses this coordinate. NS2D viscosity corresponds to an ordered-but-misscaled scenario: the coordinate is aligned with the residual direction, but a single global rescaling improves expert selection, yielding the CCM-Scale variant. RDB constitutes a weaker-metadata scenario: the available scalar metadata are comparatively unreliable, so CCM-Prefix instead uses a short observed prefix of the trajectory to infer an appropriate coordinate before evaluating future rollouts.
+
+Benchmark Method OOD mean OOD worst Gain vs base DiffReact f2 dense Base 0.188 0.228 – Endpoint average 0.183 0.224 2.4% Best fixed 0.183 0.224 2.4% CCM-Coord 0.086 0.1 54.2% Oracle per-task 0.086 0.1 54.2% NS2D viscosity Base 0.591 0.678 – Endpoint average 0.586 0.717 0.9% Best fixed 0.59 0.67 0.2% CCM-Scale 0.338 0.347 42.8% Oracle alpha 0.327 0.329 44.7% RDB high-center Base 0.471 0.534 – Endpoint average 0.45 0.509 4.5% Best fixed 0.442 0.523 6.1% CCM-Prefix 0.406 0.483 13.8%
+
+Tab. 4.3 summarizes the OOD comparison. On DiffReact, endpoint averaging and the best fixed \alpha yield only a 2.4\% relative OOD improvement, whereas CCM-Coord reduces the OOD mean from 0.188 to 0.086 . The close agreement between CCM-Coord and the oracle coordinate shows that, in this dense-axis regime, the physical metadata suffice to localize the relevant point along the endpoint-defined interpolation line.
+
+On NS2D, the qualitative OOD behavior is similar but harder: endpoint averaging barely changes the OOD mean ( 0.591\to 0.586 ), and the best fixed \alpha is essentially unchanged ( 0.590 ). In contrast, CCM-Scale achieves an OOD mean of 0.338 , a 42.8\% OOD error reduction relative to the baseline. This indicates that the signed direction is informative, but its coordinate scale must be calibrated for viscosity-parameterized rollouts. For RDB, endpoint averaging and the best fixed \alpha give OOD mean future L2 errors of 0.450 and 0.442 , respectively, compared with 0.406 for CCM-Prefix. Although smaller than in DiffReact or NS2D, this gain remains meaningful because selection uses only a short prefix and the metric omits the prefix frames, indicating that early rollout dynamics encode both the correct sign and magnitude of the endpoint direction.
+
+Across all three model families, static averaging gives only minor OOD gains, while coordinate- or prefix-conditioned selection yields most of the improvement. This aligns with the proposed mechanism: shared adaptation aids inputs near the training distribution center, but endpoint-specific signed parameter variation is needed when targets fall outside the range spanned by the training set.
+
+4.4 Controls, robustness, and auxiliary diagnostics
+
+We finally test whether the observed coordinate structure persists beyond the main rollout metric and the default FNO backbone. Fig. 4.4 summarizes the key robustness results. The wrong-sign control consistently increases error, confirming that improvements depend on the endpoint’s physical orientation, not arbitrary interpolation.
+
+Matched-seed reruns retain the qualitative advantages of both main strategies: metadata-based coordinate selection on DiffReact and prefix-based selection on RDB. FNO scaling experiments show endpoint averaging consistently outperforming the anchor for small, base, and large models, with DiffReact gains increasing from 9.6\% to 24.8\% . A compact DPOT-style backbone yields the same ordering: static averaging outperforms the base model, and coordinate-conditioned composition achieves the lowest error.
+
+These tests suggest that the residual geometry is not specific to one FNO scale, operator architecture, or random seed. We also compute auxiliary physics diagnostics in App. E.15 . These diagnostics mirror the rollout metrics: coordinate- or prefix-conditioned selection improves physically meaningful summaries in NS2D and RDB, without altering the single-checkpoint deployment protocol. We place full definitions and task-specific metrics in the appendix to avoid overloading the main text with benchmark-specific diagnostics.
+
+Overall, the evidence supports local physical-coordinate geometry within same-anchor, same-family settings. Endpoint composition separates shared adaptation from signed physical variation, the signed coordinate follows an independently specified physical axis when metadata are reliable, and coordinate- or prefix-conditioned selection improves extrapolative rollout across three PDE families.
+
+5 Conclusion
+
+This work shows that same-anchor neural PDE experts form a continuous family, not isolated checkpoints. Decomposing endpoint–anchor residuals separates shared solver adaptation from signed physical variation along the PDE axis, which explains why static averaging suffices when shared adaptation dominates, but fails when extrapolation demands endpoint-specific physics. Exploiting this structure, CCM selects a composition coordinate from physical metadata, a calibrated scale, or a short rollout prefix, yielding a single checkpoint without test-time fine-tuning, routing, or ensembling. Across diverse PDE families, CCM improves most on family-axis extrapolation, where naive averaging suppresses signed physical information. Controlled expert composition thus serves as both a training-free adaptation mechanism and a diagnostic: it reveals how neural solvers encode continuous physical variation as interpretable weight-space directions.
+
+Limitations.
+
+CCM presupposes a common local geometry, compatible architectures, and stable fine-tuning dynamics, but does not provide a universal OOD guarantee. CCM-Prefix additionally depends on a brief observation horizon, which precludes true zero-shot deployment. The coordinate assumption breaks down when endpoint gaps grow large, when we move far from the anchor’s local chart, or when the checkpoint manifold exhibits high curvature. Our analysis currently focuses on single scalar directions; extending to multi-parameter PDE families will likely require cross-axis experts or higher-order charts to represent coupled interactions.
+
+References
+
+Appendix Contents
+
+A Theory for Controlled PDE Merge . A
+
+A.1 Two-point continuation bound . A.1
+
+A.2 Why same-base endpoint updates carry directional information . A.2
+
+A.3 PDE regularity behind the curvature assumption . A.3
+
+B Detailed Related Work . B
+
+C Experimental Protocols and Hyperparameters . C
+
+C.1 Training and merge protocol . C.1
+
+C.2 CCM variants and future-only calibration . C.2
+
+D Datasets, PDE Equations, and Family Construction . D
+
+D.1 Controlled family axes . D.1
+
+D.2 DiffReact, NS2D, and RDB details . D.2
+
+E Additional Evaluation Results . E
+
+E.1 DiffReact dense coordinate control . E.1
+
+E.2 Scale, backbone, and OOD validation . E.2
+
+E.3 NS2D and RDB calibration details . E.5
+
+E.4 Additional comparisons, uncertainty, seeds, and physics metrics . E.8
+
+F Qualitative Case Studies . F
+
+F.1 Late-time medium-gap visualizations . F
+
+Appendix A Theory for Controlled PDE Merge
+
+In this section, we derive a local, conditionally valid estimate for the Controlled PDE Merge problem. It should be interpreted as an a posteriori continuation bound applicable to experts sharing the same methodological lineage, rather than as a universal guarantee valid for arbitrary weight interpolation schemes. The only quantities that enter into the estimate are the terminal (endpoint) approximation error and the curvature of the trajectory in function space.
+
+Functional setting.
+
+Let (\mathcal{X},\rho) denote the input probability space and let \mathcal{Y}_{T} be a Hilbert space of finite-horizon trajectories. We define
+
+\mathcal{H}_{\rho}:=L^{2}(\mathcal{X},\rho;\mathcal{Y}_{T}),\qquad\left\lVert A\right\rVert_{\rho}^{2}:=\mathbb{E}_{a\sim\rho}\left\lVert A(a)\right\rVert_{\mathcal{Y}_{T}}^{2}. (13)
+
+For a normalized physical coordinate s , we denote by \mathcal{S}_{s}\in\mathcal{H}_{\rho} the exact (i.e., ground-truth) solution operator associated with the underlying PDE. The lower and upper endpoints of the normalized coordinate are fixed at s=-1 and s=1 , respectively.
+
+Under these settings, let \theta_{0} denote the base checkpoint, and let \theta_{-} and \theta_{+} denote two endpoint experts that are both fine-tuned from this common base. We define the parameter offsets
+
+\Delta_{-}:=\theta_{-}-\theta_{0},\qquad\Delta_{+}:=\theta_{+}-\theta_{0},
+
+and decompose them into their shared and directional components,
+
+\Delta^{\rm sh}:=\frac{\Delta_{-}+\Delta_{+}}{2},\qquad\Delta^{\rm dir}:=\frac{\Delta_{+}-\Delta_{-}}{2}.
+
+For \alpha in a fixed local interval J\supset\{-1,1\} , we then define the corresponding family of models
+
+\mathcal{F}_{\alpha}:=\mathcal{F}_{\theta(\alpha)}.
+
+Endpoint-defined coordinate line. \theta(\alpha):=\theta_{0}+\Delta^{\rm sh}+\alpha\Delta^{\rm dir}=\frac{1-\alpha}{2}\theta_{-}+\frac{1+\alpha}{2}\theta_{+}.
+
+In this parameterization, \alpha=0 yields the arithmetic average of the two endpoints, \alpha=\pm 1 recovers the original endpoint experts, and |\alpha|>1 corresponds to a local extrapolation beyond the endpoints. All constants appearing below are understood to be local with respect to the interval J .
+
+A.1 Two-point continuation bound
+
+For \alpha\in J , denote by
+
+I_{\alpha}:={\rm conv}\{-1,1,\alpha\}
+
+the smallest closed interval containing the points -1 , 1 , and \alpha .
+
+Let \mathcal{H} be a Hilbert space and let \varphi:I_{\alpha}\to\mathcal{H} be a twice continuously differentiable mapping, i.e., of class C^{2} . Define
+
+\ell_{\varphi}(\alpha):=\frac{1-\alpha}{2}\,\varphi(-1)+\frac{1+\alpha}{2}\,\varphi(1).
+
+Then the following interpolation error estimate holds:
+
+\bigl\|\varphi(\alpha)-\ell_{\varphi}(\alpha)\bigr\|_{\mathcal{H}}\leq\frac{|\alpha^{2}-1|}{2}\sup_{t\in I_{\alpha}}\bigl\|\varphi^{\prime\prime}(t)\bigr\|_{\mathcal{H}}.
+
+Set r\coloneqq\varphi(\alpha)-\ell_{\varphi}(\alpha) . If r=0 , the claim follows trivially. Otherwise, define the normalized vector
+
+z\coloneqq\frac{r}{\lVert r\rVert_{\mathcal{H}}}
+
+and consider the scalar-valued function
+
+g(t)\coloneqq\langle\varphi(t),z\rangle_{\mathcal{H}},
+
+to which we apply the scalar Lagrange remainder formula with interpolation nodes -1 and 1 . Then there exists some \xi\in I_{\alpha} such that
+
+\langle r,z\rangle_{\mathcal{H}}=g(\alpha)-\frac{1-\alpha}{2}g(-1)-\frac{1+\alpha}{2}g(1)=\frac{\alpha^{2}-1}{2}g^{\prime\prime}(\xi).
+
+Since \langle r,z\rangle_{\mathcal{H}}=\lVert r\rVert_{\mathcal{H}} by construction of z , and
+
+\lvert g^{\prime\prime}(\xi)\rvert\leq\lVert\varphi^{\prime\prime}(\xi)\rVert_{\mathcal{H}},
+
+the claimed inequality follows immediately. ∎
+
+Assume that
+
+\mathcal{S},\mathcal{F}\in C^{2}(J;\mathcal{H}_{\rho}),\qquad E(\alpha):=\mathcal{F}_{\alpha}-\mathcal{S}_{\alpha}.
+
+Define
+
+\epsilon_{-}:=\left\lVert E(-1)\right\rVert_{\rho},\qquad\epsilon_{+}:=\left\lVert E(1)\right\rVert_{\rho},\qquad K_{E}(I_{\alpha}):=\sup_{t\in I_{\alpha}}\left\lVert E^{\prime\prime}(t)\right\rVert_{\rho}.
+
+Then, for every \alpha\in J , one has the a posteriori estimate
+
+Core a posteriori continuation estimate. \left\lVert\mathcal{F}_{\alpha}-\mathcal{S}_{\alpha}\right\rVert_{\rho}\leq\left|\frac{1-\alpha}{2}\right|\epsilon_{-}+\left|\frac{1+\alpha}{2}\right|\epsilon_{+}+\frac{|\alpha^{2}-1|}{2}K_{E}(I_{\alpha}).
+
+In particular, setting
+
+K_{F}(I_{\alpha}):=\sup_{t\in I_{\alpha}}\left\lVert\mathcal{F}^{\prime\prime}_{t}\right\rVert_{\rho},\qquad K_{S}(I_{\alpha}):=\sup_{t\in I_{\alpha}}\left\lVert\mathcal{S}^{\prime\prime}_{t}\right\rVert_{\rho},
+
+yields the fully computable upper bound
+
+Computable curvature form. \left\lVert\mathcal{F}_{\alpha}-\mathcal{S}_{\alpha}\right\rVert_{\rho}\leq\left|\frac{1-\alpha}{2}\right|\epsilon_{-}+\left|\frac{1+\alpha}{2}\right|\epsilon_{+}+\frac{|\alpha^{2}-1|}{2}\bigl(K_{F}(I_{\alpha})+K_{S}(I_{\alpha})\bigr).
+
+Furthermore, if the target parameter is s\in J while the merge is performed at the coefficient \alpha\in J , then the following stability estimate quantifies the penalty induced by this coordinate mismatch:
+
+Penalty for coordinate mismatch. \left\lVert\mathcal{F}_{\alpha}-\mathcal{S}_{s}\right\rVert_{\rho}\leq\left\lVert\mathcal{F}_{\alpha}-\mathcal{S}_{\alpha}\right\rVert_{\rho}+L_{S}(I_{\alpha,s})|\alpha-s|.
+
+where
+
+I_{\alpha,s}:={\rm conv}\{\alpha,s\},\qquad L_{S}(I_{\alpha,s}):=\sup_{t\in I_{\alpha,s}}\left\lVert\mathcal{S}^{\prime}_{t}\right\rVert_{\rho}.
+
+We apply Lemma A.1 to the error curve E:J\to\mathcal{H}_{\rho} . Its endpoint interpolant is given by
+
+\ell_{E}(\alpha)=\frac{1-\alpha}{2}E(-1)+\frac{1+\alpha}{2}E(1).
+
+Consequently,
+
+\left\lVert E(\alpha)-\ell_{E}(\alpha)\right\rVert_{\rho}\leq\frac{|\alpha^{2}-1|}{2}K_{E}(I_{\alpha}).
+
+By the triangle inequality, we obtain
+
+\left\lVert\ell_{E}(\alpha)\right\rVert_{\rho}\leq\left|\frac{1-\alpha}{2}\right|\epsilon_{-}+\left|\frac{1+\alpha}{2}\right|\epsilon_{+}.
+
+Combining these two inequalities yields the first estimate. The second estimate follows from the bound
+
+K_{E}(I_{\alpha})\leq K_{F}(I_{\alpha})+K_{S}(I_{\alpha}).
+
+Finally, we have
+
+\left\lVert\mathcal{F}_{\alpha}-\mathcal{S}_{s}\right\rVert_{\rho}\leq\left\lVert\mathcal{F}_{\alpha}-\mathcal{S}_{\alpha}\right\rVert_{\rho}+\left\lVert\mathcal{S}_{\alpha}-\mathcal{S}_{s}\right\rVert_{\rho},
+
+and
+
+\mathcal{S}_{\alpha}-\mathcal{S}_{s}=\int_{s}^{\alpha}\mathcal{S}^{\prime}_{t}\,dt,\qquad\left\lVert\mathcal{S}_{\alpha}-\mathcal{S}_{s}\right\rVert_{\rho}\leq L_{S}(I_{\alpha,s})|\alpha-s|.
+
+∎
+
+Suppose the physical parameter is given by \mu(s)=\mu_{c}+hs and that
+
+\sup_{\mu}\left\lVert\partial_{\mu\mu}^{2}\mathcal{S}_{\mu}\right\rVert_{\rho}\leq\widetilde{K}_{S}.
+
+Then
+
+K_{S}(I_{\alpha})\leq|h|^{2}\widetilde{K}_{S}.
+
+If, in addition, the induced neural path satisfies
+
+K_{F}(I_{\alpha})\leq M_{F}\left\lVert\Delta^{\rm dir}\right\rVert^{2}\quad\text{and}\quad\left\lVert\Delta^{\rm dir}\right\rVert\leq L_{\theta}|h|,
+
+then, for the coordinate-conditioned choice \alpha=s ,
+
+Second-order local form. \left\lVert\mathcal{F}_{s}-\mathcal{S}_{s}\right\rVert_{\rho}\leq\left|\frac{1-s}{2}\right|\epsilon_{-}+\left|\frac{1+s}{2}\right|\epsilon_{+}+\frac{|s^{2}-1|}{2}\bigl(M_{F}L_{\theta}^{2}+\widetilde{K}_{S}\bigr)|h|^{2}.
+
+Consequently, modulo the endpoint error, the continuation error exhibits second-order scaling with respect to the half-gap between the physical endpoints. The result is local in the sense that the constants involved are required only on the interval J under consideration.
+
+A.2 Why same-base endpoint updates carry directional information
+
+The previous estimate characterizes the function-space path after a particular trajectory has been fixed. We now formulate the minimal result that justifies why endpoint updates obtained from a common reference initialization induce a well-defined signed direction.
+
+Let \Theta be a normed parameter space. Suppose that, in a neighborhood of the central physical coordinate q=0 , the fine-tuning procedure selects a C^{3} local expert branch q\mapsto\theta^{\star}(q)\in\Theta . Define
+
+U(q):=\theta^{\star}(q)-\theta_{0}.
+
+Assume that the trained endpoint parameters satisfy
+
+\theta_{-}=\theta^{\star}(-h)+r_{-},\qquad\theta_{+}=\theta^{\star}(h)+r_{+}.
+
+Define the curvature bounds
+
+M_{2}:=\sup_{|q|\leq|h|}\left\lVert U^{\prime\prime}(q)\right\rVert,\qquad M_{3}:=\sup_{|q|\leq|h|}\left\lVert U^{\prime\prime\prime}(q)\right\rVert.
+
+Then the following quantitative finite-difference estimates hold.
+
+Endpoint updates approximate a central adaptation and a physical tangent. \left\lVert\Delta^{\rm sh}-U(0)\right\rVert\leq\frac{|h|^{2}}{2}M_{2}+\frac{\left\lVert r_{-}\right\rVert+\left\lVert r_{+}\right\rVert}{2}, \left\lVert\Delta^{\rm dir}-hU^{\prime}(0)\right\rVert\leq\frac{|h|^{3}}{6}M_{3}+\frac{\left\lVert r_{-}\right\rVert+\left\lVert r_{+}\right\rVert}{2}.
+
+In particular, the shared update provides an approximation of the central adaptation U(0) , while the directional update provides an approximation of the first derivative U^{\prime}(0) of the local expert branch with respect to the physical parameter.
+
+For the exact solution branch, Taylor’s theorem yields
+
+U(h)=U(0)+hU^{\prime}(0)+\frac{h^{2}}{2}U^{\prime\prime}(0)+R_{+},\qquad U(-h)=U(0)-hU^{\prime}(0)+\frac{h^{2}}{2}U^{\prime\prime}(0)+R_{-},
+
+where the integral form of the remainder implies the symmetric bound
+
+\left\|\frac{U(h)+U(-h)}{2}-U(0)\right\|\leq\frac{|h|^{2}}{2}M_{2},
+
+and, analogously, the third-order remainder yields
+
+\left\|\frac{U(h)-U(-h)}{2}-hU^{\prime}(0)\right\|\leq\frac{|h|^{3}}{6}M_{3}.
+
+The endpoint residuals contribute linearly through the relations
+
+\Delta^{\rm sh}=\frac{U(-h)+U(h)}{2}+\frac{r_{-}+r_{+}}{2},\qquad\Delta^{\rm dir}=\frac{U(h)-U(-h)}{2}+\frac{r_{+}-r_{-}}{2}.
+
+∎
+
+Let \mathcal{L}(q,\theta) denote a regularized population fine-tuning objective expressed in a local chart of the parameter space. Suppose that \mathcal{L}\in C^{r+1} and that, after fixing a local gauge, restricting to the chart selected by the optimizer, or introducing an appropriate local regularization, the Hessian \nabla_{\theta\theta}^{2}\mathcal{L}(0,\theta^{\star}(0)) is invertible. Then, by the implicit function theorem, there exists a C^{r} solution branch q\mapsto\theta^{\star}(q) . In particular, the C^{3} regularity of the branch used in Proposition A.4 is guaranteed by the assumption \mathcal{L}\in C^{4} together with the same nondegeneracy condition.
+
+A.3 PDE regularity behind the curvature assumption
+
+We finally give a standard sufficient condition that guarantees twice continuously differentiable dependence of the associated solution operator of the PDE. This regularity requirement is not imposed on the neural network itself; instead, it constitutes a local well-posedness assumption on the underlying family of partial differential equations.
+
+Let the PDE be written as a residual equation
+
+\mathfrak{R}(u,a,\mu)=0,
+
+where u\in\mathcal{U} , \mathfrak{R}(u,a,\mu)\in\mathcal{Z} , and \mathcal{U},\mathcal{Z} are Banach spaces continuously embedded into the trajectory norm used in \mathcal{Y}_{T} . Suppose that, for \rho -a.e. input a and all \mu in a neighborhood of the interval of interest:
+
+\mathfrak{R} is C^{2} in (u,\mu) ;
+
+there is a solution u(a,\mu) with \mathfrak{R}(u(a,\mu),a,\mu)=0 ;
+
+D_{u}\mathfrak{R}(u(a,\mu),a,\mu):\mathcal{U}\to\mathcal{Z} is invertible with uniformly bounded inverse;
+
+the first and second derivatives of \mathfrak{R} entering the sensitivity equations are bounded by a \rho -square-integrable envelope.
+
+Then \mu\mapsto\mathcal{S}_{\mu}\in\mathcal{H}_{\rho} is C^{2} . Moreover,
+
+\sup_{\mu}\left\lVert\partial_{\mu\mu}^{2}\mathcal{S}_{\mu}\right\rVert_{\rho}<\infty.
+
+Consequently, for \mu(s)=\mu_{c}+hs ,
+
+\frac{d^{2}}{ds^{2}}\mathcal{S}_{\mu(s)}=h^{2}\partial_{\mu\mu}^{2}\mathcal{S}_{\mu(s)},\qquad K_{S}\lesssim|h|^{2}.
+
+For each admissible input a , the implicit function theorem in Banach spaces ensures the local C^{2} -regularity of the mapping \mu\mapsto u(a,\mu) . Differentiating the identity
+
+\mathfrak{R}(u(a,\mu),a,\mu)=0
+
+with respect to \mu yields the first-order sensitivity relation
+
+D_{u}\mathfrak{R}\,u_{\mu}=-D_{\mu}\mathfrak{R},
+
+and, upon differentiating once more with respect to \mu , the second-order sensitivity equation
+
+D_{u}\mathfrak{R}\,u_{\mu\mu}=-D_{uu}^{2}\mathfrak{R}[u_{\mu},u_{\mu}]-2D_{u\mu}^{2}\mathfrak{R}[u_{\mu}]-D_{\mu\mu}^{2}\mathfrak{R}.
+
+The assumed uniform invertibility of D_{u}\mathfrak{R} together with the uniform bounds on the derivatives of \mathfrak{R} implies pointwise estimates on u_{\mu} and u_{\mu\mu} , which are dominated by the prescribed square-integrable envelope. By the dominated convergence theorem, these pointwise differentiability properties imply that the mapping \mu\mapsto\mathcal{S}_{\mu} is in fact twice continuously differentiable as a map from the parameter space into L^{2}(\mathcal{X},\rho;\mathcal{Y}_{T}) . ∎
+
+If the mapping \alpha\mapsto\mathcal{F}_{\alpha} is not known to be twice continuously differentiable ( C^{2} ), for instance due to nonsmooth activation functions or discrete algorithmic components, the functional curvature term in Theorem A.2 can be approximated via the second finite difference
+
+\widehat{K}_{F}(\alpha,\delta):=\frac{\lVert\mathcal{F}_{\alpha+\delta}-2\mathcal{F}_{\alpha}+\mathcal{F}_{\alpha-\delta}\rVert_{\rho}}{\delta^{2}}.
+
+This quantity constitutes the discrete analogue of K_{F} and coincides with what is naturally accessed through \alpha -sweep diagnostics. Accordingly, the mathematical bound above is most appropriately interpreted as a local continuation estimate, whose neural-curvature assumption ought to be validated or systematically ablated through empirical investigation.
+
+Scope.
+
+The theorem is formulated on a fixed local interval J . It does not address phenomena such as breakdown of PDE well-posedness, the formation of shocks or bifurcations, endpoint experts trained in distinct attraction basins, or merge trajectories exhibiting large functional curvature. Under the given local regularity and compatibility conditions, endpoint experts that arise from the same initialization basin produce finite-difference estimates of a physically interpretable tangent direction, and the merged model follows the corresponding trajectory in the space of PDE operators with a quantitatively controlled error in the associated two-point continuation.
+
+Appendix B Detailed Related Work
+
+Neural operators and PDE benchmarks.
+
+Neural operators learn mappings between spaces of functions, offering a unified paradigm for data-driven surrogate models of parametric PDEs. The Fourier Neural Operator introduced spectral convolution as an efficient operator layer for regular grids, while DeepONet proposed an operator-learning architecture using separate branch and trunk networks [ 1 , 13 , 14 ] . Since then, the class of architectures has grown in many directions, including graph-kernel and mesh-based operators, multiwavelet and factorized spectral layers, Galerkin- or transformer-style attention mechanisms, message-passing-based solvers, multigrid parameterizations, latent-space operators, and fast transformer architectures tailored to PDEs [ 5 , 25 , 44 , 45 , 46 , 47 , 3 , 48 , 31 , 34 ] . In parallel, benchmark collections such as PDEBench and APEBench have refocused evaluation on families of dynamical systems, multi-step rollout horizons, and controlled variations in the governing parameters [ 22 , 24 ] .
+
+PDE foundation models and large physical surrogates.
+
+Recent work has also started to develop neural operators and spatiotemporal surrogate models that span broader families of PDEs, physical quantities, and simulation settings. DPOT [ 15 ] , Poseidon [ 16 ] , multiple-physics pretraining [ 17 ] , the Well [ 23 ] , and Walrus [ 19 ] exemplify a shift toward reusable models and datasets for continuum dynamics. Parallel advances in weather and climate modeling demonstrate that learned physical surrogates can serve as large-scale, long-range forecasting systems [ 11 , 49 , 12 , 20 , 21 , 50 ] . Together, these developments underscore the importance of efficient adaptation once a solver has already been trained.
+
+Conditioning, geometry, and adaptation for PDE families.
+
+A common strategy for handling parameter changes is to condition the solver on metadata, geometric information, prompts, or other domain-aware encodings. Geo-FNO [ 28 ] , GINO [ 29 ] , and diffeomorphism neural operators [ 33 ] all alter how functions or domains are represented so that the learned operator can generalize across different geometries and parameter settings. Mesh-agnostic and symmetry-aware solvers follow a related design philosophy, modifying the state representation and the message-passing or equivariant operator components [ 25 , 26 , 30 , 51 ] . Transfer operator learning adapts a source operator to a shifted target distribution via additional optimization, whereas in-context operator learning conditions on auxiliary examples or prompts at inference time [ 27 , 52 ] . Parameter-efficient fine-tuning techniques such as low-rank adaptation lower the storage cost of keeping many adapted models, but still introduce target-specific parameter updates [ 53 ] . CCM is complementary to these approaches: rather than altering the architecture or retraining for each target regime, it composes pre-trained endpoint experts and uses physical metadata or a brief observed prefix to select a coordinate within the induced family of checkpoints.
+
+Model merging and task vectors.
+
+Model merging studies when separately fine-tuned models, typically starting from a shared initialization, can be combined directly in weight space. Model soups average the fine-tuned parameters, Fisher merging incorporates curvature information, and task arithmetic interprets fine-tuning updates as vectors that can be added or subtracted [ 35 , 36 , 37 ] . Subsequent approaches tackle issues such as interference, permutation symmetries, tangent-space formulations, adaptive task weighting, and more scalable merging schemes [ 54 , 55 , 38 , 56 , 39 , 40 , 57 , 58 , 59 ] . In nearly all of this work, tasks are treated as discrete, unordered entities, and the merge coefficient is typically chosen via validation performance or a fixed algorithmic heuristic. PDE families, in contrast, introduce a different kind of structure: tasks are indexed by continuous physical parameters such as diffusivity, viscosity, or geometry. This enables a direct comparison between a loss-optimized merging coefficient and an external physical coordinate, which is precisely the diagnostic role of the \alpha -coordinate experiments in the main text.
+
+Appendix C Experimental Protocols and Hyperparameters
+
+Evaluation conventions.
+
+The appendix adheres to the main-text configuration of family-axis composition for shared-base neural PDE experts. Out-of-distribution evaluation corresponds to extrapolation along the physical axis that parameterizes the endpoint experts. For CCM-Prefix, the observed prefix segment of the trajectory is used to determine the coefficient, and all reported future-rollout L2 errors are computed over the subsequent prediction horizon.
+
+C.1 Training and merge protocol
+
+The final reported experiments employ a best-checkpoint lineage: experts are initialized from the corresponding family-level best checkpoint. For RDB, the reported endpoint branch is selected according to the local-chart criterion described below, characterized by a low learning rate, the absence of additional noise, and the use of support–anchor mixing. NS2D and DiffReact/DPOT experts are likewise initialized from their respective base-best checkpoints.
+
+Training is conducted using either rollout-aware or random-time autoregressive supervision, depending on the specific benchmark. Evaluation metrics are reported as full-rollout or future-rollout L2 errors over the prescribed temporal horizons. Normalizer configurations and data-scaling procedures are held fixed by the training and evaluation protocol.
+
+All reported training runs, fine-tuning procedures, merge-sweep experiments, and evaluation jobs were executed on a single server equipped with eight NVIDIA A800 GPUs. When multiple sweeps were required, independent single-GPU jobs were parallelized across the available devices.
+
+Model family Family-base setting Endpoint-expert setting RDB FNO width 64, modes 16, lr 5{\times}10^{-4} lr 2{\times}10^{-6} , no noise, support–anchor mixing NS2D FNO width 64, modes 16, lr 10^{-4} lr 5{\times}10^{-5} , no noise DPOT DiffReact width 512, lr 5{\times}10^{-4} lr 10^{-4} , no noise FNO scale small/base/large FNO variants endpoint experts initialized from base-best checkpoints
+
+Locality criterion for endpoint branches.
+
+The reported endpoint branches are selected to satisfy local-chart stability around the shared base. For RDB, the criterion uses conservative endpoint gaps, no added training noise, a low expert learning rate, and support–anchor mixing. These choices keep endpoint updates in the regime where the linear shared/directional decomposition is meaningful.
+
+C.2 CCM algorithmic details
+
+Given base checkpoint \theta_{0} and endpoint experts \theta_{\rm low},\theta_{\rm high} , all CCM variants share the same weight family:
+
+\Delta_{\rm low}=\theta_{\rm low}-\theta_{0},\qquad\Delta_{\rm high}=\theta_{\rm high}-\theta_{0},
+
+\Delta^{+}=(\Delta_{\rm low}+\Delta_{\rm high})/2,\qquad\Delta^{-}=(\Delta_{\rm high}-\Delta_{\rm low})/2,
+
+\theta(\alpha)=\theta_{0}+\Delta^{+}+\alpha\Delta^{-}.
+
+The selection mechanism varies according to the information condition. CCM-Coord uses the known normalized coordinate s(\lambda) ; CCM-Scale estimates a single scaling parameter \gamma ; and CCM-Prefix performs a search over a finite set of candidate \alpha values using a short rollout prefix.
+
+Rule Input information Coefficient Checkpoint used for rollout Endpoint average none \alpha=0 one composed checkpoint Best fixed \alpha validation sweep one validation-selected scalar one composed checkpoint CCM-Coord known coordinate s(\lambda) \alpha=s(\lambda) one composed checkpoint CCM-Scale calibrated scale \gamma \alpha=\gamma s(\lambda) one composed checkpoint CCM-Prefix K observed rollout-prefix steps prefix-selected bank value one composed checkpoint Oracle \alpha full target rollout per-task best bank value one composed checkpoint
+
+C.3 Future-only CCM-Prefix protocol for RDB
+
+RDB high-center uses a strict future-only protocol with \mathcal{I}_{\mathrm{cal}}=\{1,\ldots,4\} and \mathcal{I}_{\mathrm{fut}}=\{5,\ldots,T\} . The \alpha bank is
+
+\mathcal{A}=\{-1.50,-1.25,-1.00,-0.75,-0.50,-0.25,0,0.25,0.50,0.75,1.00,1.25,1.50\}.
+
+For each test sample and each candidate \alpha , the model rolls out only the first four calibration steps. The selected \alpha is the candidate with smallest prefix-selection L2. The reported score is future-rollout L2 computed on \mathcal{I}_{\mathrm{fut}} . This separates coefficient selection from the frames used for future-rollout scoring.
+
+Interpretable selected \alpha values.
+
+The selected \alpha values are physically interpretable at endpoint and OOD regimes: OOD-low and medium-gap low tasks select negative coefficients, while medium-gap high and OOD-high select positive coefficients. Interior support tasks have higher variance, making RDB a prefix-calibrated case with sample-specific coefficient selection.
+
+Appendix D Datasets, PDE Equations, and Family Construction
+
+D.1 Controlled family axes
+
+All benchmarks use controlled one-dimensional family axes. DiffReact varies one coefficient at a time and includes sparse small/medium gap tasks plus a dense D_{u} evaluation axis. NS2D varies viscosity around a support family with endpoint, medium, and OOD viscosity values. RDB varies the inner dam-break height in the high-center setting with support, endpoint, and OOD low/high tasks. For all domains, base training uses support regimes, endpoint experts are fine-tuned from the same best base checkpoint, and all reported merges are post hoc.
+
+Why controlled axes matter.
+
+Each benchmark is organized around an interpretable physical coordinate, so an \alpha selected in weight space can be compared with an independent family axis. This structure distinguishes the experiments from unordered task-merging benchmarks.
+
+D.2 Diffusion–reaction family
+
+DiffReact uses the PDEBench two-channel diffusion–reaction simulator:
+
+\partial_{t}u=D_{u}\Delta u+u-u^{3}-k-v,\qquad\partial_{t}v=D_{v}\Delta v+u-v.
+
+The anchor task uses D_{u}=10^{-3} , D_{v}=5\times 10^{-3} , and k=5\times 10^{-3} . The f_{1} , f_{2} , and f_{3} families vary k , D_{u} , and D_{v} respectively while holding the other two coefficients fixed. For dense f_{2} evaluation, the coordinate is normalized as
+
+s(D_{u})=\begin{cases}\dfrac{D_{u}-D_{u,0}}{D_{u,\mathrm{high}}-D_{u,0}},&D_{u}\geq D_{u,0},\\[4.30554pt] -\dfrac{D_{u,0}-D_{u}}{D_{u,0}-D_{u,\mathrm{low}}},&D_{u}<D_{u,0},\end{cases}
+
+with D_{u,0}=10^{-3} , D_{u,\mathrm{low}}=8\times 10^{-4} , and D_{u,\mathrm{high}}=1.2\times 10^{-3} . Thus D_{u}(s)=10^{-3}+2\times 10^{-4}s on the core dense grid. The dense DiffReact axis is used as an evaluation/export grid. The exported metadata records train_size=1 for exported tasks; the base and endpoint experts are trained on the sparse support and endpoint regimes.
+
+D.3 FourierFlow NS2D viscosity family
+
+NS2D is a periodic vorticity-form incompressible Navier–Stokes family on a 128\times 128 torus. The state is vorticity \omega , with fixed forcing and viscosity \nu as the family coordinate:
+
+\partial_{t}\omega+\mathbf{v}\cdot\nabla\omega=\nu\Delta\omega+f,\qquad\nabla\cdot\mathbf{v}=0.
+
+The center viscosity is \nu_{0}=10^{-4} . The viscosity ratios are
+
+\displaystyle\nu/\nu_{0} \displaystyle\in\{0.60,0.80,1.00,1.20,1.50\} \displaystyle\text{for support and endpoint tasks}, \displaystyle\nu/\nu_{0} \displaystyle\in\{0.40,0.50,1.80,2.20\} \displaystyle\text{for medium evaluation tasks}, \displaystyle\nu/\nu_{0} \displaystyle\in\{0.25,3.00\} \displaystyle\text{for OOD evaluation tasks}.
+
+The medium and OOD regimes are evaluation-only in the exported metadata. All tasks share seed banks so that a fixed sample id corresponds to the same initial condition and differs only by viscosity.
+
+D.4 Radial dam-break high-center family
+
+RDB uses the PDEBench radial dam-break shallow-water simulator and reports height-channel rollout error. The underlying shallow-water equations can be written as
+
+\partial_{t}h+\nabla\cdot(h\mathbf{u})=0,\qquad\partial_{t}\mathbf{u}+\mathbf{u}\cdot\nabla\mathbf{u}+g\nabla h=0.
+
+The family coordinate is the inner water-column height, while the outer height is fixed at 1.0 . The canonical high-center family uses center 3.0 , base supports 2.0 and 4.2 , endpoint experts 1.7 and 4.8 , and OOD heights 1.05 and 6.6 . This range keeps all tasks in the valid regime h_{\mathrm{inner}}>1.0 while leaving enough room on both sides to test endpoint directionality and local-chart stability.
+
+Family Train support Endpoint experts Eval-only regimes DiffReact f_{2} center and small-gap support low/high D_{u} dense ID/OOD grid NS2D center, midlow, midhigh low/high viscosity medium and OOD viscosity RDB high-center center, midlow, midhigh low/high inner height OOD low/high height
+
+Appendix E Additional Evaluation Results
+
+The main text uses Fig. 4.4 as a compact atlas of the cross-domain evidence. This appendix keeps the complementary numeric tables, additional ablations, and case visualizations rather than repeating every single-panel plot from the main text.
+
+E.1 DiffReact dense coordinate control
+
+The dense D_{u} axis directly tests whether \alpha tracks a physical family coordinate. The selected coefficient varies systematically with the normalized physical coordinate, and the coordinate-aware policy matches the family-axis oracle on the exported dense tasks. The main text reports the corresponding OOD reduction from 0.1877 to 0.0861 . Figure 4.2 presents the dense coordinate law and the corresponding loss profile together with the NS2D and RDB comparisons. The table below keeps the complementary negative control.
+
+Task group # tasks CCM-Coord Wrong sign Wrong / Coord Interpolation 7 0.0803 0.136 1.69x Endpoint 2 0.0822 0.249 3.03x OOD 4 0.0861 0.336 3.91x All 13 0.0824 0.215 2.61x
+
+E.2 FNO scale robustness
+
+The FNO scale sweep evaluates merge behavior across model capacity. Average merge improves over the base at small, base, and large FNO scales. The relative gain increases with model scale, suggesting that stronger family bases make endpoint updates more composable.
+
+Scale Method Overall Endpoint Worst Rel. gain small Base 0.212 0.224 0.233 0% small Expert low 0.198 0.205 0.25 6.4% small Expert high 0.23 0.24 0.322 -8.7% small Endpoint average 0.192 0.204 0.21 9.6% base Base 0.187 0.204 0.232 0% base Expert low 0.168 0.175 0.235 10.2% base Expert high 0.184 0.193 0.28 1.8% base Endpoint average 0.149 0.165 0.171 20.2% large Base 0.15 0.168 0.175 0% large Expert low 0.135 0.141 0.215 9.9% large Expert high 0.148 0.156 0.248 1.1% large Endpoint average 0.113 0.132 0.133 24.8%
+
+E.3 Large-FNO merge baselines
+
+The large FNO line includes generic merge heuristics on the same checkpoints. On this merge-friendly PDE axis, endpoint averaging gives lower error than task-arithmetic-style extrapolation. This comparison separates the shared/directional construction from alternative task-vector edits on the same checkpoints. All generic merge baselines in this comparison use the same base and endpoint checkpoints as the controlled merge methods. Their coefficients, trimming/drop settings, and merge choices are selected from validation records under the same rule that excludes target-test labels for the other post-hoc policies. They are non-conditional reference controls for scalar family-axis continuation.
+
+Method Overall Endpoint Worst mg-low Base 0.1499 0.1678 0.1746 0.1746 Endpoint average 0.1127 0.132 0.1332 0.1332 Task arithmetic 4579 4583 4764 4401 TIES 27300 27130 27700 27570 DARE 298.3 297.7 308.7 286.8
+
+E.4 DPOT-style backbone validation
+
+The DPOT-style line evaluates the same composition rule outside the FNO architecture. The base reaches 0.0447 , average merge improves to 0.0391 , and CCM-Coord reaches 0.0183 , matching the oracle on this small coordinate bank.
+
+Method Overall \downarrow Support \downarrow Endpoint \downarrow Worst \downarrow Base 0.0447 0.0409 0.0504 0.0567 Expert low 0.0602 0.0594 0.0616 0.1043 Expert high 0.0583 0.0541 0.0646 0.1117 Best fixed 0.0391 0.0276 0.0563 0.0576 Best endpoint fixed 0.041 0.031 0.0561 0.0675 Task arithmetic 0.0735 0.0666 0.0839 0.0867 CCM-Coord 0.0183 0.0185 0.0181 0.0188 Oracle per-task 0.0183 0.0185 0.0181 0.0188
+
+E.5 NS2D viscosity policy comparison
+
+NS2D provides a viscosity-controlled incompressible-flow setting. The local family coordinate is viscosity, which controls dissipation and long-horizon vorticity dynamics. CCM-Scale gives the best overall validation mean among structured selectors, while CCM-Coord and CCM-Scale match on the OOD mean. The main text reports the OOD comparison in Tab. 4.3 and shows the coordinate relation and family-wise error trends in Figs. 4.2 and 4.4 . The full task-level and diagnostic tables are reported below in Tabs. 10 , 11 , and 18 .
+
+E.6 NS2D prefix-calibration budget
+
+Metadata-based coordinate policies are the primary NS2D selectors. The prefix-calibration budget shows that task-level prefix selection improves over the best fixed \alpha , with the lowest error at four prefix steps. This indicates that early rollout error also carries information about the signed family direction.
+
+E.7 RDB fixed alpha versus conditional composition
+
+RDB is the least directly parameterized domain because the free-surface transient is not well described by a monotone scalar metadata coordinate. The main text therefore uses CCM-Prefix for this setting. The selected \alpha varies by test sample and task, using the short prefix to choose the correct side of the endpoint direction instead of a single fixed coefficient.
+
+Task group # tasks Mean \alpha Std. \alpha Mean |\alpha| Future L2 Support 3 +0.20 0.83 0.70 0.0199 Endpoint 2 +0.00 2.12 1.50 0.0285 OOD 2 +0.00 2.12 1.50 0.406 All 7 +0.08 1.32 1.16 0.133
+
+E.8 Unified method ablation
+
+The unified ablation compares static averaging, best fixed \alpha , wrong fixed \alpha , and conditional CCM on NS2D and RDB. It measures whether conditioning changes the selected point on the merge line beyond what one fixed interpolation coefficient can provide. Conditioning matters most when one fixed \alpha cannot serve all regimes.
+
+Benchmark Method Overall Endpoint OOD/ID Worst RDB high-center Base 0.177 0.122 0.059 0.534 RDB high-center Endpoint average 0.165 0.078 0.051 0.509 RDB high-center Best fixed overall 0.163 0.087 0.051 0.523 RDB high-center Best fixed endpoint 0.168 0.077 0.052 0.5 RDB high-center Worst fixed 0.187 0.108 0.072 0.483 RDB high-center CCM-Prefix 0.133 0.028 0.023 0.483 NS2D viscosity Base 0.378 0.31 – 0.678 NS2D viscosity Endpoint average 0.371 0.305 0.586 0.717 NS2D viscosity Best fixed overall 0.368 0.297 0.59 0.67 NS2D viscosity CCM-Coord 0.276 0.265 0.338 0.347 NS2D viscosity CCM-Scale 0.253 0.265 0.338 0.347 NS2D viscosity Worst fixed 0.542 0.56 0.544 0.759
+
+E.9 Task-level comparison against the base
+
+Task-level comparison is reported separately from mean performance. This separates average improvement from pointwise behavior relative to the base. The table shows that average merge improves several merge-friendly DiffReact/FNO settings, while harder domains include tasks where the base remains stronger. CCM improves the mean and reduces regret, with pointwise behavior reported explicitly at the task level.
+
+Experiment Method Win/Loss Base Method Neg. regret DiffReact f2 small-gap FNO Endpoint average 5/0 0.127 0.119 0 DiffReact f2 dense FNO Endpoint average 13/0 0.14 0.132 0 DiffReact f3 FNO small_w48_mo12_l4 Endpoint average 5/0 0.212 0.192 0 DiffReact f3 FNO base_w64_mo16_l4 Endpoint average 5/0 0.187 0.149 0 DiffReact f3 FNO large_w80_mo20_l4 Endpoint average 5/0 0.15 0.113 0 DiffReact f3 DPOT Endpoint average 3/2 0.045 0.039 0.002 RDB high-center future-only Endpoint average 5/2 0.177 0.165 0.007 RDB high-center future-only CCM-Prefix 5/2 0.177 0.133 0.001 RDB high-center future-only CCM-Prefix+fallback 5/2 0.177 0.132 0.001 NS2D viscosity Endpoint average 6/5 0.378 0.371 0.021 NS2D viscosity CCM-Coord 11/0 0.378 0.276 0 NS2D viscosity CCM-Scale 11/0 0.378 0.253 0
+
+E.10 RDB output-space ensemble reference
+
+Output-space ensembling is a multi-checkpoint reference because it keeps both endpoint experts alive and combines predictions at every rollout step. Its cost profile differs from weight-space CCM: it requires two resident checkpoints and roughly two endpoint forward passes per step. On RDB, output-space CCM-Prefix nearly matches weight-space CCM-Prefix, indicating that the weight-space method captures much of the endpoint synergy with one composed checkpoint.
+
+Method Ckpts Infer. Calib. Overall Endpoint ID-5 Worst Weight avg merge 1 1x none 0.165 0.078 0.051 0.509 Weight best fixed 1 1x fixed-alpha oracle 0.163 0.087 0.051 0.523 Weight CCM-Prefix 1 1x 4 rollout steps 0.133 0.028 0.023 0.483 Output avg 2 2x none 0.164 0.083 0.05 0.51 Output best fixed 2 2x fixed-alpha oracle 0.163 0.089 0.051 0.523 Output CCM-Prefix 2 2x 4 rollout steps 0.133 0.032 0.024 0.483 Output oracle per-task 2 2x oracle full rollout 0.132 0.029 0.022 0.483
+
+E.11 RDB alpha-bank resolution
+
+CCM-Prefix searches a finite \alpha bank, and the \alpha -grid ablation varies the candidate resolution. The 5-point, 9-point, and 13-point grids produce nearly identical CCM-Prefix performance under the same future-only evaluation protocol.
+
+Grid Method Overall Endpoint ID-5 Worst 5 Best fixed 0.162706 0.087393 0.050929 0.52303 5 Oracle 0.132851 0.028456 0.023514 0.483108 5 CCM-Prefix 0.13285 0.028456 0.023512 0.483108 9 Best fixed 0.162706 0.087393 0.050929 0.52303 9 Oracle 0.131959 0.028456 0.022265 0.483108 9 CCM-Prefix 0.132704 0.028456 0.023308 0.483108 13 Best fixed 0.162706 0.087393 0.050929 0.52303 13 Oracle 0.131938 0.028384 0.022236 0.483108 13 CCM-Prefix 0.132708 0.028473 0.023314 0.483108
+
+E.12 RDB calibration-objective ablation
+
+The calibration objective ablation measures sensitivity to the exact prefix loss. First-step, mean-step, final-step, recency-weighted, and complete-prefix L2 selectors all remain far better than the best fixed \alpha . In the table, “Complete prefix L2” denotes the selector that uses all K calibration steps for coefficient selection, not a reported full-rollout score. These variants show that short rollout information provides a stable selection signal for the signed family direction.
+
+Selection objective Overall Endpoint ID-5 Worst Best fixed 0.162706 0.087393 0.050929 0.52303 Complete prefix L2 0.132708 0.028473 0.023314 0.483108 Mean step L2 0.13268 0.028476 0.023274 0.483109 First-step L2 0.13292 0.028458 0.02361 0.483109 Final-step L2 0.132602 0.028491 0.023165 0.483109 Recency-weighted L2 0.132635 0.028491 0.023211 0.483109
+
+E.13 RDB bootstrap confidence intervals
+
+The bootstrap intervals below are sample-level intervals under the same future-only evaluation protocol. They quantify resampling variation for the measured RDB conditional gain, while the matched independent-seed reruns in Appendix E.14 report targeted independent-seed replication.
+
+Baseline - CCM-Prefix Metric Improvement 95% CI Base Overall 0.044105 [0.043969, 0.044244] Best fixed overall Overall 0.029998 [0.029922, 0.030079] Best fixed endpoint Endpoint 0.048356 [0.047953, 0.048761] Best fixed ID ID-5 0.02688 [0.026785, 0.026975] Best fixed overall Worst 0.039922 [0.039753, 0.040091]
+
+E.14 Matched independent-seed reruns
+
+Matched three-seed reruns complement the sample-level bootstrap intervals in two targeted settings. DiffReact dense-axis OOD evaluates the coordinate-law mechanism under independent endpoint reruns. RDB future-only CCM-Prefix evaluates the prefix-calibration mechanism under independent endpoint-seed reruns. These settings cover the two coefficient-selection mechanisms used in the paper: metadata coordinate selection and short-prefix calibration. The table reports mean and standard deviation under the matched rerun protocol.
+
+Domain Policy Selection Primary metric Overall L2 DiffReact dense Base no merge 0.188 \pm 0 0.14 Endpoint average fixed zero 0.184 \pm 0.000398 0.132 Best fixed OOD varies 0.183 \pm 0.000352 0.135 CCM-Coord \alpha=s(\lambda) 0.0864 \pm 0.000175 0.0825 Oracle bank per-task best 0.0864 \pm 0.000175 0.0825 RDB future-only Best fixed overall \alpha=0.75 0.0938 \pm 0.000375 0.168 Best fixed OOD varies 0.0787 \pm 0.000708 0.174 CCM-Prefix K=4 0.0289 \pm 0.00019 0.133
+
+E.15 Physics-aware metrics
+
+Physics-aware metrics provide additional measurements of the rollout results. Rollout L2 remains the primary training and evaluation target, and each table preserves the full diagnostic profile for the compared policies.
+
+Method Future L2 \downarrow Mass MAE \downarrow Std MAE \downarrow Front MAE \downarrow Base 0.1768 0.0068 0.0074 0.0149 Best fixed overall 0.1627 0.0065 0.0071 0.0128 Best fixed endpoint 0.1677 0.0085 0.0086 0.0135 Fixed ID 0.1629 0.0067 0.0072 0.013 CCM-Prefix 0.1327 0.0052 0.0038 0.0115
+
+Method Full L2 \downarrow Vort. mean MAE \downarrow Enstrophy MAE \downarrow Final Enstrophy \downarrow Base 0.378 0.003 3.172 5.896 Endpoint average 0.3705 0.003 3.165 5.861 Best fixed overall 0.3679 0.0028 3.172 5.863 CCM-Coord 0.2762 0.003 3.182 4.356
+
+Appendix F Qualitative Case Studies
+
+Late-time qualitative panels show medium-gap family tasks. These panels complement scalar error tables by showing how the controlled physical axis changes the visible PDE state after autoregressive errors have had time to accumulate. Each panel uses a fixed seed and later time slices cropped from the full same-seed task strips.
+
+Figure 11 shows the DiffReact f_{2} medium-gap family. The rows vary the D_{u} coefficient while keeping the same seed and late-time frames. Lower D_{u} retains sharper spatial variation in the u channel, whereas higher D_{u} produces smoother late-time concentration fields. This is the field-level counterpart of the quantitative f_{2} result: the medium-gap axis is a visible physical coordinate that changes the long-horizon solution morphology.
+
+Figure 12 shows the NS2D viscosity family. The two rows are the medium-gap low and high viscosity tasks. At late times, the lower-viscosity trajectory retains sharper rolled-up vorticity filaments, whereas the higher-viscosity trajectory becomes visibly smoother. This is the same physical axis used by the NS2D \alpha law and CCM-Scale experiments; the qualitative panel therefore verifies that the medium-gap coordinate corresponds to a clear dynamical change in the field as well as a numerical label.
+
+Fig. 13 shows the radial dam-break high-center family. Here the medium-gap coordinate changes the initial central height. Late frames reveal the downstream effect on the expanding free-surface ring: larger heights produce stronger outward propagation and a larger low-height central basin. This panel illustrates why RDB is a prefix-calibrated setting: the visible state changes are strong, while the signed family direction is less reliably determined by static metadata alone.

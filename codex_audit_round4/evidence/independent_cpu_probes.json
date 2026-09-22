@@ -1,0 +1,124 @@
+{
+  "metrics": {
+    "manual_loop_cases": [
+      {
+        "q_shape": [
+          2,
+          2,
+          3,
+          4
+        ],
+        "gain_max_error": 4.440892098500626e-16,
+        "loss_max_error": 8.881784197001252e-16,
+        "q_eff_max_error": 0.0
+      },
+      {
+        "q_shape": [
+          2,
+          1,
+          2,
+          2,
+          3,
+          4
+        ],
+        "gain_max_error": 2.6645352591003757e-15,
+        "loss_max_error": 4.440892098500626e-15,
+        "q_eff_max_error": 1.1102230246251565e-16
+      },
+      {
+        "q_shape": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          4
+        ],
+        "gain_max_error": 1.3322676295501878e-15,
+        "loss_max_error": 1.7763568394002505e-15,
+        "q_eff_max_error": 2.7755575615628914e-17
+      },
+      {
+        "q_shape": [
+          3,
+          1
+        ],
+        "gain_max_error": 4.440892098500626e-16,
+        "loss_max_error": 8.881784197001252e-16,
+        "q_eff_max_error": 5.551115123125783e-17
+      }
+    ],
+    "negative_weights_rejected": "weights must be non-negative",
+    "calibration_off_by_default": true
+  },
+  "gate_invariant": {
+    "complete": "accepted",
+    "never_evaluated": "Refusing to commit PASS: required criteria were never evaluated: ['outputs_finite']",
+    "false_criterion": "Refusing to commit PASS: criteria are not all passing: ['outputs_finite']",
+    "missing_config_digest": "Refusing to commit PASS: no frozen config digest was recorded.",
+    "missing_source_identity": "Refusing to commit PASS: no source identity snapshot was recorded.",
+    "missing_criteria_details": "Refusing to commit PASS: criteria_details is missing."
+  },
+  "tf32_scope": {
+    "inside": [
+      false,
+      false
+    ],
+    "after_exception": [
+      true,
+      true
+    ]
+  },
+  "profile_mutates_caller_bank": {
+    "0.down.1.weight": 0.009910574182868004,
+    "0.up.1.weight": 0.009966589510440826,
+    "1.down.1.weight": 0.009949997067451477,
+    "1.up.1.weight": 0.009944861754775047
+  },
+  "uncontrolled_forward_during_controlled_rollout": {
+    "plain_output_max_change": 3.695487976074219e-05,
+    "equals_edited_forward": true
+  },
+  "admission_boundary": {
+    "formal_admitted_without_grid_stamp": true,
+    "failed_outer_gate_loaded_samples": 1,
+    "mismatched_normalization_hash_accepted": true,
+    "stored_issue_time": 1425988800,
+    "actual_loaded_time": "2015-03-11T12:00:00.000000000",
+    "original_time": "2015-03-10T12:00:00",
+    "rewritten_time": "2015-03-11T12:00:00"
+  },
+  "s0_exception_rollback": {
+    "status": "exception",
+    "s0_gate_pass": false,
+    "verdict_committed": false,
+    "error": "RuntimeError: audit failure after provisional PASS"
+  },
+  "failure_continues_dependent_stages": {
+    "exit_code": 1,
+    "called": [
+      "fs_fit",
+      "fs_freeze",
+      "bank_train",
+      "profile",
+      "horizon_check"
+    ]
+  },
+  "exporter_missing_xformers_exit_code": 2,
+  "registry_placeholder_metadata_accepted": {
+    "registry": "pilot_candidates",
+    "schema": "ed-candidate-registry/1",
+    "num_experts": 4,
+    "rho": 0.25,
+    "n_entries": 5,
+    "reference_plan_id": "reference",
+    "candidate_plan_ids": [
+      "expert_0",
+      "expert_1",
+      "expert_2",
+      "expert_3"
+    ]
+  },
+  "registry_reject_complex": "must be real number, not complex",
+  "registry_reject_empty": "[REGISTRY_EMPTY] Registry 'candidates' is empty. An empty registry is refused rather than answered with a no-op plan: 'every candidate lost' and 'no candidate was ever registered' must not produce the same result."
+}

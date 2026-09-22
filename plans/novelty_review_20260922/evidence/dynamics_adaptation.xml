@@ -1,0 +1,1119 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/EpwRh9FwEBsxzocVkM/3pIDIG1g</id>
+  <title>arXiv Query: search_query=(ti:"world model" OR all:"PDE foundation") AND (all:adaptation OR all:intervention OR all:corrector) AND submittedDate:"202501010000 TO 202609222359"&amp;id_list=&amp;start=0&amp;max_results=35</title>
+  <updated>2026-09-22T02:56:36Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(ti:%22world+model%22+OR+all:%22PDE+foundation%22)+AND+((all:adaptation+OR+(all:intervention+OR+all:corrector))+AND+submittedDate:%22202501010000+TO+202609222359%22)&amp;start=0&amp;max_results=35&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>35</opensearch:itemsPerPage>
+  <opensearch:totalResults>385</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2609.24313v1</id>
+    <title>NeuIDO: Neural Intrinsic Dynamics Operator for Physics-Informed 4D World Models</title>
+    <updated>2026-09-21T09:12:47Z</updated>
+    <link href="https://arxiv.org/abs/2609.24313v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.24313v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>World models aim to capture environmental dynamics and predict future trajectories, showing growing potential for embodied intelligence. Physics-informed 4D generation integrates physical simulation to predict 3D object interactions, offering a promising pathway toward world models. However, this paradigm relies on manually imposed dynamical assumptions rather than internalizing world dynamics, and thus still leaves a gap toward a true world model. To bridge this gap, we propose NeuIDO, a novel world dynamics modeling framework that learns a unified intrinsic dynamics representation from visual observations, advancing physics-informed 4D generation toward a world model. Specifically, we formulate world modeling as a neural operator learning problem and introduce a two-stage training strategy to learn a generalizable mapping from the visual observation distribution to the intrinsic dynamics distribution. Building on this observation-dynamics mapping, NeuIDO enables zero-shot dynamics inference directly from videos and can be further aligned with complex real-world dynamics via few-shot adaptation. Extensive experiments demonstrate that NeuIDO effectively unifies the intrinsic dynamics underlying diverse visual observations into a shared representation and rapidly infers dynamics in novel scenes.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-21T09:12:47Z</published>
+    <arxiv:comment>Accepted by ECCV 2026; Project Page: https://github.com/JiajingLin/NeuIDO</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Jiajing Lin</name>
+    </author>
+    <author>
+      <name>Xin Zhang</name>
+    </author>
+    <author>
+      <name>Jianhua Sun</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.23753v1</id>
+    <title>OnlineWM: Causality-Aware Active Online Learning for Effective World Modeling</title>
+    <updated>2026-09-20T17:05:37Z</updated>
+    <link href="https://arxiv.org/abs/2609.23753v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.23753v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Generative world models aim to predict future states conditioned on actions, where action controllability is fundamental for reliable dynamics modeling. While recent efforts leverage simulator-generated data to enhance this capability, existing training pipelines face two fundamental limitations. First, static offline data collection leads to a distribution misalignment between training sets and the model's evolving error patterns, failing to resolve critical long-tail scenarios where dynamics predictions remain unreliable. Second, the standard objective of minimizing observational discrepancy often encourages the model to exploit spurious correlations instead of capturing the underlying action-effect causality. To address these limitations, we propose OnlineWM, an online training framework that continuously improves world modeling through active simulator interaction and causality-aware optimization. OnlineWM introduces two key innovations: (1) Active Online Learning: Instead of using fixed datasets, OnlineWM adaptively queries the simulator for new interaction sequences that target the model's current predictive weaknesses, ensuring high-utility data acquisition. (2) Causality-Aware Fine-Tuning: We propose a counterfactual learning strategy that contrasts the outcomes of different actions from identical states, forcing the model to attribute state transitions to specific actions rather than ambient environmental evolution, thereby grounding its predictions in reliable causal mechanisms. By integrating active data acquisition with causal optimization, OnlineWM establishes a closed-loop refinement process that ensures the model is both robust to diverse scenarios and precise in its causal attribution. Extensive experiments demonstrate that OnlineWM significantly enhances action controllability and generalizes effectively to unseen domains.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-20T17:05:37Z</published>
+    <arxiv:comment>23 pages, 9 figures. Project page: https://onlinewm.github.io/</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Yikun Miao</name>
+    </author>
+    <author>
+      <name>Fangqi Zhu</name>
+    </author>
+    <author>
+      <name>Quanxin Shou</name>
+    </author>
+    <author>
+      <name>Xiaoyi Pang</name>
+    </author>
+    <author>
+      <name>Zhengyang Yan</name>
+    </author>
+    <author>
+      <name>Junhao Li</name>
+    </author>
+    <author>
+      <name>Haodong Wang</name>
+    </author>
+    <author>
+      <name>Zicong Hong</name>
+    </author>
+    <author>
+      <name>Song Guo</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.22055v1</id>
+    <title>Benchmarking World Models for Continual Learning on Compositional Tasks</title>
+    <updated>2026-09-18T17:46:28Z</updated>
+    <link href="https://arxiv.org/abs/2609.22055v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.22055v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A desirable property of a world model is the ability to learn continually across tasks, adapting to new environments without forgetting what the agent has already learnt. In particular, the ability to retain and reuse knowledge obtained from prior experiences underpins an agent's ability to efficiently adapt to novel environments, as the dynamics of the physical world can often be described in recurring mechanisms. However, the world model's measure of adaptation entangles two abilities: the speed and capacity to learn unseen tasks, and the reuse of knowledge already acquired, since incoming tasks carry novel content alongside what recurs. In order to isolate knowledge reuse from prior experiences, we propose a compositional continual learning benchmark for world models in robot manipulation. Specifically, we design each task curriculum with compositional tasks that combine aspects of the tasks seen in the sequence. We further factorise this composition along the axes of action and perception to better understand how different input modalities bottleneck knowledge reuse. We evaluate state-of-the-art world models under canonical continual learning methods, alongside a modular world model whose dynamics backbone contains explicitly reusable components. Results show that modularity balances reuse against forgetting better than conventional methods, but none solve the problem fully, leaving clear room for continual world models built to reuse without forgetting. More details are available on our project website: https://object814.github.io/Compositional-Continual-Learning/.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-18T17:46:28Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Haoyu Zhou</name>
+    </author>
+    <author>
+      <name>Joe Watson</name>
+    </author>
+    <author>
+      <name>Anson Lei</name>
+    </author>
+    <author>
+      <name>Ingmar Posner</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.21906v1</id>
+    <title>Intervention Granularity Matters: Coherent Treatment Bundles in Counterfactual Simulation with Clinical World Models</title>
+    <updated>2026-09-18T15:33:04Z</updated>
+    <link href="https://arxiv.org/abs/2609.21906v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.21906v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Counterfactual simulation with a clinical world model means fixing a patient's history, changing the treatment, and reading off the predicted response. Doing so requires deciding what counts as one intervention. In clinical settings, interventions are documented as bundles: a co-occurrence audit of 945,707 patient-hours from MIMIC-IV shows groups of components, such as every parameter of a dialysis circuit, that never appear apart, so an edit that changes one component on its own describes an hour that never occurs in the data. We hypothesize that the granularity at which an intervention is edited changes how a world model responds, and test this with Clin-JEPA, a latent world model of patient trajectories conditioned on hourly treatment text. At 1,019 documented onsets of invasive ventilation, we keep the patient's history and other treatments fixed and compare editing one ventilator setting with editing the complete configuration recorded for a real patient with the most similar recent trajectory. The complete bundle moves the predicted next state further than any single setting, consistently across all five settings, and the difference remains after accounting for how much each edit changes the model's input. Intervention granularity therefore materially affects the response of a clinical world model: single-component edits may understate treatment sensitivity, and bundle-aware editing may offer a better-supported basis for counterfactual treatment simulation.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-18T15:33:04Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Fangzhou Wang</name>
+    </author>
+    <author>
+      <name>Yixuan Yang</name>
+    </author>
+    <author>
+      <name>Camilla Balzarotti</name>
+    </author>
+    <author>
+      <name>Rishikesan Kamaleswaran</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.21787v1</id>
+    <title>Compact but Moving: Intervention-Relevant Geometry in Recurrent World Models</title>
+    <updated>2026-09-18T14:03:05Z</updated>
+    <link href="https://arxiv.org/abs/2609.21787v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.21787v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Learned world models may have compact interventions even when their recurrent state is high-dimensional, but it is unclear what happens to such a correction after it enters the model. We study this question in a controlled recurrent world model where prior work identified a checkpoint-specific rank-4 interface for one-shot counterfactual velocity interventions. The correction rapidly leaves this fixed entry subspace during autonomous rollout. Nevertheless, a low-rank image obtained by transporting the entry directions through the factual recurrent Jacobian chain continues to capture most of the nonlinear correction. Restarts using the tangent-predicted correction preserve substantial counterfactual future function. This transport/function pattern recurs across independently trained structured-GRU models and a parameter-matched LSTM initialized with a privileged compact correction. We further characterize a finite-horizon future-response operator over the full recurrent carrier. Patching shifts its leading future-sensitive directions toward the matched native-counterfactual organization, and the local operator accurately ranks finite perturbation effects over the registered direction panels at the patched and native-counterfactual basepoints. A separate full-amplitude assay finds substantial factual-endpoint tangent residuals and supports response reconfiguration in two of three checkpoints. Together, these results show that compact intervention structure can persist as a moving, state-dependent local geometry embedded in high-dimensional recurrent dynamics, without implying a fixed or dynamically closed low-dimensional state.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-18T14:03:05Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Yuming Chen</name>
+    </author>
+    <author>
+      <name>Yang Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.21748v1</id>
+    <title>World Modeling in Transformers</title>
+    <updated>2026-09-18T13:24:18Z</updated>
+    <link href="https://arxiv.org/abs/2609.21748v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.21748v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Behavioral failures can make a transformer appear to lack a world model even when it has learned faithful representations of its environment. We demonstrate this in TaxiGPT, a transformer trained on random walks through Manhattan whose failures have been interpreted as evidence of an incoherent internal map. Through mechanistic analysis and causal interventions, we show that the model represents intersections and streets, tracks its position, and uses a goal compass to navigate. We trace its failures to interference between superposed intersection features, which disrupts localization within the internal map. Affordance packing, which groups representations of intersections with the same legal moves, helps limit the consequences of these errors. Finally, we propose mechanistic indicators that we use to compare models and show that world-modeling capacities emerge at different stages of training. Our findings motivate a shift from asking whether a model has a world model to mechanistically studying its world modeling: the interacting capacities through which it represents its environment and uses those representations to guide behavior.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-18T13:24:18Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Pierre Beckmann</name>
+    </author>
+    <author>
+      <name>Matthieu Queloz</name>
+    </author>
+    <author>
+      <name>Andre Freitas</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.21740v1</id>
+    <title>Sandwich-Residuals: Parameter-Efficient Test-time Adaptation of World Models</title>
+    <updated>2026-09-18T13:17:05Z</updated>
+    <link href="https://arxiv.org/abs/2609.21740v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.21740v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Latent world models enable planning by predicting the effects of actions in a learned representation space, but their predictions can become unreliable when test-time conditions differ from training. Existing test-time adaptation methods address this by updating parts of the pretrained model, often modifying millions of parameters and requiring a choice of which internal components to adapt. We introduce Sandwich-Residuals, a lightweight alternative that keeps the pretrained world model frozen and learns only small residual corrections around the predictor. The residuals are optimized online using the model's self-supervised prediction error and require no rewards, labels, or source-domain data. Across 21 conditions on the AdaJEPA benchmark, our method achieves $1.3\times$ the success rate of the frozen model while retaining 95% of the performance of the strongest AdaJEPA variant and adapting 97-99% fewer parameters. Under compound shifts, this advantage increases to $1.9\times$ the success rate of the frozen model, while remaining comparable to internal block adaptation. We further demonstrate the same adaptation principle on a DINO-WM model for 3-D manipulation. These results suggest that effective test-time adaptation of world models does not necessarily require modifying their pretrained internal weights.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-18T13:17:05Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Krishnam Soni</name>
+    </author>
+    <author>
+      <name>Aditya Sehgal</name>
+    </author>
+    <author>
+      <name>Vedant Dave</name>
+    </author>
+    <author>
+      <name>Elmar Rueckert</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.21712v1</id>
+    <title>ZYT-World: A Real-Time Controllable World Model for Closed-Loop Autonomous-Driving Simulation</title>
+    <updated>2026-09-18T12:49:01Z</updated>
+    <link href="https://arxiv.org/abs/2609.21712v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.21712v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Generative world models offer controllable and repeatable closed-loop simulation for end-to-end and vision-language-action driving policies, but production deployment exposes three unresolved requirements: faithfully reproducing a mixed fisheye-pinhole rig at native resolutions; reconciling causal, per-timestep interaction with long-horizon stability and low latency; and preserving scene identity when a location is revisited. We present ZYT-World, a single architecture that natively generates four fisheye views with field of view &gt; 180° and three pinhole views. Projection-specific Plucker adapters encode camera geometry, ego-motion adaptive layer normalization provides global motion control, and a lightweight pixel-aligned layout conditions traffic participants and signals through instance-level boxes, headings and colors. Heterogeneous training combines full-rig geometric coverage with high-resolution detail. Teacher forcing, causal consistency distillation, self-rollout distribution matching distillation, and RigCritic transform a 40-step bidirectional teacher into a one-step, per-latent streaming generator, with RigCritic evaluating the seven-view rig jointly. A 19M-parameter variational autoencoder decoder (TinyVAE), W8A8 quantization, and our inference engine reduce decoding, backbone, and incremental-execution costs, respectively. Finally, cross-trajectory pairs derived from real captures train a plug-in implicit-memory module that preserves place-specific evidence. On the internal multi-view test set, the one-step model retains more than 90% of the teacher's PSNR and SSIM, while FID, FVD, and LPIPS stay within 11% of the teacher. Under the generator-only timing in Figure 2, it is 107.7 times faster than the 40-step bidirectional teacher. TinyVAE decodes 59.8 times faster than Wan. 30s rollouts and cross-trajectory revisits show the intended long-horizon and memory behavior.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-18T12:49:01Z</published>
+    <arxiv:comment>Technical Report. Videos and additional results are available at zyt-aim.github.io/ZYT-World</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Boni Hu</name>
+    </author>
+    <author>
+      <name>Xiong Wei</name>
+    </author>
+    <author>
+      <name>Haoming Huang</name>
+    </author>
+    <author>
+      <name>Yong Huang</name>
+    </author>
+    <author>
+      <name>Chenbo Wang</name>
+    </author>
+    <author>
+      <name>Yi Yang</name>
+    </author>
+    <author>
+      <name>Jiancheng Wang</name>
+    </author>
+    <author>
+      <name>Ruicheng Zhu</name>
+    </author>
+    <author>
+      <name>Zhimin Yang</name>
+    </author>
+    <author>
+      <name>Guanglai Liu</name>
+    </author>
+    <author>
+      <name>Qiaowan Jin</name>
+    </author>
+    <author>
+      <name>Dongzhuo Wang</name>
+    </author>
+    <author>
+      <name>Haiwei Kuang</name>
+    </author>
+    <author>
+      <name>Jiajun Fan</name>
+    </author>
+    <author>
+      <name>Yue Wu</name>
+    </author>
+    <author>
+      <name>Jiaxin Wei</name>
+    </author>
+    <author>
+      <name>Hao Sun</name>
+    </author>
+    <author>
+      <name>Feihong Yan</name>
+    </author>
+    <author>
+      <name>Wei Bi</name>
+    </author>
+    <author>
+      <name>Kaixuan Wang</name>
+    </author>
+    <author>
+      <name>Zichao Guo</name>
+    </author>
+    <author>
+      <name>Xiaozhi Chen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.21482v1</id>
+    <title>Adaptive Rollout Truncation Based on Epistemic Uncertainty for Efficient Offline World Model Training</title>
+    <updated>2026-09-18T08:32:34Z</updated>
+    <link href="https://arxiv.org/abs/2609.21482v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.21482v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Accurate neural world models are central to model-based robotics, where they enable robots to predict future states from previously observed trajectories. Multi-step autoregressive training improves long-horizon prediction, but fixed rollout horizons also increase computational cost and can amplify early training errors when the model is still inaccurate. Existing training schemes typically use the same rollout length throughout optimization, independent of the model's current predictive reliability.
+  We propose an epistemic uncertainty-driven adaptive rollout strategy for offline world model training following an auto-curriculum training scheme. Instead of always unrolling to a fixed horizon, the model terminates autoregressive rollouts once epistemic uncertainty exceeds a threshold calibrated from a warm-up phase. We study two uncertainty estimators: a five-head ensemble with a shared recurrent backbone and Monte Carlo Dropout. A two-stage warm-up procedure stabilizes uncertainty estimates before we enable adaptive truncation.
+  Experiments on ANYmal-D and ANT show that ensemble-based adaptive truncation matches or improves the prediction accuracy of fixed-horizon training and the RWM-U baseline while requiring substantially fewer cumulative rollout steps. Training a world model on ANYmal-D following the presented approach reaches comparable final performance with the baselines with roughly 72% less rollout computation. These results indicate that epistemic uncertainty is useful not only for downstream policy regularization, but also for making world model training itself more compute-efficient.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-18T08:32:34Z</published>
+    <arxiv:comment>8 pages, 12 figures. Accepted at the IEEE/RSJ IROS 2026 Workshop "Rethinking Uncertainty for Modern Robotics Paradigms"</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Nikodem Sebastian Zymla</name>
+    </author>
+    <author>
+      <name>Laurin Thiele</name>
+    </author>
+    <author>
+      <name>Johannes Pitz</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.21155v1</id>
+    <title>Same World, Different Knowledge: When Isolated Audits Misjudge World-Model Repairs</title>
+    <updated>2026-09-17T23:51:16Z</updated>
+    <link href="https://arxiv.org/abs/2609.21155v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.21155v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A repair favored under an isolated input fault can be inferior when deployed modules share the faulty information. We introduce an information-interface
+  audit for world models, distinguishing fidelity gaps, where exact inputs become estimates, from availability gaps, where inputs are missing. Fixed-weight
+  interventions measure prediction error, input dependence, and paired closed-loop benefit, including dependencies introduced by reconstruction. In
+  simulated quadrotor model predictive control, coupled, opposite-sign 10% mass/thrust calibration errors reduce a physics-anchored model's success from 69%
+  to 8%; uncertainty training restores 65%. Wind reconstruction recovers control benefit but inherits calibration dependence. For a positive calibration
+  offset, reconstruction-only corruption favors uncertainty-trained reconstruction, whereas shared corruption favors the baseline. Acceleration diagnostics
+  reveal compensation between reconstruction bias and nominal-model error, also observed with a disturbance observer. Repair selection therefore depends on
+  the information paths used in deployment.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-17T23:51:16Z</published>
+    <arxiv:comment>9 pages, 3 figures, 6 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Rui Min</name>
+    </author>
+    <author>
+      <name>Xianyao Li</name>
+    </author>
+    <author>
+      <name>Fang Xu</name>
+    </author>
+    <author>
+      <name>Sofiane Lachab</name>
+    </author>
+    <author>
+      <name>Jing Du</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.19674v1</id>
+    <title>Conservation Buys Stability and Factoring Buys Counterfactuals in Physical World Models</title>
+    <updated>2026-09-17T04:16:51Z</updated>
+    <link href="https://arxiv.org/abs/2609.19674v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.19674v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A learned simulator can reproduce its training conditions accurately yet fail in two distinct ways once those conditions change. Over long rollouts, small errors accumulate until the trajectory drifts away from physically plausible behavior; under an intervention on a physical parameter, the model may continue to follow the law seen during training rather than the intervened one. We show that these two failures require different structural remedies. Evolving a learned energy with a symplectic integrator preserves the geometry of the conservative dynamics and keeps rollouts bounded and physically meaningful for up to $100\times$ the training horizon, while equal-capacity predictors, an energy-regularized predictor, and a tuned neural ODE diverge. By contrast, encoding the physical coupling through an explicit linear factorization enables the model to follow a never-seen sign of that coupling, whereas an unrestricted parameterization remains locked to the training law. Crucially, the two mechanisms are separable: removing the structure responsible for long-horizon stability leaves counterfactual transfer intact, while removing the factorized coupling destroys counterfactual transfer without eliminating stability. This double dissociation, established with matched controls that remove or replace one structural component at a time, persists beyond the headline three-body system and remains visible when the physical state must be inferred from pixels rather than provided directly. The result is a concrete design principle for physical world models: long-horizon stability and changed-law generalization arise from distinct structural commitments, and each can be imposed deliberately without requiring the other.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-17T04:16:51Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Yufeng Wang</name>
+    </author>
+    <author>
+      <name>Parivesh Priye</name>
+    </author>
+    <author>
+      <name>Lu Wei</name>
+    </author>
+    <author>
+      <name>Haibin Ling</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.19600v1</id>
+    <title>WorldContact: A Contact-Centric World Model for Scalable Robot Learning</title>
+    <updated>2026-09-17T02:27:32Z</updated>
+    <link href="https://arxiv.org/abs/2609.19600v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.19600v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Adapting robots to new objects and tasks requires interaction experience that can be costly to obtain. We present WorldContact, a contact-centric world model for deformable-object manipulation, constructed from a limited set of high-quality trajectories to generate additional training data efficiently. It predicts object dynamics using larger time steps than the source numerical simulator, which requires small integration steps to resolve rapid motion and prevent interpenetration. We evaluate WorldContact across 16 shopping-bag manipulation tasks. State-rollout measurements on a single H100 GPU show a $10\times$ speedup over the source simulator, excluding rendering and disk I/O. We use the generated data to fine-tune an existing vision-language-action policy and deploy it directly on a real robot. In bag lifting, the same policy achieves 65% single-attempt success when fine-tuned on source simulation data alone, compared with 95% when fine-tuned on the dataset expanded with WorldContact. These results support efficient data generation with WorldContact for robot policy adaptation.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-17T02:27:32Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Caoliwen Wang</name>
+    </author>
+    <author>
+      <name>Mengdi Wang</name>
+    </author>
+    <author>
+      <name>Heng Zhang</name>
+    </author>
+    <author>
+      <name>Shixun Huang</name>
+    </author>
+    <author>
+      <name>Siyuan Chen</name>
+    </author>
+    <author>
+      <name>Chao Liu</name>
+    </author>
+    <author>
+      <name>Anpei Chen</name>
+    </author>
+    <author>
+      <name>Zhendong Wang</name>
+    </author>
+    <author>
+      <name>Peter Yichen Chen</name>
+    </author>
+    <author>
+      <name>Huamin Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.18442v1</id>
+    <title>Risk-Aware World Modeling with Flow-Guided Occupancy Evolution for Selective Trajectory Planning in Automated Driving</title>
+    <updated>2026-09-16T10:32:37Z</updated>
+    <link href="https://arxiv.org/abs/2609.18442v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.18442v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Safe motion planning in automated driving requires anticipating evolving traffic risks and deciding when to revise the current planned trajectory. We introduce RiskWorld, a risk-aware world modeling framework for shared occupancy forecasting and selective trajectory replacement. Spatial risk fields and temporal actor context are fused with visual bird's-eye-view features. Flow-guided evolution transports occupancy and scene features, while signed residuals correct occupancy after transport. One forecast is generated per planning step and reused across candidates. Each candidate is compared with a current-state persistence reference, yielding a nonnegative collision-score correction. The trajectory selected by current-world evaluation serves as the planning anchor and is replaced only when additional predicted risk triggers intervention and an alternative satisfies component-wise constraints on predicted risk and trajectory error. Candidate geometries remain unchanged. We evaluate RiskWorld for open-loop planning on nuScenes using camera features, annotation-derived current and historical actor states, and dataset-provided map context. RiskWorld achieves the lowest collision rate at a long evaluation horizon of 3 s, and the second-best average L2 error among various state-of-the-art baselines, while running at 11.5 FPS on a single NVIDIA RTX 4090 with 90.81 M parameters. Within-setting ablations show that RiskWorld achieves lower collision rates than the current-state rescoring baseline, while forecast reuse enables additional candidates to be evaluated at low marginal computational cost.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.ET" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-16T10:32:37Z</published>
+    <arxiv:comment>8 pages, 2 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Rongxiang Zeng</name>
+    </author>
+    <author>
+      <name>Linsen Cai</name>
+    </author>
+    <author>
+      <name>Jiafu Zhang</name>
+    </author>
+    <author>
+      <name>Yijie Zhong</name>
+    </author>
+    <author>
+      <name>Yide Tao</name>
+    </author>
+    <author>
+      <name>Shuai Wang</name>
+    </author>
+    <author>
+      <name>Nan Zheng</name>
+    </author>
+    <author>
+      <name>Hai L. Vu</name>
+    </author>
+    <author>
+      <name>Alvaro Garcia Hernandez</name>
+    </author>
+    <author>
+      <name>Yongqi Dong</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.18193v1</id>
+    <title>WAVE-Go: World-Model Navigation with Adaptive Execution for Wheel-Legged Robots</title>
+    <updated>2026-09-16T06:30:50Z</updated>
+    <link href="https://arxiv.org/abs/2609.18193v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.18193v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>World models can anticipate the consequences of navigation actions, but predicted action sequences may become invalid during execution, especially when wheel-legged robots encounter dynamic obstacles or change locomotion modes. We propose WAVE-Go, an image-goal navigation framework that separates world-action prediction from interruptible command execution. Its executor adaptively selects an action prefix and cancels pending commands when updated observations invalidate execution. A conditional-risk formulation specifies prefix selection under an estimated cumulative failure budget, while posture and locomotion-mode transitions require clearance, stability, and task-evidence checks. In the reported navigation evaluation, WAVE-Go achieves 74.1% in-distribution success and 63.3% dynamic out-of-distribution success, exceeding the strongest baseline by 4.7 and 7.7 percentage points, respectively, while reducing collisions from 4.4 to 2.9 per 100 m. Compared with interruptible fixed four-command execution, WAVE-Go raises success by 4.0 percentage points while reducing replanning frequency by 51.2% and collision rate by 6.5%. Execution ablations also show that runtime interruption improves success, collision rate, and reaction latency at the cost of additional replanning. These results support adaptive, interruptible execution as a means of balancing navigation performance and planning overhead. Code is available at https://github.com/vigorlee/wave-go.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-16T06:30:50Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Mingyi Li</name>
+    </author>
+    <author>
+      <name>Ji Li</name>
+    </author>
+    <author>
+      <name>Zhihao Ouyang</name>
+    </author>
+    <author>
+      <name>Yage He</name>
+    </author>
+    <author>
+      <name>Börje F. Karlsson</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.16697v1</id>
+    <title>World Models for Embodied Intelligence: From Plausible to Controllable to Actionable</title>
+    <updated>2026-09-15T06:22:42Z</updated>
+    <link href="https://arxiv.org/abs/2609.16697v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.16697v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>World models connect perception and decision-making in embodied intelligence by maintaining hidden state, anticipating consequences, comparing interventions, and adapting when execution departs from expectations. Although progress is often measured by visual fidelity, their value lies in improving behavior. Before reaching for a cup, a person anticipates its weight and resistance to grasping, shaping the hand before contact. Such anticipation is coarse and rarely pictorial, yet it guides action. This raises a central question: which predictive capabilities improve behavior? Existing surveys, organized by architecture, output modality, or application domain, leave this question implicit. We introduce three progressively stronger capability levels: Plausible models preserve task-relevant temporal, geometric, or physical structure; Controllable models additionally predict how interventions alter that structure; and Actionable models translate predictions into measurable gains in planning, action, learning, evaluation, verification, recovery, or data selection. We complement this hierarchy with a 3 x 4 matrix crossing geometry, physics, and action grounding with improvement loops centered on data, rewards, policies, and the model itself. Using this framework, we survey manipulation, navigation, locomotion, autonomous driving, and general embodied learning, tracing technical progressions, clarifying capability requirements, and examining datasets, benchmarks, and evaluation protocols. We identify challenges in long-horizon consistency, uncertainty calibration, causal intervention testing, latency, verification and recovery, and cross-embodiment transfer. This perspective shifts evaluation from visual plausibility toward whether predictions capture task-relevant state, reflect intervention effects, and improve the closed-loop behavior of embodied agents.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-15T06:22:42Z</published>
+    <arxiv:comment>Project Page: https://3dagentworld.github.io/EmbodiedWM/</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Nanjie Yao</name>
+    </author>
+    <author>
+      <name>Hao Wang</name>
+    </author>
+    <author>
+      <name>Chong Cheng</name>
+    </author>
+    <author>
+      <name>Zhikang Chen</name>
+    </author>
+    <author>
+      <name>Wenzhe Li</name>
+    </author>
+    <author>
+      <name>Jiafei Lyu</name>
+    </author>
+    <author>
+      <name>Li Shen</name>
+    </author>
+    <author>
+      <name>Peilin Zhao</name>
+    </author>
+    <author>
+      <name>Zongqing Lu</name>
+    </author>
+    <author>
+      <name>Gao Huang</name>
+    </author>
+    <author>
+      <name>Steven Hoi</name>
+    </author>
+    <author>
+      <name>Dacheng Tao</name>
+    </author>
+    <author>
+      <name>Deheng Ye</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.15781v1</id>
+    <title>When the World Lies: Backdoor Attacks on Latent World Models for Downstream Control</title>
+    <updated>2026-09-14T16:01:13Z</updated>
+    <link href="https://arxiv.org/abs/2609.15781v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.15781v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Pretrained world models, learned simulators that encode an observation into a latent state and predict how it evolves under actions, are beginning to be reused as off-the-shelf dynamics backbones for control, like pretrained encoders and language models are reused today. We show that this reuse opens a supply-chain backdoor: an adversary who controls only a released checkpoint can hijack the downstream controller, even though the victim trains and evaluates entirely on clean data and never sees the trigger. The attack encodes no explicit trigger-to-action rule. Instead, the poisoned model routes trigger-bearing observations into a chosen latent region and reshapes the local dynamics there, so that the victim's own optimization (Dreamer-style actor training in imagination, or MPC/CEM planning over predicted futures) re-discovers the attacker's target action on its own. Across several control tasks and trigger families, the trigger steers the controller's action toward the attacker's target, controlling every action dimension and hijacking 100\% of triggered steps on the strongest settings. The checkpoint still passes the clean-data diagnostics a victim would run before deployment, with clean-task success retaining at least $\sim$75\%. The effect is temporally gated: it appears only while the trigger is present and disappears when the trigger is removed. Trigger-blind repair is budget-dependent: moderate clean fine-tuning can preserve clean utility while leaving the triggered failure intact, whereas sufficiently aggressive adaptation can remove it only after substantially degrading clean control. The world-model backbone itself is therefore an emerging and underexamined attack surface for control. The full code and artifacts are available in our repository.</summary>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-14T16:01:13Z</published>
+    <arxiv:primary_category term="cs.CR"/>
+    <author>
+      <name>Roberto Riaño</name>
+    </author>
+    <author>
+      <name>Gorka Abad</name>
+    </author>
+    <author>
+      <name>Stjepan Picek</name>
+    </author>
+    <author>
+      <name>Aitor Urbieta</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.15113v2</id>
+    <title>Legislating World-Model-Based Planning with Legal Reasoning</title>
+    <updated>2026-09-16T21:58:06Z</updated>
+    <link href="https://arxiv.org/abs/2609.15113v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.15113v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>As robotic systems grow more general, legal norms are needed to integrate them into society. This paper extends the isomorphism problem of aligning legal source texts with their encodings, and measures two key challenges to robot normative control: (1) the grounding isomorphism gap, where perception error grounds false atoms for legal reasoning, and (2) the ontological isomorphism gap, where one legal conclusion admits many faithful translations into planning constraints. The paper introduces a legal planning stack that employs Defeasible Deontic Logic (DDL) to constrain a motion planner. The stack leverages learned world models to plan and to provide legal context, enabling ex ante governance that intervenes before an illegal action is executed. It was deployed on a simulated robot arm pushing a cube across a 3x3 grid. The findings were (1) the legislated agent abided substantially more often than the non-legislated one, and modeling perception uncertainty lifted abidance even further, (2) the legal reasoning ran efficiently at runtime and its verdicts were auditable, and (3) the stack adapted to exogenous signals and endogenous rule changes. Both gaps were measured: (4) world model and probe error corrupted the factual input for the DDL reasoner, and (5) a single law admitted several faithful metric interpretations yielding drastically different abidance. Thus, ex ante legislation functions as intended, and closing these gaps with a standardized mapping from the law to runtime constraints and improved fact grounding from perception will yield robust laws that align robot behavior with society's norms. Project page: https://dylanwaldner-cail.github.io/Legislated-Planner/.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-14T06:45:58Z</published>
+    <arxiv:comment>Project page: https://dylanwaldner-cail.github.io/Legislated-Planner/</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Dylan Waldner</name>
+    </author>
+    <author>
+      <name>Yiannis Kantaros</name>
+    </author>
+    <author>
+      <name>Guido Governatori</name>
+    </author>
+    <author>
+      <name>Risto Miikkulainen</name>
+    </author>
+    <author>
+      <name>Amir Banifatemi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.14709v1</id>
+    <title>An immune world model for multiscale forecasting and therapeutic hypothesis generation</title>
+    <updated>2026-09-13T18:06:18Z</updated>
+    <link href="https://arxiv.org/abs/2609.14709v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.14709v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Immune therapies act across cell-intrinsic programs, tissue ecosystems, and patient-specific immune states, yet most predictors address these scales separately. We used a governed evolutionary AI Scientist to construct the Immune World Model, an action-conditioned model that learns how interventions move immune states across cellular, tissue, and individual levels. The Immune World Model--building Scientist searched candidate architectures and workflows, and the resulting world model was frozen before independent confirmation. The frozen model generalized to unseen interventions and biological contexts, recovered intervention-specific cellular programs, integrated cell and tissue information to improve ecosystem and patient-response prediction, and forecast unseen perturbation combinations. Immune World Model--guided analysis then combined measured perturbations with cross-axis inference to nominate IL-36$γ$ plus SIRP$α$ inhibition as a complementary-axis therapeutic hypothesis, whereas a governed self-correction audit rejected every screened cytokine pair. The Immune World Model provides a framework for multiscale immune simulation that connects AI Scientist-driven model construction, intervention forecasting, and the generation of prospectively testable therapeutic hypotheses.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.QM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-13T18:06:18Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Taoyong Cui</name>
+    </author>
+    <author>
+      <name>Xi Wang</name>
+    </author>
+    <author>
+      <name>Zonghang Li</name>
+    </author>
+    <author>
+      <name>Jinchao Ding</name>
+    </author>
+    <author>
+      <name>Lingsen You</name>
+    </author>
+    <author>
+      <name>Yuzhi Xu</name>
+    </author>
+    <author>
+      <name>Wanghan Xu</name>
+    </author>
+    <author>
+      <name>Fang Wu</name>
+    </author>
+    <author>
+      <name>Kejun Ying</name>
+    </author>
+    <author>
+      <name>Wanli Ouyang</name>
+    </author>
+    <author>
+      <name>Pheng Ann Heng</name>
+    </author>
+    <author>
+      <name>Ling Yang</name>
+    </author>
+    <author>
+      <name>Zhenfei Yin</name>
+    </author>
+    <author>
+      <name>Yingcheng Wu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.14462v1</id>
+    <title>AlayaVista: Streaming World Modeling from Panoramic States to Perspective Video</title>
+    <updated>2026-09-13T12:13:51Z</updated>
+    <link href="https://arxiv.org/abs/2609.14462v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.14462v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Interactive video world models must maintain broad scene context under camera motion while producing high-fidelity observations with low latency. Existing approaches face a representation trade-off: perspective models operate on local views and must preserve off-screen content over long rollouts, whereas broader spatial coverage is typically obtained by synthesizing full-sphere videos or constructing explicit 3D representations. Motivated by the complementary roles of global context and selective local acuity in visual perception, we present AlayaVista, a camera-controllable streaming video world model that decouples panoramic world evolution from perspective observation synthesis. Given a single perspective image, AlayaVista constructs a 360-degree scene prior using a pretrained panorama expansion model and then evolves the scene as a camera-conditioned panoramic latent state. A latent viewport renderer maps this state to the requested perspective video latents, while a perspective refiner restores details, suppresses artifacts, and performs super-resolution. To support efficient streaming, we adapt the panoramic generator to chunk-autoregressive generation and distill both panoramic generation and perspective refinement into few-step processes. To provide the supervision required by this design, we construct MUGEN, a large-scale real-world panoramic video dataset containing 1,318 hours of videos at resolutions of at least 4K, together with rich semantic and geometric annotations.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-13T12:13:51Z</published>
+    <arxiv:comment>Project page: https://alaya-lab.github.io/AlayaVista</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Jiaming Tan</name>
+    </author>
+    <author>
+      <name>Mingliang Zhai</name>
+    </author>
+    <author>
+      <name>Zhen Li</name>
+    </author>
+    <author>
+      <name>Yuwei Wu</name>
+    </author>
+    <author>
+      <name>Chuanhao Li</name>
+    </author>
+    <author>
+      <name>Kaipeng Zhang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.14073v1</id>
+    <title>LPA-CWM: A Learned Physical Adjudicator for Motion Reasoning with Counterfactual World Models</title>
+    <updated>2026-09-12T17:46:32Z</updated>
+    <link href="https://arxiv.org/abs/2609.14073v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.14073v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Counterfactual world models (CWM) extract motion from pretrained video predictors by comparing factual and intervened predictions. However, responses generated under different target-frame masks vary in reliability, while uniform aggregation weights them equally. We formulate response aggregation as candidate reliability learning and propose LPA-CWM with a lightweight Learned Physical Adjudicator (LPA). Trained on dense MOVi-F trajectories, the 3.0M-parameter LPA compares visual context and response structure across an unordered candidate set to predict relative weights, while the CWM predictor and intervention generator remain frozen. The weighted responses undergo windowed localization and one paired re-evaluation to recover motion. We also introduce Completeness-aware Motion Correspondence (CMC), a ground-truth-anchored evaluation protocol that jointly measures localization, trajectory completeness, visibility, and continuity, counting missing predictions as failures on visible dynamic points. On the evaluated DAVIS and Kinetics subsets, LPA-CWM improves $\mathrm{DCA}_{\mathrm{avg}}$ over Uniform CWM by 60.0\% and 29.0\%, respectively, and also improves tracking accuracy under TAP-Vid First. A quick overview is available at https://LPA-CWM.github.io.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-12T17:46:32Z</published>
+    <arxiv:comment>A quick overview is available at https://LPA-CWM.github.io</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Kunwei Wu</name>
+    </author>
+    <author>
+      <name>Xiang Liu</name>
+    </author>
+    <author>
+      <name>Guocai Yao</name>
+    </author>
+    <author>
+      <name>Junming Chen</name>
+    </author>
+    <author>
+      <name>Zhikang Chen</name>
+    </author>
+    <author>
+      <name>Min Zhang</name>
+    </author>
+    <author>
+      <name>Pengwei Wang</name>
+    </author>
+    <author>
+      <name>Sen Cui</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.12441v1</id>
+    <title>IMPLY: Physically Anchored Consistency for World-Model Rollouts</title>
+    <updated>2026-09-11T05:02:08Z</updated>
+    <link href="https://arxiv.org/abs/2609.12441v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.12441v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A world model asked what happens if an object is pushed at several speeds produces several futures. If the model has the object in mind, those futures agree about it: each implies the same mass and friction. The consistency checks now used to vet world-action models ask whether a model's futures agree with each other, and none of them knows any physics. We show that this is not enough, and what to do instead. IMPLY reads the physics each rollout implies by inverting a simulator and scores a set of rollouts by how well one object explains all of them, anchored to two calibration pushes the model has observed. In a controlled setting, self-consistency gives a perfect score to a model that ignores the object and always predicts a typical push; anchoring exposes it (AUROC 0.70 versus 1.00). On a real model, V-JEPA 2-AC adapted to the scene, the same thing happens. Given its own calibration pushes the model tracks the object (per-object correlation with the truth 0.91); given another object's, it does not (0.05). Self-consistency cannot tell these apart, preferring the right evidence on 52% of objects, chance level, while anchored disagreement prefers it on 73% and correlates 0.92-0.99 with the rollouts' error. Used to choose among candidate rollout sets, it comes within 0.003 of an oracle that sees the truth. A model that has internalised the wrong object is exactly as self-consistent as one that has internalised the right one; consistency has to be anchored to evidence.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-11T05:02:08Z</published>
+    <arxiv:comment>7 pages, 2 figures, 3 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Aman Mehta</name>
+    </author>
+    <author>
+      <name>Riya Baviskar</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.12036v1</id>
+    <title>Pelican-Sim 1.0: A General World Model Simulator for Embodied Intelligence</title>
+    <updated>2026-09-10T17:51:01Z</updated>
+    <link href="https://arxiv.org/abs/2609.12036v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.12036v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this technical report, we propose Pelican-Sim 1.0, a general world model simulator for embodied intelligence that predicts future observations from visual context and robot actions to support downstream learning and decision making. The model incorporates four key design features: (1) Unified action representation: a 28-dimensional action value space covering most mainstream embodiments, keeping one model valid across heterogeneous devices. (2) Action-visual injection: URDF- and camera-rendered action videos bridge actions and pixels, giving markedly better controllability across embodiments, scenes, and tasks (PSNR +0.904 over alternative fusion baselines). (3) Sparse mixture-of-experts (MoE): sparse MoE layers add capacity for heterogeneous dynamics and absorb the action modality while reducing inter-modality conflict (FVD -6.530 vs. the dense backbone). (4) Efficient rollout generation: causal adaptation and few-step distillation yield a four-step autoregressive simulator, achieving a 5.67-fold speedup over the 35-step model. Benefiting from these designs, we train on approximately one million real-world and simulated trajectories and obtain large gains in action controllability and video quality: PSNR improves over the strongest evaluated baselines by 4.636 on AgiBotWorld Beta, 2.080 on RoboMIND, and 10.343 on RoboTwin, with the adapted EWMBench DYN score up 0.426 on RoboTwin. Relying on this, four downstream applications on RoboTwin succeed: 500 generated trajectories added to 50 demonstrations per task raise policy success from 70% to 93%; policy evaluation reaches a Pearson correlation of 0.994 across five checkpoints; and relative success gains reach 47.7% for action selection and 20.3% for policy improvement. Qualitative generalization across trajectory, scene, object, embodiment, and viewpoint shifts highlights its potential as a general-purpose world model simulator.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-10T17:51:01Z</published>
+    <arxiv:comment>Project page: https://zoushilong1024.github.io/Pelican-Sim1.0/</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Shilong Zou</name>
+    </author>
+    <author>
+      <name>Shilin Zhang</name>
+    </author>
+    <author>
+      <name>Yingji Zhang</name>
+    </author>
+    <author>
+      <name>Yuhang Huang</name>
+    </author>
+    <author>
+      <name>Yi Zhang</name>
+    </author>
+    <author>
+      <name>Zeyuan Ding</name>
+    </author>
+    <author>
+      <name>Han Dong</name>
+    </author>
+    <author>
+      <name>Junwei Liao</name>
+    </author>
+    <author>
+      <name>Yong Dai</name>
+    </author>
+    <author>
+      <name>Jian Tang</name>
+    </author>
+    <author>
+      <name>Xiaozhu Ju</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.11445v1</id>
+    <title>FARM: Reading Failure Signals from the Internal Predictive States of a Frozen Robotic World Model</title>
+    <updated>2026-09-10T12:14:37Z</updated>
+    <link href="https://arxiv.org/abs/2609.11445v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.11445v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Reliable robot deployment requires online failure monitoring, yet existing monitors mainly derive risk from proxy signals or train dedicated monitoring components. We ask whether the internal predictive states of a frozen pretrained robotic world model already contain directly decodable failure information. Failure-Aware Readout from World Models (FARM) trains only a 33,985-parameter supervised readout over frozen VLA-JEPA predictive states, producing step-wise failure scores and causal trajectory risk. Five-fold out-of-fold evaluation across seven source tasks reaches 85.68/88.59 pooled AUROC/AUPRC, and FARM gives the best Seen performance among 15 matched baselines on the 10-task benchmark. Across four real-robot populations on PIPER X, SO-101, and Franka, fixed-readout transfer and readout-only adaptation test deployment shifts without updating the predictive backbone. FARM also discriminates failures from partial causal histories and adds 0.2256 ms mean CUDA latency once the frozen state is available. These results support frozen predictive world-model states as reusable features for causal, transferable, and low-overhead execution monitoring.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-10T12:14:37Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Haoran Pei</name>
+    </author>
+    <author>
+      <name>Mingrui Luo</name>
+    </author>
+    <author>
+      <name>Senbao Wang</name>
+    </author>
+    <author>
+      <name>Haoran Lv</name>
+    </author>
+    <author>
+      <name>Jie Guo</name>
+    </author>
+    <author>
+      <name>Sheng Zhong</name>
+    </author>
+    <author>
+      <name>Ruixi Ci</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.10954v1</id>
+    <title>Measuring the Value of World-Model Updates: A Counterfactual Utility Protocol for Continual Adaptation</title>
+    <updated>2026-09-10T01:22:57Z</updated>
+    <link href="https://arxiv.org/abs/2609.10954v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.10954v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Continual world models must decide whether new data justify changing the model. Fixed replay schedules and prediction-error triggers specify when to update, but neither reveals the value of an individual update: one deployment run cannot show how the same model would have performed at that moment had it held its parameters. We introduce the fork ledger, which branches a deployment stream at pre-registered decision points into matched update and hold continuations under common random numbers. It evaluates both continuations on the same episodes and records $ΔR = R_{\mathrm{update}} - R_{\mathrm{hold}}$. Always applying one fixed update mechanism lowers return on all three simulated control tasks: CartPole ($-144.0$; checkpoint-bootstrap $95\%$ CI $[-185.4,-116.1]$, against a converged return near $650$), Walker ($-82.8$; $[-101.1,-61.7]$) and Cheetah ($-18.6$; $[-29.0,-6.6]$). Divergence is an outcome of applying the update, so the estimand counts every attempted fork; restricted to the $693$ of $720$ that did not collapse, CartPole and Walker are unchanged in sign ($-113.4$ and $-82.1$) and Cheetah becomes unresolved ($-3.9$; $[-17.5,+13.0]$). The task is the unit of inference: each contributes $240$ attempted forks over five pretrained checkpoints crossed with two drift directions. The ledger makes counterfactual utility observable for a fixed mechanism, allowing triggers to be judged by the updates they select rather than by surprise detection alone.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-10T01:22:57Z</published>
+    <arxiv:comment>13 pages, 2 figures, under review at the CWM workshop</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Anqi Peter Li</name>
+    </author>
+    <author>
+      <name>Kaden Kim</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.09757v2</id>
+    <title>Arti-JEPA: Adapting Video World Model to Real-Time MRI of the Vocal Tract for Speech-Production Analysis</title>
+    <updated>2026-09-16T17:11:39Z</updated>
+    <link href="https://arxiv.org/abs/2609.09757v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.09757v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Real-time MRI (rtMRI) captures the dynamics of the entire vocal tract during speech, but labeled data are scarce and the modality - single-slice, grayscale, low-resolution - differs substantially from the natural videos that video foundation models are trained on. We introduce Arti-JEPA, a joint embedding predictive architecture to model vocal tract rtMRI by continuing its self-supervised objective on about 62h of unlabelled vocal-tract videos, and evaluate the frozen representation on three tasks: cross-domain phoneme prediction (on typical speakers), fluent-vs-disfluent classification (a corpus containing stuttered speech), and characterizing pre/post-operative transfer (after partial glossectomy). Three key findings emerge. (1) A temporal video prior decisively outperforms per-frame image encoders, and latent prediction (V-JEPA) is at least as strong as pixel reconstruction (VideoMAE), with the edge on fine-grained phonemes. (2) Domain adaptation is \emph{task-dependent}: it roughly doubles cross-domain phoneme prediction $κ$ (to 0.352) but does not help binary stuttering classification. (3) Arti-JEPA was able to recover phoneme signal from pre/post glossectomy speech --- an in-domain probe decodes patients at least as well as a typical speaker, indicating that the residual transfer gap is cross-speaker/domain misalignment, not surgical signal loss, and post-operative decoding does not fall below performance on pre-operative speech. Together, these position a frozen, domain-adapted rtMRI encoder as a reusable measurement tool for articulatory and clinical speech science.</summary>
+    <category term="cs.SD" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-09T05:58:40Z</published>
+    <arxiv:primary_category term="cs.SD"/>
+    <author>
+      <name>Hong Nguyen</name>
+    </author>
+    <author>
+      <name>Sean Foley</name>
+    </author>
+    <author>
+      <name>Christina Hagedorn</name>
+    </author>
+    <author>
+      <name>Yijing Lu</name>
+    </author>
+    <author>
+      <name>Sudarsana Reddy Kadiri</name>
+    </author>
+    <author>
+      <name>Dani Byrd</name>
+    </author>
+    <author>
+      <name>Shrikanth Narayanan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.08855v1</id>
+    <title>Earth System World Model for What-If Simulations: A Case Study for Terrestrial Ecosystems</title>
+    <updated>2026-09-08T15:06:34Z</updated>
+    <link href="https://arxiv.org/abs/2609.08855v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.08855v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Machine learning emulators have become essential for accelerating expensive Earth-system simulations, but most existing approaches remain passive forecasters: they reproduce simulator trajectories under prescribed forcings without an explicit interaction mechanism for user-specified interventions. This limits their use in interactive scientific workflows and Earth-system digital twins, where users often need to explore how a system would respond if selected state components were changed. We propose an action-conditioned world-modeling framework for Earth-system emulation that reformulates simulator trajectories as supervision for controllable state-transition learning. The key idea is transition-action pretraining: naturally observed state changes are treated as label-free action supervision, allowing the model to learn both prescribed dynamics and action-conditioned responses without manually annotated interventions. We further introduce masked response learning to infer unobserved variables under partial state edits and learn coupled system dependencies. We test this framework on ecosystem dynamics across six global regions and multiple stand ages. Experiments show that the model preserves competitive long-horizon emulation accuracy while enabling controllable structural interventions and coherent responses in coupled ecosystem-cycle variables. These results suggest a practical route from passive Earth-system emulators toward interactive, intervention-aware scientific surrogates.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-08T15:06:34Z</published>
+    <arxiv:comment>Accepted in SIGSPATIAL'26</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Zhihao Wang</name>
+    </author>
+    <author>
+      <name>Ruichen Wang</name>
+    </author>
+    <author>
+      <name>Ruohan Li</name>
+    </author>
+    <author>
+      <name>Lei Ma</name>
+    </author>
+    <author>
+      <name>George Hurtt</name>
+    </author>
+    <author>
+      <name>Xiaowei Jia</name>
+    </author>
+    <author>
+      <name>Gengchen Mai</name>
+    </author>
+    <author>
+      <name>Shaowen Wang</name>
+    </author>
+    <author>
+      <name>Yiqun Xie</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.08796v2</id>
+    <title>Hi-FLoop: Hierarchical State-Feedback Loops for Multi-Timescale World Modeling</title>
+    <updated>2026-09-09T12:40:17Z</updated>
+    <link href="https://arxiv.org/abs/2609.08796v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.08796v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multi-agent traffic simulation seeks diverse, coordinated, and physically realistic futures from maps and observed history. Long-horizon closed-loop generation must reconcile multiple decision time scales while its context evolves with generated states. Existing methods often unfold long futures from an initial scene and resolve intent, interaction, and motion monolithically, weakening cross-scale consistency and adaptation. Multimodal rollout poses a further consistency problem: independently reselecting modes across agents or commits can stitch together incompatible futures instead of preserving a coherent joint branch. We present Hi-FLoop, a branch-consistent multi-timescale state-feedback framework. Eight scene-level Worlds represent joint hypotheses; all agents share one selected World identity throughout all 16 commits of an 8-second rollout, while Goal, Preview, and Control states adapt within that branch. An 8-second Goal anchors intent, a 2-second Preview coordinates interactions, and 1-second Control produces physical motion. Every 0.5-second commit feeds back only its executed prefix as new facts, while unexecuted hypotheses never enter factual memory. Joint Preview Interaction induces a sparse directed future graph and uses conflict probabilities and signed arrival-time differences to refine interaction-aware motion. For generated-state recovery, a prefix-frozen A-to-B cascade transfers typed physical state and the branch index--but no latent state--from a frozen prefix model to an independently parameterized recovery model. On the full H-D public-validation split of 955 scenarios, the S2.1 cascade obtains an 8-second scene-joint ADE-at-joint-minFDE@8/joint-minFDE@8 of 2.048/6.384 m when one World must explain all evaluated agents. Agent-centric oracle-minADE@8 is 0.526 m at 6 seconds and 0.875 m at 8 seconds.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-08T14:25:11Z</published>
+    <arxiv:comment>12 pages, 2 figures, and 6 tables. Revised abstract, results, and branch-consistency presentation</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Rx Fan</name>
+    </author>
+    <author>
+      <name>Z Han</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.08230v1</id>
+    <title>ActionSplice: In-Flight Action Editing for Interactive World Models</title>
+    <updated>2026-09-08T04:21:36Z</updated>
+    <link href="https://arxiv.org/abs/2609.08230v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.08230v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Chunk-autoregressive video world models typically condition each generated chunk on one action. An action received during sampling must therefore wait for the next chunk, condition future solver evaluations on a state produced under the previous action, or trigger rollback that repeats completed evaluations. We introduce ActionSplice, an inference framework that formulates this problem as Counterfactual State Transport (CST). A lightweight corrector transports the interrupted backbone-native representation toward the matched state induced by the revised action at the same solver step. The world model and sampler remain frozen, and sampling resumes without replaying completed evaluations. The retargeting variant $\mathrm{CST}*{R}$ updates the entire active chunk, while the temporal-splicing variant $\mathrm{CST}*{T}$ preserves a temporal prefix and updates only the suffix. Across minWM-Wan Action2V and HY-WM1.5, $\mathrm{CST}*{R}$ reduces rollback-relative LPIPS by 61.5% and 75.9% relative to direct condition swapping. $\mathrm{CST}*{T}$ reduces suffix LPIPS by 56.1% and 77.5%, respectively, while providing $2.73\times$ and $1.69\times$ pixel-ready speedups over waiting. Under the HY-WorldPlay protocol, $\mathrm{CST}_{R}$ obtains a PSNR of 25.66 dB, an SSIM of 0.6902, and an LPIPS of 0.1337 against the original rollout.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-08T04:21:36Z</published>
+    <arxiv:comment>15 pages, 6 figures. Project page: https://pardistaghavi.github.io/actionsplice-website/</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Pardis Taghavi</name>
+    </author>
+    <author>
+      <name>Tingyu Guo</name>
+    </author>
+    <author>
+      <name>Jonas Lossner</name>
+    </author>
+    <author>
+      <name>Gaurav Pandey</name>
+    </author>
+    <author>
+      <name>Reza Langari</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.08162v1</id>
+    <title>WorldAgen: Unified State-Action Prediction with Test-Time World Model Training</title>
+    <updated>2026-09-08T02:46:13Z</updated>
+    <link href="https://arxiv.org/abs/2609.08162v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.08162v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>How can vision-language-action (VLA) models adapt to new environments where world dynamics shift? While recent research has combined world modeling and action prediction to improve VLA performance, existing methods largely rely on pretraining on static datasets, without mechanisms for active adaptation at deployment time. As a result, these models often fail to generalize when deployed in unseen scenarios with novel object configurations or dynamics. We present WorldAgen, a unified framework that jointly learns world modeling and action prediction while enabling Test-Time Training (TTT) to adapt to new environments. WorldAgen employs a shared Transformer backbone with two heads: (1) a world model head that predicts future states from past state-action trajectories, and (2) an agent model head that predicts actions conditioned on task instructions. We design a Mixed Unidirectional Attention Mask to separate these two models. During test time, WorldAgen samples exploratory actions, collects ground-truth state transitions, and performs lightweight TTT updates to refine its world model. This adaptation improves the model's understanding of the environment and leads to more accurate action predictions. Experiments on the CALVIN and LIBERO benchmarks demonstrate that our baseline model achieves comparable, and in some cases superior, performance to current state-of-the-art approaches. Moreover, with TTT on a small number of samples, our method surpasses existing state-of-the-art models, highlighting the effectiveness of adapting world models at inference time.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-08T02:46:13Z</published>
+    <arxiv:comment>Accepted to AAAI 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Chi Wan</name>
+    </author>
+    <author>
+      <name>Kangrui Wang</name>
+    </author>
+    <author>
+      <name>Yuan Si</name>
+    </author>
+    <author>
+      <name>Pingyue Zhang</name>
+    </author>
+    <author>
+      <name>Manling Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.07874v1</id>
+    <title>InfluenceField: A Differentiable Field with Interventionally Identifiable Causal Structure for Multimodal World Modeling</title>
+    <updated>2026-09-07T18:36:20Z</updated>
+    <link href="https://arxiv.org/abs/2609.07874v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.07874v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multimodal large language models often capture visual-linguistic correlations but struggle to predict how local visual interventions propagate and affect downstream answers. We introduce InfluenceField, an intervention-aware latent field inserted between the visual encoder and language decoder. It lifts patch features into a continuous spatial representation, propagates directed influence over multiple steps, and predicts local intervention effects through a shared transition operator. Training jointly optimizes language modeling, cross-environment invariance, counterfactual rollout supervision, and structural regularization. For a nonlinear finite-basis population model, we show that target-aligned interventional supervision, together with a one-step separation condition on the transition, restricts admissible representations to within-location reparameterizations, so that the directed dependency graph of the full transition is recovered exactly. A linear specialization gives an exact partial-coverage characterization and a finite-loss stability bound, and the field analysis derives the spatial profile of coefficient interventions together with a shared-channel calibration result. On CausalVQA, InfluenceField improves overall accuracy over its backbone by 13.1 percentage points, with the largest gains on the planning and hypothetical categories. Capacity-matched baselines and structural controls attribute the gains in robustness and factual-counterfactual consistency to the causal objectives rather than to added capacity.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-07T18:36:20Z</published>
+    <arxiv:comment>22 pages, 3 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Zihao Yang</name>
+    </author>
+    <author>
+      <name>Zijia Wang</name>
+    </author>
+    <author>
+      <name>Zhiqiu Huang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.07719v1</id>
+    <title>A radiographic world model for clinical reasoning and evidence generation</title>
+    <updated>2026-09-07T16:33:02Z</updated>
+    <link href="https://arxiv.org/abs/2609.07719v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.07719v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Medical imaging artificial intelligence (AI) is commonly developed as separate mappings from radiographs to diagnostic outputs or from clinical descriptions to generated images, although both arise from the same underlying radiographic state. A world-model formulation instead seeks to learn an internal representation of this state that can support both clinical readout and conditional simulation of radiographic observations. Here we introduce MedDream, a radiographic world model that learns a shared continuous latent state from paired chest radiograph-text observations for diagnostic reasoning and report-conditioned evidence generation. MedDream was pretrained on 2.65 million leakage-controlled chest radiograph-text pairs curated from 4.40 million candidates. Across eight clinical datasets and two independent reader cohorts, MedDream outperformed leading diagnostic and generative comparators. For diagnostic reasoning, MedDream showed strong generalization across disease recognition, label-scarce adaptation, severity assessment, and localization, while MedDream-supported review increased mean resident concordance with independent radiologist consensus from 56.3% to 63.0%. For evidence generation, MedDream produced radiographs that preserved clinically relevant pathology and improved downstream performance on held-out real data, with synthetic augmentation increasing external VinDr-CXR macro-AUROC from 76.4% to 81.4%. More importantly, conditioning generation on prespecified subgroup performance gaps enabled targeted evidence construction, increasing weighted F1 by 3.1 percentage points in Asian patients, whereas matched-volume unguided augmentation decreased it by 2.3 points. These findings establish radiographic world models as a path toward medical AI that learns clinically meaningful internal states for interpreting, simulating, and constructing evidence for clinical use.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-07T16:33:02Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Suyang Xi</name>
+    </author>
+    <author>
+      <name>Songtao Hu</name>
+    </author>
+    <author>
+      <name>Shansong Wang</name>
+    </author>
+    <author>
+      <name>Mojtaba Safari</name>
+    </author>
+    <author>
+      <name>Luke del Balzo</name>
+    </author>
+    <author>
+      <name>Ehsan Ul Karim</name>
+    </author>
+    <author>
+      <name>Mingzhe Hu</name>
+    </author>
+    <author>
+      <name>Kuo Zhang</name>
+    </author>
+    <author>
+      <name>Tonghe Wang</name>
+    </author>
+    <author>
+      <name>Ralph R. Weichselbaum</name>
+    </author>
+    <author>
+      <name>Xiaofeng Yang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.07328v1</id>
+    <title>PV-WM: A Heterogeneous Micro-Macro World Model for Articulated Pedestrian-Vehicle Co-Rollout</title>
+    <updated>2026-09-07T10:45:26Z</updated>
+    <link href="https://arxiv.org/abs/2609.07328v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.07328v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Local pedestrian-vehicle forecasting spans heterogeneous physical scales: pedestrians combine root locomotion with articulated motion, whereas vehicles are rigid bodies described by kinematic state and oriented extent. Existing road-agent forecasters typically omit pedestrian articulation, while pose forecasters leave vehicle futures outside the learned rollout. We introduce PV-WM, a history-only world model over structured post-perception tracks. It recurrently advances pedestrian root motion, 15-joint articulation, and learned vehicle states within a synchronized heterogeneous state. The generated pedestrian and vehicle chunks supply the next recurrent boundary; vehicle boxes are reconstructed from predicted center and heading with observed extent, and P-V geometry is recomputed after every transition. Relative to a matched one-shot complete-state predictor, recurrent execution reduces Root ADE by 12.7% and MPJPE by 14.8%. Feedback interventions show that later predictions depend on the content, temporal order, and pedestrian identity of generated articulation. Across 824 aligned Waymo contexts, with 797 providing valid future vehicle support, PV-WM reduces Root ADE by 5.2%, MPJPE by 7.6%, P-V distance error by 11.9%, and oriented-box closest-approach error by 5.8% relative to a validation-selected Modular Specialist. The single-network model uses 57.1% fewer parameters, 96.5% lower average FLOPs per local scene, and 25.5% lower measured p95 latency. PV-WM unifies this heterogeneous future state while preserving type-specific pedestrian and vehicle dynamics.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-07T10:45:26Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Haozhuang Chi</name>
+    </author>
+    <author>
+      <name>Jingsong Liang</name>
+    </author>
+    <author>
+      <name>Ziying Song</name>
+    </author>
+    <author>
+      <name>Lei Yang</name>
+    </author>
+    <author>
+      <name>Shihao Li</name>
+    </author>
+    <author>
+      <name>Haoruo Zhang</name>
+    </author>
+    <author>
+      <name>Chen Lv</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.13257v1</id>
+    <title>Sampling headroom is not selection gain: a compute-value audit of test-time scaling for video world models</title>
+    <updated>2026-09-06T06:11:15Z</updated>
+    <link href="https://arxiv.org/abs/2609.13257v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.13257v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Test-time scaling (TTS) can improve generation only when additional compute produces better candidates and the system can reliably identify them. This distinction is especially important for video world models, where a wider sample pool may contain stronger rollouts without improving the output that is ultimately selected. We introduce the Compute-Value Audit (CVA), a sequential framework that asks whether extra sampling creates opportunity, observable signals provide a reliable state, that state supports a beneficial action, and the resulting gain exceeds the full entry fee of generation and verification. On 192 Physics-IQ scenes, expanding the pool from 4 to 16 candidates increases oracle quality by +9.23 IQ (95% CI [+7.44, +11.14]), but Flow, Cycle, and VideoReward fail to recover this headroom reliably. Across three generators, none of twelve adaptive-depth policies outperforms uniform compute; they recover only 42-69% of the measured entry fee. A matched-60-NFE Predict-and-Perturb intervention on VideoPhy2 is likewise negative across three fresh-seed replicas. These negative results are not universal: anchor-explorer passes all four stages in a sparse PRM800K setting, MMLU-Pro exposes the gap between predictive state and useful action, and a privileged paired future establishes a positive video upper bound. Together, these results show that sampling headroom has deployment value only when it can be converted into a reliable decision whose benefit survives the complete compute charge. Code is available at https://github.com/YuhuaJiang2002/sampling-headroom-is-not-selection-gain.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-06T06:11:15Z</published>
+    <arxiv:comment>33 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Yuhua Jiang</name>
+    </author>
+    <author>
+      <name>Junjie Lu</name>
+    </author>
+    <author>
+      <name>Feifei Gao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.09210v1</id>
+    <title>Identifying Habit, Physics, and Nuisance in Robot World Models</title>
+    <updated>2026-09-06T00:20:22Z</updated>
+    <link href="https://arxiv.org/abs/2609.09210v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.09210v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Teleoperated demonstrations are often multimodal even when the underlying dynamics are nearly deterministic given the executed action. We argue that this multimodality typically mixes three factors--operator habit in action selection, shared physics, and observation nuisance--and that entangled next-observation predictors absorb all three. We formalize the split with a structural causal model a=g(h,z,u), z'=f(z,a), o=r(z,c), and test it with complementary interventions: replacing or shuffling actions at fixed state sharply increases next-state error, whereas appearance and camera changes should not; habit-aware reverse scoring improves ranking of feasible pasts without rewriting the dynamics. The associated adaptation rule is to freeze a shared physics readout and update only a thin interface. On StackCube, DROID, and RH20T this rule improves low-shot transfer relative to training from scratch, retains cleaner dynamics under corrupted adaptation data, and extends from proprioception to pixel observations with multi-view and multi-step checks. We do not equate latent actions with operator habit, and we do not target large-scale video generation benchmarks.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-06T00:20:22Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Jinting Hang</name>
+    </author>
+    <author>
+      <name>Zhenhui Cai</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.06009v1</id>
+    <title>How to Learn from What a Human Would Avoid? Intervention-Aware World Models with Real-World RL for Dexterous Manipulation</title>
+    <updated>2026-09-05T10:28:23Z</updated>
+    <link href="https://arxiv.org/abs/2609.06009v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.06009v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multi-fingered dexterous manipulation remains a frontier for real-world reinforcement learning (RL) due to the high-dimensional action space and the prohibitive cost of hardware failures. While human-in-the-loop (HIL) RL allows operators to intervene before failures occur, current pipelines often treat these interventions as reactive corrections, discarding the rich safety signal inherent in the operator's decision to take control. In this paper, we ask: How can we learn from what a human would avoid? We present WHIRL, a safety-aware RL framework that transforms binary human interventions into forward-predictive signals for proactive risk avoidance. Our approach centers on an intervention-aware latent world model with four prediction heads: dynamics, reward, termination, and a novel per-state intervention-probability head that learns to predict the likelihood of a human takeover at future states. This head provides an actor-side risk-shaping term that discourages the policy from entering "intervention-prone" regions, modeling the operator's internal safety threshold. We evaluate our framework on a 16-DoF LEAP Hand across tasks spanning convex and irregular object grasping, prismatic manipulation, and long-horizon multi-stage tasks. Our results show that predictive risk-shaping enables the system to achieve a 96.7 percent success rate on complex grasping tasks while reducing the operator intervention burden by up to 84 percent in step-weighted terms. By closing the loop between human intuition and predictive world modeling, this work provides a practical safety-aware recipe for training complex dexterous agents in the real world while reducing operator fatigue and hardware-risk exposure.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-05T10:28:23Z</published>
+    <arxiv:comment>15 pages, 8 figures, 3 tables. Accepted by CoRL 2026. Project page: https://whirl-dexterous.github.io/</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Jiaju Yin</name>
+    </author>
+    <author>
+      <name>Zhenhui Zhang</name>
+    </author>
+    <author>
+      <name>Lixin Xu</name>
+    </author>
+    <author>
+      <name>Heng Zhang</name>
+    </author>
+    <author>
+      <name>Jun Shao</name>
+    </author>
+    <author>
+      <name>Yating Feng</name>
+    </author>
+    <author>
+      <name>Arash Ajoudani</name>
+    </author>
+    <author>
+      <name>Renjing Xu</name>
+    </author>
+  </entry>
+</feed>

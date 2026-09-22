@@ -1,0 +1,972 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/ozrqg+tLDVYKKGqjUbcvS90EH6k</id>
+  <title>arXiv Query: search_query=(all:"forecast sensitivity" OR all:"observation impact" OR all:"proactive quality") AND submittedDate:"202501010000 TO 202609222359"&amp;id_list=&amp;start=0&amp;max_results=35</title>
+  <updated>2026-09-22T02:57:05Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(all:%22forecast+sensitivity%22+OR+(all:%22observation+impact%22+OR+all:%22proactive+quality%22))+AND+submittedDate:%22202501010000+TO+202609222359%22&amp;start=0&amp;max_results=35&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>35</opensearch:itemsPerPage>
+  <opensearch:totalResults>43</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2609.22044v1</id>
+    <title>Asteroids Impacting the Solar System Planets and the Moon. II: Comparison with Observational Impact Records</title>
+    <updated>2026-09-18T17:34:16Z</updated>
+    <link href="https://arxiv.org/abs/2609.22044v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.22044v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Planetary impact rates are difficult to infer from observations alone because impacts are rare, observational records are target-dependent, and converting observed flashes, bolides, and craters to an intrinsic impact rate depends on uncertain selection effects and conversion parameters. Building on the simulations in Paper I, we examine whether observational systematics can explain the order-of-magnitude mismatch between observed and modeled impact rates on Earth, and whether comparable discrepancies extend to other Solar System bodies. We convert 12 observed impact records for Earth, the Moon, Mars, and Jupiter to a common pre-atmospheric impact rate for $D&gt;10$ m, propagate uncertainties through the conversion chain, and compare the resulting rates with the intrinsic rates derived in Paper I. We find discrepancies for Earth (observation-to-model median ratio $2.2-21.0$), the Moon ($3.4-132.1$), Mars ($14.2-118.6$), and Jupiter ($2.6-47.7$), with the dominant source of the discrepancy differing by body. The simulated Jupiter-family comet (JFC) contribution substantially reduces the Earth discrepancy, suggesting that an additional dynamical source may help explain the gap. The lunar records disagree with each other by two orders of magnitude, with the discrepancy dominated by size-extrapolation uncertainties. The Mars mismatch is dominated by crater-to-impactor conversion. The Jupiter comparison depends mainly on uncertainties in the inferred number of bound impactors and in the observational completeness thresholds. Further investigation of this mismatch requires incorporating cometary modeling and tighter constraints on size-extrapolation scaling and improved observational completeness.</summary>
+    <category term="astro-ph.EP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.SR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-18T17:34:16Z</published>
+    <arxiv:comment>Submitting to AJ. Comments are welcome</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.EP"/>
+    <author>
+      <name>Qifeng Cheng</name>
+    </author>
+    <author>
+      <name>Daniel Scolnic</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.12296v1</id>
+    <title>Preemptive Ensemble Forecast Sensitivity to Observations</title>
+    <updated>2026-09-10T23:53:09Z</updated>
+    <link href="https://arxiv.org/abs/2609.12296v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.12296v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Estimating the impact of observations newly added to an existing numerical weather prediction (NWP) system requires reintegrating the ensemble forecast from the analysis that assimilates the additional observations, which is laborious and computationally expensive. We therefore propose preemptive EFSO (PEFSO; preemptive ensemble forecast sensitivity to observations), which estimates observation impact without model reintegration by invoking a stronger tangent-linear approximation than that used in EFSO. The estimated impact, however, is merely a scalar quantity at a specified verification time, so it is also valuable to obtain the ensemble forecast in which the remaining additional observations are assimilated after denying the detrimental ones. We refer to this procedure as ADD-SEL, but carrying it out requires reintegration. We therefore propose two methods for updating the ensemble forecast without reintegration as approximations to ADD-SEL, collectively termed ADD-SEL-PRE: one recomputes the ensemble transform matrix (i.e., the Kalman gain), and the other modifies only the innovations at lower cost. Experiments with the Lorenz-96 model examine whether both can be approximated without reintegration. PEFSO estimates observation impact comparable to that obtained by EFSO within the range where the tangent-linear approximation remains valid, even under more practical conditions: an ensemble size of 10, the analysis as the reference state, and only the additional observations available. When additional observations are assimilated after denying detrimental ones, both ADD-SEL-PRE methods update the ensemble forecast, giving forecast errors comparable to those from ADD-SEL, particularly for lead times up to two days, where the tangent-linear approximation is expected to hold.</summary>
+    <category term="physics.geo-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-10T23:53:09Z</published>
+    <arxiv:primary_category term="physics.geo-ph"/>
+    <author>
+      <name>Fumitoshi Kawasaki</name>
+    </author>
+    <author>
+      <name>Shunji Kotsuki</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.10674v1</id>
+    <title>Re-examining the sensitivity of JWST to decaying axion dark matter</title>
+    <updated>2026-09-09T18:00:00Z</updated>
+    <link href="https://arxiv.org/abs/2609.10674v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.10674v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>An eV-scale QCD axion comprising the observed dark matter (DM) abundance is expected to generate a photon line at infrared energies that would be observable or near-observable in data collected by the James Webb Space Telescope (JWST), as might more general axion-like particles (ALPs) over a broader range of masses and couplings. This has motivated a number of efforts to either forecast JWST sensitivities to a QCD axion or realize them through analyses of publicly available datasets. At present, no consensus exists; leading analyses disagree by as much as an order of magnitude in terms of axion-coupling sensitivity, implying an orders-of-magnitude discrepancy in raw flux density sensitivity, and consistency between the analyses and prior forecasts is unclear. We address these outstanding discrepancies with a bespoke data reduction and flexible nonparametric inference procedure that lead to well-controlled and robust limits on the decay of eV-scale axion DM, consistent with previously forecasted sensitivities. We further demonstrate that the strongest previously claimed sensitivities exceed those attainable by any analysis of the datasets from which they were derived. We exclude QCD axion DM for masses between $500\,\mathrm{meV}$ and $2.5\,\mathrm{eV}$ using NIRSpec data, while setting limits on ALP DM complementary to other astrophysical constraints at masses between $100\,\mathrm{meV}$ and $500\,\mathrm{meV}$. However, we find the sensitivities to be systematically limited, and therefore unlikely to be improved upon by ongoing data collection or re-analysis unless instrumental modeling and data reduction pipelines improve considerably.</summary>
+    <category term="hep-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-09T18:00:00Z</published>
+    <arxiv:comment>27 pages, 15 figures</arxiv:comment>
+    <arxiv:primary_category term="hep-ph"/>
+    <author>
+      <name>Caleb Gemmell</name>
+    </author>
+    <author>
+      <name>Christopher Dessert</name>
+    </author>
+    <author>
+      <name>Andrea Caputo</name>
+    </author>
+    <author>
+      <name>Joshua W. Foster</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.23649v1</id>
+    <title>A Survey of Timing Variability in Microservice-Based Software-Defined Vehicles</title>
+    <updated>2026-08-24T10:06:27Z</updated>
+    <link href="https://arxiv.org/abs/2608.23649v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.23649v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Microservice-based systems are modular and adaptable, but their distributed structure makes their timing behavior difficult to analyze and guarantee. Because latency emerges from interactions among service dependencies, shared resources, and coordinating middleware, local timing disturbances can propagate into system-level effects. This survey examines the sources, propagation mechanisms, and observable impacts of timing variability in microservice-based systems, using software-defined vehicles as a motivating example. It compares major classes of timing models by their assumptions about workload stability, execution structure, resource sharing, observability, and guarantee admissibility, and summarizes their limitations within microservice-based software-defined vehicles.</summary>
+    <category term="cs.DC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-24T10:06:27Z</published>
+    <arxiv:comment>Submitted to ACM Computing Surveys, 33 pages, 17 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.DC"/>
+    <author>
+      <name>Cyrus K. Vattes</name>
+    </author>
+    <author>
+      <name>Habib Mostafaei</name>
+    </author>
+    <author>
+      <name>Nirvana Meratnia</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.18431v1</id>
+    <title>Process Optimization Under Uncertainty for Improving the Bond Quality of Polymer Filaments in Fused Filament Fabrication</title>
+    <updated>2026-08-19T01:44:37Z</updated>
+    <link href="https://arxiv.org/abs/2608.18431v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.18431v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper develops a computational framework to optimize the process parameters such that the bond quality between extruded polymer filaments is maximized in fused filament fabrication (FFF). A transient heat transfer analysis providing an estimate of the temperature profile of the filaments is coupled with a sintering neck growth model to assess the bond quality that occurs at the interfaces between adjacent filaments. Predicting the variability in the FFF process is essential for achieving proactive quality control of the manufactured part; however, the models used to predict the variability are affected by assumptions and approximations. This paper systematically quantifies the uncertainty in the bond quality model prediction due to various sources of uncertainty, both aleatory and epistemic, and includes the uncertainty and the model discrepancy in the process parameter optimization. Variance-based sensitivity analysis based on Sobol indices is used to quantify the relative contributions of the different uncertainty sources to the uncertainty in the bond quality. A Gaussian process (GP) surrogate model is constructed to compute and include the model discrepancy within the optimization. Physical experiments are conducted for calibration and validation of the physics model and also for validation of the optimum solution. The results show that the proposed formulation for process parameter optimization under uncertainty results in high bond quality between adjoining filaments of the FFF product.</summary>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.NA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-19T01:44:37Z</published>
+    <arxiv:comment>12 pages, ASME Journal of Manufacturing Science and Engineering</arxiv:comment>
+    <arxiv:primary_category term="cs.CE"/>
+    <arxiv:journal_ref>J. Manuf. Sci. Eng. 143(2), 021007 (2021)</arxiv:journal_ref>
+    <author>
+      <name>Berkcan Kapusuzoglu</name>
+    </author>
+    <author>
+      <name>Matthew Sato</name>
+    </author>
+    <author>
+      <name>Sankaran Mahadevan</name>
+    </author>
+    <author>
+      <name>Paul Witherell</name>
+    </author>
+    <arxiv:doi>10.1115/1.4048073</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1115/1.4048073" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.11395v1</id>
+    <title>Exploring the Social Life of Data: Finding Data You Can Trust</title>
+    <updated>2026-08-11T20:01:19Z</updated>
+    <link href="https://arxiv.org/abs/2608.11395v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.11395v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Artificial intelligence is changing the scale and tempo of scientific inquiry. Models can now search, integrate, and reason over data far beyond data repositories familiar to any individual researcher. Yet this expansion creates a prior problem: before a model can produce a trustworthy scientific result, it must locate data that are appropriate for the question, sufficiently reliable for the intended analysis, and accompanied by enough context to support responsible interpretation. As data becomes increasingly abundant, the challenge of finding data has been overcome by the challenge of finding data that you can trust.
+  This paper explores how the social and empirical evidence that accumulates when data are used in research can be used, analogous to social trust networks, to determine fit for purpose and trust. Specifically, the paper explores data-usage graphs as a new layer of scientific data infrastructure. A data-usage graph connects datasets to the publications, people, institutions, topics, software, models, workflows, and other datasets through which they are produced and used. These connections reveal the {\it social life of data:} who has relied on a source, for which questions, in what combinations, with which methods, and with what observable impact. They can turn scattered traces of practice into data-usage descriptors that complement conventional metadata and support judgments of trust and fitness for purpose. The central claim is not that popularity establishes trust, but that this can be grown with appropriate contextual history. Usage evidence must therefore be combined with production quality, provenance, governance, semantic clarity, and community validation. The feasibility and value of data usage graphs is demonstrated by implementing the prototype data insights discovery service within the National Data Platform (NDP).</summary>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-11T20:01:19Z</published>
+    <arxiv:comment>6 pages; 2 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.SI"/>
+    <author>
+      <name>Penny R. Atkins</name>
+    </author>
+    <author>
+      <name>Manish Parashar</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.05946v2</id>
+    <title>Why do massive stars form bow shocks? Bulk ISM motion as the main driver of bow shock formation and geometry</title>
+    <updated>2026-08-12T12:42:27Z</updated>
+    <link href="https://arxiv.org/abs/2608.05946v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.05946v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Bow shocks are one the most commonly observed impact sites of massive star feedback. Their existence is often taken as evidence of the supersonic motion or even runaway nature of the massive star. Bow shock geometry is also used to infer the properties of the stellar wind. However, some bow shocks have been reported around sub-sonic massive stars or are orientated differently than the stellar direction of movement, suggesting a substantial influence of the interstellar medium (ISM). In this work, we quantitatively investigate the dominant cause of bow shock formation around massive stars. Starting from an infrared sample of known bow shocks, we measure the stellar peculiar velocities and degree of alignment of the bow shocks. We find that only half ($52\pm2\%$) of the bow shocks is driven by a supersonic star and that $70\pm2\%$ of bow shocks is substantially misaligned (&gt;30 degrees). Of our sample, only $21\pm2\%$ of systems can be regarded as classical bow shocks, driven by a supersonic star in the direction of stellar movement. For the remaining $79\pm2\%$ of systems, the role of bulk ISM movement in creating the shock is equal to or dominant over the stellar movement. We then introduce a new statistical method to derive the magnitude of the ISM motions required to play this dominant role. We find that ISM motion of the order $10-15$ km s$^{-1}$, oriented randomly within the local standard of rest, suffices to explain the existence and orientations of the bow shocks in our sample. For the subset of systems facing HII regions, we find evidence that outflows at $&gt;25$ km s$^{-1}$ from those regions drive the nearby shocks. We conclude that ISM motion is the dominant factor in creating massive star bow shocks and discuss how ignoring these motions can lead to underestimates of the stellar wind's mass loss rate by more than an order of magnitude.</summary>
+    <category term="astro-ph.SR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.GA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-06T12:13:20Z</published>
+    <arxiv:comment>Accepted for publication in MNRAS. Links to reproduction package added</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.SR"/>
+    <author>
+      <name>J. van den Eijnden</name>
+    </author>
+    <author>
+      <name>L. Kaper</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.29481v1</id>
+    <title>Twin Impact Lunar Telescope network: Lunar Impact Flash observations of the 2025 Geminids</title>
+    <updated>2026-07-31T14:46:35Z</updated>
+    <link href="https://arxiv.org/abs/2607.29481v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.29481v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Meteoroid impacts on the Moon, observed from Earth as flashes typically lasting a few tens of milliseconds, have been monitored for three decades for determining meteoroids' size and mass frequency distribution in the cm to dm range. Studies link these observed impact events to fresh craters advancing our understanding of energy partitioning during an impact. Currently we are transitioning to a new era where lunar impact flashes (LIFs) can be used to supplement upcoming lunar seismology to study the internal lunar structure. Here we present results from the first station of a telescope network under development for continuous LIF monitoring. Observations were carried out during the Geminids 2025 campaign, initiated by the LUMIO Science Team in the framework of their public engagement activities. We detected 53 potential impact flashes and confirmed 11 of them through multiframe observations, and independent detections by other observers. We present evidence suggesting that some of the yet unconfirmed events may be real. Our confirmed events range between magnitude +7.5 and +10.4, primarily in the V and R band. We obtained a high rate of observations per hour, highlighting the importance of high ZHR meteoroid streams for observing LIFs. We also discuss the scientific value of potential LIFs that remain unconfirmed in optical data alone. Even without multi station confirmation, these events can correlate to seismic signals in future lunar seismic networks, thereby providing useful physical constraints on impact processes. This approach would also allow stations equipped with a single telescope/camera to meaningfully contribute to the network.</summary>
+    <category term="astro-ph.EP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.IM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-31T14:46:35Z</published>
+    <arxiv:primary_category term="astro-ph.EP"/>
+    <author>
+      <name>Daniel Sheward</name>
+    </author>
+    <author>
+      <name>Marco Delbo</name>
+    </author>
+    <author>
+      <name>Chrysa Avdellidou</name>
+    </author>
+    <author>
+      <name>Philippe Lognonné</name>
+    </author>
+    <author>
+      <name>Jeremie Vaubaillon</name>
+    </author>
+    <author>
+      <name>Pierre-Yves Froissart</name>
+    </author>
+    <author>
+      <name>Christelle Saliby</name>
+    </author>
+    <author>
+      <name>Paul Girard</name>
+    </author>
+    <author>
+      <name>Nicolas Mauclert</name>
+    </author>
+    <author>
+      <name>Bruno Mongellaz</name>
+    </author>
+    <author>
+      <name>Laurent Herrier</name>
+    </author>
+    <author>
+      <name>Nicolas Anfosso</name>
+    </author>
+    <author>
+      <name>Thierry Parra</name>
+    </author>
+    <author>
+      <name>Fausto Giacometti</name>
+    </author>
+    <author>
+      <name>Andrea Ferrero</name>
+    </author>
+    <author>
+      <name>Jean-Pierre Rivet</name>
+    </author>
+    <author>
+      <name>Elisa Maria Alessi</name>
+    </author>
+    <author>
+      <name>Anthony Cook</name>
+    </author>
+    <author>
+      <name>Detlef Koschny</name>
+    </author>
+    <author>
+      <name>James Dawson</name>
+    </author>
+    <author>
+      <name>Chris Hooker</name>
+    </author>
+    <author>
+      <name>Alex Pratt</name>
+    </author>
+    <author>
+      <name>Michael O'Connell</name>
+    </author>
+    <author>
+      <name>Aldo Tonon</name>
+    </author>
+    <author>
+      <name>Vincenzo della Vecchia</name>
+    </author>
+    <author>
+      <name>Luigi Zanatta</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.14790v1</id>
+    <title>Probing Graviton Mass with MeerKAT PTA and SKA--PTA Forecasts</title>
+    <updated>2026-07-16T10:09:55Z</updated>
+    <link href="https://arxiv.org/abs/2607.14790v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.14790v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present constraints on the graviton mass using the 4.5-year data release from the MeerKAT Pulsar Timing Array (MPTA) and provide forecasts for the upcoming Square Kilometre Array PTA (SKA--PTA). By modeling the modified dispersion relation and the corresponding tensor correlation function for massive gravitons, we perform Bayesian inference on the angular-correlation measurements under three noise configurations (DATA, ER, ALT). Our 90\% credible upper limits on the graviton mass are $m_g &lt; 2.10 \times 10^{-23}\,\mathrm{eV}/c^{2}$ (DATA), $m_g &lt; 2.58 \times 10^{-23}\,\mathrm{eV}/c^{2}$ (ER), and $m_g &lt; 2.25 \times 10^{-23}\,\mathrm{eV}/c^{2}$ (ALT). Including monopolar and dipolar contributions does not significantly alter these bounds, confirming that the constraints are driven by the quadrupolar tensor correlation. All results remain fully consistent with general relativity. For SKA--PTA, we forecast sensitivities down to $m_g \sim 10^{-24}\,\mathrm{eV}/c^{2}$ with a 10-year observing baseline and $m_g \sim 10^{-25}\,\mathrm{eV}/c^{2}$ with a 50-year observing baseline, representing order-of-magnitude improvements over current limits. This work demonstrates the power of current and future PTA observations to test fundamental aspects of gravity in the nanohertz band.</summary>
+    <category term="astro-ph.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.HE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="gr-qc" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-16T10:09:55Z</published>
+    <arxiv:comment>12 pages, 4 figures</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.CO"/>
+    <author>
+      <name>Zhi-Chao Zhao</name>
+    </author>
+    <author>
+      <name>Sai Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.27267v1</id>
+    <title>Sparse Sensor Placement for Reducing Forecast Errors in Ensemble Kalman Filtering</title>
+    <updated>2026-06-25T16:50:15Z</updated>
+    <link href="https://arxiv.org/abs/2606.27267v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.27267v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Designing efficient observation networks for reducing forecast errors is a fundamental challenge in numerical weather prediction. Data-driven sparse sensor placement (SSP) and ensemble-based data assimilation via the Ensemble Kalman Filter (EnKF) have each addressed this challenge independently, yet their mathematical connections have not been systematically formalized. This study presents a unified theoretical framework integrating SSP and EnKF through optimal experimental design, providing new theoretical and algorithmic results. While conventional SSP methods aim to reduce analysis errors, this study extends the SSP to target forecast error reduction by using a tangent linear model approximated by an ensemble forecast. We derive the Fisher information matrices in the ensemble and model spaces for the EnKF, and clarify the mathematical interpretations of A-, D-, and E-optimality in terms of forecast error reduction. A-optimality in the model space minimizes the mean forecast error variance; D-optimality is ill-defined in the model space due to rank deficiency and is therefore formulated in the ensemble space, where it maximizes the Shannon information content of assimilated observations; and E-optimality in the model space minimizes the worst-case forecast error variance. We further propose a fast greedy algorithm for selecting observation locations under A-optimality in the model space, avoiding matrix inversion at each greedy step and substantially reducing computational cost. Numerical experiments using the Lorenz-96 model support these theoretical findings. Among the three optimality criteria, A-optimality in the model space most consistently reduces forecast spread and root-mean-square error, and yields stable incremental improvements consistent with post-assimilation observation impact diagnostics.</summary>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-25T16:50:15Z</published>
+    <arxiv:primary_category term="physics.ao-ph"/>
+    <author>
+      <name>Takumi Saito</name>
+    </author>
+    <author>
+      <name>Shunji Kotsuki</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.24992v1</id>
+    <title>Synergies Between Pulsar Timing Array and Astrometry</title>
+    <updated>2026-06-23T15:33:50Z</updated>
+    <link href="https://arxiv.org/abs/2606.24992v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.24992v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The presence of a gravitational wave background can be established not only via exquisitely precise pulsar timing array (PTA) measurements, but also via astrometric observations. In fact, the very same background responsible for the delay in the arrival time of pulse is also responsible of an apparent displacement of galactic objects as stars and asteroids. In this chapter we explore the natural synergy between the SKA Observatory, and current/future astrometric probes of the position of Milky Way objects. On top of presenting the potential of SKAO alone in terms of detecting a gravitational wave background, we also demonstrate the increased sensitivity that is actually achievable when SKAO measurements are used in combination with astrometric ones. In particular, we observe an approximate improvement ranging from~$10\%$ up to~$50\%$ in terms of forecast sensitivity for a PTA-astrometry joint-analysis.</summary>
+    <category term="astro-ph.IM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-23T15:33:50Z</published>
+    <arxiv:comment>Published in Advancing Astrophysics with the SKA II (AASKAII), 2026 (arXiv:2606.20366). Report-no:AASKAII/Perna01. Advancing Astrophysics with the SKA II (AASKAII) outlines the transformative scientific advances that will be enabled by the SKA telescopes</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.IM"/>
+    <author>
+      <name>Gabriele Perna</name>
+    </author>
+    <author>
+      <name>Nicola Bellomo</name>
+    </author>
+    <author>
+      <name>Daniele Bertacca</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.14288v2</id>
+    <title>Characterization of Rocking Block Behaviors with Classical and Alternative Restitution Models</title>
+    <updated>2026-06-22T08:15:40Z</updated>
+    <link href="https://arxiv.org/abs/2606.14288v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.14288v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This work investigates how restitution modeling affects the dynamics of rocking blocks subjected to harmonic excitation. While several studies have reported discrepancies between experimentally observed impact behavior and the predictions obtained using the classical Housner restitution coefficient, the implications of adopting alternative restitution formulations on the global dynamics of rocking systems remain largely unexplored. The system is formulated as a hybrid non-smooth dynamical model and analyzed through bifurcation diagrams, Lyapunov exponents, and basins of attraction for different slenderness ratios. By comparing the classical restitution model proposed by Housner with the alternative formulation of Mao et al., we show that the choice of restitution model strongly influences the predicted system response. The alternative formulation leads to an earlier onset and greater prevalence of complex oscillations, as well as changes in the type, stability, and accessibility of attractors compared to the classical model. However, as the slenderness ratio increases, the dynamical features produced by both formulations progressively converge, indicating a reduced sensitivity to the restitution model for taller blocks. These results provide a dynamical perspective on why alternative restitution formulations, which predict impact responses closer to experimental observations, can produce markedly different behaviors from those obtained using the classical Housner model.</summary>
+    <category term="physics.optics" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="nlin.CD" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-12T09:16:44Z</published>
+    <arxiv:comment>21 pages, 10 figures</arxiv:comment>
+    <arxiv:primary_category term="physics.optics"/>
+    <author>
+      <name>Fernando Gaibor E.</name>
+    </author>
+    <author>
+      <name>Alexander López</name>
+    </author>
+    <author>
+      <name>Esther D. Gutiérrez</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.04909v1</id>
+    <title>BEATS: Bootstrapping E-commerce Attribute Taxonomies for Search through Iterative Human-AI Collaboration</title>
+    <updated>2026-06-03T14:06:27Z</updated>
+    <link href="https://arxiv.org/abs/2606.04909v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.04909v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>E-commerce platforms in emerging markets often operate with underdeveloped product catalogs that contain only category taxonomies but lack structured attribute schemas. This absence of fine-grained product attributes limits search capabilities -- preventing faceted filtering, degrading query understanding, and weakening semantic representations used by search systems. We present BEATS, a human-in-the-loop LLM framework for bootstrapping product attribute taxonomies entirely from scratch. Our approach extends a multi-stage LLM generation pipeline with two critical production stages: (1) proactive quality checking by model developers to filter erroneous outputs, and (2) human annotation by domain-expert local staff to validate generated attributes. The framework operates iteratively -- prompts at each generation stage are refined based on quality check observations and annotator feedback across successive rounds, progressively improving attribute quality. Once the attribute taxonomy is established, we employ LLMs to perform structured attribute tagging on individual product items, enriching their contextual representations. The enriched catalog directly benefits multiple components of the search system: enabling granular attribute-based filtering, providing structured features for ranking models, and improving semantic representations for dense retrieval. We validate the generated taxonomy by training dense retrieval models on attribute-enriched product data, demonstrating consistent improvements over baselines using original catalog information. Our system has been deployed at Rakuten Taiwan, enriching 9 major categories spanning 2,694 sub-categories with 67,277 generated attributes, and over 5.4 million products have been tagged with the generated attributes, with plans to enrich the entire product catalog.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-03T14:06:27Z</published>
+    <arxiv:comment>6 pages, 1 figure, 5 tables. Accepted to SIGIR 2026 Industry Track. Official version: https://doi.org/10.1145/3805712.3808520</arxiv:comment>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Yung-Yu Shih</name>
+    </author>
+    <author>
+      <name>Shang-Yu Su</name>
+    </author>
+    <author>
+      <name>Tzu-I Ho</name>
+    </author>
+    <author>
+      <name>Dongzhe Wang</name>
+    </author>
+    <author>
+      <name>Yun-Nung Chen</name>
+    </author>
+    <arxiv:doi>10.1145/3805712.3808520</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3805712.3808520" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.07752v1</id>
+    <title>Robust and Reliable AI for Predictive Quality in Semiconductor Materials Manufacturing with MLOps and Uncertainty Quantification</title>
+    <updated>2026-05-08T13:57:21Z</updated>
+    <link href="https://arxiv.org/abs/2605.07752v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.07752v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Semiconductor materials manufacturing presents unique challenges for machine learning deployment due to evolving process conditions, equipment degradation, and raw material variability that can cause model performance deterioration over time. This study benchmarks machine learning operations (MLOps) retraining strategies using five years of real manufacturing data to identify optimal retraining approaches for quality prediction. We evaluate various retraining frequencies and hyperparameter optimization strategies using control limit normalized residuals as key performance metric. Results demonstrate that a fixed retraining cadence every five production batches without hyperparameter retuning achieves superior performance across all drift conditions while significantly reducing computational overhead compared to strategies incorporating hyperparameter optimization. This approach effectively maintains model accuracy during both abrupt process changes and gradual equipment degradation patterns. To address the critical need for uncertainty quantification in manufacturing decision-making, we implement conformal prediction to generate prediction confidence intervals with strong statistical guarantees. This enables proactive quality control by identifying when prediction intervals fall within acceptable control limits, transforming traditional reactive quality management into a predictive framework. The findings provide practical guidelines for implementing robust MLOps strategies in manufacturing environments where computational efficiency and reliable uncertainty quantification are paramount for operational success.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-08T13:57:21Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Min Gao</name>
+    </author>
+    <author>
+      <name>Julia Maria Perathoner</name>
+    </author>
+    <author>
+      <name>Anton Ludwig Bonin</name>
+    </author>
+    <author>
+      <name>Steven Eulig</name>
+    </author>
+    <author>
+      <name>Gianni Klesse</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.24716v2</id>
+    <title>Gate-dependent offset charge shifts and anharmonicity in gatemon qubits in the weak tunneling regime</title>
+    <updated>2026-04-30T22:53:02Z</updated>
+    <link href="https://arxiv.org/abs/2604.24716v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.24716v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Gatemon qubits are based on a superconductor-quantum dot-superconductor (S-QD-S) junction which enables in situ electrostatic tuning via a gate electrode. For a single-channel QD this structure gives rise to two subgap Andreev bound states (ABSs), and generally leads to a richer quantum phase dynamics as compared to conventional transmons. In a recent work [Phys. Rev. B 111, 214503 (2025)] we derived the quantum phase dynamics from a many-body treatment which leads to an effective gate voltage-dependent Hamiltonian that self-consistently incorporates the phase quantization. It predicts (i) a renormalization of the junction's effective capacitance and (ii) the presence of gate voltage and occupation-dependent charge offsets in junctions with tunneling asymmetry. Here, we quantify the observable impact of these effects on the qubit's energy spectrum and anharmonicity, by studying the interplay of the two Andreev branches as a function of dot-gate voltages and junction transparencies. We show the relation of these predictions to simplified gatemon models and propose a protocol to experimentally detect the predicted charge offsets.</summary>
+    <category term="cond-mat.mes-hall" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-27T17:24:20Z</published>
+    <arxiv:comment>Citations added</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.mes-hall"/>
+    <author>
+      <name>Utkan Güngördü</name>
+    </author>
+    <author>
+      <name>Rusko Ruskov</name>
+    </author>
+    <author>
+      <name>Silas Hoffman</name>
+    </author>
+    <author>
+      <name>Kyle Serniak</name>
+    </author>
+    <author>
+      <name>Andrew J. Kerman</name>
+    </author>
+    <author>
+      <name>Charles Tahan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.16733v1</id>
+    <title>Active World-Model with 4D-informed Retrieval for Exploration and Awareness</title>
+    <updated>2026-04-17T22:43:49Z</updated>
+    <link href="https://arxiv.org/abs/2604.16733v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.16733v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Physical awareness, especially in a large and dynamic environment, is shaped by sensing decisions that determine observability across space, time, and scale, while observations impact the quality of sensing decisions. This loopy information structure makes physical awareness a fundamentally challenging decision problem with partial observations. While in the past decade we have witnessed the unprecedented success of reinforcement learning (RL) in problems with full observability, decision problems with partial observation, such as POMDPs, remain largely open: real-world explorations are excessively costly, while sim-to-real pipeline suffer from unobserved viewpoints. We introduce AW4RE (Active World-model with 4D-informed Retrieval for Exploration), an awareness-centric generative world model that provides a sensor-native surrogate environment for exploring sensing queries. Conditioned on a queried sensing action, AW4RE estimates the action-conditioned observation process. This is done by combining 4D-informed evidence retrieval, action-conditioned geometric support with temporal coherence, and conditional generative completion. Experiments demonstrate that AW4RE produces more grounded and consistent predictions than geometry-aware generative baselines under extreme viewpoint shifts, temporal gaps, and sparse geometric support.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-17T22:43:49Z</published>
+    <arxiv:comment>11 pages, 4 figures, submitted to ICLR 2026 2nd Workshop on World Models</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Elaheh Vaezpour</name>
+    </author>
+    <author>
+      <name>Amirhosein Javadi</name>
+    </author>
+    <author>
+      <name>Tara Javidi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.16226v2</id>
+    <title>Post-Newtonian Constraints on Scalar-Tensor Gravity</title>
+    <updated>2026-07-13T17:48:21Z</updated>
+    <link href="https://arxiv.org/abs/2604.16226v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.16226v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Solar-System constraints on a general scalar-tensor theory with generic non-minimal coupling function, non-canonical kinetic function, and scalar potential, are investigated in both the metric and Palatini formalisms. A unified post-Newtonian treatment is developed, yielding analytical expressions for the effective scalar mass, the effective gravitational coupling, and the parametrised post-Newtonian parameters $γ$ and $β$. The results show explicitly how the choice of variational principle affects the weak-field phenomenology. Comparison with Solar-System observations, primarily the Cassini bound on $γ$, indicates that the observational impact of the formalism is strongly model dependent. Generic non-minimally coupled scalar fields may satisfy significantly weaker local bounds in the Palatini case because of stronger Yukawa suppression, whereas in Brans-Dicke gravity the differences are typically small and become appreciable only in restricted regions of parameter space. For the point-particle source considered here, Palatini $f(\hat{R})$ gravity reproduces the general-relativistic exterior post-Newtonian limit, unlike metric $f(R)$ gravity.</summary>
+    <category term="gr-qc" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-17T16:41:35Z</published>
+    <arxiv:comment>43 pages, 4 figures, 1 table, 5 appendices. Author-Accepted Manuscript</arxiv:comment>
+    <arxiv:primary_category term="gr-qc"/>
+    <arxiv:journal_ref>Phys. Rev. D 114, 023528 (2026)</arxiv:journal_ref>
+    <author>
+      <name>Alexandros Karam</name>
+    </author>
+    <author>
+      <name>Samuel Sánchez López</name>
+    </author>
+    <author>
+      <name>José Jaime Terente Díaz</name>
+    </author>
+    <arxiv:doi>10.1103/j4w3-581d</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1103/j4w3-581d" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.10599v1</id>
+    <title>Rethinking Software Engineering for Agentic AI Systems</title>
+    <updated>2026-04-12T12:08:53Z</updated>
+    <link href="https://arxiv.org/abs/2604.10599v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.10599v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The rapid proliferation of large language models (LLMs) and agentic AI systems has created an unprecedented abundance of automatically generated code, challenging the traditional software engineering paradigm centered on manual authorship. This paper examines whether the discipline should be reoriented around orchestration, verification, and human-AI collaboration, and what implications this shift holds for education, tools, processes, and professional practice.
+  Drawing on a structured synthesis of relevant literature and emerging industry perspectives, we analyze four key dimensions: the evolving role of the engineer in agentic workflows, verification as a critical quality bottleneck, observed impacts on productivity and maintainability, and broader implications for the discipline.
+  Our analysis indicates that code is transitioning from a scarce, carefully crafted artifact to an abundant and increasingly disposable commodity. As a result, software engineering must reorganize around three core competencies: effective orchestration of multi-agent systems, rigorous verification of AI-generated outputs, and structured human-AI collaboration.
+  We propose a conceptual framework outlining the transformations required across curricula, development tooling, lifecycle processes, and governance models. Rather than diminishing the role of engineers, this shift elevates their responsibilities toward system-level design, semantic validation, and accountable oversight. The paper concludes by highlighting key research challenges, including verification-first lifecycles, prompt traceability, and the long-term evolution of the engineering workforce.</summary>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-12T12:08:53Z</published>
+    <arxiv:primary_category term="cs.SE"/>
+    <author>
+      <name>Mamdouh Alenezi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.19459v1</id>
+    <title>Archaeology of Galactic Nuclei Activity</title>
+    <updated>2026-03-19T20:37:06Z</updated>
+    <link href="https://arxiv.org/abs/2603.19459v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.19459v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Considerable observational evidence suggests that the activity of supermassive black holes in galactic nuclei is transient. The term ``active galactic nuclei archaeology'' has even been coined. This implies the possibility of reconstructing the history of activity, such as changes in the nuclear luminosity over time across various regions of the electromagnetic spectrum, by analysing how this activity manifested itself on galactic and extragalactic spatial scales. These phenomena include relic radio structures, gas clouds illuminated by the ``ionising echo'' of past activity, and Fermi/eROSITA bubbles. We provide a review of the results of galactic nucleus activity studies, focusing on its observable impact on the intergalactic medium and circumgalactic environment. Our main focus is on optical observations of ionisation cones and evidence of switching between radiative (ionisation cones) and kinetic (radio jets) modes of nuclear activity.</summary>
+    <category term="astro-ph.GA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.HE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-19T20:37:06Z</published>
+    <arxiv:comment>Accepted to Advances in Physical Sciences (Physics-Uspekhi), vol. 69</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.GA"/>
+    <author>
+      <name>A. V. Moiseev</name>
+      <arxiv:affiliation>Special Astrophysical Observatory, Russian Academy of Sciences</arxiv:affiliation>
+    </author>
+    <author>
+      <name>A. Arshinova</name>
+      <arxiv:affiliation>Special Astrophysical Observatory, Russian Academy of Sciences</arxiv:affiliation>
+    </author>
+    <author>
+      <name>A. A. Smirnova</name>
+      <arxiv:affiliation>Special Astrophysical Observatory, Russian Academy of Sciences</arxiv:affiliation>
+    </author>
+    <arxiv:doi>10.3367/UFNe.2025.03.040022</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.3367/UFNe.2025.03.040022" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.17563v1</id>
+    <title>Forecasting Sensitivity to Modified Dispersion Effects in Pulsar Timing Arrays</title>
+    <updated>2026-03-18T10:12:49Z</updated>
+    <link href="https://arxiv.org/abs/2603.17563v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.17563v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The pulsar timing array systems have reported a detection of a nanohertz-band stochastic gravitational wave background in our galaxy. It is of interest to use this observation to probe modified gravity and to forecast the sensitivity with which certain deviations can be tested in the coming years. In this paper, we focus on the modified dispersion relation of the tensor modes and its effect on the overlap reduction function of the timing residual cross-correlations. We perform a comprehensive forecast of the phase velocity uncertainty, $σ_v$, using a Fisher analysis validated by a mock-data study to account for potential non-Gaussian behavior. We also take into account the sample variance effect and provide an observational timeline for future PTA sensitivity: detecting a $10\%$ or $-1\%$ deviation from the speed of light at the $3σ$ level requires $\mathcal{O}(30)$ years of observations.</summary>
+    <category term="astro-ph.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.HE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="gr-qc" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-18T10:12:49Z</published>
+    <arxiv:comment>38 pages, 10 figures</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.CO"/>
+    <author>
+      <name>Jonathan Grée</name>
+    </author>
+    <author>
+      <name>Qiuyue Liang</name>
+    </author>
+    <author>
+      <name>Elisa G. M. Ferreira</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2602.06536v2</id>
+    <title>Continued fraction method for high overtone quasinormal modes in effective potentials with discontinuity</title>
+    <updated>2026-02-19T04:48:41Z</updated>
+    <link href="https://arxiv.org/abs/2602.06536v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2602.06536v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this study, we extend Leaver's continued fraction method to evaluate black hole quasinormal modes (QNMs) in systems where the effective potential exhibits a discontinuity. Besides the low-lying modes, we particularly focus on high overtones, which are physically pertinent due to the substantial deformation of the QNM spectrum triggered by spectral instability. In our algorithm, we expand the wavefunction at the point of discontinuity, instead of the black hole horizon, and incorporate the Israel-Lanczos-Sen junction conditions. %As the wavefunction convergence condition becomes irrelevant, our proposed algorithm generalizes the original method by expanding the wavefunctions at the point of discontinuity, and the associated difficulty is mitigated by rectifying the recurrence relations between the expansion coefficients to incorporate the Israel-Lanczos-Sen junction conditions. We apply this algorithm to compute the QNMs of the modified Regge-Wheeler potential up to $2000$ modes with high precision. For the low-lying modes, the numerical results show excellent agreement with those obtained using the matrix and Prony methods. The high overtones are significantly deformed, owing to the presence of echoes due to the discontinuity. This deformation in the asymptotic QNM spectrum reveals universal features that are largely independent of the specific form of the discontinuity in the potential, seemingly coinciding with those observed in the modified Pöschl-Teller effective potential. We speculate on whether the collective effect of the high overtones has an observational impact on gravitational wave signals.</summary>
+    <category term="gr-qc" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-02-06T09:41:08Z</published>
+    <arxiv:comment>46 pages, 7 figures, and 10 tables</arxiv:comment>
+    <arxiv:primary_category term="gr-qc"/>
+    <author>
+      <name>Guan-Ru Li</name>
+    </author>
+    <author>
+      <name>Jodin C. Morey</name>
+    </author>
+    <author>
+      <name>Wei-Liang Qian</name>
+    </author>
+    <author>
+      <name>Ramin G. Daghigh</name>
+    </author>
+    <author>
+      <name>Michael D. Green</name>
+    </author>
+    <author>
+      <name>Kai Lin</name>
+    </author>
+    <author>
+      <name>Rui-Hong Yue</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2601.05880v1</id>
+    <title>Non Destructive Testing</title>
+    <updated>2026-01-09T15:55:43Z</updated>
+    <link href="https://arxiv.org/abs/2601.05880v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2601.05880v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The contribution introduces the principles, methods, and applications of non-destructive testing in the context of particle accelerators and related technologies is presented. Both surface inspection methods (visual testing, penetrant testing, magnetic particle testing, eddy current testing) and volumetric methods (radiographic testing, ultrasonic testing) are presented, with examples drawn from CERN projects. Emphasis is placed on the capabilities, limitations, and practical considerations of each technique, highlighting their role in ensuring quality and safety during fabrication, procurement, and in-service inspections. The contribution also addresses standards, codes, and personnel qualification schemes, underlining their regulatory impact in fields such as pressure equipment and industrial piping. Finally, the importance of early integration of NDT into project planning is stressed, not only for compliance but also as a proactive quality and efficiency measure.</summary>
+    <category term="physics.acc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-01-09T15:55:43Z</published>
+    <arxiv:comment>12 pages, contribution to the CAS - CERN Accelerator School: Mechanical &amp; Materials Engineering for Particle Accelerators and Detectors, 2-15 June 2024, Sint-Michielsgestel, Netherlands</arxiv:comment>
+    <arxiv:primary_category term="physics.acc-ph"/>
+    <author>
+      <name>Gonzalo Arnau Izquierdo</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2512.17191v1</id>
+    <title>A Near-Earth Object Model Calibrated to Earth Impactors</title>
+    <updated>2025-12-19T03:16:10Z</updated>
+    <link href="https://arxiv.org/abs/2512.17191v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2512.17191v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The population of Earth-impacting meteoroids and its size-dependent orbital elements are key to understanding the origin of meteorites and informing on planetary defence efforts. Outstanding questions include the role of collisions in depleting meteoroids on highly evolved orbits and the relative importance of delivery resonances. Those depend on size, with current dynamical models considering only asteroids larger than 10m in diameter. Based on 1,202 sporadic meteoroids observed by the Global Fireball Observatory, we created a debiased model of the near-Earth meteoroid population in the 10g - 150kg in size (approximately 1cm - 0.5m) as they dynamically evolved from the main asteroid belt onto Earth-crossing orbits. The observed impact population is best matched with a collisional half-life decreasing from 3Myr for meteoroids of 0.6kg (7cm) or higher, to 1Myr below this size, extending to the model lower bound of 10g. Placing our results in context with near-Earth object models for larger sizes, we find that the inner main belt continues to dominate feeding the small 1m to 10m diameter population primarily via the $ν_6$ secular resonance and the 3:1J mean motion resonance. We also evaluated the potential significance of physical processes other than collisions on Earth-impacting meteoroids, such as low-perihelion disruptions from thermal stresses.</summary>
+    <category term="astro-ph.EP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-12-19T03:16:10Z</published>
+    <arxiv:comment>Accepted by The Astronomical Journal</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.EP"/>
+    <arxiv:journal_ref>AJ vol. 171 no.3 March 2026</arxiv:journal_ref>
+    <author>
+      <name>Sophie E. Deam</name>
+    </author>
+    <author>
+      <name>Hadrien A. R. Devillepoix</name>
+    </author>
+    <author>
+      <name>David Nesvorný</name>
+    </author>
+    <author>
+      <name>Patrick M. Shober</name>
+    </author>
+    <author>
+      <name>Eleanor K. Sansom</name>
+    </author>
+    <author>
+      <name>Jim Albers</name>
+    </author>
+    <author>
+      <name>Eric Anderson</name>
+    </author>
+    <author>
+      <name>Zouhair Benkhaldoun</name>
+    </author>
+    <author>
+      <name>Peter G. Brown</name>
+    </author>
+    <author>
+      <name>Luke Daly</name>
+    </author>
+    <author>
+      <name>George DiBattista</name>
+    </author>
+    <author>
+      <name>Hasnaa Chennaoui Aoudjehane</name>
+    </author>
+    <author>
+      <name>Christopher D. K. Herd</name>
+    </author>
+    <author>
+      <name>Tom Herring</name>
+    </author>
+    <author>
+      <name>Jonathan Horner</name>
+    </author>
+    <author>
+      <name>Peter Jenniskens</name>
+    </author>
+    <author>
+      <name>Derek C. Poulton</name>
+    </author>
+    <author>
+      <name>Martin D. Suttle</name>
+    </author>
+    <author>
+      <name>Anna Zappatini</name>
+    </author>
+    <arxiv:doi>10.3847/1538-3881/ae2fc5</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.3847/1538-3881/ae2fc5" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.15253v2</id>
+    <title>PresentCoach: Dual-Agent Presentation Coaching through Exemplars and Interactive Feedback</title>
+    <updated>2025-11-24T02:51:05Z</updated>
+    <link href="https://arxiv.org/abs/2511.15253v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.15253v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Effective presentation skills are essential in education, professional communication, and public speaking, yet learners often lack access to high-quality exemplars or personalized coaching. Existing AI tools typically provide isolated functionalities such as speech scoring or script generation without integrating reference modeling and interactive feedback into a cohesive learning experience. We introduce a dual-agent system that supports presentation practice through two complementary roles: the Ideal Presentation Agent and the Coach Agent. The Ideal Presentation Agent converts user-provided slides into model presentation videos by combining slide processing, visual-language analysis, narration script generation, personalized voice synthesis, and synchronized video assembly. The Coach Agent then evaluates user-recorded presentations against these exemplars, conducting multimodal speech analysis and delivering structured feedback in an Observation-Impact-Suggestion (OIS) format. To enhance the authenticity of the learning experience, the Coach Agent incorporates an Audience Agent, which simulates the perspective of a human listener and provides humanized feedback reflecting audience reactions and engagement. Together, these agents form a closed loop of observation, practice, and feedback. Implemented on a robust backend with multi-model integration, voice cloning, and error handling mechanisms, the system demonstrates how AI-driven agents can provide engaging, human-centered, and scalable support for presentation skill development in both educational and professional contexts.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-19T09:15:21Z</published>
+    <arxiv:comment>13pages,6figures</arxiv:comment>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Sirui Chen</name>
+    </author>
+    <author>
+      <name>Jinsong Zhou</name>
+    </author>
+    <author>
+      <name>Xinli Xu</name>
+    </author>
+    <author>
+      <name>Xiaoyu Yang</name>
+    </author>
+    <author>
+      <name>Litao Guo</name>
+    </author>
+    <author>
+      <name>Ying-Cong Chen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.27388v1</id>
+    <title>Using data assimilation tools to dissect GraphDOP</title>
+    <updated>2025-10-31T11:28:28Z</updated>
+    <link href="https://arxiv.org/abs/2510.27388v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.27388v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The Data Assimilation (DA) community has been developing various diagnostics to understand the importance of the observing system in accurately forecasting the weather. They usually rely on the ability to compute the derivatives of the physical model output with respect to its initial condition. For example, the Forecast Sensitivity-based Observation Impact (FSOI) estimates the impact on the forecast error of each observation processed in the DA system. This paper presents how these DA diagnostic tools are transferred to Machine Learning (ML) models, as their derivatives are readily available through automatic differentiation. We specifically explore the interpretability and explainability of the observation-driven GraphDOP model developed at the European Centre for Medium-Range Weather Forecasts (ECMWF). The interpretability study demonstrates the effectiveness of GraphDOP's sliding attention window to learn the meteorological features present in the observation datasets and to learn the spatial relationships between different regions. Making these relationships more transparent confirms that GraphDOP captures real, physically meaningful processes, such as the movement of storm systems. The explainability of GraphDOP is explored by applying the FSOI tool to study the impact of the different observations on the forecast error. This inspection reveals that GraphDOP creates an internal representation of the Earth system by combining the information from conventional and satellite observations.</summary>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-31T11:28:28Z</published>
+    <arxiv:primary_category term="physics.ao-ph"/>
+    <author>
+      <name>Patrick Laloyaux</name>
+    </author>
+    <author>
+      <name>Mihai Alexe</name>
+    </author>
+    <author>
+      <name>Eulalie Boucher</name>
+    </author>
+    <author>
+      <name>Peter Lean</name>
+    </author>
+    <author>
+      <name>Ewan Pinnington</name>
+    </author>
+    <author>
+      <name>Simon Lang</name>
+    </author>
+    <author>
+      <name>Tobias Necker</name>
+    </author>
+    <author>
+      <name>Anthony McNally</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2509.13322v2</id>
+    <title>Axion-photon conversion in transient compact stars: Systematics, constraints, and opportunities</title>
+    <updated>2026-03-18T20:26:19Z</updated>
+    <link href="https://arxiv.org/abs/2509.13322v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2509.13322v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We study magnetic conversion of ultra-relativistic axion-like particles (ALPs) into photons in compact-star environments, focusing on the hot, transient conditions of core-collapse supernova (SN) remnants and neutron-star mergers (NSMs). We address previously overlooked uncertainties, particularly the suppression caused by ejected matter near the stellar surface, a region crucial to the conversion process. We derive analytical expressions for the transition rate; they reveal the influence of key parameters and their uncertainties. We update constraints using historical gamma-ray data from SN~1987A and find $g_{aγ}&lt;5\times10^{-12}~{\rm GeV}^{-1}$ for $m_a\lesssim10^{-9}$ eV. We also forecast sensitivities for a future Galactic SN and for NSMs, assuming observations with Fermi-LAT or similar gamma-ray instruments. We distinguish ALPs -- defined as coupling only to photons and produced via Primakoff scattering -- from axions, which also couple to nucleons and emerge through nuclear bremsstrahlung. We omit pionic axion production due to its large uncertainties and inconsistencies, though it could contribute comparably to bremsstrahlung under optimistic assumptions. For the compact sources, we adopt time-averaged one-zone models, guided by numerical simulations, to enable clear and reproducible parametric studies.</summary>
+    <category term="hep-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.HE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-09-16T17:59:59Z</published>
+    <arxiv:comment>80 pages, 13 figures. Matches the published version</arxiv:comment>
+    <arxiv:primary_category term="hep-ph"/>
+    <arxiv:journal_ref>JCAP 03 (2026) 053</arxiv:journal_ref>
+    <author>
+      <name>Damiano F. G. Fiorillo</name>
+    </author>
+    <author>
+      <name>Ángel Gil Muyor</name>
+    </author>
+    <author>
+      <name>Hans-Thomas Janka</name>
+    </author>
+    <author>
+      <name>Georg G. Raffelt</name>
+    </author>
+    <author>
+      <name>Edoardo Vitagliano</name>
+    </author>
+    <arxiv:doi>10.1088/1475-7516/2026/03/053</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1088/1475-7516/2026/03/053" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2508.18364v2</id>
+    <title>Non-Thermal Ionization of Kilonova Ejecta: Observable Impacts</title>
+    <updated>2025-08-27T17:22:48Z</updated>
+    <link href="https://arxiv.org/abs/2508.18364v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2508.18364v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The characteristic rapid rise and decline at optical wavelengths of a kilonova is the product of the low ejecta mass ($\lesssim 0.05 M_\odot$) and high ejecta velocity ($\gtrsim 0.1$c). We show that, even at very early times ($\lesssim 2$ days), regions of ejecta fall below critical density and temperature thresholds at which non-local thermodynamic equilibrium (NLTE) effects become important. Here, we present an approximate method for calculating the ionization state of the ejecta that accounts for the NLTE impact of high-energy electrons produced in the beta decay of freshly synthesized $r$-process elements. We find that incorporating ionization from high-energy electrons produces an ``inverted" and ``blended" ionization structure, where the most highly ionized species are located in the fastest moving homologous ejecta and multiple ionization states coexist. In radiation transport calculations, the higher degree of ionization reduces line blanketing in optical bands, leading to improved agreement with the light curve properties of AT\,2017gfo such as the duration, decay rates, brightness, and colors. Our quasi-NLTE implementation helps to alleviate tensions in kilonova modeling: for high-velocity ($\sim 0.3c$) ejecta components our models require less mass for a given peak brightness in optical bands, by as much as a factor of 3; our models can explain the presence of observed features associated to Sr II, W III, Se III, and Te III under conditions where LTE models would predict only neutral species; and we naturally predict the coexistence of species like Sr II and Ce III without the need for fine-tuning of the ejecta properties.</summary>
+    <category term="astro-ph.HE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.SR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-08-25T18:00:10Z</published>
+    <arxiv:primary_category term="astro-ph.HE"/>
+    <author>
+      <name>Daniel Brethauer</name>
+    </author>
+    <author>
+      <name>Daniel Kasen</name>
+    </author>
+    <author>
+      <name>Raffaella Margutti</name>
+    </author>
+    <author>
+      <name>Ryan Chornock</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2508.04178v1</id>
+    <title>Secure Development of a Hooking-Based Deception Framework Against Keylogging Techniques</title>
+    <updated>2025-08-06T08:03:39Z</updated>
+    <link href="https://arxiv.org/abs/2508.04178v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2508.04178v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Keyloggers remain a serious threat in modern cybersecurity, silently capturing user keystrokes to steal credentials and sensitive information. Traditional defenses focus mainly on detection and removal, which can halt malicious activity but do little to engage or mislead adversaries. In this paper, we present a deception framework that leverages API hooking to intercept input-related API calls invoked by keyloggers at runtime and inject realistic decoy keystrokes. A core challenge, however, lies in the increasing adoption of anti-hooking techniques by advanced keyloggers. Anti-hooking strategies allow malware to bypass or detect instrumentation. To counter this, we introduce a hardened hooking layer that detects tampering and rapidly reinstates disrupted hooks, ensuring continuity of deception. We evaluate our framework against a custom-built "super keylogger" incorporating multiple evasion strategies, as well as 50 real-world malware samples spanning ten prominent keylogger families. Experimental results demonstrate that our system successfully resists sophisticated bypass attempts, maintains operational stealth, and reliably deceives attackers by feeding them decoys. The system operates with negligible performance overhead and no observable impact on user experience. Our findings show that resilient, runtime deception can play a practical and robust role in confronting advanced threats.</summary>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-08-06T08:03:39Z</published>
+    <arxiv:comment>Accepted at IEEE Secure Development Conference (SecDev) 2025</arxiv:comment>
+    <arxiv:primary_category term="cs.CR"/>
+    <author>
+      <name>Md Sajidul Islam Sajid</name>
+    </author>
+    <author>
+      <name>Shihab Ahmed</name>
+    </author>
+    <author>
+      <name>Ryan Sosnoski</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2508.03615v2</id>
+    <title>Interferometric signature of higher-order images in a parametrized framework</title>
+    <updated>2026-07-06T15:15:26Z</updated>
+    <link href="https://arxiv.org/abs/2508.03615v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2508.03615v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper investigates gravitational lensing in the strong deflection limit, focusing particularly on higher-order images produced near compact objects such as black holes and their observable impact through the visibility function. Employing a robust parametrization framework proposed by Rezzolla and Zhidenko, the study systematically explores deviations from the Schwarzschild metric. A detailed theoretical analysis of interferometric observables is provided, highlighting how higher-order images imprint distinctive, measurable patterns in the visibility function, notably characterized by a staircase-like structure. By parametrically varying metric coefficients, the analysis reveals clear dependencies between spacetime deviations and key observational signatures, specifically the step heights and periodicities in the interferometric visibility. The results enhance the theoretical groundwork for interpreting data from advanced interferometric observations, potentially enabling precise tests of general relativity and the discrimination among alternative gravitational theories.</summary>
+    <category term="gr-qc" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.HE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-08-05T16:28:44Z</published>
+    <arxiv:comment>13 pages, 7 figures; v2: typos corrected</arxiv:comment>
+    <arxiv:primary_category term="gr-qc"/>
+    <arxiv:journal_ref>Phys. Rev. D 112, 044007 (2025)</arxiv:journal_ref>
+    <author>
+      <name>Fabiano Feleppa</name>
+    </author>
+    <author>
+      <name>Fabio Aratore</name>
+    </author>
+    <author>
+      <name>Valerio Bozza</name>
+    </author>
+    <arxiv:doi>10.1103/1gls-k3df</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1103/1gls-k3df" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2507.21764v2</id>
+    <title>Ultraviolet photon production rates of the first stars: Impact on the He II $λ$ 1640 Å emission line from primordial star clusters and the 21-cm signal from cosmic dawn</title>
+    <updated>2026-02-28T16:13:51Z</updated>
+    <link href="https://arxiv.org/abs/2507.21764v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2507.21764v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The first stars, the chemically pristine Population III, likely played an important role in heating the intergalactic medium during the epoch of cosmic dawn. The very high effective temperatures ($\sim 10^5$ K) predicted for the most massive Population III stars could also give rise to tell-tale signatures in the emission-line spectra of early star clusters or small galaxies dominated by such stars. Important quantities in modelling their observational signatures include their photon production rates at ultraviolet energies at which photons are able to ionize hydrogen and helium, dissociate molecular hydrogen and cause Lyman-$α$ heating. Here, we model the spectral energy distributions of Population III stars to explore how these key quantities are affected by the initial mass and rotation of Population III stars given a wide range of models for the evolution of these stars. Our results indicate that rotating Population III stars that evolve to effective temperatures $\sim 2\times 10^5$ K could potentially give rise to a very strong HeII 1640 emission line in the spectra from primordial star clusters, without requiring stellar masses of $\gtrsim 100\ \mathrm{M}_\odot$ indicated by previous models for non-rotating Population III stars. The observable impact on 21-cm signatures from cosmic dawn and the epoch of reionization from our set of rotating stars that evolve to $\sim 2\times 10^5$ K is modest, except in case of high Population~III star formation efficiencies which imprint potentially detectable features in the global 21-cm signal and 21-cm power spectrum.</summary>
+    <category term="astro-ph.GA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-07-29T12:49:38Z</published>
+    <arxiv:comment>14 pages, 9 figures. Accepted for publication in MNRAS</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.GA"/>
+    <arxiv:journal_ref>Mon Not R Astron Soc (2026)</arxiv:journal_ref>
+    <author>
+      <name>Joel Wasserman</name>
+    </author>
+    <author>
+      <name>Erik Zackrisson</name>
+    </author>
+    <author>
+      <name>Jiten Dhandha</name>
+    </author>
+    <author>
+      <name>Anastasia Fialkov</name>
+    </author>
+    <author>
+      <name>Leon Noble</name>
+    </author>
+    <author>
+      <name>Suman Majumdar</name>
+    </author>
+    <arxiv:doi>10.1093/mnras/stag386</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1093/mnras/stag386" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.00684v1</id>
+    <title>Forecast Constraints on Bouncing Cosmology from High Frequency Gravitational Waves Using Superconducting LC Circuits and Resonant Cavities</title>
+    <updated>2025-05-31T19:34:44Z</updated>
+    <link href="https://arxiv.org/abs/2506.00684v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.00684v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We exploit forecast sensitivities to high frequency gravitational waves (HFGWs) from superconducting LC circuits, traditional resonant cavity and superconducting radio frequency (SRF) cavities with electromagnetic and mechanical modes to derive the first projections of the bounce energy scale within the generic bouncing cosmology framework over the frequency window $1\,$kHz $\lesssim f\lesssim10\,$GHz. In comparison with existing astrophysical limits (spanning $10^{-17}\,$Hz $\lesssim f\lesssim1\,$kHz and based on Planck/BICEP, PTA, and aLIGO/LISA) our HFGW forecasts yield substantially tighter constraints across a broad region of parameter space. This work unifies constraints from cosmological observations and quantum measurement experiments, providing comprehensive coverage of the early Universe gravitational wave spectrum from $10^{-17}\,\mathrm{Hz}$ to $10\,\mathrm{GHz}$ and thereby probing the cosmic initial non singularity at ultra high energy scales.</summary>
+    <category term="astro-ph.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="hep-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-05-31T19:34:44Z</published>
+    <arxiv:primary_category term="astro-ph.CO"/>
+    <author>
+      <name>Changhong Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2505.19950v1</id>
+    <title>Comparative study of the strong backreaction regime in axion inflation: the effect of the potential</title>
+    <updated>2025-05-26T13:15:46Z</updated>
+    <link href="https://arxiv.org/abs/2505.19950v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2505.19950v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent works have demonstrated the necessity of capturing the local inhomogeneous physics in axion inflation, and showed new genuine features, most notably the extension of the inflationary period dictated by an electromagnetic slow-roll phase. In this work, we further investigate the model by performing a systematic study of the effect of the inflationary potential in the dynamics during the strong backreaction regime. The results indicate that the novel features associated with the local backreaction are universal and intrinsic to the model, hence independent on the choice of inflationary potential. We find that the main quantitative differences between the different choices manifest in the lengthening of inflation. We discuss the possible observational impact of this. Finally, we assess the possible reconciliation of the homogeneous backreaction method with fully inhomogeneous lattice techniques, and obtain that the former fails to provide a correct description for the regime studied in this work.</summary>
+    <category term="astro-ph.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="hep-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-05-26T13:15:46Z</published>
+    <arxiv:comment>27 pages, 8 figures</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.CO"/>
+    <author>
+      <name>Joanes Lizarraga</name>
+    </author>
+    <author>
+      <name>Carmelo López-Mediavilla</name>
+    </author>
+    <author>
+      <name>Ander Urio</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2505.14370v1</id>
+    <title>What Does Success Look Like? Catalyzing Meeting Intentionality with AI-Assisted Prospective Reflection</title>
+    <updated>2025-05-20T13:53:43Z</updated>
+    <link href="https://arxiv.org/abs/2505.14370v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2505.14370v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Despite decades of HCI and Meeting Science research, complaints about ineffective meetings are still pervasive. We argue that meeting technologies lack support for prospective reflection, that is, thinking about why a meeting is needed and what might happen. To explore this, we designed a Meeting Purpose Assistant (MPA) technology probe to coach users to articulate their meeting's purpose and challenges, and act accordingly. The MPA used Generative AI to support personalized and actionable prospective reflection across the diversity of meeting contexts. Using a participatory prompting methodology, 18 employees of a global technology company reflected with the MPA on upcoming meetings. Observed impacts were: clarifying meeting purposes, challenges, and success conditions; changing perspectives and flexibility; improving preparation and communication; and proposing changed plans. We also identify perceived social, temporal, and technological barriers to using the MPA. We present system and workflow design considerations for developing AI-assisted reflection support for meetings.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-05-20T13:53:43Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Ava Elizabeth Scott</name>
+    </author>
+    <author>
+      <name>Lev Tankelevitch</name>
+    </author>
+    <author>
+      <name>Payod Panda</name>
+    </author>
+    <author>
+      <name>Rishi Vanukuru</name>
+    </author>
+    <author>
+      <name>Xinyue Chen</name>
+    </author>
+    <author>
+      <name>Sean Rintel</name>
+    </author>
+    <arxiv:doi>10.1145/3729176.3729204</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3729176.3729204" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2505.07723v1</id>
+    <title>The observable impact of runaway OB stars on protoplanetary discs</title>
+    <updated>2025-05-12T16:32:45Z</updated>
+    <link href="https://arxiv.org/abs/2505.07723v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2505.07723v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>UV radiation from OB stars can drive ``external'' photoevaporative winds from discs in clusters, that have been shown to be important for disc evolution and planet formation. However, cluster dynamics can complicate the interpretation of this process. A significant fraction of OB stars are runaways, propagating at high velocity which might dominate over the wider cluster dynamics in setting the time variation of the UV field in part of the cluster. We explore the impact of a runaway OB star on discs and the observational impact that may have. We find that discs exposed to even short periods of strong irradiation are significantly truncated, and only rebound slightly following the ``flyby'' of the UV source. This is predicted to leave an observable imprint on a disc population, with those downstream of the OB star vector being more massive and extended than those upstream. Because external photoevaporation acts quickly, this imprint is less susceptible to being washed out by cluster dynamics for faster runaway OB stars. The Gaia proper motion vector of the B star 42 Ori in NGC 1977 is transverse to the low mass stellar population and so may make a good region to search for this signature in resolved disc observations.</summary>
+    <category term="astro-ph.EP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.SR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-05-12T16:32:45Z</published>
+    <arxiv:comment>Accepted for publication in MNRAS. 14 pages, 16 figures</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.EP"/>
+    <author>
+      <name>Gavin A. L. Coleman</name>
+    </author>
+    <author>
+      <name>Jinyoung Serena Kim</name>
+    </author>
+    <author>
+      <name>Thomas J. Haworth</name>
+    </author>
+    <author>
+      <name>Peter A. Hartman</name>
+    </author>
+    <author>
+      <name>Taylor C. Kalish</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2504.12200v2</id>
+    <title>Global $Λ$ polarization in heavy-ion collisions at high baryon density</title>
+    <updated>2025-07-10T14:10:02Z</updated>
+    <link href="https://arxiv.org/abs/2504.12200v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2504.12200v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Based on the model of three-fluid dynamics (3FD), the global $Λ$ polarization ($P_Λ$) is calculated in Au+Au collisions at 3 $\leq\sqrt{s_{NN}}\leq$ 9 GeV, in which high baryon density is achieved. Various contributions to $P_Λ$ are considered: those from the thermal vorticity, meson field, thermal shear and spin-Hall effect. Feed-down from higher-lying resonances is also taken into account. The results are compared with available data. Special attention is payed to the collision energies of $\sqrt{s_{NN}}=$ 3, 3.2, 3.5, 3.9, and 4.5 GeV, for which a thorough scan of the energy, rapidity, and centrality dependence of $P_Λ$ is performed. The results for 3 GeV reasonably well reproduce the corresponding STAR data. While the results at $\sqrt{s_{NN}}=$ 3.2, 3.5, 3.9, and 4.5 GeV can be considered as predictions for results of measurements within the STAR fixed-target (STAR-FXT) programthat are expected in the nearest future. It is predicted that a broad maximum of $P_Λ$ is reached at $\sqrt{s_{NN}}\approx$ 3--3.9 GeV, exact position of which depends on the centrality and width of the midrapidity range of observation. Impact of the meson-field, thermal-shear and spin-Hall-effect contributions to $P_Λ$ is also studied.</summary>
+    <category term="nucl-th" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="hep-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="nucl-ex" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-04-16T15:51:45Z</published>
+    <arxiv:comment>12 pages, 12 figures, minor changes, version published in PRC</arxiv:comment>
+    <arxiv:primary_category term="nucl-th"/>
+    <arxiv:journal_ref>Phys.Rev.C 112, 014902 (2025)</arxiv:journal_ref>
+    <author>
+      <name>Yu. B. Ivanov</name>
+    </author>
+    <arxiv:doi>10.1103/qn56-fvnq</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1103/qn56-fvnq" title="doi"/>
+  </entry>
+</feed>

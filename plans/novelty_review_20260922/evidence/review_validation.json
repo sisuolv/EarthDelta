@@ -1,0 +1,18 @@
+{
+  "validated_at_utc": "2026-09-22T03:25:27.817785+00:00",
+  "head": "d749a1c62521226df857587e08f7d067b0f15355",
+  "source_files_checked": 48,
+  "source_files_changed": [],
+  "tracked_diff_unchanged_from_round4": true,
+  "tracked_diff_sha256": "0db5900cf89eb7d53a7c66af9dc071b1ee82f26ea67fc874be3731944bad8cd2",
+  "local_links_checked": 9,
+  "missing_local_links": [],
+  "paper_records": 26,
+  "primary_text_files_checked": 49,
+  "primary_text_hash_mismatches": [],
+  "unindexed_arxiv_citations": [],
+  "markdown_fences_balanced": true,
+  "gpu_jobs_submitted_for_this_research_review": 0,
+  "external_llm_api_calls_for_this_research_review": 0,
+  "validation_scope": "Document links, source/record integrity and literature metadata only; no new weather efficacy experiment or implementation claim."
+}

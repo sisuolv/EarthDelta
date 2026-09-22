@@ -1,0 +1,27 @@
+{
+  "created_utc": "2026-09-21T04:01:19.391331+00:00",
+  "deliverable": "read-only research/code audit and executable task contract; not a repository patch",
+  "audited_repository": "sisuolv/EarthDelta",
+  "audited_branch": "main",
+  "audited_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+  "tasks": 16,
+  "initial_allowed_tasks": [
+    "P0-01"
+  ],
+  "generated_code": "preflight/schema-validator/synthetic-algebra tools only",
+  "package_validation": "PASS",
+  "synthetic_algebra_checks": {
+    "passed": 10,
+    "total": 10
+  },
+  "current_repo_tests_rerun": false,
+  "current_repo_mutated": false,
+  "actual_checkpoint_loaded": false,
+  "real_weather_training": false,
+  "real_weather_inference": false,
+  "notes": [
+    "Remote data/checkpoint states are repository-reported, not locally verified.",
+    "No upstream source files, weights, data, or credentials redistributed.",
+    "Proposed scripts under Files to create must be implemented before their acceptance commands can run."
+  ]
+}

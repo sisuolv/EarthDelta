@@ -1,0 +1,183 @@
+Sandwich-Residuals: Parameter-Efficient Test-time Adaptation of World Models
+
+Latent world models enable planning by predicting the effects of actions in a learned representation space, but their predictions can become unreliable when test-time conditions differ from training. Existing test-time adaptation methods address this by updating parts of the pretrained model, often modifying millions of parameters and requiring a choice of which internal components to adapt. We introduce Sandwich-Residuals , a lightweight alternative that keeps the pretrained world model frozen and learns only small residual corrections around the predictor. The residuals are optimized online using the model’s self-supervised prediction error and require no rewards, labels, or source-domain data. Across 21 conditions on the AdaJEPA benchmark, our method achieves 1.3\times the success rate of the frozen model while retaining 95% of the performance of the strongest AdaJEPA variant and adapting 97–99% fewer parameters. Under compound shifts, this advantage increases to 1.9\times the success rate of the frozen model, while remaining comparable to internal block adaptation. We further demonstrate the same adaptation principle on a DINO-WM model for 3-D manipulation. These results suggest that effective test-time adaptation of world models does not necessarily require modifying their pretrained internal weights. Project Page: https://sandwich-residuals.github.io/
+
+I INTRODUCTION
+
+World models provide a compact mechanism for learning how an environment evolves under an agent’s actions. Rather than reasoning directly in high-dimensional observation space, latent world models encode observations into structured representations and predict their future evolution conditioned on actions [ 1 , 2 , 3 ] . Joint-Embedding Predictive Architectures (JEPAs) [ 4 , 5 ] extend this idea by learning action-conditioned latent dynamics from reward-free trajectories and have recently shown strong results for visual model-predictive control [ 6 , 7 , 8 ] .
+
+A central assumption behind such models is that a frozen world model remains valid at test-time, i.e., that the environment encountered at test time stays sufficiently close to the distribution on which it was trained. In realistic robotic settings, this assumption is easily violated, and train–test distribution shifts can substantially degrade learned predictions and downstream control [ 9 ] . Such shifts may affect observations through changes in lighting, backgrounds, camera viewpoint, or task-irrelevant distractors, without changing the underlying task [ 10 , 11 ] . In addition, the physical interaction between actions and state transitions may also change: friction, mass, actuator response, payload, or other system properties can alter how the same action affects the environment [ 12 ] . These two forms of distribution shift pose fundamentally different challenges. Appearance shifts perturb the observation mapping while potentially preserving the dynamics, whereas dynamics shifts directly invalidate the learned action-conditioned transition model.
+
+Existing approaches address distribution shift either by learning representations that generalize beyond the training distribution, e.g., through state abstraction, bisimulation, or disentangled world models, or by adapting pretrained models using data encountered at test-time [ 13 , 14 ] . For observation-side shifts, Toso et al. [ 11 ] explicitly shape the latent geometry of a JEPA-based world model using bisimulation, suppressing visually irrelevant variation while preserving transition-relevant structure and thereby improving planning robustness to appearance changes.
+
+Test-time adaptation provides a natural way to correct test-time mismatch using transitions collected online. AdaJEPA [ 10 ] , for example, updates a predictor block and the visual encoder’s projection head using the model’s own latent prediction error. While effective, this strategy modifies millions of pretrained parameters and requires selecting which internal predictor block to adapt. Wang et al. [ 10 ] find that the best adaptation target is environment-dependent, although performance is generally not highly sensitive to the particular layers adapted. Their LoRA variant, which inserts low-rank adapters into every linear layer of the predictor and encoder while keeping the pretrained weights frozen, also improves over the frozen model but does not consistently outperform direct updates to selected layers. In our experiments, the two selected-layer AdaJEPA variants likewise differ in effectiveness: predfirst+enclast outperforms predlast+enclast on aggregate, yet both require updating nearly 10^{7} pretrained parameters. These results leave a more basic question unresolved: does effective test-time adaptation require modifying the pretrained world model itself, and if not, where can the necessary correction be introduced?
+
+We investigate whether test-time adaptation can be achieved without modifying the pretrained world model itself. As illustrated in Fig. 1 , our approach freezes all encoder and predictor parameters and inserts lightweight residual modules around the predictor, forming a “sandwich” of learnable corrections before and after the frozen dynamics model. On the input side, residuals modify the visual and action embeddings before they are passed to the predictor; the action residual is additionally conditioned on proprioception so that the same command can be corrected differently depending on the current system state. On the output side, residuals correct the predicted visual and proprioceptive latents before they are reused for rollout and planning. Only these residual modules are updated online, using the same self-supervised latent prediction error as AdaJEPA and requiring no rewards, labels, or source-domain data. We call this architecture Sandwich-Residuals .
+
+We evaluate Sandwich-Residuals on an expanded AdaJEPA-based evaluation suite using the released checkpoints and environments [ 10 ] , comprising 21 primary and 7 compound conditions, and on a DINO-WM model trained for OGBench-Cube manipulation [ 15 ] . The evaluation covers changes in dynamics, appearance, object-shape, layout, and compound shifts. Our key contributions are:
+
+We introduce Sandwich-Residuals , a test-time adaptation method that keeps the pretrained encoder and predictor frozen and updates only lightweight residual modules.
+
+We show that interface-level adaptation recovers most of the performance gain of AdaJEPA while updating 97–99% fewer parameters, with particularly strong results under dynamics and compound shifts and without requiring predictor-block selection.
+
+We demonstrate that the same adaptation principle transfers from AdaJEPA-style world models to a DINO-WM model on 3-D robotic manipulation, using a single residual design across architectures.
+
+II RELATED WORK
+
+II-A Latent World Models and Predictive Planning
+
+World models learn compact predictive models of environment dynamics that support planning or policy learning without repeatedly interacting with the environment [ 1 , 2 , 3 ] . Recent work increasingly performs prediction directly in learned representation spaces, avoiding expensive pixel reconstruction [ 4 , 6 , 8 ] . DINO-WM [ 6 ] predicts future frozen DINOv2 features conditioned on actions and plans directly in that latent space, whereas Wang et al. [ 7 ] train the encoder and predictor jointly under a curvature penalty that straightens latent trajectories to make them easier to plan through. Our work concerns how such action-conditioned world models should adapt when test-time conditions change.
+
+II-B Test-Time Adaptation
+
+Test-time training and adaptation update pretrained models using unlabeled observations encountered after test-time [ 16 , 17 , 18 ] . Existing methods adapt models through self-supervised objectives, entropy minimization, selective parameter updates, or test-time feature and classifier adjustment [ 19 , 18 , 20 ] . While effective, online gradient-based adaptation can introduce substantial computational overhead and may degrade pretrained representations when large parts of the model are updated [ 18 , 20 ] . This has motivated increasingly lightweight adaptation strategies that restrict test-time updates to selected parameters or auxiliary components [ 21 ] . Our work follows this direction in latent world models, but confines adaptation to lightweight residual modules at the predictor’s input and output interfaces rather than modifying the pretrained encoder or predictor.
+
+II-C Online Adaptation of World Models
+
+World-model adaptation has been studied through online fine-tuning, system identification, and dynamics-specific updates [ 12 , 22 ] . SimDist [ 22 ] freezes the transferred representation, reward, and value models while fine-tuning the latent dynamics from real-world transitions, explicitly preserving a stationary latent target during adaptation. AdaJEPA [ 10 ] brings test-time adaptation directly into JEPA-based MPC: after executing an action, the resulting transition provides a self-supervised prediction target for updating selected encoder and predictor parameters before replanning.
+
+II-D Residual and Action-Specific Dynamics Adaptation
+
+Residual dynamics models provide a complementary strategy for correcting model mismatch while preserving a pretrained model [ 23 , 24 ] . ReDRAW [ 24 ] is closest to our setting: it freezes a pretrained world model and learns a residual correction to its latent-state dynamics from a small offline target-domain dataset. Recent work has also emphasized explicitly structuring action-conditioned dynamics. AdaWorld [ 25 ] learns transferable latent action representations, while DWM [ 26 ] separates action-driven transitions from action-independent world effects during training. These approaches improve transfer or dynamics modeling, but correct the model before or between deployments rather than online inside the planning loop, and do not jointly correct the action and observation pathways.
+
+III METHODOLOGY
+
+III-A Background
+
+We consider pretrained joint-embedding predictive architectures (JEPAs) for visual model-predictive control. At time step t , the agent receives an observation \mathbf{o}_{t} and executes an action \mathbf{a}_{t} . Observation and action encoders produce latent representations that are concatenated along their feature dimension into the predictor input \mathbf{x}_{t} . For a context of K consecutive time steps, the causal predictor produces a one-step-ahead prediction at each context position:
+
+\widehat{\mathbf{x}}_{t-K+2:t+1}=f_{\Theta}\left(\mathbf{x}_{t-K+1:t}\right). (1)
+
+During recursive rollout, the final prediction \widehat{\mathbf{x}}_{t+1} is appended to the context before predicting the next step.
+
+We consider two instantiations of this architecture. In the pretrained world models of AdaJEPA, the observation \mathbf{o}_{t}=(\mathbf{v}_{t},\mathbf{p}_{t}) consists of an image \mathbf{v}_{t} and a proprioceptive state \mathbf{p}_{t} , encoded by a small ResNet with an MLP projection head and by a proprioceptive encoder, respectively:
+
+\mathbf{z}^{v}_{t}=\mathcal{E}_{v}(\mathbf{v}_{t}),\qquad\mathbf{z}^{p}_{t}=\mathcal{E}_{p}(\mathbf{p}_{t}),\qquad\mathbf{z}^{a}_{t}=\mathcal{E}_{a}(\mathbf{a}_{t}), (2)
+
+with \mathbf{z}^{v}_{t}\in\mathbb{R}^{384} and \mathbf{z}^{p}_{t},\mathbf{z}^{a}_{t}\in\mathbb{R}^{10} , and
+
+\mathbf{x}_{t}=\left[\mathbf{z}^{v}_{t};\,\mathbf{z}^{p}_{t};\,\mathbf{z}^{a}_{t}\right]. (3)
+
+In DINO-WM, the observation is the image alone, encoded by a frozen DINOv2 [ 27 ] backbone into a set of patch tokens \mathbf{z}^{v}_{t}\in\mathbb{R}^{P\times 384} ; the action embedding is tiled onto every token, so that \mathbf{x}_{t}=[\mathbf{z}^{v}_{t};\,\mathbf{z}^{a}_{t}] per token, and the predictor operates over the K\times P tokens of the context. In the following, \mathbf{z}^{p}_{t} and the proprioceptive terms are simply absent for DINO-WM.
+
+The world model is trained using an objective centered on predicting future observation representations in latent space. Its complete pretraining objective also includes the auxiliary losses and regularization terms used by the underlying JEPA formulation. After training, candidate action sequences can be evaluated by recursively applying the predictor and measuring the distance between the predicted representations and the encoded goal observation. We use the cross-entropy method (CEM) to optimize these action sequences within a receding-horizon control loop.
+
+AdaJEPA adapts the pretrained world model during this control loop using recently observed transitions. For clarity, consider the one-step prediction ending at time i+1 . The observation components of the final prediction produced by f_{\Theta}(\mathbf{x}_{i-K+1:i}) are concatenated as
+
+\widehat{\mathbf{z}}^{o}_{i+1}=\left[\widehat{\mathbf{z}}^{v}_{i+1};\widehat{\mathbf{z}}^{p}_{i+1}\right]. (4)
+
+The corresponding target representation is formed by encoding the observed image and proprioceptive state:
+
+\mathbf{z}^{o}_{i+1}=\left[\mathcal{E}_{v}(\mathbf{v}_{i+1});\mathcal{E}_{p}(\mathbf{p}_{i+1})\right]. (5)
+
+Using the predicted and target observation representations in Eqs. ( 4 ) and ( 5 ), respectively, AdaJEPA minimizes the self-supervised latent prediction loss
+
+\mathcal{L}_{\mathrm{pred}}=\frac{1}{|\mathcal{B}|}\sum_{(\mathbf{o}_{i},\mathbf{a}_{i},\mathbf{o}_{i+1})\in\mathcal{B}}\ell\left(\widehat{\mathbf{z}}^{o}_{i+1},\operatorname{sg}\left(\mathbf{z}^{o}_{i+1}\right)\right), (6)
+
+where \mathcal{B} contains the five most recent observed transitions, \ell is the mean-squared error over the observation features, and \operatorname{sg}(\cdot) denotes stop-gradient. The predfirst+enclast variant updates the first predictor transformer block, whereas predlast+enclast updates the last predictor transformer block and the final predictor LayerNorm. Both variants also update the encoder’s final projection head where one exists; the frozen DINOv2 encoder has none. Although this allows the world model to adapt to test-time conditions, it requires modifying parameters of the pretrained encoder and predictor.
+
+III-B Residual Adaptation Before and After Prediction
+
+As illustrated in Fig. 1 , we freeze every parameter of the pretrained encoders and predictor and introduce lightweight residual modules around the predictor. The residuals modify its inputs and outputs, forming a sandwich around the frozen dynamics model. This provides learnable interfaces for compensating for both input-side distribution shifts and systematic prediction errors without changing the pretrained world model itself.
+
+We correct the action embedding using the action and, when available, the proprioceptive representation:
+
+\widetilde{\mathbf{z}}^{a}_{t}=\mathbf{z}^{a}_{t}+r^{a}_{\phi}\left(\left[\mathbf{z}^{a}_{t};\mathbf{z}^{p}_{t}\right]\right), (7)
+
+where r^{a}_{\phi} is a linear residual map. Conditioning the correction on the proprioceptive representation allows the same encoded action to be adjusted differently depending on the current state. This input-side correction is intended to compensate for dynamics shifts, such as changes in damping, that alter how a given action affects the next state.
+
+We also apply a residual MLP to the visual representation:
+
+\widetilde{\mathbf{z}}^{v}_{t}=\mathbf{z}^{v}_{t}+r^{v,\mathrm{in}}_{\phi}\left(\mathbf{z}^{v}_{t}\right). (8)
+
+This residual is applied immediately after the visual encoder, so it acts on every encoded image: the context frames, the observed next frame that serves as adaptation target, and the goal image used by the planning objective. Predictions and goal are therefore compared in the same corrected representation, similar to AdaJEPA. For DINO-WM the residual is applied to each patch token.
+
+We do not modify the input proprioceptive embedding, which reflects our setting. The proprioceptive observation mapping remains unchanged, while distribution shifts affect the visual observations or the mapping from actions to state transitions. As in Sec. III-A , the equations below are written for the AdaJEPA models; for DINO-WM the \mathbf{z}^{p}_{t} terms and the proprioceptive output residual are absent.
+
+The corrected predictor input is therefore
+
+\widetilde{\mathbf{x}}_{t}=\left[\widetilde{\mathbf{z}}^{v}_{t};\,\mathbf{z}^{p}_{t};\,\widetilde{\mathbf{z}}^{a}_{t}\right]. (9)
+
+For a context of K time steps, the frozen predictor produces
+
+\widehat{\mathbf{x}}_{t-K+2:t+1}=f_{\Theta}\left(\widetilde{\mathbf{x}}_{t-K+1:t}\right). (10)
+
+Let \widehat{\mathbf{z}}^{v}_{t+1} and \widehat{\mathbf{z}}^{p}_{t+1} denote the visual and proprioceptive components of a predicted representation. A second pair of residual modules corrects these predictor outputs:
+
+\displaystyle\widetilde{\widehat{\mathbf{z}}}^{v}_{t+1} \displaystyle=\widehat{\mathbf{z}}^{v}_{t+1}+r^{v,\mathrm{out}}_{\phi}\left(\widehat{\mathbf{z}}^{v}_{t+1}\right), (11) \displaystyle\widetilde{\widehat{\mathbf{z}}}^{p}_{t+1} \displaystyle=\widehat{\mathbf{z}}^{p}_{t+1}+r^{p,\mathrm{out}}_{\phi}\left(\widehat{\mathbf{z}}^{p}_{t+1}\right). (12)
+
+The output visual residual is another MLP, while the output proprioceptive residual is linear. These output residuals directly compensate for errors that remain after prediction. The corrected representations are used both recursively during model rollouts and by the latent planning objective.
+
+Both visual residuals are two-layer MLPs with a 64-dimensional hidden layer and GELU activation, \mathbb{R}^{384}\rightarrow\mathbb{R}^{64}\rightarrow\mathbb{R}^{384} . For the AdaJEPA models, the action-input residual maps \mathbb{R}^{20}\rightarrow\mathbb{R}^{10} , while the proprioceptive-output residual maps \mathbb{R}^{10}\rightarrow\mathbb{R}^{10} , yielding 99,520 trainable parameters in total. This corresponds to 1.0% of the 9.93M parameters updated by AdaJEPA in the maze models and 2.7% of the 3.66M updated in the pushing models. For DINO-WM, the action residual maps \mathbb{R}^{10}\rightarrow\mathbb{R}^{10} and the proprioceptive-output residual is omitted, resulting in 99,310 trainable parameters, or 3.1% of the 3.23M parameters updated by AdaJEPA.
+
+For Sandwich-Residuals, Eq. ( 6 ) is evaluated using the residual-corrected prediction \widetilde{\widehat{\mathbf{z}}}^{o}_{i+1}=[\widetilde{\widehat{\mathbf{z}}}^{v}_{i+1};\widetilde{\widehat{\mathbf{z}}}^{p}_{i+1}] and target \widetilde{\mathbf{z}}^{o}_{i+1}=[\widetilde{\mathbf{z}}^{v}_{i+1};\mathbf{z}^{p}_{i+1}] , with stop-gradient applied to the target.
+
+The linear residuals are initialized to zero and the last layer of each MLP residual to \mathcal{N}(0,10^{-4}) , so the adapted model coincides with the frozen pretrained model at the beginning of each episode. Only the residual parameters \phi are optimized at test-time. After each plan-execute cycle, we perform one Adam update:
+
+\phi\leftarrow\phi-\eta_{\phi}\nabla_{\phi}\mathcal{L}_{\mathrm{pred}}. (13)
+
+In all experiments, we use a learning rate of 10^{-2} for the linear residuals and 5\times 10^{-4} for the visual MLPs. The adaptation buffer retains the five most recent transitions, and the prediction loss is averaged over all windows of up to K consecutive transitions formed from them. Residual parameters persist across replanning cycles within an episode and are reset to their initial values at the beginning of each new episode, mirroring AdaJEPA’s protocol.
+
+IV EXPERIMENTS
+
+We ask whether adapting only the Sandwich-Residuals recovers planning performance under test-time shifts as effectively as AdaJEPA’s updates to the pretrained weights, and how the answer depends on the type of shift.
+
+IV-A AdaJEPA Benchmark
+
+Environments and pretrained models: We use the released AdaJEPA checkpoints, environments, and planner; the only code change is the addition of the residual arm. The benchmark comprises four goal-conditioned visual control tasks, each with its own pretrained world model: Medium Maze , a MuJoCo point-mass agent navigating a fixed maze; Diverse Maze , the same agent on held-out layouts; PushT , a pymunk pusher moving a T-shaped block to a goal pose (model trained on the T block only); and PushObj , the same pusher with a model trained on four shapes {T, L, Z, +}. Episodes are goal-conditioned on a goal image (and proprioception); start/goal pairs are sampled as in AdaJEPA (maze: cells at least 3 apart, or shortest-path distance 3–5 for held-out layouts; pushing: two states 25 steps apart on held-out trajectories). Success is defined as in AdaJEPA. Test-time shifts: Shifts are applied at test time only and fall into three groups. Dynamics shifts change the simulator: joint damping \times 50 and body density 0.2 – 10\times in Medium Maze; the pusher’s PD controller gain k_{v} doubled in PushT. Appearance shifts alter the rendered images (applied identically to observed and goal frames): Gaussian blur ( \sigma=2 ), salt-and-pepper noise (1%), brightness scaled by 0.9, and recoloring of the agent, block, or goal anchor to red. Task shifts change what must be manipulated or where: PushObj evaluates on 3 unseen shapes (I, small T, square) in addition to the 4 trained shapes, and Diverse Maze uses unseen layouts. Seven compound conditions combine a corruption with a dynamics change. In total we evaluate 21 main and 7 compound conditions. Planning protocol: All arms share AdaJEPA’s receding-horizon loop. The world model observes one image every 5 simulation steps (5 low-level actions per block) with context K=3 . Each cycle, CEM optimizes 5 action blocks (200 candidates, 30 elites, 10 iterations) against the distance between the predicted latent trajectory and the encoded goal; the first block is executed, the rest warm-start the next cycle, for up to 20 cycles. Baselines: Frozen plans with the pretrained model and no adaptation. AdaJEPA adapts a subset of pretrained weights after every executed block with one Adam step on \mathcal{L}_{\mathrm{pred}} . predlast+enclast updates the last predictor block, its final LayerNorm, and the encoder’s projection head; predfirst+enclast updates the first predictor block and the projection head (learning rates as in the original work; 9.93M parameters in the maze models, 3.66M in the pushing models). Ours freezes all pretrained weights and updates only the residual modules of Sec. III-B (99,520 parameters), with the same buffer, update schedule, and per-episode reset. Every (condition, arm) cell is evaluated on 50 episodes for each of 5 seeds; we additionally report paired differences and their standard errors in addition to per-condition means.
+
+Condition Frozen pl pf Ours \Delta Medium Maze No shift 80.8 \pm 8.9 86.0 \pm 5.8 84.0 \pm 5.7 81.2 \pm 6.7 +0.4 Damping 50 \times 46.4 \pm 3.8 52.0 \pm 4.0 59.2 \pm 3.0 66.0 \pm 3.7 +19.6 Density 0.2 \times 90.0 \pm 4.5 86.4 \pm 6.2 88.0 \pm 7.7 88.4 \pm 5.7 - 1.6 Density 10 \times 38.0 \pm 5.1 39.6 \pm 6.1 42.8 \pm 4.6 40.4 \pm 3.0 +2.4 Blur \sigma =2 83.2 \pm 6.6 83.2 \pm 6.4 84.0 \pm 4.7 83.2 \pm 7.7 +0.0 average 67.7 69.4 71.6 71.8 +4.2 Diverse Maze Unseen layouts 45.6 \pm 9.1 53.6 \pm 6.1 62.8 \pm 8.2 63.2 \pm 11.0 +17.6 PushObj T 50.4 \pm 4.3 76.4 \pm 3.0 79.6 \pm 5.2 76.4 \pm 6.5 +26.0 L 47.6 \pm 6.2 76.8 \pm 3.0 77.2 \pm 2.3 71.6 \pm 7.3 +24.0 Z 37.6 \pm 8.9 72.8 \pm 4.6 79.2 \pm 6.7 70.4 \pm 4.8 +32.8 Plus 36.4 \pm 5.5 72.0 \pm 5.8 76.8 \pm 6.4 70.4 \pm 8.2 +34.0 I ∗ 24.8 \pm 7.0 46.0 \pm 9.4 43.2 \pm 7.6 45.6 \pm 8.9 +20.8 Small T ∗ 49.6 \pm 4.6 65.6 \pm 9.0 63.2 \pm 8.8 62.4 \pm 11.8 +12.8 Square ∗ 22.4 \pm 7.1 40.0 \pm 5.1 44.4 \pm 7.0 39.2 \pm 9.5 +16.8 average 38.4 64.2 66.2 62.3 +23.9 PushT No shift 62.0 \pm 6.0 75.6 \pm 3.6 82.4 \pm 2.6 77.6 \pm 5.5 +15.6 Blur \sigma =2 50.4 \pm 4.3 69.2 \pm 5.8 82.8 \pm 5.6 72.8 \pm 4.1 +22.4 S&P noise 0.01 55.6 \pm 4.1 70.4 \pm 8.8 83.2 \pm 2.3 72.0 \pm 4.2 +16.4 Brightness 0.9 \times 65.6 \pm 7.1 74.8 \pm 6.3 82.0 \pm 4.2 73.6 \pm 6.5 +8.0 Red agent 50.0 \pm 4.7 62.4 \pm 6.1 74.0 \pm 4.9 67.2 \pm 3.3 +17.2 Red block 14.0 \pm 4.2 11.2 \pm 4.1 10.0 \pm 2.0 12.8 \pm 1.8 - 1.2 Red anchor 29.6 \pm 3.8 36.0 \pm 5.7 43.2 \pm 8.2 42.4 \pm 3.3 +12.8 k_{v} 2 \times 53.2 \pm 5.4 80.8 \pm 5.2 91.2 \pm 3.0 88.4 \pm 5.4 +35.2 average 47.5 60.0 68.6 63.4 +15.8 All 21 conditions 49.2 63.4 68.2 65.0 +15.8
+
+Results: Tables I and II summarize performance on the 21 primary and seven compound conditions, respectively, while Table III reports the paired comparisons. Across the 21 primary conditions, our method achieves 65.0% mean success, compared with 49.2% for Frozen, 63.4% for predlast+enclast , and 68.2% for predfirst+enclast . This is achieved while adapting only 1.0% of the parameters updated by AdaJEPA in the maze models and 2.7% in the pushing models. Overall, our method improves over Frozen by 15.8\pm 1.2 and over predlast by 1.6\pm 0.7 , while remaining within 3.2\pm 0.8 of predfirst .
+
+Condition Frozen pl pf Ours \Delta Medium Maze: blur \sigma=2 + damping 50 \times 46.8 \pm 7.8 54.0 \pm 4.7 56.0 \pm 4.0 65.6 \pm 6.2 +18.8 Medium Maze: blur \sigma=2 + density 10 \times 38.8 \pm 6.1 39.2 \pm 3.6 37.2 \pm 7.2 40.8 \pm 3.0 +2.0 PushT: blur \sigma=2 + controller k_{v} 2 \times 40.4 \pm 4.3 76.8 \pm 3.3 87.6 \pm 2.6 87.6 \pm 3.0 +47.2 PushT: red anchor + controller k_{v} 2 \times 30.4 \pm 4.3 42.4 \pm 7.4 53.2 \pm 4.1 51.2 \pm 7.7 +20.8 PushT: blur \sigma=2 + red anchor + controller k_{v} 2 \times 34.4 \pm 8.6 41.2 \pm 5.8 68.8 \pm 6.7 59.6 \pm 2.6 +25.2 PushObj T: blur \sigma=2 + controller k_{v} 2 \times 26.8 \pm 3.0 84.8 \pm 2.7 85.6 \pm 3.3 87.2 \pm 5.0 +60.4 PushObj Square: blur \sigma=2 + controller k_{v} 2 \times 23.6 \pm 6.4 66.4 \pm 8.6 68.0 \pm 9.1 70.0 \pm 9.1 +46.4
+
+Subset - Frozen - pl - pf All 21 conditions +15.8\pm 1.2 +1.6\pm 0.7 -3.2\pm 0.8 Medium Maze +4.2\pm 1.9 +2.4\pm 1.6 +0.2\pm 1.0 Diverse Maze +17.6\pm 1.2 +9.6\pm 2.5 +0.4\pm 4.3 PushObj +23.9\pm 1.7 -1.9\pm 0.9 -3.9\pm 1.5 PushT +15.8\pm 1.8 +3.3\pm 0.9 -5.2\pm 1.2 Compound (7) +31.5\pm 3.4 +8.2\pm 1.3 +0.8\pm 1.4
+
+The relative performance depends strongly on the type of shift. Under dynamics changes, our method is comparable to predfirst ( +0.5\pm 1.3 ), whereas the gap is larger for appearance, shape, and unshifted conditions ( -4.1\pm 0.9 ). The strongest gains occur under large dynamics changes. With 50\times damping in Medium Maze, our method reaches 66.0% success compared with 59.2% for predfirst and 46.4% for Frozen. Under blur combined with 50\times damping, it reaches 65.6%, compared with 56.0% and 46.8%, respectively. As shown by the ablation in Sec. V , these improvements arise from different residual pathways across environments: output-side correction dominates in Medium Maze, whereas the action residual is substantially more important under the PushT controller shift.
+
+The same trend is more pronounced under compound shifts. Across the seven compound conditions, our method improves substantially over Frozen and predlast , while remaining comparable to predfirst ( +0.8\pm 1.4 ). It achieves the highest success rate on four of the seven conditions and outperforms predlast on all seven. In contrast, predfirst retains a clearer advantage on several pure appearance shifts, particularly in PushT, suggesting that direct adaptation of the pretrained representation remains beneficial when the shift primarily affects visual encoding. The red-block condition remains challenging for all methods, with success below 15%.
+
+Figure 2 provides qualitative examples under four compound shifts. These trajectories illustrate the behavior observed in the aggregate results; in particular, our method successfully reaches the goal in the illustrated 50\times damping episode where the other adaptation strategies fail.
+
+IV-B Robot Manipulation: OGBench-Cube
+
+Task and world model: To test transfer to a 3-D manipulation task and a world model with a different encoder, we use the single-cube task of OGBench, in which a UR5e arm with a parallel gripper must move a cube to a target position. Actions are 5-dimensional (end-effector displacement, yaw, gripper command), observations are 224\times 224 images from a fixed front camera, and there is no proprioceptive input. We use the dataset released with LeWorldModel [ 8 ] and train a DINO-WM world model on 2,000 episodes with the reference recipe of stable-worldmodel : a frozen DINOv2-small encoder, a 6-block causal ViT predictor over K=3 frames, frames every 5 simulation steps with 5 actions per block. Evaluation protocol and shifts: We follow the LeWorldModel protocol: the start state is a random state of a dataset trajectory, the goal image is the frame 25 steps later, and the two preceding frames and executed action blocks form the initial context. An episode succeeds if the cube comes within 4 cm of the goal position. Planning uses the CEM settings of Sec. IV-A with DINO-WM’s cost (mean squared distance between predicted and goal patch tokens), for up to 10 cycles. Three shifts, absent from training data, are applied through the simulator: a lighting shift (intensity 0.7 to 0.3), a viewpoint shift ( 10^{\circ} camera rotation in yaw and pitch), and a dynamics shift (arm joint position gain halved). Baselines: The four arms are defined as in Sec. IV-A . Because the DINOv2 [ 27 ] encoder is frozen and has no projection head, predlast updates the last predictor block and its final LayerNorm and predfirst the first predictor block (3.23M parameters each); ours updates the residual modules without proprioceptive terms (99,310 parameters). Each cell is evaluated on 50 episodes for each of 3 seeds.
+
+Results: Table IV summarizes performance on the four OGBench-Cube conditions. Without shift, Frozen achieves 62.7% success, predfirst 64.0%, and both predlast and our method 60.7%. Averaged across all conditions, our method reaches 60.0%, compared with 58.7% for Frozen, 57.8% for predlast , and 58.0% for predfirst , while adapting only 99,310 parameters versus 3.23M for the AdaJEPA variants. Across the twelve (condition, seed) pairs, our method differs from Frozen by +1.3\pm 1.5 , from predlast by +2.2\pm 1.2 , and from predfirst by +2.0\pm 1.8 .
+
+Condition Frozen pl pf Ours No shift 62.7 \pm 3.1 60.7 \pm 3.1 64.0 \pm 2.0 60.7 \pm 5.0 Light 0.3 58.7 \pm 4.2 60.0 \pm 4.0 58.7 \pm 4.6 61.3 \pm 5.0 Camera 10^{\circ} 54.0 \pm 5.3 51.3 \pm 5.0 52.0 \pm 5.3 56.0 \pm 2.0 Arm gain 0.5 \times 59.3 \pm 5.8 59.3 \pm 5.8 57.3 \pm 3.1 62.0 \pm 2.0 Average 58.7 57.8 58.0 60.0
+
+Under test-time shift, our method is the only adaptation strategy that improves over Frozen in all three conditions: 61.3% vs. 58.7% under the lighting shift, 56.0% vs. 54.0% under the camera shift, and 62.0% vs. 59.3% under the arm-gain shift. This corresponds to +2.4\pm 1.4 relative to Frozen, whereas both AdaJEPA variants fall below the frozen model under the viewpoint shift. Figure 3 shows a representative episode under this condition and the resulting replan-to-replan cube trajectory. Overall, these results show that the same interface-level adaptation principle transfers to a patch-token world model and a 3-D manipulation setting, although the performance differences remain modest.
+
+V Residual Pathway Ablation
+
+Table V analyzes the contribution of each residual pathway under two compound shifts: Medium Maze with blur \sigma=2 and damping 50\times , and PushT with blur \sigma=2 and doubled controller gain k_{v} . Starting from the full Sandwich-Residual configuration, we remove either the action residual r^{a} , both output residuals r^{\mathrm{out}} , or both input-side residuals r^{\mathrm{in}} . All remaining adaptation and planning settings are unchanged.
+
+Configuration Medium Maze PushT Full 65.6 \pm 6.2 87.6 \pm 3.0 -r^{a} 63.6 \pm 3.8 ( -2.0 ) 77.6 \pm 3.0 ( -10.0 ) -r^{\mathrm{out}} 56.4 \pm 2.2 ( -9.2 ) 72.0 \pm 5.1 ( -15.6 ) -r^{\mathrm{in}} 64.4 \pm 1.7 ( -1.2 ) 71.2 \pm 1.8 ( -16.4 )
+
+The ablation reveals different adaptation mechanisms across the two environments. In Medium Maze, output-side correction accounts for most of the improvement: removing r^{\mathrm{out}} reduces success from 65.6% to 56.4%, whereas retaining only the output residuals ( -r^{\mathrm{in}} ) achieves 64.4%, close to the full configuration. Removing only the action residual has little effect, yielding 63.6%. This indicates that the compound shift can largely be compensated for after prediction rather than through action remapping.
+
+In PushT, the residual pathways are substantially more complementary. Removing the 210-parameter action residual reduces success from 87.6% to 77.6%, consistent with the controller shift directly modifying the effect of commanded actions. Removing either all output residuals or all input-side residuals further reduces success to 72.0% and 71.2%, respectively. Thus, neither side of the predictor alone is sufficient to recover the full adaptation performance.
+
+Overall, the results show that the dominant correction pathway depends on the test-time shift. Output-side adaptation is nearly sufficient in Medium Maze, whereas PushT benefits from jointly correcting both the predictor inputs and outputs. This supports the full Sandwich-Residual configuration as a fixed adaptation mechanism when the source of the test-time mismatch is not known in advance.
+
+VI DISCUSSION AND CONCLUSION
+
+VI-A Limitations
+
+Sandwich-Residuals assume that the pretrained representation remains sufficient after test-time shift and that the proprioceptive observation mapping remains unchanged; we also evaluate shifts that are approximately stationary within an episode. Our experiments are limited to simulation; real-robot deployment additionally introduces sensing and actuation noise, latency, and potentially time-varying dynamics. The residual architecture and learning rates are fixed across tasks, which may partly explain the remaining gap under visual shifts. The OGBench-Cube experiments use a reduced training and evaluation setting, and the observed gains are modest. Finally, reducing the number of trainable parameters does not proportionally reduce adaptation cost, since gradients for the input-side residuals must still propagate through the frozen predictor.
+
+VI-B Discussion
+
+The results suggest that test-time mismatch does not always require modifying the internal dynamics model. When the pretrained representation and transition structure remain useful, adaptation can instead recalibrate predictor inputs or correct its outputs. The residuals should therefore be viewed as lightweight compensators rather than explicit system-identification modules: they need only make the frozen model useful for planning, not recover the true changed dynamics.
+
+The ablation shows that the dominant correction pathway depends on the shift. Medium Maze is largely corrected after prediction, whereas the PushT controller shift places greater importance on the action pathway. Appearance shifts are harder because information distorted or lost inside the frozen encoder cannot be fully recovered downstream.
+
+VI-C Conclusion and future directions
+
+Sandwich-Residuals keep the pretrained world model frozen and learn only small corrections around its predictor from self-supervised transition error. Across the 21 primary AdaJEPA conditions, our method achieves 1.3\times the success rate of the frozen model while retaining 95% of the strongest AdaJEPA variant’s performance and adapting 97–99% fewer parameters. Under compound shifts, this increases to 1.9\times the frozen-model success rate, with performance comparable to adapting the first predictor block. The same principle transfers to DINO-WM, where our method is the only adapted variant to improve over the frozen model under all three tested shifts. Thus, interface-level adaptation can recover substantial performance without modifying pretrained weights or selecting a predictor block to update.
+
+Future work could retain residuals across episodes for persistent shifts or introduce corrections earlier in the visual encoder to better address representation shifts. In addition, evaluating these extensions on a physical manipulator is an important next step.
+
+References

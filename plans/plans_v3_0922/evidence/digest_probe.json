@@ -1,0 +1,71 @@
+{
+  "head": "d749a1c62521226df857587e08f7d067b0f15355",
+  "method": "AST extraction of unchanged normalization class and digest function",
+  "limits": "No production imports, GPU inference, S0 orchestration, or pytest run",
+  "numpy": "1.24.4",
+  "torch": "2.3.0a0+6ddf5cf85e.nv24.04",
+  "source_sha256": {
+    "earthdelta/bridge/stormer_bridge.py": "d67cad6f9831b732ec2c1c128cd80cb48fd8b164cdc79755a8e05a87fad07c61",
+    "scripts/export_upstream_reference.py": "87c84975d0783588dab52e44b068624b3bf45d13163cf56e88acf6557a0c00af"
+  },
+  "cases": [
+    {
+      "case": "synthetic",
+      "npz_dtype": "float32",
+      "intervals": [
+        6
+      ],
+      "variables_count": 2,
+      "bridge_digest": "1b22a21e76d1f455",
+      "exporter_digest": "1b22a21e76d1f455",
+      "equal": true
+    },
+    {
+      "case": "synthetic",
+      "npz_dtype": "float32",
+      "intervals": [
+        6,
+        24
+      ],
+      "variables_count": 2,
+      "bridge_digest": "d408878ba07b67b6",
+      "exporter_digest": "1336aa8c62d42564",
+      "equal": false
+    },
+    {
+      "case": "synthetic",
+      "npz_dtype": "float64",
+      "intervals": [
+        6
+      ],
+      "variables_count": 2,
+      "bridge_digest": "1b22a21e76d1f455",
+      "exporter_digest": "1462fea056784c64",
+      "equal": false
+    },
+    {
+      "case": "synthetic",
+      "npz_dtype": "float64",
+      "intervals": [
+        6,
+        24
+      ],
+      "variables_count": 2,
+      "bridge_digest": "d408878ba07b67b6",
+      "exporter_digest": "3f2e4877a39ec7a8",
+      "equal": false
+    },
+    {
+      "case": "repository_npz",
+      "path": "reference/stormer/normalization_constants",
+      "intervals": [
+        6,
+        24
+      ],
+      "variables_count": 69,
+      "bridge_digest": "ed563eb5e55fc118",
+      "exporter_digest": "e2871e376eb9d9e8",
+      "equal": false
+    }
+  ]
+}

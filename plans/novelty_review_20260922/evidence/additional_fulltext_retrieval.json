@@ -1,0 +1,51 @@
+[
+  {
+    "id": "2609.21787v1",
+    "url": "https://arxiv.org/html/2609.21787v1",
+    "retrieved_at_utc": "2026-09-22T02:58:46.256709+00:00",
+    "status": 404,
+    "error": "HTTPError: 404 Client Error: Not Found for url: https://arxiv.org/html/2609.21787v1"
+  },
+  {
+    "id": "2609.21740v1",
+    "url": "https://arxiv.org/html/2609.21740v1",
+    "retrieved_at_utc": "2026-09-22T02:58:46.257246+00:00",
+    "status": 200,
+    "characters": 47639,
+    "file": "2609.21740v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2609.13257v1",
+    "url": "https://arxiv.org/html/2609.13257v1",
+    "retrieved_at_utc": "2026-09-22T02:58:46.257712+00:00",
+    "status": 200,
+    "characters": 118798,
+    "file": "2609.13257v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2609.11445v1",
+    "url": "https://arxiv.org/html/2609.11445v1",
+    "retrieved_at_utc": "2026-09-22T02:58:47.914909+00:00",
+    "status": 200,
+    "characters": 45132,
+    "file": "2609.11445v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2608.09490v2",
+    "url": "https://arxiv.org/html/2608.09490v2",
+    "retrieved_at_utc": "2026-09-22T02:58:49.925126+00:00",
+    "status": 200,
+    "characters": 68421,
+    "file": "2608.09490v2.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2607.20887v1",
+    "url": "https://arxiv.org/html/2607.20887v1",
+    "retrieved_at_utc": "2026-09-22T02:58:50.931304+00:00",
+    "error": "SSLError: HTTPSConnectionPool(host='arxiv.org', port=443): Max retries exceeded with url: /html/2607.20887v1 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)')))"
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "legacy_zero_slice": {
+    "gain_repr": "[[[[1.0], [nan]]]]",
+    "nonfinite_count": 1
+  },
+  "registry_complex_direct_rejection": {
+    "code": "REGISTRY_COEFFICIENT_COMPLEX",
+    "message": "[REGISTRY_COEFFICIENT_COMPLEX] Plan 'complex' coefficient 0 is (0.1+100j) (type complex). Complex coefficients are refused: the finite-candidate planner converts them to float64 and keeps only the real part, so the plan that would run is not the plan that was registered."
+  },
+  "registry_ambiguous_coefficient_match": {
+    "selected_plan_id": "reference",
+    "reported_coefficients": [
+      0.0
+    ],
+    "actual_planner_coefficients": [
+      4.999999987376214e-07
+    ],
+    "planner_predicted_gain": 9.99999747475244e-07
+  },
+  "existing_selection_functions_source_unchanged": {
+    "unified_select": true,
+    "select_plan": true,
+    "plan_from_prediction": true,
+    "_plan_from_finite_candidates": true
+  }
+}

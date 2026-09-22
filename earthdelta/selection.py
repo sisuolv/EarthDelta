@@ -313,6 +313,90 @@ def _plan_from_finite_candidates(
                          best_gain, best_cost, solves, rejected_bound + rejected_support)
 
 
+@dataclass(frozen=True)
+class RegistrySelection:
+    """What a formal registry selection chose, and which registered row it was."""
+    plan_id: str
+    coefficients: tuple[float, ...]
+    is_reference: bool
+    surrogate: SurrogatePlan
+
+
+def select_from_registry(registry, benefit: Tensor, gram: Tensor, *,
+                         costs: tuple[float, ...] | None = None,
+                         budget: float = 2., ridge: float = 1e-4,
+                         max_active: int = 2,
+                         max_candidates: int = 4096) -> RegistrySelection:
+    """Select from a validated registry, never from an implied candidate set.
+
+    `plan_from_prediction` is a planner: handed an empty or wholly-infeasible
+    candidate table it returns the all-zero program, which is the right answer
+    to "what should I do" and a useless answer to "what did I choose". This
+    entry point closes that gap for formal consumption by requiring the
+    candidate table to come from a registry that has already been validated --
+    non-empty, real-float coefficients, an explicit no-edit row -- so an
+    all-zero result means the registered reference won, not that nothing was
+    ever registered.
+
+    The registry's reference occupies row 0 of the offsets table, so the chosen
+    coefficients can always be mapped back to a registered plan_id.
+
+    Args:
+        registry: A `earthdelta.registry.CandidateRegistry`.
+        benefit: [d] predicted benefit vector.
+        gram: [d, d] predicted Gram matrix.
+        costs: Per-dimension costs (None = unit costs).
+        budget: Maximum total cost.
+        ridge: Ridge regularization.
+        max_active: Maximum number of active dimensions.
+        max_candidates: Safety limit on the candidate count.
+
+    Returns:
+        RegistrySelection naming the registered plan that was selected.
+
+    Raises:
+        RegistryViolation: If the registry is empty, lacks the explicit no-edit
+            entry, or holds any non-real / non-finite coefficient.
+        ValueError: From the planner, on invalid benefit/gram/costs.
+    """
+    summary = registry.assert_ready(require_candidates=True)
+    offsets = registry.candidate_offsets(dtype=benefit.dtype).to(benefit.device)
+    if offsets.shape[1] != benefit.numel():
+        raise ValueError(
+            f'registry holds plans over {offsets.shape[1]} experts but benefit '
+            f'has {benefit.numel()} dimensions'
+        )
+
+    plan = plan_from_prediction(
+        benefit, gram, bound=float(summary['rho']), max_active=max_active,
+        costs=costs, budget=budget, ridge=ridge, max_candidates=max_candidates,
+        candidate_offsets=offsets,
+    )
+
+    chosen = plan.coefficients.detach().to(torch.float64).cpu()
+    # The plan comes back in the benefit's dtype, so a coefficient that is not
+    # exactly representable there (0.1 in float32) differs from the registered
+    # float64 value by a rounding step. Match at the precision the round trip
+    # actually has, not at float64 precision it never had.
+    atol = 1e-12 if offsets.dtype == torch.float64 else 1e-6
+    reference = registry.reference_entry
+    for entry in ([reference] + [e for e in registry.entries if e is not reference]):
+        row = torch.tensor(entry.coefficients, dtype=torch.float64)
+        if torch.allclose(row, chosen, rtol=0., atol=atol):
+            return RegistrySelection(
+                plan_id=entry.plan_id,
+                coefficients=tuple(float(a) for a in entry.coefficients),
+                is_reference=bool(entry.is_reference),
+                surrogate=plan,
+            )
+
+    raise ValueError(
+        f'selected coefficients {chosen.tolist()} match no registered plan in '
+        f'{summary["registry"]!r}; the planner returned a program the registry '
+        'does not contain'
+    )
+
+
 def unified_select(predicted_gain: Tensor | None = None,
                    total_cost: Tensor | None = None,
                    budget: float = 2.0,

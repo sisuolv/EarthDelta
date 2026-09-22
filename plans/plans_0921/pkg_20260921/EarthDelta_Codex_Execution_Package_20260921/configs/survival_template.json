@@ -1,0 +1,74 @@
+{
+  "schema_version": "earthdelta_survival_v1",
+  "status": "TEMPLATE_NOT_READY",
+  "audit_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+  "reference": {
+    "role": "F0_for_S0; declared_Fs_or_F0_for_edit_trials",
+    "checkpoint_path": null,
+    "checkpoint_sha256": null,
+    "bank_manifest": null,
+    "normalization_policy": "official_inference_zero_diff_mean"
+  },
+  "data": {
+    "root": null,
+    "actual_time_index": null,
+    "split_manifest": null,
+    "availability_protocol": "retrospective_open_loop",
+    "memory_enabled": false,
+    "confirm_exposed": null
+  },
+  "method": {
+    "response_kind": "finite_endpoint",
+    "head": "ComposedPredictionHead",
+    "jepa": false,
+    "gain_calibration": false,
+    "selection": "registered_finite_candidates",
+    "candidate_manifest": null,
+    "return_trajectory": true
+  },
+  "evaluation": {
+    "metric_spec": null,
+    "pilot_leads_hours": [
+      6,
+      24,
+      72
+    ],
+    "formal_leads_hours": [
+      6,
+      24,
+      72,
+      120
+    ],
+    "optional_leads_hours": [
+      240
+    ],
+    "primary_metric": null,
+    "bootstrap_unit": "issue_time_block_or_weather_process",
+    "alpha": 0.05,
+    "target_power": 0.8
+  },
+  "decision_thresholds": {
+    "delta_numeric": null,
+    "delta_gain": null,
+    "delta_dynamic": null,
+    "long_lead_harm_margins": null,
+    "justification": null,
+    "frozen_before_confirm": false
+  },
+  "resource_caps": {
+    "max_gpu_hours": null,
+    "max_storage_gb": null,
+    "max_network_gb": null,
+    "max_model_forward_calls": null,
+    "max_hpo_trials_per_method": null,
+    "max_confirm_groups": null,
+    "authorized": false
+  },
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "overwrite": false,
+  "automatic_phase_advancement": false
+}

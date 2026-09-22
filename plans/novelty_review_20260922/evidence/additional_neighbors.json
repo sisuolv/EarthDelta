@@ -1,0 +1,245 @@
+{
+  "url": "https://export.arxiv.org/api/query?id_list=2609.21787%2C2609.21740%2C2609.13257%2C2609.11445%2C2608.09490%2C2607.20887%2C2609.12897%2C2609.19674%2C1606.05312&max_results=9",
+  "results": [
+    {
+      "id": "http://arxiv.org/abs/1606.05312v2",
+      "title": "Successor Features for Transfer in Reinforcement Learning",
+      "published": "2016-06-16T18:45:32Z",
+      "updated": "2018-04-12T11:41:05Z",
+      "abstract": "Transfer in reinforcement learning refers to the notion that generalization should occur not only within a task but also across tasks. We propose a transfer framework for the scenario where the reward function changes between tasks but the environment's dynamics remain the same. Our approach rests on two key ideas: \"successor features\", a value function representation that decouples the dynamics of the environment from the rewards, and \"generalized policy improvement\", a generalization of dynamic programming's policy improvement operation that considers a set of policies rather than a single one. Put together, the two ideas lead to an approach that integrates seamlessly within the reinforcement learning framework and allows the free exchange of information across tasks. The proposed method also provides performance guarantees for the transferred policy even before any learning has taken place. We derive two theorems that set our approach in firm theoretical ground and present experiments that show that it successfully promotes transfer in practice, significantly outperforming alternative methods in a sequence of navigation tasks and in the control of a simulated robotic arm.",
+      "authors": [
+        "André Barreto",
+        "Will Dabney",
+        "Rémi Munos",
+        "Jonathan J. Hunt",
+        "Tom Schaul",
+        "Hado van Hasselt",
+        "David Silver"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/1606.05312v2",
+          "rel": "alternate",
+          "type": "text/html"
+        },
+        {
+          "href": "https://arxiv.org/pdf/1606.05312v2",
+          "rel": "related",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ]
+    },
+    {
+      "id": "http://arxiv.org/abs/2609.19674v1",
+      "title": "Conservation Buys Stability and Factoring Buys Counterfactuals in Physical World Models",
+      "published": "2026-09-17T04:16:51Z",
+      "updated": "2026-09-17T04:16:51Z",
+      "abstract": "A learned simulator can reproduce its training conditions accurately yet fail in two distinct ways once those conditions change. Over long rollouts, small errors accumulate until the trajectory drifts away from physically plausible behavior; under an intervention on a physical parameter, the model may continue to follow the law seen during training rather than the intervened one. We show that these two failures require different structural remedies. Evolving a learned energy with a symplectic integrator preserves the geometry of the conservative dynamics and keeps rollouts bounded and physically meaningful for up to $100\\times$ the training horizon, while equal-capacity predictors, an energy-regularized predictor, and a tuned neural ODE diverge. By contrast, encoding the physical coupling through an explicit linear factorization enables the model to follow a never-seen sign of that coupling, whereas an unrestricted parameterization remains locked to the training law. Crucially, the two mechanisms are separable: removing the structure responsible for long-horizon stability leaves counterfactual transfer intact, while removing the factorized coupling destroys counterfactual transfer without eliminating stability. This double dissociation, established with matched controls that remove or replace one structural component at a time, persists beyond the headline three-body system and remains visible when the physical state must be inferred from pixels rather than provided directly. The result is a concrete design principle for physical world models: long-horizon stability and changed-law generalization arise from distinct structural commitments, and each can be imposed deliberately without requiring the other.",
+      "authors": [
+        "Yufeng Wang",
+        "Parivesh Priye",
+        "Lu Wei",
+        "Haibin Ling"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2609.19674v1",
+          "rel": "alternate",
+          "type": "text/html"
+        },
+        {
+          "href": "https://arxiv.org/pdf/2609.19674v1",
+          "rel": "related",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ]
+    },
+    {
+      "id": "http://arxiv.org/abs/2609.11445v1",
+      "title": "FARM: Reading Failure Signals from the Internal Predictive States of a Frozen Robotic World Model",
+      "published": "2026-09-10T12:14:37Z",
+      "updated": "2026-09-10T12:14:37Z",
+      "abstract": "Reliable robot deployment requires online failure monitoring, yet existing monitors mainly derive risk from proxy signals or train dedicated monitoring components. We ask whether the internal predictive states of a frozen pretrained robotic world model already contain directly decodable failure information. Failure-Aware Readout from World Models (FARM) trains only a 33,985-parameter supervised readout over frozen VLA-JEPA predictive states, producing step-wise failure scores and causal trajectory risk. Five-fold out-of-fold evaluation across seven source tasks reaches 85.68/88.59 pooled AUROC/AUPRC, and FARM gives the best Seen performance among 15 matched baselines on the 10-task benchmark. Across four real-robot populations on PIPER X, SO-101, and Franka, fixed-readout transfer and readout-only adaptation test deployment shifts without updating the predictive backbone. FARM also discriminates failures from partial causal histories and adds 0.2256 ms mean CUDA latency once the frozen state is available. These results support frozen predictive world-model states as reusable features for causal, transferable, and low-overhead execution monitoring.",
+      "authors": [
+        "Haoran Pei",
+        "Mingrui Luo",
+        "Senbao Wang",
+        "Haoran Lv",
+        "Jie Guo",
+        "Sheng Zhong",
+        "Ruixi Ci"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2609.11445v1",
+          "rel": "alternate",
+          "type": "text/html"
+        },
+        {
+          "href": "https://arxiv.org/pdf/2609.11445v1",
+          "rel": "related",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ]
+    },
+    {
+      "id": "http://arxiv.org/abs/2608.09490v2",
+      "title": "When Do Task Vectors Interfere? Mapping the Validity Boundaries of Weight-Space Composition",
+      "published": "2026-08-10T11:58:04Z",
+      "updated": "2026-08-31T03:14:55Z",
+      "abstract": "Task arithmetic composes skills by adding weight displacements, and merged models are then judged on benchmark suites. We measure when that composition is functionally additive, and find that the answer depends as much on how the model is prompted as on which tasks are merged. Across two-dimensional composition surfaces -- five model settings from 0.5B to 8B, two families, LoRA and full fine-tuning -- pairwise non-additivity is real, seed-stable, and transfers in coarse order to unseen task pairs: all eight preregistered sign predictions held. But it is input-conditioned everywhere we measured: the same merged model that shows a six-point interaction contrast on code prompts shows none on math prompts, and wrapping the identical code prompts in the instruction template the adapters were trained on collapses the contrast twenty-fold, from +6.9 to +0.3 points -- while re-serializing them in an untrained chat template leaves it intact (+12.5), falsifying our own preregistered prediction. Execution benchmarks (pass@1) inherit the training-format wrapper's blindness. Weight-space composition therefore supports coarse, input- and format-conditioned functional statements -- not a universal merging-performance predictor, and not one that training-format evaluations can see.",
+      "authors": [
+        "Chencheng Zhu",
+        "Xiaoyang Li",
+        "Taotao Cai"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2608.09490v2",
+          "rel": "alternate",
+          "type": "text/html"
+        },
+        {
+          "href": "https://arxiv.org/pdf/2608.09490v2",
+          "rel": "related",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ]
+    },
+    {
+      "id": "http://arxiv.org/abs/2609.13257v1",
+      "title": "Sampling headroom is not selection gain: a compute-value audit of test-time scaling for video world models",
+      "published": "2026-09-06T06:11:15Z",
+      "updated": "2026-09-06T06:11:15Z",
+      "abstract": "Test-time scaling (TTS) can improve generation only when additional compute produces better candidates and the system can reliably identify them. This distinction is especially important for video world models, where a wider sample pool may contain stronger rollouts without improving the output that is ultimately selected. We introduce the Compute-Value Audit (CVA), a sequential framework that asks whether extra sampling creates opportunity, observable signals provide a reliable state, that state supports a beneficial action, and the resulting gain exceeds the full entry fee of generation and verification. On 192 Physics-IQ scenes, expanding the pool from 4 to 16 candidates increases oracle quality by +9.23 IQ (95% CI [+7.44, +11.14]), but Flow, Cycle, and VideoReward fail to recover this headroom reliably. Across three generators, none of twelve adaptive-depth policies outperforms uniform compute; they recover only 42-69% of the measured entry fee. A matched-60-NFE Predict-and-Perturb intervention on VideoPhy2 is likewise negative across three fresh-seed replicas. These negative results are not universal: anchor-explorer passes all four stages in a sparse PRM800K setting, MMLU-Pro exposes the gap between predictive state and useful action, and a privileged paired future establishes a positive video upper bound. Together, these results show that sampling headroom has deployment value only when it can be converted into a reliable decision whose benefit survives the complete compute charge. Code is available at https://github.com/YuhuaJiang2002/sampling-headroom-is-not-selection-gain.",
+      "authors": [
+        "Yuhua Jiang",
+        "Junjie Lu",
+        "Feifei Gao"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2609.13257v1",
+          "rel": "alternate",
+          "type": "text/html"
+        },
+        {
+          "href": "https://arxiv.org/pdf/2609.13257v1",
+          "rel": "related",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ]
+    },
+    {
+      "id": "http://arxiv.org/abs/2609.21787v1",
+      "title": "Compact but Moving: Intervention-Relevant Geometry in Recurrent World Models",
+      "published": "2026-09-18T14:03:05Z",
+      "updated": "2026-09-18T14:03:05Z",
+      "abstract": "Learned world models may have compact interventions even when their recurrent state is high-dimensional, but it is unclear what happens to such a correction after it enters the model. We study this question in a controlled recurrent world model where prior work identified a checkpoint-specific rank-4 interface for one-shot counterfactual velocity interventions. The correction rapidly leaves this fixed entry subspace during autonomous rollout. Nevertheless, a low-rank image obtained by transporting the entry directions through the factual recurrent Jacobian chain continues to capture most of the nonlinear correction. Restarts using the tangent-predicted correction preserve substantial counterfactual future function. This transport/function pattern recurs across independently trained structured-GRU models and a parameter-matched LSTM initialized with a privileged compact correction. We further characterize a finite-horizon future-response operator over the full recurrent carrier. Patching shifts its leading future-sensitive directions toward the matched native-counterfactual organization, and the local operator accurately ranks finite perturbation effects over the registered direction panels at the patched and native-counterfactual basepoints. A separate full-amplitude assay finds substantial factual-endpoint tangent residuals and supports response reconfiguration in two of three checkpoints. Together, these results show that compact intervention structure can persist as a moving, state-dependent local geometry embedded in high-dimensional recurrent dynamics, without implying a fixed or dynamically closed low-dimensional state.",
+      "authors": [
+        "Yuming Chen",
+        "Yang Liu"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2609.21787v1",
+          "rel": "alternate",
+          "type": "text/html"
+        },
+        {
+          "href": "https://arxiv.org/pdf/2609.21787v1",
+          "rel": "related",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ]
+    },
+    {
+      "id": "http://arxiv.org/abs/2607.20887v1",
+      "title": "TwistedMerge: Certified Higher-Order Diagnostics and Abstention for Model Merging",
+      "published": "2026-07-23T03:24:50Z",
+      "updated": "2026-07-23T03:24:50Z",
+      "abstract": "Model merging combines independently trained or fine-tuned models, but pairwise alignability does not imply globally consistent alignment. We formulate merging as a finite descent problem in which checkpoints are local objects, alignment maps are transitions, and cycle products are residuals. TwistedMerge is a conservative certification pipeline that separates fixed-chart averaging, synchronization-removable gauge inconsistency, a certified central obstruction on a specified comparison complex, and nonabelian holonomy. A residual is promoted to a cohomology class only after inverse-consistency, coefficient-identification, centrality, and closure tests; otherwise the method abstains and returns an ordinary or synchronized fallback. We prove a constant-edge no-go result, frozen-complex three-way and predeclared-family error-control theorems, and a refinement test for comparison-complex sensitivity. A planted neural alignment defect is removed by cycle-consistent synchronization, showing that a nonzero cycle score alone is not a higher obstruction. Controlled central systems recover the predicted non-coboundary and projective-rank behavior, while noisy estimates move from certification to abstention without false lifts on the tested controls. A trained low-rank-adapter audit shows that naive factor averaging depends on the chosen GLr representative, whereas global factor synchronization and dense-delta SVD are stable. On natural checkpoint collections, cycle residuals do not predict merge degradation and no natural central or period-index class is certified. The results position descent theory as a falsifiable certification and abstention framework.",
+      "authors": [
+        "Ting Gong",
+        "Shitan Xu"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2607.20887v1",
+          "rel": "alternate",
+          "type": "text/html"
+        },
+        {
+          "href": "https://arxiv.org/pdf/2607.20887v1",
+          "rel": "related",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ]
+    },
+    {
+      "id": "http://arxiv.org/abs/2609.12897v1",
+      "title": "Tracing and Coordinating Cross-Layer Influence for Multimodal Model Merging",
+      "published": "2026-09-11T14:24:07Z",
+      "updated": "2026-09-11T14:24:07Z",
+      "abstract": "Multimodal model merging aims to consolidate task experts into a single model that retains their complementary capabilities. Most unimodal model merging methods combine expert updates within individual layers, and multimodal approaches largely follow this design. However, an expert update changes the representations passed to subsequent layers, allowing its influence to propagate across depth and affect how visual and textual information interact. When visual and language updates are combined, later updates act on inputs already modified by earlier ones, coupling their effects. This poses two challenges: (1) how to characterize the multimodal influence of individual expert updates across depth, and (2) how to jointly combine expert updates based on their multimodal influence. To address these challenges, we propose TAC-Merge for tracing and coordinating cross-layer influence in multimodal model merging. It contains two modules, i.e., multimodal influence mapping (MIM) and coupled merge control (CMC). MIM constructs graphs of update effects and uses Ricci curvature together with expert predictions to define a shared fusion objective. CMC models interactions among coefficient adjustments and jointly optimizes regional weights to synthesize one shared model. Experiments across diverse multimodal tasks demonstrate the effectiveness of TAC-Merge in consolidating complementary expert capabilities and supporting generalization to unseen tasks.",
+      "authors": [
+        "Pengyang Zhou",
+        "Xiaobin Tu",
+        "Zhengxi Liu",
+        "Rongkun Xue",
+        "Haochen Li",
+        "Miancan Liu",
+        "Ziyuan Chen",
+        "Yinggui Wang",
+        "Jinkui Ren",
+        "Xiantao Zhang"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2609.12897v1",
+          "rel": "alternate",
+          "type": "text/html"
+        },
+        {
+          "href": "https://arxiv.org/pdf/2609.12897v1",
+          "rel": "related",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ]
+    },
+    {
+      "id": "http://arxiv.org/abs/2609.21740v1",
+      "title": "Sandwich-Residuals: Parameter-Efficient Test-time Adaptation of World Models",
+      "published": "2026-09-18T13:17:05Z",
+      "updated": "2026-09-18T13:17:05Z",
+      "abstract": "Latent world models enable planning by predicting the effects of actions in a learned representation space, but their predictions can become unreliable when test-time conditions differ from training. Existing test-time adaptation methods address this by updating parts of the pretrained model, often modifying millions of parameters and requiring a choice of which internal components to adapt. We introduce Sandwich-Residuals, a lightweight alternative that keeps the pretrained world model frozen and learns only small residual corrections around the predictor. The residuals are optimized online using the model's self-supervised prediction error and require no rewards, labels, or source-domain data. Across 21 conditions on the AdaJEPA benchmark, our method achieves $1.3\\times$ the success rate of the frozen model while retaining 95% of the performance of the strongest AdaJEPA variant and adapting 97-99% fewer parameters. Under compound shifts, this advantage increases to $1.9\\times$ the success rate of the frozen model, while remaining comparable to internal block adaptation. We further demonstrate the same adaptation principle on a DINO-WM model for 3-D manipulation. These results suggest that effective test-time adaptation of world models does not necessarily require modifying their pretrained internal weights.",
+      "authors": [
+        "Krishnam Soni",
+        "Aditya Sehgal",
+        "Vedant Dave",
+        "Elmar Rueckert"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2609.21740v1",
+          "rel": "alternate",
+          "type": "text/html"
+        },
+        {
+          "href": "https://arxiv.org/pdf/2609.21740v1",
+          "rel": "related",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ]
+    }
+  ]
+}

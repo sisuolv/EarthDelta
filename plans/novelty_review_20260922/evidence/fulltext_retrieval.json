@@ -1,0 +1,158 @@
+[
+  {
+    "id": "2509.22020v2",
+    "url": "https://arxiv.org/html/2509.22020v2",
+    "retrieved_at_utc": "2026-09-22T02:57:42.920389+00:00",
+    "status": 200,
+    "characters": 137652,
+    "file": "2509.22020v2.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2608.02528v1",
+    "url": "https://arxiv.org/html/2608.02528v1",
+    "retrieved_at_utc": "2026-09-22T02:57:42.920919+00:00",
+    "status": 200,
+    "characters": 72297,
+    "file": "2608.02528v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2605.14546v1",
+    "url": "https://arxiv.org/html/2605.14546v1",
+    "retrieved_at_utc": "2026-09-22T02:57:42.921445+00:00",
+    "status": 200,
+    "characters": 101965,
+    "file": "2605.14546v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2609.12278v1",
+    "url": "https://arxiv.org/html/2609.12278v1",
+    "retrieved_at_utc": "2026-09-22T02:57:45.760541+00:00",
+    "status": 200,
+    "characters": 63589,
+    "file": "2609.12278v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2608.22370v2",
+    "url": "https://arxiv.org/html/2608.22370v2",
+    "retrieved_at_utc": "2026-09-22T02:57:47.077770+00:00",
+    "error": "ProxyError: HTTPSConnectionPool(host='arxiv.org', port=443): Max retries exceeded with url: /html/2608.22370v2 (Caused by ProxyError('Cannot connect to proxy.', TimeoutError('_ssl.c:990: The handshake operation timed out')))"
+  },
+  {
+    "id": "2603.19325v1",
+    "url": "https://arxiv.org/html/2603.19325v1",
+    "retrieved_at_utc": "2026-09-22T02:57:47.540409+00:00",
+    "status": 200,
+    "characters": 61427,
+    "file": "2603.19325v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2609.08412v1",
+    "url": "https://arxiv.org/html/2609.08412v1",
+    "retrieved_at_utc": "2026-09-22T02:57:49.215096+00:00",
+    "status": 200,
+    "characters": 123795,
+    "file": "2609.08412v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2606.14222v1",
+    "url": "https://arxiv.org/html/2606.14222v1",
+    "retrieved_at_utc": "2026-09-22T02:57:54.631367+00:00",
+    "status": 200,
+    "characters": 98675,
+    "file": "2606.14222v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2609.03937v1",
+    "url": "https://arxiv.org/html/2609.03937v1",
+    "retrieved_at_utc": "2026-09-22T02:57:58.482346+00:00",
+    "status": 200,
+    "characters": 42290,
+    "file": "2609.03937v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2605.22222v3",
+    "url": "https://arxiv.org/html/2605.22222v3",
+    "retrieved_at_utc": "2026-09-22T02:57:59.976081+00:00",
+    "error": "SSLError: HTTPSConnectionPool(host='arxiv.org', port=443): Max retries exceeded with url: /html/2605.22222v3 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1007)')))"
+  },
+  {
+    "id": "2609.17042v1",
+    "url": "https://arxiv.org/html/2609.17042v1",
+    "retrieved_at_utc": "2026-09-22T02:58:04.075127+00:00",
+    "status": 200,
+    "characters": 61149,
+    "file": "2609.17042v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2609.18381v1",
+    "url": "https://arxiv.org/html/2609.18381v1",
+    "retrieved_at_utc": "2026-09-22T02:58:04.980561+00:00",
+    "status": 200,
+    "characters": 36953,
+    "file": "2609.18381v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2609.10954v1",
+    "url": "https://arxiv.org/html/2609.10954v1",
+    "retrieved_at_utc": "2026-09-22T02:58:07.270194+00:00",
+    "status": 200,
+    "characters": 51017,
+    "file": "2609.10954v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2609.22237v1",
+    "url": "https://arxiv.org/html/2609.22237v1",
+    "retrieved_at_utc": "2026-09-22T02:58:08.230215+00:00",
+    "status": 200,
+    "characters": 53135,
+    "file": "2609.22237v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2609.12296v1",
+    "url": "https://arxiv.org/html/2609.12296v1",
+    "retrieved_at_utc": "2026-09-22T02:58:08.909483+00:00",
+    "status": 200,
+    "characters": 80648,
+    "file": "2609.12296v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2603.15990v1",
+    "url": "https://arxiv.org/html/2603.15990v1",
+    "retrieved_at_utc": "2026-09-22T02:58:11.751023+00:00",
+    "status": 200,
+    "characters": 72166,
+    "file": "2603.15990v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2605.17250v1",
+    "url": "https://arxiv.org/html/2605.17250v1",
+    "retrieved_at_utc": "2026-09-22T02:58:13.777086+00:00",
+    "status": 200,
+    "characters": 73900,
+    "file": "2605.17250v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2607.02829v1",
+    "url": "https://arxiv.org/html/2607.02829v1",
+    "retrieved_at_utc": "2026-09-22T02:58:16.445106+00:00",
+    "status": 200,
+    "characters": 69169,
+    "file": "2607.02829v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  }
+]

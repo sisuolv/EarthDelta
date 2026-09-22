@@ -1,0 +1,62 @@
+[
+  {
+    "id": "2609.20051v1",
+    "url": "https://arxiv.org/html/2609.20051v1",
+    "retrieved_at_utc": "2026-09-22T03:06:47.759019+00:00",
+    "status": 200,
+    "characters": 80940,
+    "file": "2609.20051v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2609.08618v1",
+    "url": "https://arxiv.org/html/2609.08618v1",
+    "retrieved_at_utc": "2026-09-22T03:06:47.759449+00:00",
+    "error": "ReadTimeout: HTTPSConnectionPool(host='arxiv.org', port=443): Read timed out. (read timeout=40)"
+  },
+  {
+    "id": "2609.09148v3",
+    "url": "https://arxiv.org/html/2609.09148v3",
+    "retrieved_at_utc": "2026-09-22T03:06:47.759913+00:00",
+    "status": 200,
+    "characters": 65157,
+    "file": "2609.09148v3.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2609.22782v1",
+    "url": "https://arxiv.org/html/2609.22782v1",
+    "retrieved_at_utc": "2026-09-22T03:06:52.244993+00:00",
+    "status": 200,
+    "characters": 51585,
+    "file": "2609.22782v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2608.11499v1",
+    "url": "https://arxiv.org/html/2608.11499v1",
+    "retrieved_at_utc": "2026-09-22T03:06:52.952604+00:00",
+    "status": 200,
+    "characters": 58691,
+    "file": "2608.11499v1.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2506.06105v2",
+    "url": "https://arxiv.org/html/2506.06105v2",
+    "retrieved_at_utc": "2026-09-22T03:06:54.721222+00:00",
+    "status": 200,
+    "characters": 78198,
+    "file": "2506.06105v2.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  },
+  {
+    "id": "2608.22370v2",
+    "url": "https://arxiv.org/html/2608.22370v2",
+    "retrieved_at_utc": "2026-09-22T03:06:56.289363+00:00",
+    "status": 200,
+    "characters": 53144,
+    "file": "2608.22370v2.txt",
+    "scope": "FULL_TEXT_RETRIEVED_NOT_AUTOMATICALLY_REVIEWED"
+  }
+]

@@ -1,0 +1,129 @@
+{
+  "audited_diff": "git --git-dir=.git --work-tree=. diff HEAD, HEAD=d749a1c62521226df857587e08f7d067b0f15355 (uncommitted working tree), plus seven untracked production modules and nine untracked test modules read directly",
+  "audit_date_utc": "2026-09-22",
+  "branch": "audit/round2-review-20260921",
+  "prior_findings_disposition": {
+    "B05": "PARTIALLY_CLOSED",
+    "B06": "PARTIALLY_CLOSED",
+    "B08": "PARTIALLY_CLOSED",
+    "B09": "PARTIALLY_CLOSED",
+    "B12": "PARTIALLY_CLOSED",
+    "B13": "CLOSED",
+    "B14": "CLOSED",
+    "B15": "PARTIALLY_CLOSED"
+  },
+  "prior_findings_reason": {
+    "B05": "新 weighted_mse 校验/full objective 正确；旧逐F全零切片仍除零(C07)。",
+    "B06": "native full-objective 与默认无校准 API 正确；旧 head/paired 整合未完成(C08)。",
+    "B08": "内容验证和 preflight 真实接线；训练消费不要求全覆盖证书/整体PASS(C04)。",
+    "B09": "UTC 与真实端点联结有效；消费时绝对时间/norm/grid/目标范围身份未重验(C04)。",
+    "B12": "受控对受控共享model拒绝有效；普通forward不参加保护(C10)，当前串行调用不阻断。",
+    "B13": "条件完整性、异常撤销以及原子发布路径均复核有效。",
+    "B14": "缺失/非有限数值安全格式化及报告降级路径有效。",
+    "B15": "正式入口空表/复数拒绝与实际a0检查有效；registry身份未绑定(C09)，近邻系数反查可错标(C11)。"
+  },
+  "stage3b_bug_fixes": {
+    "device_mismatch": {
+      "disposition": "CLOSED",
+      "scope": "已审查的同一设备实际训练/冻结/测量路径；不声称任意分片设备调用安全。"
+    },
+    "tf32_scope": {
+      "disposition": "CLOSED",
+      "scope": "finally恢复设置；同一merged路径重复计算；不据此排除训练非确定性或证明残差唯一成因。"
+    },
+    "merge_atol_formula": {
+      "disposition": "CLOSED",
+      "scope": "公式/参数移除/实际记录一致性成立；实际单输入单步证据，不是任意horizon的数学误差上界。"
+    }
+  },
+  "merge_atol_fix_independently_reproduced": true,
+  "merge_atol_recomputed_values": [
+    {
+      "expert": "expert0",
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12/expert0/run_record.json",
+      "delta_max_abs": 0.5175191760063171,
+      "recomputed_atol": 0.0007762787640094757,
+      "recorded_atol": 0.0007762787640094757,
+      "exactly_equal": true,
+      "max_abs_diff": 0.00010704994201660156,
+      "atol_over_max_abs_diff": 7.251557071269488
+    },
+    {
+      "expert": "expert1",
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12/expert1/run_record.json",
+      "delta_max_abs": 0.8071883320808411,
+      "recomputed_atol": 0.0012107824981212616,
+      "recorded_atol": 0.0012107824981212616,
+      "exactly_equal": true,
+      "max_abs_diff": 0.00013583898544311523,
+      "atol_over_max_abs_diff": 8.913365291794646
+    },
+    {
+      "expert": "expert2",
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12/expert2/run_record.json",
+      "delta_max_abs": 1.5924005508422852,
+      "recomputed_atol": 0.0023886008262634277,
+      "recorded_atol": 0.0023886008262634277,
+      "exactly_equal": true,
+      "max_abs_diff": 0.0007569789886474609,
+      "atol_over_max_abs_diff": 3.1554387401574804
+    },
+    {
+      "expert": "expert3",
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12/expert3/run_record.json",
+      "delta_max_abs": 2.1599972248077393,
+      "recomputed_atol": 0.003239995837211609,
+      "recorded_atol": 0.003239995837211609,
+      "exactly_equal": true,
+      "max_abs_diff": 0.0002353191375732422,
+      "atol_over_max_abs_diff": 13.768518237082066
+    }
+  ],
+  "new_findings_count": 11,
+  "finding_counts": {
+    "P0": 0,
+    "P1": 9,
+    "P2": 2,
+    "new_implementation_issues": 8,
+    "carried_forward_residuals": 3
+  },
+  "counting_note": "new_findings_count 是本轮新编号 C01-C11 的条数，包含对 B05/B06/B12 的残留复核；并非声称11条均由本轮新引入。",
+  "round4_verdict": "PARTIAL_PASS_WITH_OPEN_FINDINGS",
+  "code_gate_status": "FAIL_IMPLEMENTATION",
+  "fs_fit_divergence_verdict": "MUST_FIX_BEFORE_STAGE4",
+  "stage4_status": "STOP",
+  "s0_status": "BLOCKED",
+  "blocking_items_before_stage4": [
+    "C01: Fs训练质量门与固定面板checkpoint复评；隔离当前退化产物。",
+    "C02: 所有动态专家加载同一合格Fs并强制身份一致；不能拼接当前不同基线专家。",
+    "C03: 保存并独立重载动态专家权重，通过输出及身份round-trip验收。",
+    "C04: 训练强制消费整体PASS、全范围内容/时间/norm/grid绑定的准入记录。",
+    "C05: profiling不能改变最终资格检查后的专家状态。",
+    "C06: 前置失败阻断依赖阶段，隔离诊断产物和合格发布。",
+    "C09: 正式registry绑定Fs、normalization、objective与动态权重的内容身份。",
+    "S0既有BLOCKED: 完成真实官方xformers参照及parity，才可把后续缓存用于正式上游等价性前提下的结论；可单独进行明确标注的工程诊断。"
+  ],
+  "nonblocking_for_current_native_serial_cache": [
+    "C07/C08: 在head/selector研究比较前必须关闭；当前native Fs/bank不调用旧head。",
+    "C10: 当前串行边界不受影响。",
+    "C11: 当前固定a0=.25候选表不触发，扩展registry前修复。"
+  ],
+  "validation": {
+    "cpu_repository_tests_passed": 434,
+    "cpu_repository_tests_failed": 0,
+    "cpu_repository_tests_skipped": 0,
+    "targeted_group_passed": 307,
+    "additional_group_passed": 127,
+    "full_suite_collection_count": 686,
+    "full_suite_executed": false,
+    "independent_cpu_probes": [
+      "evidence/independent_cpu_probes.json",
+      "evidence/additional_cpu_probes.json"
+    ],
+    "gpu_jobs_submitted": 0,
+    "gpu_artifacts_modified": false,
+    "known_collection_failure": "在本轮配置的CPU环境中未复现；xarray可导入，整树collection成功。不能沿用brief中当前必然collection失败的说法，也不能据此证明历史环境归因错误。"
+  },
+  "source_integrity_evidence": "evidence/final_validation.json",
+  "report": "ROUND4_REPORT.md"
+}

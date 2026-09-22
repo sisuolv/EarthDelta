@@ -1,0 +1,156 @@
+{
+  "purpose": "Source identity and inherited evidence ledger; no new literature audit.",
+  "branch_identity_rechecked": {
+    "full_name": "sisuolv/EarthDelta",
+    "branch": "audit/round2-review-20260921",
+    "observed_branch_head": "403b55db65f4c35c1a85d0794ad0de2765b07d96",
+    "audited_source_head": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+    "observed_head_commit_utc": "2026-09-21T09:22:56Z",
+    "verification_method": "GitHub connector GET commits?sha=audit/round2-review-20260921&per_page=1",
+    "relationship": "observed HEAD 的直接 parent 为 audited_source_head；交付提交不能视作 findings 已修复。"
+  },
+  "branch_lookup_initial_failure": "Encoded-slash /branches URL returned INVALID_ARGUMENT; commits?sha=... succeeded.",
+  "branch_identity_source_url": "https://api.github.com/repos/sisuolv/EarthDelta/commits?sha=audit%2Fround2-review-20260921&per_page=1",
+  "source_documents": [
+    {
+      "path": "codex_audit_round2/delivery/CHATGPT_PRO_REVIEW_PACKET.md",
+      "ref": "403b55db65f4c35c1a85d0794ad0de2765b07d96",
+      "basis": "previous review"
+    },
+    {
+      "path": "codex_audit_round2/context/round1/experiments/P0_SURVIVAL_EXPERIMENTS.md",
+      "ref": "403b55db65f4c35c1a85d0794ad0de2765b07d96",
+      "basis": "previous review"
+    },
+    {
+      "path": "codex_audit_round2/results/ROUND2_REPORT.md",
+      "ref": "403b55db65f4c35c1a85d0794ad0de2765b07d96",
+      "basis": "previous review"
+    },
+    {
+      "path": "codex_audit_round2/results/evidence/pytest_cpu.log",
+      "ref": "403b55db65f4c35c1a85d0794ad0de2765b07d96",
+      "basis": "previous review read, not current rerun"
+    },
+    {
+      "path": "codex_audit_round2/results/evidence/cpu_repros.json",
+      "ref": "403b55db65f4c35c1a85d0794ad0de2765b07d96",
+      "basis": "previous review read"
+    },
+    {
+      "path": "codex_audit_round2/results/evidence/contract_repros.json",
+      "ref": "403b55db65f4c35c1a85d0794ad0de2765b07d96",
+      "basis": "previous review read"
+    }
+  ],
+  "audited_code_links": [
+    {
+      "finding": "B01",
+      "path_and_lines": "scripts/export_upstream_reference.py:106–110,230–250; earthdelta/bridge/stormer_bridge.py:251",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B02",
+      "path_and_lines": "scripts/s0_gate.py:170–186,265–301; earthdelta/contracts.py:28",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B03",
+      "path_and_lines": "earthdelta/bridge/stormer_bridge.py:663,742–749",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B04",
+      "path_and_lines": "earthdelta/metrics_contract.py:179–194; earthdelta/heads.py:445",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B05",
+      "path_and_lines": "earthdelta/metrics_contract.py:96–100,145–153,250–274",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B06",
+      "path_and_lines": "earthdelta/metrics_contract.py:145–157; earthdelta/heads.py:294,350–359",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B07",
+      "path_and_lines": "earthdelta/data/make_splits.py:86,224–227,306–323,378",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B08",
+      "path_and_lines": "earthdelta/data/pull_wb2.py:423–479,705,783",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B09",
+      "path_and_lines": "earthdelta/data/make_splits.py:338–389",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B10",
+      "path_and_lines": "scripts/s0_gate.py:609–620; scripts/export_upstream_reference.py:410–429",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B11",
+      "path_and_lines": "plans/plans_v1_0919/v6_draft/A11_DISPOSITION_NOTE.md:36–41",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B12",
+      "path_and_lines": "earthdelta/bridge/stormer_bridge.py:632–656,780–790",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B13",
+      "path_and_lines": "scripts/s0_gate.py:680–689",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B14",
+      "path_and_lines": "scripts/s0_gate.py:748–752,767–770",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    },
+    {
+      "finding": "B15",
+      "path_and_lines": "earthdelta/selection.py:248–272",
+      "commit": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+      "basis": "previous review source reads"
+    }
+  ],
+  "literature": "Versions/sections retained only in research/ROUND2_REVIEW_SUMMARY.md; no new bibliographic verification in this task.",
+  "original_attachments": "Older broad instructions are historical context only. Current user scope (one iteration, 3–6 tasks) supersedes them.",
+  "not_executed": [
+    "repository checkout",
+    "repository pytest",
+    "GPU/xformers S0",
+    "weather-data pull",
+    "bank training",
+    "head training",
+    "scientific confirmation"
+  ],
+  "not_included": [
+    "private source snapshot",
+    "checkpoint weights",
+    "weather datasets",
+    "external repository code",
+    "API credentials"
+  ]
+}

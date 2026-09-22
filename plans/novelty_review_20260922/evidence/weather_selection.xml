@@ -1,0 +1,1031 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/3UV2xUDhk50oiIHWkhBS87ZF03A</id>
+  <title>arXiv Query: search_query=(all:weather OR all:atmospheric) AND (all:"model selection" OR all:"mixture of experts" OR all:"weight perturbation" OR all:"concept tuning") AND submittedDate:"202501010000 TO 202609222359"&amp;id_list=&amp;start=0&amp;max_results=35</title>
+  <updated>2026-09-22T02:57:14Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(all:weather+OR+all:atmospheric)+AND+((all:%22model+selection%22+OR+(all:%22mixture+of+experts%22+OR+(all:%22weight+perturbation%22+OR+all:%22concept+tuning%22)))+AND+submittedDate:%22202501010000+TO+202609222359%22)&amp;start=0&amp;max_results=35&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>35</opensearch:itemsPerPage>
+  <opensearch:totalResults>52</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2609.02434v1</id>
+    <title>Uncertainty-Guided Adverse Weather Restoration via Gated Transformer Network</title>
+    <updated>2026-09-02T10:57:41Z</updated>
+    <link href="https://arxiv.org/abs/2609.02434v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.02434v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Restoring images degraded by adverse weather remains challenging due to spatially heterogeneous degradations. Many existing weather-specific restoration models rely on weather-agnostic global aggregation, naive cross-scale fusion, and deterministic objectives, which struggle to handle heterogeneous degradations in all-in-one adverse-weather settings. To address these limitations, we propose an Uncertainty-guided Adverse-weather Restoration Network (UAR-Net), a weather-specific AiO framework that integrates a gated transformer with balanced multi-scale skip connections. Specifically, we employ Gated Dual-scale Transformer Blocks (GDTB) to jointly model selective global interactions and multi-scale local structures, a progressive Balanced Multi-scale Skip Connection (BMSC) for balanced multi-scale feature integration, and an Uncertainty-Aware Refinement Head (URH) that performs artifact removal, detail enhancement, and predictive uncertainty estimation. The model is supervised by a Brightness-Aware Energy Loss (BAE-Loss) to encourage accurate reconstruction with well-calibrated uncertainty. Extensive experiments demonstrate that our method achieves state-of-the-art performance across multiple adverse-weather benchmarks. The codes will open source upon acceptance.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-02T10:57:41Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Zheke Jin</name>
+    </author>
+    <author>
+      <name>Yuning Cui</name>
+    </author>
+    <author>
+      <name>Tianle Jin</name>
+    </author>
+    <author>
+      <name>Alois Knoll</name>
+    </author>
+    <author>
+      <name>Hu Cao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.00263v1</id>
+    <title>A JWST transiting survey of FGK stellar limb darkening: empirical evidence for quadratic laws and atmospheric model comparisons</title>
+    <updated>2026-08-31T19:06:42Z</updated>
+    <link href="https://arxiv.org/abs/2609.00263v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.00263v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present a study of stellar limb-darkening using JWST transit observations of seven exoplanets orbiting FGK host stars, spanning 4200-6800 K. The wide wavelength coverage and high S/N of NIRISS/SOSS and NIRSpec/PRISM enable precise constraints on the wavelength-dependent limb-darkening. Using Bayesian model selection, we find that the quadratic limb-darkening law is statistically preferred over higher-order laws for most FGK stars, recovers consistent intensity profiles for $&gt;$95% of the stellar disk area, and introduces a minimal bias in the derived transit depths of only $\sim$14 ppm (1$σ$) for 6/7 targets. This contrasts with previous studies relying on stellar models. We compare the empirically derived quadratic coefficients to predictions from the PHOENIX, MPS-ATLAS, MURaM, and Stagger stellar atmosphere grids. We introduce a quadratic limb-darkening parameterization in terms of limb intensity ($\ell$) and curvature at mid-$μ$ ($δ$), finding that empirical FGK limb darkening is generally more linear than models predict ($δ\lesssim 0.1$). We identify wavelength-independent offsets between data and model quadratic coefficients, minimized by adopting $μ_{\rm min} = 0.2$ in intensity calculations; we attribute this in part to models overpredicting limb-darkening near the limb where the plane-parallel approximation breaks down. For spherical PHOENIX models, we derive a $μ$ rescaling method using a $τ= 1$ photospheric radius. With these corrections, residual offsets are minimized and all stellar models achieve statistically acceptable fits. We provide recommended limb-darkening offset priors for use in JWST transit analyses, enabling more accurate constraints on exoplanet transmission spectra while accounting for residual stellar model uncertainties.</summary>
+    <category term="astro-ph.EP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.SR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-31T19:06:42Z</published>
+    <arxiv:comment>17 Pages; 12 figures; 4 Tables; Accepted in AJ. Machine-readable tables included with source files</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.EP"/>
+    <author>
+      <name>David K. Sing</name>
+      <arxiv:affiliation>Department of Earth &amp; Planetary Sciences, Johns Hopkins University, Baltimore, MD, USA</arxiv:affiliation>
+      <arxiv:affiliation>William H. Miller III Department of Physics &amp; Astronomy, Johns Hopkins University, 3400 N Charles St, Baltimore, MD, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Joshua D. Lothringer</name>
+      <arxiv:affiliation>Space Telescope Science Institute, Baltimore, MD 21218, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Jeff A. Valenti</name>
+      <arxiv:affiliation>Space Telescope Science Institute, Baltimore, MD 21218, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Natalie H. Allen</name>
+      <arxiv:affiliation>William H. Miller III Department of Physics &amp; Astronomy, Johns Hopkins University, 3400 N Charles St, Baltimore, MD, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Katherine A. Bennett</name>
+      <arxiv:affiliation>Department of Earth &amp; Planetary Sciences, Johns Hopkins University, Baltimore, MD, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Carlos Gascón</name>
+      <arxiv:affiliation>Space Telescope Science Institute, Baltimore, MD 21218, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Mei Ting Mak</name>
+      <arxiv:affiliation>Atmospheric, Oceanic, and Planetary Physics Department, University of Oxford, OX1 3PU, UK</arxiv:affiliation>
+      <arxiv:affiliation>Department of Physics and Astronomy, Faculty of Environment, Science and Economy, University of Exeter, Exeter EX4 4QL, UK</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Patrick McCreery</name>
+      <arxiv:affiliation>William H. Miller III Department of Physics &amp; Astronomy, Johns Hopkins University, 3400 N Charles St, Baltimore, MD, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Sagnick Mukherjee</name>
+      <arxiv:affiliation>School of Earth and Space Exploration, Arizona State University, Tempe, AZ, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Lakeisha M. Ramos Rosado</name>
+      <arxiv:affiliation>William H. Miller III Department of Physics &amp; Astronomy, Johns Hopkins University, 3400 N Charles St, Baltimore, MD, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Stephen P. Schmidt</name>
+      <arxiv:affiliation>William H. Miller III Department of Physics &amp; Astronomy, Johns Hopkins University, 3400 N Charles St, Baltimore, MD, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Kevin B. Stevenson</name>
+      <arxiv:affiliation>Johns Hopkins APL, 11100 Johns Hopkins Rd, Laurel, MD 20723, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Daniel P. Thorngren</name>
+      <arxiv:affiliation>William H. Miller III Department of Physics &amp; Astronomy, Johns Hopkins University, 3400 N Charles St, Baltimore, MD, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Le-Chris Wang</name>
+      <arxiv:affiliation>Department of Astrophysical Sciences, Princeton University, 4 Ivy Lane, Princeton, NJ 08544, USA</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.02088v2</id>
+    <title>An AI-Based Decision-Support Pipeline for Day-Ahead Photovoltaic Forecasting</title>
+    <updated>2026-09-08T15:02:34Z</updated>
+    <link href="https://arxiv.org/abs/2608.02088v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.02088v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Reliable photovoltaic (PV) forecasts can support low-carbon energy systems, but deployed sites may have only short and incomplete records. Physical and hybrid methods can be sensitive to weather inputs, calibration, and timestamp-alignment, while individual machine learning models may capture different parts of the forecasting problem. We study hourly day-ahead PV forecasting at a United Kingdom charging station using one year of inverter measurements, with 9.25% of hours missing. The pipeline checks timestamp-alignment, derives solar and clearness features, adds short-term weather context, and combines five complementary models using non-negative least squares stacking, with the combination fitted only on validation observations. We compare against smart persistence, a weather-scaled baseline that carries the previous day's PV behaviour forward using target-day irradiance. With retrospective weather, the combined model reduces daylight normalised root mean square error (RMSE) by 31.2% under random day-fold evaluation and by 2.9% under rolling-origin evaluation, although the latter improvement is not robust across days. It also improves by 3.0% over the single model selected from validation performance. Replacing retrospective weather with a public product sampled at a constant 24-hour lead increases daylight RMSE by 13.1% and 4.2% under the two protocols, while retaining positive skill over smart persistence.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-03T11:48:32Z</published>
+    <arxiv:comment>16 pages, 4 figures, Accepted for publication in the Proceedings of the UK AI Conference (UK-AI 2026)</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Fariba Dehghan</name>
+    </author>
+    <author>
+      <name>Sebastian Stein</name>
+    </author>
+    <author>
+      <name>Vahid Yazdanpanah</name>
+    </author>
+    <author>
+      <name>Stephanie Gauthier</name>
+    </author>
+    <author>
+      <name>Masood Nazari</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.12954v1</id>
+    <title>Robustness of Deep Learning Models for PV Power Forecasting under NWP Forecast Errors: A Spatiotemporal and Physically Interpretable Analysis</title>
+    <updated>2026-07-14T16:48:07Z</updated>
+    <link href="https://arxiv.org/abs/2607.12954v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.12954v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Engineering use of AI forecasting models requires not only high nominal accuracy but also predictable behavior under uncertain inputs. In photovoltaic (PV) forecasting, this requirement is especially challenging because numerical weather prediction (NWP) errors are temporally correlated, state dependent, and physically coupled across variables. Existing evaluations, however, often rely on perfect forecast assumptions or simplistic perturbations that do not reflect these characteristics. This study presents a physically constrained robustness evaluation framework based on simulation, using virtual PV power as a controlled response variable to isolate the propagation of input uncertainty from confounders at the plant level. Six representative machine learning and deep sequence models, including PatchTST, GRU, N-HITS, and LightGBM, are evaluated under dynamic NWP perturbations with heteroscedasticity modulated by clear-sky conditions and Erbs reconstruction that preserves radiation consistency. The results show that sequence models provide stronger noise filtering and temporal resilience than a strong tabular baseline under medium to high disturbance regimes. SHapley Additive exPlanations (SHAP) and Integrated Gradients (IG) further support a feature reallocation tendency at the case level, in which predictive reliance shifts from corrupted future forecasts toward more stable historical observations and deterministic physical priors. A Pareto analysis of accuracy under clean conditions, robustness, and computational latency then translates these findings into engineering implications for robustness assessment and model selection under forecast uncertainty.</summary>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-14T16:48:07Z</published>
+    <arxiv:primary_category term="physics.ao-ph"/>
+    <author>
+      <name>Dandan Chen</name>
+    </author>
+    <author>
+      <name>Yan Zhao</name>
+    </author>
+    <author>
+      <name>Xuepeng Chen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.05045v1</id>
+    <title>On the Genealogy of Machine Learning Weather Prediction</title>
+    <updated>2026-07-06T13:21:13Z</updated>
+    <link href="https://arxiv.org/abs/2607.05045v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.05045v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Modern machine-learning weather prediction (MLWP) has largely inherited the initial-value-problem (IVP) framing of numerical weather prediction (NWP). This inheritance leads to a dominant paradigm of learned autoregressive time-stepping and constrains how the learning problem is defined and architectures are favored. In this study we make the inheritance explicit, contrast two philosophical traditions: "scientific surrogate modeling," where machine learning (ML) is embedded within a physical system and must respect its structural constraints, and "free-form data-driven modeling," where atmospheric fields are treated as spatiotemporal sequences and models learn latent dynamics without explicit physical constraints. By reviewing the governing primitive equations, surveying recent literature, and analyzing concrete physical examples, we map each modeling paradigm to either a state-conditioned or evolution operator formulation. We conclude that principled model selection requires explicitly aligning architecture and training objectives with either the physical system structure or the statistical structure of the data.</summary>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-06T13:21:13Z</published>
+    <arxiv:primary_category term="physics.ao-ph"/>
+    <author>
+      <name>Mohammad Hassan Erfani</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.01772v1</id>
+    <title>LLM-Empowered Multimodal Fusion Framework for Autonomous Driving: Semantic Enhancement and Channel-Adaptive Design</title>
+    <updated>2026-07-02T06:44:02Z</updated>
+    <link href="https://arxiv.org/abs/2607.01772v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.01772v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Vision-radar fusion is central to robust autonomous driving, combining dense visual semantics with precise range and velocity measurements from radar. However, real-world fusion quality is fundamentally challenged by dynamically varying input quality, stemming from occlusion, adverse weather, and channel noise. To address this, we re-frame the problem from static data fusion to channel-aware semantic reasoning and propose a Large Language Model-centric Semantic-layer Channel-aware Integrated Perception (LM-SCIP) framework. It places a Large Language Model (LLM) as a central reasoning core to fuse a local visual stream with a quality-varying external radar stream used to cover perception-blind spots. Concretely, LM-SCIP couples a hierarchical radar-vision encoder with a Channel-Adaptive Semantic Module (CASM) that maps link indicators into a "Channel Prompt" to dynamically gate external radar features. A parameter-efficient, LoRA-tuned LLM, in conjunction with a heterogeneous Mixture-of-Experts (H-MoE), then arbitrates between local visual cues and the channel-conditioned radar context. Finally, a decoupled multi-task decoder outputs localization, trajectory forecasting, and image reconstruction. Experiments on nuScenes and VIRAT validate our approach. On nuScenes, under a controlled toggle of radar input, LM-SCIP reduces localization RMSE by 40.0% versus a vision-only baseline. On VIRAT, the model attains a 0.214m localization RMSE and 0.179m minFDE (k=1). These results reveal that the proposed LM-SCIP enables a robust vision-dominant fallback at low SNR and synergistic fusion at high SNR.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-02T06:44:02Z</published>
+    <arxiv:comment>6 pages, 4 figures. Accepted by 2026 IEEE 37th International Symposium on Personal, Indoor and Mobile Radio Communications (PIMRC)</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Wen Wang</name>
+    </author>
+    <author>
+      <name>Yaping Sun</name>
+    </author>
+    <author>
+      <name>Yejun He</name>
+    </author>
+    <author>
+      <name>Hao Chen</name>
+    </author>
+    <author>
+      <name>Zhiyong Chen</name>
+    </author>
+    <author>
+      <name>Xiaodong Xu</name>
+    </author>
+    <author>
+      <name>Nan Ma</name>
+    </author>
+    <author>
+      <name>Shuguang Cui</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.02663v1</id>
+    <title>AdaWeather: Adaptively Mixing Probabilistic Weather Forecasts with Logarithmic Regret</title>
+    <updated>2026-06-01T09:46:26Z</updated>
+    <link href="https://arxiv.org/abs/2606.02663v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.02663v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent advances in machine learning have produced probabilistic weather forecasting models comparable to state-of-the-art numerical weather predictors. But no model consistently dominates spatio-temporally, and relative performance is highly context-dependent. This motivates adaptive methods for combining multiple forecasts to obtain improvements and robustness. While combined forecasts have been proposed in the literature, these are achieved either through supervised learning or through prediction with expert advice methods. We introduce AdaWeather, an adaptive framework that combines many probabilistic forecasts using both machine learning as well as mixture of experts to arrive at a unified improved probabilistic forecast. While traditional expert methods develop the regret bounds with respect to the best single expert in hindsight, we extend the algorithm and analysis to show our method has logarithmic regret compared to the best static mixture of experts in hindsight. Empirically, we focus on forecasting temperature, and observe improvements over existing methods.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-01T09:46:26Z</published>
+    <arxiv:comment>36 pages, 16 figures. Submitted to arXiv. Forecast aggregation for probabilistic weather prediction using offline supervised learning and online prediction with expert advice. Includes theoretical regret guarantees and empirical evaluation on temperature forecasting. Submitted to NeurIPS 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Saptarishi Dhanuka</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Sarvesh Iyer</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Manmeet Singh</name>
+      <arxiv:affiliation>Western Kentucky University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Mihir More</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Rushil Gupta</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Dhruman Gupta</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Parthasarathi Mukhopadhyay</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Sandeep Juneja</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.01822v2</id>
+    <title>Hierarchically Decoupled Mixture-of-Experts for Robust Traffic Sign Recognition in Complex Driving Scenarios</title>
+    <updated>2026-06-04T03:22:58Z</updated>
+    <link href="https://arxiv.org/abs/2606.01822v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.01822v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Traffic sign detection is a fundamental component of environmental perception in autonomous driving and intelligent transportation systems. However, most existing detectors rely on static inference with globally shared parameters, limiting their ability to adapt to diverse and unstructured traffic scenarios. As a result, a single static model often struggles to simultaneously handle both clear near-range samples and challenging conditions such as distant small targets or adverse weather environments. To address this limitation, we propose CBDES MoE TSR, a hierarchically decoupled heterogeneous mixture-of-experts(MoE) framework for traffic sign recognition. The proposed framework departs from the conventional globally shared parameter paradigm by introducing a heterogeneous You Only Look Once (YOLO) expert pool together with a lightweight gating network, enabling an image-level dynamic routing mechanism. Based on the semantic characteristics of the input image, the gating module selectively activates the most suitable expert model from the expert pool, enabling a shift from fixed parameter fitting to on-demand dynamic representation. This design enhances feature extraction capability for specific scenarios while maintaining controlled inference overhead. Experimental results demonstrate that the proposed method achieves a remarkable balance between detection accuracy and efficiency on the composite traffic sign dataset. Specifically, our method attains an mAP50-95 of 76.8%, yielding a 2.3% improvement over the baseline method (74.5%) while simultaneously reducing computational overhead by approximately 39.4%. These findings robustly validate the effectiveness of the proposed approach.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-01T07:39:44Z</published>
+    <arxiv:comment>9 figures, 3 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Mingxiao Wang</name>
+    </author>
+    <author>
+      <name>Xiaozhen Qu</name>
+    </author>
+    <author>
+      <name>Bolin Gao</name>
+    </author>
+    <author>
+      <name>Tong Wang</name>
+    </author>
+    <author>
+      <name>Lei He</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.00572v1</id>
+    <title>Spatiotemporal Multi-Task Graph Transformer for Trip-Level Transit Prediction</title>
+    <updated>2026-05-30T06:49:26Z</updated>
+    <link href="https://arxiv.org/abs/2606.00572v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.00572v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Passenger count data from public transit systems reveals urban mobility patterns and is essential for planning, operation, and optimisation. However, non-linear spatiotemporal interdependencies across stops and lines make modelling and prediction challenging. Existing approaches often rely on fixed temporal, spatial, or stop-level formulations, limiting their ability to capture within-trip evolution and network context. This study proposes SMT-GraphFormer, a spatiotemporal multi-task graph transformer that frames trip-level transit prediction as sequence-to-sequence modelling. Given a line's stop sequence and trip-level context, the model predicts successive boarding and alighting counts, with delay and dwell time treated as encoder-side surrogate tasks. Key components include graph embeddings for multi-relational stop similarity, a context encoder for weather and temporal information, and a multi-gate mixture-of-experts module that produces task-specific decoder representations for boarding and alighting predictions. Evaluation on public bus transit data from Trondheim, Norway, shows that SMT-GraphFormer outperforms stop-level tabular benchmarks, with ablation studies examining each component's contribution. The sequential formulation yields substantial gains on alighting prediction ($+$0.24 in $R^2$) and consistent improvements on boarding, delay, and dwell, confirming the value of explicit trip-level sequential bias and inter-target dependencies. These findings demonstrate the potential of transformer-based sequence modelling for capturing complex spatiotemporal dynamics in public transit and underscore the value of architectures tailored to transit data rather than off-the-shelf tabular models. The proposed framework provides a horizon-agnostic basis for scenario analysis in digital twin environments, supporting informed decision-making by planners and transit operators.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-30T06:49:26Z</published>
+    <arxiv:comment>25 pages, 7 figures, 11 tables, including appendix. Code available at https://github.com/Outsiders17711/SMTGraphFormer</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Oluwaleke Yusuf</name>
+    </author>
+    <author>
+      <name>Adil Rasheed</name>
+    </author>
+    <author>
+      <name>Frank Lindseth</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.27236v1</id>
+    <title>Explainable Comparison of Feature-Based and Deep Learning Models for TROPOMI Methane Plume Screening</title>
+    <updated>2026-05-26T16:17:02Z</updated>
+    <link href="https://arxiv.org/abs/2605.27236v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.27236v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Continuous and global detection of large methane emissions is a crucial step for global warming mitigation. Satellite observations, such as from S5P/TROPOMI, combined with plume detection algorithms, can play a key role in this effort. However, not all TROPOMI plume detections that look like methane emission plumes are the result of actual emissions. A significant part of the plume-like features in the data are retrieval artifacts. Such artifacts could be the result of variations in elevation or albedo gradients, high concentrations of aerosols, coastal lines, water bodies, etc. Previous work approached the problem of plume-artifact classification by means of a Support Vector Machine Classifier (SVC), trained on an extensive set of observation-based scalar features designed by domain experts. However, such an approach limits the information scope received by the algorithm to what is deemed to be important by the experts, breaks the spatial relationship between pixels, and loses information during the process of statistical aggregation. In this study, we compare feature-based (SVC, Random Forest, XGBoost) and image-based (ResNet-18, ResNet-34) models for methane plume-artifact classification under balanced and imbalanced evaluation settings. To interpret the results, we apply SHAP-based explainability to both model families. Our findings provide practical guidance for model selection in operational methane-screening workflows such as the CAMS Methane Hotspot Explorer.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-26T16:17:02Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Solomiia Kurchaba</name>
+    </author>
+    <author>
+      <name>Joannes D. Maasakkers</name>
+    </author>
+    <author>
+      <name>Berend J. Schuit</name>
+    </author>
+    <author>
+      <name>Ilse Aben</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.24032v1</id>
+    <title>Volador 1.0: A Data-Driven Air-Sea Full-Coupling Regional Forecast Model with Submesoscale-Permitting Based on MOE-Swin-Transformer Framework</title>
+    <updated>2026-05-21T02:56:01Z</updated>
+    <link href="https://arxiv.org/abs/2605.24032v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.24032v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A data-driven air-sea full-coupling regional forecast model with submesoscale-permitting, named "Volador 1.0", is developed for the South China Sea (SCS). The model features a Swin-Transformer framework integrated with a Mixture-of-Experts (MoE) system, a latent space interaction architecture based on Cross-Grid Bidirectional Cross-Attention, and a fast-slow dual-branch architecture. Both the three-month hindcast test and the 15-day operational real-time forecasting demonstrate that Volador 1.0 has a very encouraging and promising performance in 0-72h forecasting of temperature and salinity in the 0-500m upper ocean as well as the sea surface height with root-mean-square-error (RMSE) or mean absolute error (MAE) smaller than or at least comparable to those from the reanalysis datasets REDOS V2.0 and GLORYS12 and the state-of-the-art regional numerical model Regional Ocean Modeling System (ROMS). In particular, Volador 1.0 demonstrates its capability of capturing/forecasting submesoscale processes including internal waves, with an energy spectrum well representing sub- to mesoscale energy cascade as expected by the classical turbulence theory. Further analysis based on ablation experiments shows that the air-sea full-coupling framework, which takes into account the dynamic exchanges of momentum and heat fluxes between the atmosphere and the ocean, indeed helps improve the model's performance compared to the non-full-coupling one. Volador 1.0, though still subject to refinement in the coming future with a large space for improvement, blazes a path for an accurate, fine and fast marine environment forecasting, and thus could help promote our capability of disaster prevention and mitigation in the SCS as well as in other coastal regions where these innovative techniques can be applied.</summary>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-21T02:56:01Z</published>
+    <arxiv:primary_category term="physics.ao-ph"/>
+    <author>
+      <name>Yuhang Zhu</name>
+    </author>
+    <author>
+      <name>Jianxin Wang</name>
+    </author>
+    <author>
+      <name>Yu-kun Qian</name>
+    </author>
+    <author>
+      <name>Yineng Li</name>
+    </author>
+    <author>
+      <name>Yahui Liu</name>
+    </author>
+    <author>
+      <name>Yankun Gong</name>
+    </author>
+    <author>
+      <name>Shilin Tang</name>
+    </author>
+    <author>
+      <name>Shiqiu Peng</name>
+    </author>
+    <author>
+      <name>Tao Song</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.24661v3</id>
+    <title>Agent-Centric Observation Adaptation for Robust Visual Control under Dynamic Perturbations</title>
+    <updated>2026-05-08T02:03:01Z</updated>
+    <link href="https://arxiv.org/abs/2604.24661v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.24661v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Real-world visual systems face time-varying perturbations, including weather, sensor noise, compression artifacts, and background distractions. Existing image restoration methods are typically designed for fixed corruption types and optimized for pixel-level fidelity, leaving open two questions: how restoration behaves under non-stationary corruption switching, and whether pixel-level fidelity preserves the task-relevant information needed by downstream models. To study this setting, we introduce the Visual Degraded Control Suite (VDCS), a benchmark that injects Markov-switching physical degradations into rendered scenes. We further identify a fundamental failure mode of reconstruction-based representations: faithfully reconstructing corrupted observations forces the latent state to encode corruption-specific nuisance information, thereby contaminating downstream models. From an information-bottleneck perspective, anchoring the representation to the clean foreground eliminates this contamination. Motivated by this analysis, we propose \emph{Agent-Centric Observations with Mixture-of-Experts} (ACO-MoE), a frozen, plug-and-play observation adapter that combines a routed bank of restoration experts with a foreground-mask branch. ACO-MoE is pretrained entirely offline on synthetic rendered data with automatically generated degradation pairs and simulation-derived foreground masks, requiring no manual annotation. At inference time, it takes only corrupted RGB as input without corruption labels, clean reference frames, or foreground masks. Across VDCS, DMC-GB, and RoboSuite, ACO-MoE consistently improves downstream control with both model-free and model-based backbones, recovering 95.3\% of clean-input performance under challenging Markov-switching corruptions. It also generalizes zero-shot to unseen visual perturbations excluded from adapter pretraining.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-27T16:24:40Z</published>
+    <arxiv:comment>Source code is available at https://github.com/fangzr/aco-moe-code</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Zhengru Fang</name>
+    </author>
+    <author>
+      <name>Yu Guo</name>
+    </author>
+    <author>
+      <name>Fei Liu</name>
+    </author>
+    <author>
+      <name>Yuang Zhang</name>
+    </author>
+    <author>
+      <name>Yihang Tao</name>
+    </author>
+    <author>
+      <name>Senkang Hu</name>
+    </author>
+    <author>
+      <name>Wenbo Ding</name>
+    </author>
+    <author>
+      <name>Yuguang Fang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.25046v1</id>
+    <title>MP-MoE: Matrix Profile-Guided Mixture of Experts for Precipitation Forecasting</title>
+    <updated>2026-03-26T05:29:17Z</updated>
+    <link href="https://arxiv.org/abs/2603.25046v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.25046v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Precipitation forecasting remains a persistent challenge in tropical regions like Vietnam, where complex topography and convective instability often limit the accuracy of Numerical Weather Prediction (NWP) models. While data-driven post-processing is widely used to mitigate these biases, most existing frameworks rely on point-wise objective functions, which suffer from the ``double penalty'' effect under minor temporal misalignments. In this work, we propose the Matrix Profile-guided Mixture of Experts (MP-MoE), a framework that integrates conventional intensity loss with a structural-aware Matrix Profile objective. By leveraging subsequence-level similarity rather than point-wise errors, the proposed loss facilitates more reliable expert selection and mitigates excessive penalization caused by phase shifts. We evaluate MP-MoE on rainfall datasets from two major river basins in Vietnam across multiple horizons, including 1-hour intensity and accumulated rainfall over 12, 24, and 48 hours. Experimental results demonstrate that MP-MoE outperforms raw NWP and baseline learning methods in terms of Mean Critical Success Index (CSI-M) for heavy rainfall events, while significantly reducing Dynamic Time Warping (DTW) values. These findings highlight the framework's efficacy in capturing peak rainfall intensities and preserving the morphological integrity of storm events.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-26T05:29:17Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Huyen Ngoc Tran</name>
+    </author>
+    <author>
+      <name>Dung Trung Tran</name>
+    </author>
+    <author>
+      <name>Hong Nguyen</name>
+    </author>
+    <author>
+      <name>Xuan Vu Phan</name>
+    </author>
+    <author>
+      <name>Nam-Phong Nguyen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.19325v1</id>
+    <title>Target Concept Tuning Improves Extreme Weather Forecasting</title>
+    <updated>2026-03-17T15:34:05Z</updated>
+    <link href="https://arxiv.org/abs/2603.19325v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.19325v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deep learning models for meteorological forecasting often fail in rare but high-impact events such as typhoons, where relevant data is scarce. Existing fine-tuning methods typically face a trade-off between overlooking these extreme events and overfitting them at the expense of overall performance. We propose TaCT, an interpretable concept-gated fine-tuning framework that solves the aforementioned issue by selective model improvement: models are adapted specifically for failure cases while preserving performance in common scenarios. To this end, TaCT automatically discovers failure-related internal concepts using Sparse Autoencoders and counterfactual analysis, and updates parameters only when the corresponding concepts are activated, rather than applying uniform adaptation. Experiments show consistent improvements in typhoon forecasting across different regions without degrading other meteorological variables. The identified concepts correspond to physically meaningful circulation patterns, revealing model biases and supporting trustworthy adaptation in scientific forecasting tasks. The code is available at https://anonymous.4open.science/r/Concept-Gated-Fine-tune-62AC.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-17T15:34:05Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Shijie Ren</name>
+    </author>
+    <author>
+      <name>Xinyue Gu</name>
+    </author>
+    <author>
+      <name>Ziheng Peng</name>
+    </author>
+    <author>
+      <name>Haifan Zhang</name>
+    </author>
+    <author>
+      <name>Peisong Niu</name>
+    </author>
+    <author>
+      <name>Bo Wu</name>
+    </author>
+    <author>
+      <name>Xiting Wang</name>
+    </author>
+    <author>
+      <name>Liang Sun</name>
+    </author>
+    <author>
+      <name>Jirong Wen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.16261v1</id>
+    <title>AW-MoE: All-Weather Mixture of Experts for Robust Multi-Modal 3D Object Detection</title>
+    <updated>2026-03-17T08:48:48Z</updated>
+    <link href="https://arxiv.org/abs/2603.16261v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.16261v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Robust 3D object detection under adverse weather conditions is crucial for autonomous driving. However, most existing methods simply combine all weather samples for training while overlooking data distribution discrepancies across different weather scenarios, leading to performance conflicts. To address this issue, we introduce AW-MoE, the framework that innovatively integrates Mixture of Experts (MoE) into weather-robust multi-modal 3D object detection approaches. AW-MoE incorporates Image-guided Weather-aware Routing (IWR), which leverages the superior discriminability of image features across weather conditions and their invariance to scene variations for precise weather classification. Based on this accurate classification, IWR selects the top-K most relevant Weather-Specific Experts (WSE) that handle data discrepancies, ensuring optimal detection under all weather conditions. Additionally, we propose a Unified Dual-Modal Augmentation (UDMA) for synchronous LiDAR and 4D Radar dual-modal data augmentation while preserving the realism of scenes. Extensive experiments on the real-world dataset demonstrate that AW-MoE achieves ~ 15% improvement in adverse-weather performance over state-of-the-art methods, while incurring negligible inference overhead. Moreover, integrating AW-MoE into established baseline detectors yields performance improvements surpassing current state-of-the-art methods. These results show the effectiveness and strong scalability of our AW-MoE. We will release the code publicly at https://github.com/windlinsherlock/AW-MoE.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-17T08:48:48Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Hongwei Lin</name>
+    </author>
+    <author>
+      <name>Xun Huang</name>
+    </author>
+    <author>
+      <name>Chenglu Wen</name>
+    </author>
+    <author>
+      <name>Cheng Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.13818v1</id>
+    <title>PA-Net: Precipitation-Adaptive Mixture-of-Experts for Long-Tail Rainfall Nowcasting</title>
+    <updated>2026-03-14T08:02:07Z</updated>
+    <link href="https://arxiv.org/abs/2603.13818v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.13818v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Precipitation nowcasting is vital for flood warning, agricultural management, and emergency response, yet two bottlenecks persist: the prohibitive cost of modeling million-scale spatiotemporal tokens from multi-variate atmospheric fields, and the extreme long-tailed rainfall distribution where heavy-to-torrential events -- those of greatest societal impact -- constitute fewer than 0.1% of all samples. We propose the Precipitation-Adaptive Network (PA-Net), a Transformer framework whose computational budget is explicitly governed by rainfall intensity. Its core component, Precipitation-Adaptive MoE (PA-MoE), dynamically scales the number of activated experts per token according to local precipitation magnitude, channeling richer representational capacity toward the rare yet critical heavy-rainfall tail. A Dual-Axis Compressed Latent Attention mechanism factorizes spatiotemporal attention with convolutional reduction to manage massive context lengths, while an intensity-aware training protocol progressively amplifies learning signals from extreme-rainfall samples. Experiment on ERA5 demonstrate consistent improvements over state-of-the-art baselines, with particularly significant gains in heavy-rain and rainstorm regimes.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-14T08:02:07Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Xinyu Xiao</name>
+    </author>
+    <author>
+      <name>Sen Lei</name>
+    </author>
+    <author>
+      <name>Eryun Liu</name>
+    </author>
+    <author>
+      <name>Shiming Xiang</name>
+    </author>
+    <author>
+      <name>Hao Li</name>
+    </author>
+    <author>
+      <name>Cheng Yuan</name>
+    </author>
+    <author>
+      <name>Yuan Qi</name>
+    </author>
+    <author>
+      <name>Qizhao Jin</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.12008v1</id>
+    <title>CrossEarth-SAR: A SAR-Centric and Billion-Scale Geospatial Foundation Model for Domain Generalizable Semantic Segmentation</title>
+    <updated>2026-03-12T14:52:35Z</updated>
+    <link href="https://arxiv.org/abs/2603.12008v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.12008v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Synthetic Aperture Radar (SAR) enables global, all-weather earth observation. However, owing to diverse imaging mechanisms, domain shifts across sensors and regions severely hinder its semantic generalization. To address this, we present CrossEarth-SAR, the first billion-scale SAR vision foundation model built upon a novel physics-guided sparse mixture-of-experts (MoE) architecture incorporating physical descriptors, explicitly designed for cross-domain semantic segmentation. To facilitate large-scale pre-training, we develop CrossEarth-SAR-200K, a weakly and fully supervised dataset that unifies public and private SAR imagery. We also introduce a benchmark suite comprising 22 sub-benchmarks across 8 distinct domain gaps, establishing the first unified standard for domain generalization semantic segmentation on SAR imagery. Extensive experiments demonstrate that CrossEarth-SAR achieves state-of-the-art results on 20 benchmarks, surpassing previous methods by over 10\% mIoU on some benchmarks under multi-gap transfer. All code, benchmark and datasets will be publicly available.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-12T14:52:35Z</published>
+    <arxiv:comment>26 pages, 15 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Ziqi Ye</name>
+    </author>
+    <author>
+      <name>Ziyang Gong</name>
+    </author>
+    <author>
+      <name>Ning Liao</name>
+    </author>
+    <author>
+      <name>Xiaoxing Hu</name>
+    </author>
+    <author>
+      <name>Di Wang</name>
+    </author>
+    <author>
+      <name>Hongruixuan Chen</name>
+    </author>
+    <author>
+      <name>Chen Huang</name>
+    </author>
+    <author>
+      <name>Yiguo He</name>
+    </author>
+    <author>
+      <name>Yuru Jia</name>
+    </author>
+    <author>
+      <name>Xiaoxing Wang</name>
+    </author>
+    <author>
+      <name>Haipeng Wang</name>
+    </author>
+    <author>
+      <name>Xue Yang</name>
+    </author>
+    <author>
+      <name>Junchi Yan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.07227v3</id>
+    <title>Model selection in extreme value regression for estimation of changes in return values over time applied to extreme annual regional CMIP6 desert temperatures</title>
+    <updated>2026-08-25T16:05:39Z</updated>
+    <link href="https://arxiv.org/abs/2603.07227v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.07227v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Estimating changes in extremes quantiles from environmental processes non-stationary in time, from small samples is challenging since it is difficult to characterise tail non-stationarity adequately. Using annual maxima and minima of near-surface temperature (tas) from CMIP6 output for some Earth desert regions, we use generalised extreme value (GEV) regression to model changes in extreme quantiles in time. We consider candidate models with different parametric forms for the variation of GEV parameters with time, estimating parameters using Bayesian inference. We select optimal candidate models using model selection criteria, including the Akaike, Bayesian, divergence and widely-applicable information criteria. In an extreme value setting, the performance of different criteria is unreliable. We therefore undertake a simulation study using ground truth models generating data similar to our extrema, to assess performance of the criteria to minimise error in prediction of change DeltaQ in the 100-year return value of tas over (2015,2125). The Bayesian information criterion (BIC) provides best performance, out-performing the divergence and widely-applicable Information criteria. We compare BIC model selection with a stacked Bayesian model average. Using BIC-selected GEV regression, we estimate joint posterior distributions of DeltaQ, coupled over three climate scenarios, for different combinations of desert region, global climate model and climate ensemble. We find significant increases in DeltaQ for regional annual maxima under stronger forcing scenarios for all desert regions. Similar but weaker trends are observed for regional annual minima. There is evidence that extreme minima are warming more rapidly than extreme maxima in Antarctica, whereas most hot desert regions exhibit the opposite effect.
+  An ancillary file of supplementary material is provided.</summary>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-07T14:17:48Z</published>
+    <arxiv:primary_category term="physics.ao-ph"/>
+    <author>
+      <name>Callum Leach</name>
+    </author>
+    <author>
+      <name>Kevin Ewans</name>
+    </author>
+    <author>
+      <name>Philip Jonathan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.04726v1</id>
+    <title>Revealing the Topology invariance of vectorial vortex beam in complex media</title>
+    <updated>2026-03-05T01:59:03Z</updated>
+    <link href="https://arxiv.org/abs/2603.04726v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.04726v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Orbital angular momentum (OAM), a topological degree of freedom of light, is theoretically invariant under continuous deformations; yet, its physical observability degrades precipitously in complex media, creating a fundamental "topology-observability gap." Here, we propose a novel paradigm for topological measurement based on the non-separable coupling between polarization and topological features in vectorial vortex beam. By constructing a topological non-separability measure derived from global Stokes fields, and integrating it with a physics-guided machine learning calibration framework that combines Bayesian Gaussian process regression with XGBoost-driven adaptive model selection, we achieve high-fidelity identification of topological features up to 200. Crucially, this robustness persists even when beam intensity and phase structures are completely distorted by extreme complex media, including strong atmospheric turbulence, oceanic turbulence, and high-temperature jet exhausts. This approach overcomes the dual bottlenecks of limited accessible OAM modes and susceptibility to perturbations that constrain conventional methods. Our work not only bridges the fundamental divide between topological theory and physical observability, but also establishes a robust framework for the reliable deployment of high-dimensional OAM in real-world complex environments, promising exciting advancements for wireless optical communications, remote topological sensing, and classical analogs of quantum information protocols.</summary>
+    <category term="physics.optics" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-05T01:59:03Z</published>
+    <arxiv:primary_category term="physics.optics"/>
+    <author>
+      <name>Shuailing Wang</name>
+    </author>
+    <author>
+      <name>Jingping Xu</name>
+    </author>
+    <author>
+      <name>Yaping Yang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2602.05611v1</id>
+    <title>The stochastic view used in climate sciences: (some) perspectives from (some of) mathematical statistics</title>
+    <updated>2026-02-05T12:48:49Z</updated>
+    <link href="https://arxiv.org/abs/2602.05611v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2602.05611v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Climate statistics is of course a very broad field, along with the many connections and impacts for yet other areas, with a history as long as mankind has been recording temperatures, describing drastic weather events, etc. The important work of Klaus Hasselmann, with crucial contributions to the field, along with various other connected strands of work,is being reviewed and discussed in other chapters. The aim of the present chapter is to point to a few statistical methodology themes of relevance for and joint interest with climate statistics. These themes, presented from a statistical methods perspective, include (i) more careful modelling and model selection strategies for meteorological type time series; (ii) methods for prediction, not only for future values of a time series, but for assessing when a trend might be crossing a barrier, along with relevant measures of uncertainty for these; (iii) climatic influence on marine biology; (iv) monitoring processes to assess whether and then to what extent models and their parameters have stayed reasonably constant over time; (v) combination of outputs from different information sources; and (vi) analysing probabilities and their uncertainties related to extreme events.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-02-05T12:48:49Z</published>
+    <arxiv:comment>17 pages, 18 figures</arxiv:comment>
+    <arxiv:primary_category term="stat.ME"/>
+    <author>
+      <name>Nils Lid Hjort</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2601.10921v1</id>
+    <title>RobuMTL: Enhancing Multi-Task Learning Robustness Against Weather Conditions</title>
+    <updated>2026-01-16T00:41:42Z</updated>
+    <link href="https://arxiv.org/abs/2601.10921v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2601.10921v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Robust Multi-Task Learning (MTL) is crucial for autonomous systems operating in real-world environments, where adverse weather conditions can severely degrade model performance and reliability. In this paper, we introduce RobuMTL, a novel architecture designed to adaptively address visual degradation by dynamically selecting task-specific hierarchical Low-Rank Adaptation (LoRA) modules and a LoRA expert squad based on input perturbations in a mixture-of-experts fashion. Our framework enables adaptive specialization based on input characteristics, improving robustness across diverse real-world conditions. To validate our approach, we evaluated it on the PASCAL and NYUD-v2 datasets and compared it against single-task models, standard MTL baselines, and state-of-the-art methods. On the PASCAL benchmark, RobuMTL delivers a +2.8% average relative improvement under single perturbations and up to +44.4% under mixed weather conditions compared to the MTL baseline. On NYUD-v2, RobuMTL achieves a +9.7% average relative improvement across tasks. The code is available at GitHub.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-01-16T00:41:42Z</published>
+    <arxiv:comment>Accepted at the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Tasneem Shaffee</name>
+    </author>
+    <author>
+      <name>Sherief Reda</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2512.18011v1</id>
+    <title>Time-resolved X-ray spectra of Proxima Centauri as seen by XMM-Newton</title>
+    <updated>2025-12-19T19:09:35Z</updated>
+    <link href="https://arxiv.org/abs/2512.18011v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2512.18011v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Stellar soft X-ray ([1, 100] Angstrom) and Extreme Ultraviolet (also EUV, [100, 920] Angstrom; jointly, XUV) radiation affects the evolution and chemistry of exoplanet atmospheres. It is however uncertain to what extent the radiation's short-term variability contributes to these effects. We are interested in what this variability might imply for planets around M dwarf stars, and focus on Proxima Centauri (Prox Cen) for three reasons: it is an active M dwarf with high levels of variability; it hosts a likely terrestrial exoplanet within its habitable zone (HZ) that will be a prime target for future direct imaging; its proximity has led to extensive observations. We set out to produce time-resolved XUV spectra of Prox Cen that will serve as input to atmospheric models, and to characterize the intrinsic variability of the star. We analyzed the entire dataset of archival XMM-Newton observations for Prox Cen. To derive the time-resolved X-ray spectra, we implemented a new pile-up correction, a new adaptive time-binning algorithm, and a time-dependent plasma model selection. The estimated EUV spectrum is based on a published template, that we scale with proposed relationships between X-ray and EUV fluxes. We produced spectra of Prox Cen from 1 to 920 Angstrom over ~260 ks of observations with unprecedented time resolution. The instantaneous X-ray flux of Prox Cen varies between about 20 times and one-fifth of the average value over the available baseline, with significant differences between wavelengths. We further quantify how variability affects the estimated average flux when a limited number of snapshots (each typically of 30 ks exposure) are available, as is common in X-ray surveys. Future investigations of the atmospheres of Prox Cen b should fold in the time variability and uncertainties described here.</summary>
+    <category term="astro-ph.EP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.IM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.SR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-12-19T19:09:35Z</published>
+    <arxiv:comment>19 pages, 14 figures, 3 tables; Accepted for publication in A&amp;A</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.EP"/>
+    <arxiv:journal_ref>A&amp;A 706, A349 (2026)</arxiv:journal_ref>
+    <author>
+      <name>A. Damonte</name>
+    </author>
+    <author>
+      <name>I. Pillitteri</name>
+    </author>
+    <author>
+      <name>A. Maggio</name>
+    </author>
+    <author>
+      <name>A. García Muñoz</name>
+    </author>
+    <author>
+      <name>G. Micela</name>
+    </author>
+    <arxiv:doi>10.1051/0004-6361/202557125</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1051/0004-6361/202557125" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2512.10581v1</id>
+    <title>Unleashing Degradation-Carrying Features in Symmetric U-Net: Simpler and Stronger Baselines for All-in-One Image Restoration</title>
+    <updated>2025-12-11T12:20:31Z</updated>
+    <link href="https://arxiv.org/abs/2512.10581v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2512.10581v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>All-in-one image restoration aims to handle diverse degradations (e.g., noise, blur, adverse weather) within a unified framework, yet existing methods increasingly rely on complex architectures (e.g., Mixture-of-Experts, diffusion models) and elaborate degradation prompt strategies. In this work, we reveal a critical insight: well-crafted feature extraction inherently encodes degradation-carrying information, and a symmetric U-Net architecture is sufficient to unleash these cues effectively. By aligning feature scales across encoder-decoder and enabling streamlined cross-scale propagation, our symmetric design preserves intrinsic degradation signals robustly, rendering simple additive fusion in skip connections sufficient for state-of-the-art performance. Our primary baseline, SymUNet, is built on this symmetric U-Net and achieves better results across benchmark datasets than existing approaches while reducing computational cost. We further propose a semantic enhanced variant, SE-SymUNet, which integrates direct semantic injection from frozen CLIP features via simple cross-attention to explicitly amplify degradation priors. Extensive experiments on several benchmarks validate the superiority of our methods. Both baselines SymUNet and SE-SymUNet establish simpler and stronger foundations for future advancements in all-in-one image restoration. The source code is available at https://github.com/WenlongJiao/SymUNet.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-12-11T12:20:31Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Wenlong Jiao</name>
+    </author>
+    <author>
+      <name>Heyang Lee</name>
+    </author>
+    <author>
+      <name>Ping Wang</name>
+    </author>
+    <author>
+      <name>Pengfei Zhu</name>
+    </author>
+    <author>
+      <name>Qinghua Hu</name>
+    </author>
+    <author>
+      <name>Dongwei Ren</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2512.06664v1</id>
+    <title>Statistic-Augmented, Decoupled MoE Routing and Aggregating in Autonomous Driving</title>
+    <updated>2025-12-07T05:28:40Z</updated>
+    <link href="https://arxiv.org/abs/2512.06664v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2512.06664v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Autonomous driving (AD) scenarios are inherently complex and diverse, posing significant challenges for a single deep learning model to effectively cover all possible conditions, such as varying weather, traffic densities, and road types. Large Model (LM)-Driven Mixture of Experts (MoE) paradigm offers a promising solution, where LM serves as the backbone to extract latent features while MoE serves as the downstream head to dynamically select and aggregate specialized experts to adapt to different scenarios. However, routing and aggregating in MoE face intrinsic challenges, including imprecise expert selection due to flawed routing strategy and inefficient expert aggregation leading to suboptimal prediction. To address these issues, we propose a statistic-augmented, decoupled MoE }outing and Aggregating Mechanism (MoE-RAM) driven by LM. Specifically, on the one hand, MoE-RAM enhances expert routing by incorporating statistical retrieval mechanism to match LM-extracted latent features with cached prototypical features of the most relevant experts; on the other hand, MoE-RAM adaptively reweights experts' outputs in fusion by measuring statistical distances of experts' instant features against LM-extracted latent features. Benefiting from the synergy of the statistic-augmented MoE's routing and aggregating, MoE-RAM ultimately improves the prediction performance. We take the AD semantic segmentation task as an example to assess the proposed MoE-RAM. Extensive experiments on AD datasets demonstrate the superiority of MoE-RAM compared to other MoE baselines and conventional single-model approaches.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-12-07T05:28:40Z</published>
+    <arxiv:comment>9 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Wei-Bin Kou</name>
+    </author>
+    <author>
+      <name>Guangxu Zhu</name>
+    </author>
+    <author>
+      <name>Jingreng Lei</name>
+    </author>
+    <author>
+      <name>Chen Zhang</name>
+    </author>
+    <author>
+      <name>Yik-Chung Wu</name>
+    </author>
+    <author>
+      <name>Jianping Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2512.05400v1</id>
+    <title>Hybrid modeling approach for better identification of building thermal network model and improved prediction</title>
+    <updated>2025-12-05T03:38:41Z</updated>
+    <link href="https://arxiv.org/abs/2512.05400v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2512.05400v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The gray-box modeling approach, which uses a semi-physical thermal network model, has been widely used in building prediction applications, such as model predictive control (MPC). However, unmeasured disturbances, such as occupants, lighting, and in/exfiltration loads, make it challenging to apply this approach to practical buildings. In this study, we propose a hybrid modeling approach that integrates the gray-box model with a model for unmeasured disturbance. After reviewing several system identification approaches, we systematically designed the unmeasured disturbance model with a model selection process based on statistical tests to make it robust. We generated data based on the building model calibrated by real operational data and then trained the hybrid model for two different weather conditions. The Hybrid model approach demonstrates the reduction of RMSE approximately 0.2-0.9C and 0.3-2C on 1-day ahead temperature prediction compared to the Conventional approach for mild (Berkeley, CA) and cold (Chicago, IL) climates, respectively. In addition, this approach was applied for experimental data obtained from the laboratory building to be used for the MPC application, showing superior prediction performances.</summary>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-12-05T03:38:41Z</published>
+    <arxiv:primary_category term="eess.SY"/>
+    <author>
+      <name>Sang woo Ham</name>
+    </author>
+    <author>
+      <name>Donghun Kim</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.19039v2</id>
+    <title>Validity in machine learning for extreme event attribution</title>
+    <updated>2026-08-15T06:59:52Z</updated>
+    <link href="https://arxiv.org/abs/2511.19039v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.19039v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Extreme event attribution (EEA), which assesses the extent to which disasters are caused by climate change, is crucial for informing climate policy and legal proceedings. Machine learning is increasingly used for EEA by modeling rare weather events too complex or computationally intensive for traditional methods. However, its validity remains unclear, as machine learning applications are criticized for bias and lack of robustness. Here we evaluate machine learning for EEA using California wildfire data from 2003-2020. We identify three major threats to validity: (1) individual event attribution estimates are highly sensitive to algorithmic design choices; (2) common performance metrics like Brier score are not strongly correlated with attribution error, facilitating suboptimal model selection; and (3) distribution shift across climate scenarios substantially degrades predictive performance. We propose a more robust attribution analysis using aggregate estimates and additional evaluation metrics for predictive performance and distribution shift.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-24T12:25:20Z</published>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Cassandra C. Chou</name>
+    </author>
+    <author>
+      <name>Scott L. Zeger</name>
+    </author>
+    <author>
+      <name>Benjamin Q. Huynh</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.17967v1</id>
+    <title>CADTrack: Learning Contextual Aggregation with Deformable Alignment for Robust RGBT Tracking</title>
+    <updated>2025-11-22T08:10:02Z</updated>
+    <link href="https://arxiv.org/abs/2511.17967v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.17967v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>RGB-Thermal (RGBT) tracking aims to exploit visible and thermal infrared modalities for robust all-weather object tracking. However, existing RGBT trackers struggle to resolve modality discrepancies, which poses great challenges for robust feature representation. This limitation hinders effective cross-modal information propagation and fusion, which significantly reduces the tracking accuracy. To address this limitation, we propose a novel Contextual Aggregation with Deformable Alignment framework called CADTrack for RGBT Tracking. To be specific, we first deploy the Mamba-based Feature Interaction (MFI) that establishes efficient feature interaction via state space models. This interaction module can operate with linear complexity, reducing computational cost and improving feature discrimination. Then, we propose the Contextual Aggregation Module (CAM) that dynamically activates backbone layers through sparse gating based on the Mixture-of-Experts (MoE). This module can encode complementary contextual information from cross-layer features. Finally, we propose the Deformable Alignment Module (DAM) to integrate deformable sampling and temporal propagation, mitigating spatial misalignment and localization drift. With the above components, our CADTrack achieves robust and accurate tracking in complex scenarios. Extensive experiments on five RGBT tracking benchmarks verify the effectiveness of our proposed method. The source code is released at https://github.com/IdolLab/CADTrack.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-22T08:10:02Z</published>
+    <arxiv:comment>Accepted by AAAI2026. More modifications may be performed</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Hao Li</name>
+    </author>
+    <author>
+      <name>Yuhao Wang</name>
+    </author>
+    <author>
+      <name>Xiantao Hu</name>
+    </author>
+    <author>
+      <name>Wenning Hao</name>
+    </author>
+    <author>
+      <name>Pingping Zhang</name>
+    </author>
+    <author>
+      <name>Dong Wang</name>
+    </author>
+    <author>
+      <name>Huchuan Lu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.16998v1</id>
+    <title>VLM-Augmented Degradation Modeling for Image Restoration Under Adverse Weather Conditions</title>
+    <updated>2025-11-21T07:06:48Z</updated>
+    <link href="https://arxiv.org/abs/2511.16998v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.16998v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Reliable visual perception under adverse weather conditions, such as rain, haze, snow, or a mixture of them, is desirable yet challenging for autonomous driving and outdoor robots. In this paper, we propose a unified Memory-Enhanced Visual-Language Recovery (MVLR) model that restores images from different degradation levels under various weather conditions. MVLR couples a lightweight encoder-decoder backbone with a Visual-Language Model (VLM) and an Implicit Memory Bank (IMB). The VLM performs chain-of-thought inference to encode weather degradation priors and the IMB stores continuous latent representations of degradation patterns. The VLM-generated priors query the IMB to retrieve fine-grained degradation prototypes. These prototypes are then adaptively fused with multi-scale visual features via dynamic cross-attention mechanisms, enhancing restoration accuracy while maintaining computational efficiency. Extensive experiments on four severe-weather benchmarks show that MVLR surpasses single-branch and Mixture-of-Experts baselines in terms of Peak Signal-to-Noise Ratio (PSNR) and Structural Similarity Index Measure (SSIM). These results indicate that MVLR offers a practical balance between model compactness and expressiveness for real-time deployment in diverse outdoor conditions.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-21T07:06:48Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <arxiv:journal_ref>Proc. 2025 30th International Conference on Automation and Computing (ICAC), pp. 1-6, 2025</arxiv:journal_ref>
+    <author>
+      <name>Qianyi Shao</name>
+    </author>
+    <author>
+      <name>Yuanfan Zhang</name>
+    </author>
+    <author>
+      <name>Renxiang Xiao</name>
+    </author>
+    <author>
+      <name>Liang Hu</name>
+    </author>
+    <arxiv:doi>10.1109/ICAC65379.2025.11196306</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/ICAC65379.2025.11196306" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.12525v1</id>
+    <title>MdaIF: Robust One-Stop Multi-Degradation-Aware Image Fusion with Language-Driven Semantics</title>
+    <updated>2025-11-16T09:43:12Z</updated>
+    <link href="https://arxiv.org/abs/2511.12525v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.12525v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Infrared and visible image fusion aims to integrate complementary multi-modal information into a single fused result. However, existing methods 1) fail to account for the degradation visible images under adverse weather conditions, thereby compromising fusion performance; and 2) rely on fixed network architectures, limiting their adaptability to diverse degradation scenarios. To address these issues, we propose a one-stop degradation-aware image fusion framework for multi-degradation scenarios driven by a large language model (MdaIF). Given the distinct scattering characteristics of different degradation scenarios (e.g., haze, rain, and snow) in atmospheric transmission, a mixture-of-experts (MoE) system is introduced to tackle image fusion across multiple degradation scenarios. To adaptively extract diverse weather-aware degradation knowledge and scene feature representations, collectively referred to as the semantic prior, we employ a pre-trained vision-language model (VLM) in our framework. Guided by the semantic prior, we propose degradation-aware channel attention module (DCAM), which employ degradation prototype decomposition to facilitate multi-modal feature interaction in channel domain. In addition, to achieve effective expert routing, the semantic prior and channel-domain modulated features are utilized to guide the MoE, enabling robust image fusion in complex degradation scenarios. Extensive experiments validate the effectiveness of our MdaIF, demonstrating superior performance over SOTA methods.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-16T09:43:12Z</published>
+    <arxiv:comment>10 pages, 7 figures. Accepted by AAAI 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Jing Li</name>
+    </author>
+    <author>
+      <name>Yifan Wang</name>
+    </author>
+    <author>
+      <name>Jiafeng Yan</name>
+    </author>
+    <author>
+      <name>Renlong Zhang</name>
+    </author>
+    <author>
+      <name>Bin Yang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.05095v1</id>
+    <title>Real-World Adverse Weather Image Restoration via Dual-Level Reinforcement Learning with High-Quality Cold Start</title>
+    <updated>2025-11-07T09:22:53Z</updated>
+    <link href="https://arxiv.org/abs/2511.05095v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.05095v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Adverse weather severely impairs real-world visual perception, while existing vision models trained on synthetic data with fixed parameters struggle to generalize to complex degradations. To address this, we first construct HFLS-Weather, a physics-driven, high-fidelity dataset that simulates diverse weather phenomena, and then design a dual-level reinforcement learning framework initialized with HFLS-Weather for cold-start training. Within this framework, at the local level, weather-specific restoration models are refined through perturbation-driven image quality optimization, enabling reward-based learning without paired supervision; at the global level, a meta-controller dynamically orchestrates model selection and execution order according to scene degradation. This framework enables continuous adaptation to real-world conditions and achieves state-of-the-art performance across a wide range of adverse weather scenarios. Code is available at https://github.com/xxclfy/AgentRL-Real-Weather</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-07T09:22:53Z</published>
+    <arxiv:comment>Accepted by NeurIPS 2025</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Fuyang Liu</name>
+    </author>
+    <author>
+      <name>Jiaqi Xu</name>
+    </author>
+    <author>
+      <name>Xiaowei Hu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.05059v3</id>
+    <title>SurgiATM: A Physics-Guided Plug-and-Play Model for Deep Learning-Based Smoke Removal in Laparoscopic Surgery</title>
+    <updated>2026-09-01T04:00:49Z</updated>
+    <link href="https://arxiv.org/abs/2511.05059v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.05059v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>During laparoscopic surgery, smoke generated by tissue cauterization can significantly degrade the visual quality of endoscopic frames, increasing the risk of surgical errors and hindering both clinical decision-making and computer-assisted visual analysis. Consequently, removing surgical smoke is critical to ensuring patient safety and maintaining operative efficiency. In this study, we propose the Surgical Atmospheric Model (SurgiATM) for surgical smoke removal. SurgiATM statistically bridges a physics-based atmospheric model and data-driven deep learning models, combining the superior generalizability of the former with the high accuracy of the latter. Furthermore, SurgiATM is designed as a lightweight module that can be easily integrated into existing surgical desmoking architectures with minimal modification, aiming to enhance their accuracy and stability. The proposed method is derived via statistically optimizing a Mixture-of-Experts (MoE) model at the output end of arbitrary deep learning methods, with a Laplacian-like error distribution specifically leveraged to model surgical smoke. The output-stage MoE ensures minimal modification to the architecture of the original methods, while the Laplacian-like distribution characteristic of surgical smoke enables a lightweight reconstruction formulation with minimal parameters. Therefore, SurgiATM introduces only two hyperparameters and no additional trainable weights, preserving the original network architecture with minimal computational and modification overhead. We conduct extensive experiments on three public surgical datasets with ten desmoking methods, involving multiple network architectures and covering diverse procedures, including cholecystectomy, partial nephrectomy, and diaphragm dissection.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-07T08:04:24Z</published>
+    <arxiv:comment>28 pages, 12 figures, 17 tables. Code available at https://github.com/MingyuShengSMY/SurgiATM</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Mingyu Sheng</name>
+    </author>
+    <author>
+      <name>Jianan Fan</name>
+    </author>
+    <author>
+      <name>Dongnan Liu</name>
+    </author>
+    <author>
+      <name>Guoyan Zheng</name>
+    </author>
+    <author>
+      <name>Ron Kikinis</name>
+    </author>
+    <author>
+      <name>Weidong Cai</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.11276v2</id>
+    <title>Information-theoretic analysis of temporal dependence in discrete stochastic processes: Application to precipitation predictability</title>
+    <updated>2026-03-13T10:57:12Z</updated>
+    <link href="https://arxiv.org/abs/2510.11276v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.11276v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Understanding the temporal dependence of precipitation is key to improving weather predictability and developing efficient stochastic rainfall models. We introduce an information-theoretic approach to quantify memory effects in discrete stochastic processes and apply it to daily precipitation records across the contiguous United States. The method is based on the predictability gain, a quantity derived from block entropy that measures the additional information provided by higher-order temporal dependencies. This statistic, combined with a bootstrap-based hypothesis testing and Fisher's method, enables a robust memory estimator from finite data. Tests with generated sequences show that this estimator outperforms other model-selection criteria such as Akaike Information Criterion and Bayesian Information Criterion. Applied to precipitation data, the analysis reveals that daily rainfall occurrence is well described by low-order Markov chains, exhibiting regional and seasonal variations, with stronger correlations in winter along the West Coast and in summer in the Southeast, consistent with known climatological patterns. Overall, our findings establish a framework for building parsimonious stochastic descriptions, useful when addressing spatial heterogeneity in the memory structure of precipitation dynamics, and support further advances in real-time, data-driven forecasting schemes.</summary>
+    <category term="physics.data-an" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.app-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-13T11:11:16Z</published>
+    <arxiv:primary_category term="physics.data-an"/>
+    <arxiv:journal_ref>Chaos 36, 033124 (1-14) (2026)</arxiv:journal_ref>
+    <author>
+      <name>Juan De Gregorio</name>
+    </author>
+    <author>
+      <name>David Sánchez</name>
+    </author>
+    <author>
+      <name>Raúl Toral</name>
+    </author>
+    <arxiv:doi>10.1063/5.0307092</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1063/5.0307092" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.09734v2</id>
+    <title>ARROW: An Adaptive Rollout and Routing Method for Global Weather Forecasting</title>
+    <updated>2026-03-31T07:14:26Z</updated>
+    <link href="https://arxiv.org/abs/2510.09734v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.09734v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Weather forecasting is a fundamental task in spatiotemporal data analysis, with broad applications across a wide range of domains. Existing data-driven forecasting methods typically model atmospheric dynamics over a fixed short time interval, e.g., 6 hours, and rely on naive autoregression-based rollout for long-term forecasting, e.g., 5 days. However, this paradigm suffers from two key limitations: (1) it often inadequately models the spatial and multi-scale temporal dependencies inherent in global weather systems, and (2) the rollout strategy struggles to balance error accumulation with the capture of fine-grained atmospheric variations. In this study, we propose ARROW, an Adaptive-Rollout Multi-scale temporal Routing method for Global Weather Forecasting. To contend with the first limitation, we construct a multi-interval forecasting model that forecasts weather across different time intervals. Within the model, the Shared-Private Mixture-of-Experts captures both shared patterns and specific characteristics of atmospheric dynamics across different time scales, while Ring Positional Encoding accurately encodes the circular latitude structure of the Earth when representing spatial information. For the second limitation, we develop an adaptive rollout scheduler based on reinforcement learning, which selects the most suitable time interval to forecast according to the current weather state. Experimental results demonstrate that ARROW achieves state-of-the-art performance in global weather forecasting, establishing a promising paradigm in this field.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-10T14:00:59Z</published>
+    <arxiv:comment>25 pages, 16 figures, ICLR 2026 Camera Ready</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Jindong Tian</name>
+    </author>
+    <author>
+      <name>Yifei Ding</name>
+    </author>
+    <author>
+      <name>Ronghui Xu</name>
+    </author>
+    <author>
+      <name>Hao Miao</name>
+    </author>
+    <author>
+      <name>Chenjuan Guo</name>
+    </author>
+    <author>
+      <name>Bin Yang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2509.22279v3</id>
+    <title>Task-Aware Mixture-of-Experts for Time Series Analysis</title>
+    <updated>2026-01-20T16:18:00Z</updated>
+    <link href="https://arxiv.org/abs/2509.22279v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2509.22279v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Time Series Analysis is widely used in various real-world applications such as weather forecasting, financial fraud detection, imputation for missing data in IoT systems, and classification for action recognization. Mixture-of-Experts (MoE), as a powerful architecture, though demonstrating effectiveness in NLP, still falls short in adapting to versatile tasks in time series analytics due to its task-agnostic router and the lack of capability in modeling channel correlations. In this study, we propose a novel, general MoE-based time series framework called PatchMoE to support the intricate ``knowledge'' utilization for distinct tasks, thus task-aware. Based on the observation that hierarchical representations often vary across tasks, e.g., forecasting vs. classification, we propose a Recurrent Noisy Gating to utilize the hierarchical information in routing, thus obtaining task-sepcific capability. And the routing strategy is operated on time series tokens in both temporal and channel dimensions, and encouraged by a meticulously designed Temporal \&amp; Channel Load Balancing Loss to model the intricate temporal and channel correlations. Comprehensive experiments on five downstream tasks demonstrate the state-of-the-art performance of PatchMoE.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-09-26T12:44:46Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Xingjian Wu</name>
+    </author>
+    <author>
+      <name>Zhengyu Li</name>
+    </author>
+    <author>
+      <name>Hanyin Cheng</name>
+    </author>
+    <author>
+      <name>Xiangfei Qiu</name>
+    </author>
+    <author>
+      <name>Jilin Hu</name>
+    </author>
+    <author>
+      <name>Chenjuan Guo</name>
+    </author>
+    <author>
+      <name>Bin Yang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2509.21802v2</id>
+    <title>ChaosNexus: A Foundation Model for ODE-based Chaotic System Forecasting with Hierarchical Multi-scale Awareness</title>
+    <updated>2026-02-01T04:15:11Z</updated>
+    <link href="https://arxiv.org/abs/2509.21802v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2509.21802v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Foundation models have shown great promise in achieving zero-shot or few-shot forecasting for ODE-based chaotic systems via large-scale pretraining. However, existing architectures often fail to capture the multi-scale temporal structures and distinct spectral characteristics of chaotic dynamics. To address this, we introduce ChaosNexus, a foundation model for chaotic system forecasting underpinned by the proposed ScaleFormer architecture. By processing temporal contexts across hierarchically varying patch sizes, ChaosNexus effectively captures long-range dependencies and preserves high-frequency fluctuations. To address heterogeneity across distinct systems, we integrate Mixture-of-Experts (MoE) layers into each ScaleFormer block and explicitly condition the final forecasts on a learned frequency fingerprint, providing the model with a global spectral view of the system. Extensive evaluations on over 9,000 synthetic systems demonstrate that ChaosNexus achieves superior fidelity in long-term attractor statistics while maintaining competitive point-wise accuracy. Furthermore, in real-world applications, it achieves a remarkable zero-shot mean error below 1°C for 5-day station-based weather forecasting. Codes are available at https://github.com/TomXaxaxa/ChaosNexus.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-09-26T02:59:12Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Chang Liu</name>
+    </author>
+    <author>
+      <name>Bohao Zhao</name>
+    </author>
+    <author>
+      <name>Jingtao Ding</name>
+    </author>
+    <author>
+      <name>Yong Li</name>
+    </author>
+  </entry>
+</feed>

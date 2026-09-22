@@ -1,0 +1,164 @@
+{
+  "repo_metadata": {
+    "citation": "turn46file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "README": {
+    "citation": "turn48file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "earthdelta/paired.py": {
+    "citation": "turn50file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "earthdelta/selection.py": {
+    "citation": "turn51file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "scripts/s0_gate.py": {
+    "citations": [
+      "turn52file0",
+      "turn53file0"
+    ],
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "earthdelta/bridge/stormer_bridge.py": {
+    "citations": [
+      "turn54file0",
+      "turn55file0"
+    ],
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "earthdelta/heads.py": {
+    "citations": [
+      "turn56file0",
+      "turn76file0"
+    ],
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "earthdelta/geometry.py": {
+    "citation": "turn57file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "earthdelta/probe.py": {
+    "citation": "turn58file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "earthdelta/teacher.py": {
+    "citation": "turn59file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "earthdelta/lowrank.py": {
+    "citation": "turn63file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "earthdelta/memory.py": {
+    "citation": "turn64file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "earthdelta/spectral.py": {
+    "citation": "turn65file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "research_spec_v6.yaml": {
+    "citation": "turn66file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "survey_D_response_prediction_dfl_sensitivity.md": {
+    "citation": "turn68file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "earthdelta/data/make_splits.py": {
+    "citation": "turn69file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "earthdelta/contracts.py": {
+    "citation": "turn70file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "reference/_manifest.json": {
+    "citation": "turn72file0",
+    "lines": [
+      2,
+      2
+    ]
+  },
+  "tests/test_bridge.py": {
+    "citations": [
+      "turn73file0",
+      "turn78file0"
+    ],
+    "lines": [
+      2,
+      2
+    ],
+    "scope": "selected ranges"
+  },
+  "earthdelta/data/pull_wb2.py": {
+    "citation": "turn75file0",
+    "lines": [
+      2,
+      2
+    ],
+    "scope": "first 210 source lines"
+  },
+  "upstream/stormer/inference.py": {
+    "citation": "turn77file0",
+    "lines": [
+      2,
+      2
+    ],
+    "scope": "source lines95-160"
+  }
+}

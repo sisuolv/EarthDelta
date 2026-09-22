@@ -1,0 +1,195 @@
+[
+  {
+    "id": "C01",
+    "priority": "P1",
+    "files": "earthdelta/static_adapter.py:906; earthdelta/static_adapter.py:954; earthdelta/static_adapter.py:990; earthdelta/static_adapter.py:1644; scripts/r2_fs_bank_train.py:334; scripts/r2_fs_bank_train.py:357",
+    "symbols": "FsFitRecord / fit_static_adapter / PostFreezeVerification.passed / stage_fs_fit",
+    "finding": "Fs 资格仅拒绝非有限 loss/梯度及零更新；同样本 8/8 退化以及冻结后固定面板 loss 变差不影响 eligible 或 post-freeze passed。两个 formal 作业各两份 Fs 退化；最新作业仍全部返回 PASS。配对逻辑和符号正确，冻结 Fs/F0 同面板比值 4.066871 与 1.070957 再次确认实际退化。数值合并一致性无法替代训练质量门。",
+    "evidence_status": "STATIC_CONFIRMED",
+    "minimal_action": "在 bank_fit 侧固定面板对共同初始/候选最终 checkpoint 复评，预先声明训练资格与回退规则；资格不通过必须阻止冻结发布和后继阶段。质量门必须与 merge-equivalence 分列。",
+    "closes_prior_finding": null,
+    "disposition": "NOT_CLOSED",
+    "origin": "本轮新增实现",
+    "gate_status": "FAIL_IMPLEMENTATION",
+    "blocks_current_stage4": true,
+    "evidence": [
+      "fs_fit_divergence_assessment.json",
+      "evidence/gpu_records_recomputed.json"
+    ]
+  },
+  {
+    "id": "C02",
+    "priority": "P1",
+    "files": "scripts/r2_fs_bank_train.py:304; scripts/r2_fs_bank_train.py:369; scripts/r2_fs_bank_train.py:475; scripts/r2_fs_bank_train.py:963",
+    "symbols": "stage_fs_fit / stage_fs_freeze / stage_bank_train / main",
+    "finding": "四个 --expert-index 进程各自执行 all 并独立拟合/冻结 Fs，专家分组仅用于之后的动态训练。三个作业均有四个不同 merged_backbone_digest；这些动态专家不在同一冻结参考上，不能直接组装成共同 Fs 上的 K=4 库。CLI 没有加载既有合格 Fs 的路径，错误消息中的 --fs-adapter 参数也未实现。仅删除两份退化 Fs 不会修复基线不一致。",
+    "evidence_status": "STATIC_CONFIRMED",
+    "minimal_action": "单独拟合/选择并冻结一份合格 Fs；实现显式加载及内容身份核验，所有专家在同一 Fs 上训练；组装时拒绝 Fs/norm/objective 身份不一致。重训或重新验证所有依赖专家。",
+    "closes_prior_finding": null,
+    "disposition": "NOT_CLOSED",
+    "origin": "本轮新增实现",
+    "gate_status": "FAIL_IMPLEMENTATION",
+    "blocks_current_stage4": true,
+    "evidence": [
+      "evidence/gpu_records_recomputed.json",
+      "evidence/artifact_crosschecks.json"
+    ]
+  },
+  {
+    "id": "C03",
+    "priority": "P1",
+    "files": "scripts/r2_fs_bank_train.py:541; scripts/r2_fs_bank_train.py:564; scripts/r2_fs_bank_train.py:573; scripts/r2_fs_bank_train.py:1012",
+    "symbols": "stage_bank_train / main",
+    "finding": "动态 bank 只在内存更新，stage_bank_train 落盘的是分组、registry 与训练记录 JSON，没有任何动态 LoRA state_dict 保存。实际最新作业每个专家目录有 fs_adapter.pt 和 fs_merged_backbone.pt，但没有训练后的动态 bank 权重。进程结束后，无法从这些产物复用已训练的专家；训练日志 PASS 不等于已交付可加载专家库。",
+    "evidence_status": "STATIC_CONFIRMED",
+    "minimal_action": "保存通过资格检查后的动态因子、expert/block 索引和配置，绑定共同 Fs/norm/objective/registry 内容摘要；实现独立进程加载并核对输出、非零响应和身份的 round-trip 验收。",
+    "closes_prior_finding": null,
+    "disposition": "NOT_CLOSED",
+    "origin": "本轮新增实现",
+    "gate_status": "FAIL_IMPLEMENTATION",
+    "blocks_current_stage4": true,
+    "evidence": [
+      "evidence/artifact_crosschecks.json"
+    ]
+  },
+  {
+    "id": "C04",
+    "priority": "P1",
+    "files": "earthdelta/static_adapter.py:1817; earthdelta/static_adapter.py:1832; earthdelta/static_adapter.py:1867; earthdelta/static_adapter.py:1881; earthdelta/static_adapter.py:1925; scripts/r2_admission_gate.py:154; scripts/r2_admission_gate.py:185; earthdelta/data/make_splits.py:980",
+    "symbols": "load_admitted_samples / load_admitted_sample / _admit / _verify_content / admit_real_sample",
+    "finding": "训练加载器只信行级 admitted 和四个字段，忽略外层 passed/formal/content 结果，不比对实际 normalization 身份或当前时间坐标与证书绝对时间。CPU 反例中 passed=False 的门记录仍加载成功；改写时间轴 +24h 或换 normalization hash 也被接受。formal 准入缺 grid stamp 时仍放行。真实训练记录有8个 admitted 行但仅2份抽样内容证书，行内证书均空；准入 lead=6h，而训练请求24h目标。这确认消费侧资格/内容/时间身份未闭合，不表示已证明现有天气数据损坏。",
+    "evidence_status": "STATIC_CONFIRMED",
+    "minimal_action": "正式消费要求可验证的整体 PASS 和覆盖所有实际输入/目标的证书；按绝对时间重新定位并校验 store 内容、norm/grid/channel 身份及请求 horizon，拒绝失败、陈旧、缺失或范围不足的记录。抽查证书只能支持抽查结论。",
+    "closes_prior_finding": "B08",
+    "disposition": "PARTIALLY_CLOSED",
+    "origin": "本轮新增实现",
+    "gate_status": "FAIL_IMPLEMENTATION",
+    "blocks_current_stage4": true,
+    "evidence": [
+      "evidence/independent_cpu_probes.json",
+      "evidence/artifact_crosschecks.json"
+    ],
+    "related_prior_findings": [
+      "B08",
+      "B09"
+    ]
+  },
+  {
+    "id": "C05",
+    "priority": "P1",
+    "files": "scripts/r2_fs_bank_train.py:584; scripts/r2_fs_bank_train.py:607; scripts/r2_fs_bank_train.py:963; earthdelta/bank_training.py:1332; earthdelta/bank_training.py:1353",
+    "symbols": "stage_profile / profile_training_step",
+    "finding": "all 在训练完成后将同一个动态 bank 交给 profiler；profiler 新建 Adam 并对调用者参数执行真实 optimizer.step，没有复制或恢复。独立 CPU 一步使参数变化约0.00991至0.00997。后续 horizon 使用的是额外更新后的参数，已记录的训练更新上限、资格和非零响应却对应更新前版本；profiling 样本还固定取全部数据的第一个，不保证属于该专家组。",
+    "evidence_status": "STATIC_CONFIRMED",
+    "minimal_action": "对独立副本 profiling，或在最终训练/资格检查之前测量；对测量前后 bank state 做内容一致性断言，发布/保存的一定是最后一次验收的同一版本。",
+    "closes_prior_finding": null,
+    "disposition": "NOT_CLOSED",
+    "origin": "本轮新增实现",
+    "gate_status": "FAIL_IMPLEMENTATION",
+    "blocks_current_stage4": true,
+    "evidence": [
+      "evidence/independent_cpu_probes.json"
+    ]
+  },
+  {
+    "id": "C06",
+    "priority": "P1",
+    "files": "scripts/r2_fs_bank_train.py:373; scripts/r2_fs_bank_train.py:440; scripts/r2_fs_bank_train.py:975; scripts/r2_fs_bank_train.py:992; scripts/r2_fs_bank_train.py:995",
+    "symbols": "stage_fs_freeze / main stage loop",
+    "finding": "阶段返回 False 或捕获异常后，main 继续所有依赖阶段；Fs 在核验前进入 ctx，核验失败也照样保存 checkpoint。CPU 注入 fs_fit=False 后五个 handler 全部调用；首个 formal 作业的 fs_freeze=False 后 bank_train 仍运行。最终 rc=1/总体 FAIL 是诚实的，但不构成后继执行门，诊断产物与合格发布缺少隔离。",
+    "evidence_status": "STATIC_CONFIRMED",
+    "minimal_action": "对阶段依赖显式 fail-closed：前置失败时将依赖阶段标为 BLOCKED/SKIPPED 并不执行；诊断文件单独标记不可消费，资格通过后再发布 Fs/专家权重。",
+    "closes_prior_finding": null,
+    "disposition": "NOT_CLOSED",
+    "origin": "本轮新增实现",
+    "gate_status": "FAIL_IMPLEMENTATION",
+    "blocks_current_stage4": true,
+    "evidence": [
+      "evidence/independent_cpu_probes.json",
+      "evidence/gpu_records_recomputed.json"
+    ]
+  },
+  {
+    "id": "C07",
+    "priority": "P1",
+    "files": "earthdelta/metrics_contract.py:148; earthdelta/metrics_contract.py:215; earthdelta/paired.py:70; earthdelta/paired.py:103",
+    "symbols": "_validate_weights / quadratic_gain / make_training_targets",
+    "finding": "weighted_mse 的负权重校验已修复，但 B05 原先指出的逐 feature 切片分母问题仍在：helper 只查全局 sum>0，quadratic_gain 又逐 F 除以切片和。合法广播形状的权重含一个全零切片时，有限 e/u 返回 NaN；独立反例得到 [[[[1.0],[nan]]]]。既有 paired/head 路径仍调用此函数。",
+    "evidence_status": "STATIC_CONFIRMED",
+    "minimal_action": "广播后按实际约简轴检查每个分母为正，或实施明确的零切片 mask 语义；添加包含全零 lead/区域切片的非均匀权重反例。",
+    "closes_prior_finding": "B05",
+    "disposition": "PARTIALLY_CLOSED",
+    "origin": "前轮 B05 未关闭残留，不是本轮新引入回归",
+    "gate_status": "FAIL_IMPLEMENTATION",
+    "blocks_current_stage4": false,
+    "evidence": [
+      "evidence/additional_cpu_probes.json"
+    ]
+  },
+  {
+    "id": "C08",
+    "priority": "P1",
+    "files": "earthdelta/heads.py:294; earthdelta/heads.py:351; earthdelta/heads.py:356; earthdelta/heads.py:359; earthdelta/paired.py:103; earthdelta/metrics_contract.py:793",
+    "symbols": "ComposedPredictionHead.forward / gain_calibrated / make_training_targets",
+    "finding": "新 full-objective 与 gain_analytic/gain_calibrated API 正确、校准默认关闭；但既有 head 未接入，仍无条件将 trainable calibration 加到唯一 gain 输出，paired 监督仍来自逐 F diagnostic reducer。因此只能关闭 B06 的新 native objective 子项，不能声称 head/selection 整条度量与校准合同已统一。heads.py/paired.py 未在本轮 diff 中修改，此项为延续性复核。",
+    "evidence_status": "STATIC_CONFIRMED",
+    "minimal_action": "在进入后续 head/selector 比较前，明确接入同一全目标 Q_eff，分开返回 analytic/calibrated gain 并默认关闭后者；以非均匀 lead/area 权重验证损失差、head 与系数目标的一致性。",
+    "closes_prior_finding": "B06",
+    "disposition": "PARTIALLY_CLOSED",
+    "origin": "前轮 B06 未关闭残留；新 Fs/bank 全目标路径不受此旧 head 问题影响",
+    "gate_status": "FAIL_IMPLEMENTATION",
+    "blocks_current_stage4": false,
+    "evidence": []
+  },
+  {
+    "id": "C09",
+    "priority": "P1",
+    "files": "earthdelta/registry.py:275; earthdelta/registry.py:301; earthdelta/registry.py:342; earthdelta/registry.py:487; earthdelta/registry.py:609; scripts/r2_fs_bank_train.py:492",
+    "symbols": "CandidateRegistry.__init__ / register / validate / build_bank_registry",
+    "finding": "registry 拒绝空表/复数，但没有正式身份校验模式：metadata 不解释，artifact_ref 可缺失，validate 不核验 normalization/Fs/专家权重身份。包含 normalization_hash=placeholder_1979_2018 的 pilot registry 在 CPU 探针中仍合法。占位 hash 拒绝仅位于 make_splits 的样本准入，不能归给 registry；当前训练在权重产生前建立 registry，最后也未绑定产出的动态权重。",
+    "evidence_status": "STATIC_CONFIRMED",
+    "minimal_action": "区分候选系数表与正式可消费 registry；正式冻结/装载边界强制真实 norm、共同 Fs、动态权重、objective 身份并拒绝 placeholder/缺件。可保留宽松构建阶段，但 assert_ready 的正式路径须完成这些校验。",
+    "closes_prior_finding": "B15",
+    "disposition": "PARTIALLY_CLOSED",
+    "origin": "本轮新增实现",
+    "gate_status": "FAIL_IMPLEMENTATION",
+    "blocks_current_stage4": true,
+    "evidence": [
+      "evidence/independent_cpu_probes.json"
+    ]
+  },
+  {
+    "id": "C10",
+    "priority": "P2",
+    "files": "earthdelta/bridge/stormer_bridge.py:756; earthdelta/bridge/stormer_bridge.py:904; earthdelta/bridge/stormer_bridge.py:1083",
+    "symbols": "WeatherStepBridge.forward_validation / _RolloutRegistry / controlled_rollout",
+    "finding": "按 model id 加锁能拒绝两个 controlled_rollout 的共享模型并发，普通 forward_validation 不参加 registry。CPU 双线程在受控调用挂钩期间执行普通 forward，输出偏移3.69549e-5并等于加编辑输出。当前真实脚本为串行且四GPU各用独立进程/模型，未发现该并发方式出现在现有生产调用图，故不是本次 Fs 退化原因或现有串行 Stage4 的阻断项。",
+    "evidence_status": "STATIC_CONFIRMED",
+    "minimal_action": "明确普通 forward 与 controlled_rollout 共享模型也必须串行；若暴露并发入口，令所有相关前向都参与同一模型级生命周期保护。不要将目前的拒绝器表述为全路径并发安全。",
+    "closes_prior_finding": "B12",
+    "disposition": "PARTIALLY_CLOSED",
+    "origin": "前轮 B12 部分修复后仍有支持边界残留",
+    "gate_status": "INCONCLUSIVE",
+    "blocks_current_stage4": false,
+    "evidence": [
+      "evidence/independent_cpu_probes.json"
+    ]
+  },
+  {
+    "id": "C11",
+    "priority": "P2",
+    "files": "earthdelta/selection.py:382; earthdelta/selection.py:385; earthdelta/selection.py:387",
+    "symbols": "select_from_registry",
+    "finding": "用固定 atol=1e-6 将选中系数反查到第一个 registry 行，会把相距很近的不同候选混淆。CPU 合法float32候选5e-7被 planner 选中（predicted_gain约1e-6），返回的 RegistrySelection 却是 reference、coefficients=(0,)；surrogate 中仍保留非零实际系数。当前 a0=.25 的五行 pilot 不触发，但新增公共入口的 plan_id 与动作对应合同不成立。",
+    "evidence_status": "STATIC_CONFIRMED",
+    "minimal_action": "规划器直接保留并返回选中行索引/plan_id；或在同一执行 dtype 精确匹配并拒绝不可区分候选，不使用允许 reference 吞并非零候选的绝对容差。",
+    "closes_prior_finding": "B15",
+    "disposition": "PARTIALLY_CLOSED",
+    "origin": "本轮新增实现",
+    "gate_status": "INCONCLUSIVE",
+    "blocks_current_stage4": false,
+    "evidence": [
+      "evidence/additional_cpu_probes.json"
+    ]
+  }
+]

@@ -1,0 +1,106 @@
+{
+  "status": "PASS",
+  "scope": "PACKAGE_ONLY_NOT_REPOSITORY_OR_WEATHER_VALIDATION",
+  "check_count": 19,
+  "checks": [
+    {
+      "name": "required_files_present",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "five_unique_tasks",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "uniform_task_fields",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "only_first_task_authorized",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "unexecuted_tasks",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dag_topologically_ordered",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "all_gates_have_scope_and_ci",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no_automatic_success_unlock",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "main_plan_has_same_tasks",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "all_commands_in_main_plan",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "markdown_fences_balanced",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "template_training_gpu_confirm_disabled",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "thresholds_not_invented",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "resource_caps_unfilled",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "all_B01_B15_mapped",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "valid_audit_priorities",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "head_vs_audit_distinguished",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "historical_cpu_result_not_claimed_as_rerun",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "sha256_inventory_and_content",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "repository_tests_executed": false,
+  "gpu_s0_executed": false,
+  "training_executed": false,
+  "remote_repository_modified": false
+}

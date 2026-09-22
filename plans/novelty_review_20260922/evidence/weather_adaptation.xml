@@ -1,0 +1,1082 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/gh2mSHeGBzg5vXCZOkbu1cLTjcU</id>
+  <title>arXiv Query: search_query=(all:"weather forecasting" OR all:"weather foundation") AND (all:adapter OR all:adaptation OR all:correction OR all:routing) AND submittedDate:"202501010000 TO 202609222359"&amp;id_list=&amp;start=0&amp;max_results=35</title>
+  <updated>2026-09-22T02:55:57Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(all:%22weather+forecasting%22+OR+all:%22weather+foundation%22)+AND+((all:adapter+OR+(all:adaptation+OR+(all:correction+OR+all:routing)))+AND+submittedDate:%22202501010000+TO+202609222359%22)&amp;start=0&amp;max_results=35&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>35</opensearch:itemsPerPage>
+  <opensearch:totalResults>105</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2609.18381v1</id>
+    <title>Every Fixed Metric Has a Blind Spot: A Learned Atmospheric Critic for Scoring Forecast Realism</title>
+    <updated>2026-09-16T09:36:15Z</updated>
+    <link href="https://arxiv.org/abs/2609.18381v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.18381v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Despite their high accuracy on point-wise metrics, machine learning weather forecasting models can exhibit different failure modes such as blurring, periodic irregularities, and other unphysical spatial artifacts. This has motivated a variety of metrics to detect known failure cases. Existing metrics fix a representation or transformation in advance, and that choice limits the artifacts they can detect. We propose to train a discriminator for separating reference data from the model's output, and using its output logit to obtain a divergence-like realism score. The discriminator learns whatever separates the model's fields from real weather, adapting to whichever failure mode that model exhibits. We compare our learned atmospheric critic to existing metrics using various synthetic corruptions applied to ERA5 reanalysis data. Our method successfully identifies the corruptions and ranks their severity, while existing metrics fail on at least one corruption. Additionally, we evaluate forecasts from real weather models, and find that the realism score degrades with longer lead times and the metric generally assigns higher realism to numerical models than to machine learning models.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-16T09:36:15Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Younes Elberkennou</name>
+    </author>
+    <author>
+      <name>Dmitri Demler</name>
+    </author>
+    <author>
+      <name>Thierry Meier</name>
+    </author>
+    <author>
+      <name>Luca Rispoli</name>
+    </author>
+    <author>
+      <name>Fanny Lehmann</name>
+    </author>
+    <author>
+      <name>Joel Oskarsson</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.17000v1</id>
+    <title>Combining Weather Forecast Aggregation and State-Space Models for Adaptive Probabilistic Electricity Load Forecasting</title>
+    <updated>2026-09-15T11:09:36Z</updated>
+    <link href="https://arxiv.org/abs/2609.17000v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.17000v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Accurate electricity load forecasting is essential to ensure the real-time balance between supply and demand, especially in systems increasingly influenced by weather conditions and renewable energy integration. In this paper, we propose an adaptive probabilistic forecasting framework that leverages multiple meteorological forecast providers to mitigate the impact of weather prediction errors on load forecasts. Our approach combines an adaptive generalized additive model (GAM) with a state-space formulation estimated via the Viking algorithm, enabling dynamic parameter updates over time. To improve uncertainty quantification, we extend the framework with a probabilistic layer based on GAM for location, scale and shape (GAMLSS), allowing the residual variance to depend on explanatory variables. We further introduce a short-term correction mechanism to enhance performance across different forecast horizons. A key contribution of this work is the aggregation of multiple meteorological inputs, whose diversity is shown to improve both point and probabilistic forecasts, particularly in capturing extreme quantiles by incorporating forecast dispersion. The methodology is evaluated on French national electricity consumption data and demonstrates consistent gains over single-provider approaches, with significant improvements in probabilistic forecasting accuracy.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-15T11:09:36Z</published>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Joseph de Vilmarest</name>
+      <arxiv:affiliation>R\&amp;D-RTE</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Jonathan Dumas</name>
+      <arxiv:affiliation>R\&amp;D-RTE</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Jean Thorey</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.24954v1</id>
+    <title>AFDBench: A Reasoning-First AI Scientist for NationalWeather Service Forecast Discussions</title>
+    <updated>2026-08-25T02:02:24Z</updated>
+    <link href="https://arxiv.org/abs/2608.24954v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.24954v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language models (LLMs) hallucinate numerical values when generating high-stakes meteorological text, posing risks for weather communication. We present AFDBench, an AI meteorologist that generates professional Area Forecast Discussions (AFDs) by reasoning through structured AI weather forecast data from Google's WeatherNext 2. We introduce AFDBench, the first benchmark for evaluating generative meteorological reasoning, comprising 7,732 expert written discussions from 13 National Weather Service (NWS) offices paired with real AI weather forecast inputs, and three complementary metrics: Met-Align (numerical accuracy), Style-Align (professional dialect adherence), and Input-Grounding (fidelity to source weather data). Zero-shot evaluations reveal that open-source LLMs achieve low Style-Align (~0.33) and moderate Input-Grounding (~0.88), failing to write in the professional NWS register or faithfully use their input data. We apply Group Relative Policy Optimization (GRPO) with domain-specific rewards targeting temperature accuracy, synoptic correctness, and format compliance. On 1,033 held-out samples from two unseen NWS offices, GRPO nearly doubles Style-Align from 0.318 to 0.619 and improves Input-Grounding from 0.881 to 0.940, demonstrating that reinforcement learning teaches a 7B-parameter model to write like a professional meteorologist and faithfully interpret AI weather data.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-25T02:02:24Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Manmeet Singh</name>
+    </author>
+    <author>
+      <name>Somnath Luitel</name>
+    </author>
+    <author>
+      <name>Prabhjot Singh</name>
+    </author>
+    <author>
+      <name>Manraaj Banga</name>
+    </author>
+    <author>
+      <name>Naveen Sudharsan</name>
+    </author>
+    <author>
+      <name>Josh Durkee</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.21652v1</id>
+    <title>GeoQ: Geometry-Aware Conditional Quantile Error Estimation for Scientific Surrogate Models</title>
+    <updated>2026-08-21T21:47:16Z</updated>
+    <link href="https://arxiv.org/abs/2608.21652v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.21652v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Neural-network surrogate models are increasingly used to accelerate scientific simulations, but their deployment in extrapolative and autoregressive settings requires input-dependent estimates of prediction error. In this work, we introduce GeoQ (Geometry-Aware Conditional Quantile Error Estimation), a non-intrusive calibration framework for estimating surrogate error at individual query points. GeoQ represents the error at a query point as an anchor-averaged calibration error plus a learned nonnegative correction. This correction is modeled as an upper conditional quantile of the anchor-relative error increment, using geometry-based features that encode representation-space displacement and local support density. A cross-fitting procedure generates approximately out-of-sample calibration tuples, while a feature-space k-nearest-neighbor support score identifies regions \textcolor{black}{where the learned error model is supported by calibration data}. We evaluate GeoQ on scalar regression, chaotic dynamics, medium-range weather forecasting, and Richtmyer-Meshkov instability prediction. The results demonstrate that geometry-aware conditional quantile modeling provides a practical and non-intrusive approach for validity-aware error estimation in scientific surrogate models.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-21T21:47:16Z</published>
+    <arxiv:comment>25 pages, 6 figures, 5 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Khoa Nguyen</name>
+    </author>
+    <author>
+      <name>Daniel Serino</name>
+    </author>
+    <author>
+      <name>Aviral Prakash</name>
+    </author>
+    <author>
+      <name>Marc Klasky</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.22123v1</id>
+    <title>StationPDE: Station-Oriented Surface PDE Learning for Multi-Station Multivariate Weather Forecasting</title>
+    <updated>2026-08-20T05:16:47Z</updated>
+    <link href="https://arxiv.org/abs/2609.22123v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.22123v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multi-station multivariate weather forecasting aims to forecast future weather variables at multiple weather stations from historical surface observations. Existing station forecasting models learn statistical dependencies among discrete stations, but lack explicit physical evolution. Meanwhile, PDE-based weather models provide interpretable physical dynamics, yet require continuous fields and upper-air variables unavailable in surface station data. To bridge this gap, we propose StationPDE, a station-oriented surface PDE learning model. StationPDE constructs a terrain-aware continuous surface field from discrete station observations and decomposes its physical evolution into surface wind transport and upper-air inference. Surface wind transport explicitly evolves observable weather variables, while upper-air inference uses learnable horizontal diffusion to approximate the missing influence of unavailable upper-air variables. A parallel data-driven diffusion branch captures complementary motion patterns, and an adaptive router integrates the two forecasts for station-level multivariate forecasting. Experiments on Weather2K and MeteoNet show that StationPDE consistently outperforms state-of-the-art baselines, reducing MSE by about $9.6\%$ on average compared with the strongest baseline. Code and implementation details are available at https://github.com/hnu-vis/StationPDE.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-20T05:16:47Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Xiao Wang</name>
+    </author>
+    <author>
+      <name>Changjian Chen</name>
+    </author>
+    <author>
+      <name>Rongwen Li</name>
+    </author>
+    <author>
+      <name>Hongwu Liu</name>
+    </author>
+    <author>
+      <name>Kun Fang</name>
+    </author>
+    <author>
+      <name>Zhuo Tang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.09286v1</id>
+    <title>VeinCast: Physics-Guided Dynamic Field Graphs with Graph-Conditioned Fusion for Global Medium-Range Weather Forecasting</title>
+    <updated>2026-08-10T08:39:52Z</updated>
+    <link href="https://arxiv.org/abs/2608.09286v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.09286v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Global medium-range weather forecasting requires modeling structured yet state-dependent interactions among heterogeneous atmospheric fields. Existing data-driven models largely learn these interactions implicitly, whereas equation-level physical constraints may inherit approximation and model-form biases. We present VeinCast, a physics-guided dynamic field graph and graph-conditioned fusion framework that jointly forecasts 69 surface and upper-air fields. Within each local window, its Physics-Guided Dynamic Field Graph combines predefined atmospheric relations with state-dependent Top-K residual edges and adapts Earth-window attention using the resulting graph context. Graph-Conditioned Latent Fusion further employs graph context and source-node centrality to guide field-to-latent aggregation, while bounded feedback preserves field-specific information. On the $1.5^\circ$ ERA5 benchmark, VeinCast demonstrates competitive forecasting performance across all 69 meteorological fields at lead times of up to 14 days, compared with representative global weather forecasting models including FuXi, Pangu-Weather, GraphCast, FengWu, and ARROW. Ablations confirm that the two modules provide complementary gains, demonstrating the effectiveness of relational-level physical guidance for data-driven weather forecasting.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-10T08:39:52Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Zhisheng Chen</name>
+    </author>
+    <author>
+      <name>Jinhan Li</name>
+    </author>
+    <author>
+      <name>Yuxuan Li</name>
+    </author>
+    <author>
+      <name>Yuan Gao</name>
+    </author>
+    <author>
+      <name>Hao Wu</name>
+    </author>
+    <author>
+      <name>Zheng Lu</name>
+    </author>
+    <author>
+      <name>Jinlong Du</name>
+    </author>
+    <author>
+      <name>Kun Wang</name>
+    </author>
+    <author>
+      <name>Bo An</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.05054v1</id>
+    <title>MarsCast: Transfer Learning of AI Weather Foundation Models to Planetary Atmospheres</title>
+    <updated>2026-08-05T17:03:13Z</updated>
+    <link href="https://arxiv.org/abs/2608.05054v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.05054v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We investigate the transferability of Earth weather foundation models to planetary atmospheres by adapting the GraphCast graph neural weather forecasting model to Mars. While GraphCast achieves state-of-the-art performance for terrestrial forecasting, its applicability to non-Earth environments remains unexplored. Using the Mars Climate Database (MCD), which provides global atmospheric fields across vertical altitude levels (similar to Earth pressure levels), we evaluate zero-shot and fine-tuned GraphCast predictions of Martian temperature and wind fields. Zero-shot forecasts produce a surprisingly accurate depiction of current conditions but fail to reproduce diurnal variability and rapidly decay toward climatological mean states. To address this limitation, we fine-tune GraphCast using MCD variables and top-of-atmosphere solar radiation forcing while holding humidity constant. Fine-tuning enables rapid learning of Martian thermal variability. Within as few as 10 training epochs, the model begins to capture the diurnal cycle and forecasts up to 10 days reproduce seasonal and vertical temperature structure. Prediction quality improves with training sample size and exhibits sensitivity to seasonal initialization. These results demonstrate that Earth-trained AI weather models can be adapted to simulate Martian atmospheric dynamics, providing a pathway toward rapid planetary weather prediction to support mission operations, dust storm risk mitigation, and future human exploration.</summary>
+    <category term="astro-ph.EP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-05T17:03:13Z</published>
+    <arxiv:primary_category term="astro-ph.EP"/>
+    <author>
+      <name>M. L. Carroll</name>
+    </author>
+    <author>
+      <name>J. Li</name>
+    </author>
+    <author>
+      <name>S. D. Guzewich</name>
+    </author>
+    <author>
+      <name>G. Villanueva</name>
+    </author>
+    <author>
+      <name>J. A. Caraballo-Vega</name>
+    </author>
+    <author>
+      <name>M. J. Frost</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.09959v2</id>
+    <title>AIFS-TC: A simple correction competitive with the operational frontier for tropical cyclone intensity forecasting</title>
+    <updated>2026-08-13T10:42:59Z</updated>
+    <link href="https://arxiv.org/abs/2608.09959v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.09959v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>AI weather models are in the process of revolutionising weather forecasting. While these models have been shown to achieve superior performance to physics-based NWP in forecasting tropical cyclone (TC) tracks, they tend to dramatically underestimate intensity. Here we present AIFS-TC, a simple correction to the AIFS-Single model that is competitive with the operational state-of-the-art for forecasting maximum wind speed and minimum central pressure at lead times of 12 h to seven days. This performance also holds for rapid intensification events. Notably, the entire system was autonomously designed and built by a large language model (Claude Fable 5) in a few hours, directed through a small number of natural-language prompts by a single domain scientist. That the operational frontier can be reached with an open-source AI forecast model (AIFS-Single) and relatively simple, cheap post-processing is significant for TC science, and points to agentic coding as a route to rapid exploration and progress in life-saving early-warning systems in other domains.</summary>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-24T11:03:53Z</published>
+    <arxiv:comment>6 pages, 5 figures, 2 tables</arxiv:comment>
+    <arxiv:primary_category term="physics.ao-ph"/>
+    <author>
+      <name>Anna Allen</name>
+    </author>
+    <author>
+      <name>Wessel P. Bruinsma</name>
+    </author>
+    <author>
+      <name>Michael Maier-Gerber</name>
+    </author>
+    <author>
+      <name>Harrison Cook</name>
+    </author>
+    <author>
+      <name>Matthew Chantry</name>
+    </author>
+    <author>
+      <name>Richard E. Turner</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.11222v2</id>
+    <title>Bayesian Quantile-Based Correction and Synthesis of Hydrologic Products</title>
+    <updated>2026-08-15T04:31:31Z</updated>
+    <link href="https://arxiv.org/abs/2608.11222v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.11222v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>River-flow forecasting requires predictive distributions that remain informative in both routine and extreme conditions. We develop a Bayesian quantile-based correction-and-synthesis framework built on Dynamic Quantile Linear Models (DQLMs). The framework links U.S. Geological Survey (USGS) observations, retrospective products, and ensemble forecast products through a shared latent quantile process, learns dynamic discrepancies for each external source, and combines quantile-specific posterior predictions into a single predictive distribution. We also adapt variational Bayes inference to the extended dynamic quantile linear model using Laplace--Delta approximations for non-conjugate parameters. The methodology is illustrated using daily flow for the San Lorenzo River together with products from the European Centre for Medium-Range Weather Forecasts (ECMWF) Global Flood Awareness System (GloFAS) and the National Oceanic and Atmospheric Administration (NOAA) National Weather Service (NWS), with emphasis on medium-range forecasting and uncertainty quantification across multiple quantile levels.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-22T22:17:25Z</published>
+    <arxiv:comment>29 pages, 13 figures, 8 tables</arxiv:comment>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Antonio De Leon</name>
+    </author>
+    <author>
+      <name>Raquel Prado</name>
+    </author>
+    <author>
+      <name>Bruno Sansó</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.20716v1</id>
+    <title>Spatial Generalization Tests for Machine Learning-based Weather Models to Assess Physical Consistency</title>
+    <updated>2026-07-22T20:32:48Z</updated>
+    <link href="https://arxiv.org/abs/2607.20716v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.20716v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Machine learning-based weather prediction is revolutionizing weather forecasting by learning from weather data in present-day climate. However, generalization to other climates remains a major challenge. With melting sea ice, land-use change, and increasing ocean temperatures, boundary conditions are changing. Therefore, generalization in time depends on generalization in space. Here, we present three test cases to evaluate whether machine learning-based weather and climate models generalize in space and apply them to GraphCast and NeuralGCM. We reverse or rotate the planet in longitude or latitude under the model's coordinate system and adapt all boundary conditions and forcings accordingly. Physics-based general circulation models simulate a rotated/reversed planet with only rounding errors, but GraphCast and NeuralGCM fail these tests. The analyses furthermore revealed unphysical variable mappings based on correlation rather than causation. We argue that machine learning-based climate models should be designed to pass generalization tests to prevent overfitting on present-day regional climate.</summary>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-22T20:32:48Z</published>
+    <arxiv:comment>23 pages (double-spaced), 7 figures in the main text; 14 pages, 4 figures in supplementary material</arxiv:comment>
+    <arxiv:primary_category term="physics.ao-ph"/>
+    <author>
+      <name>Maren Höver</name>
+    </author>
+    <author>
+      <name>Milan Klöwer</name>
+    </author>
+    <author>
+      <name>Christian Schroeder de Witt</name>
+    </author>
+    <author>
+      <name>Hannah M. Christensen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.20557v1</id>
+    <title>Monkey King Bang: A Unified Scientific Multimodal Foundation Model</title>
+    <updated>2026-07-17T13:56:50Z</updated>
+    <link href="https://arxiv.org/abs/2607.20557v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.20557v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Scientific discovery is increasingly shifting from isolated disciplines to multi-domain reasoning, and AI for science faces a similar transition. Existing systems are either specialised for individual domains or unify scientific data mainly through text tokenisation and prompt-based interfaces, limiting their ability to handle diverse scientific inputs, produce modality-native outputs, and support joint understanding, reasoning, and generation across scientific domains. We introduce MKB, a unified scientific multimodal model for both understanding and generation, built around a shared Transformer backbone and modality-tailored encoders, adapters, and decoders. MKB covers six scientific branches, including DNA, RNA, proteins, small molecules, earth science, and medical images, and supports native outputs such as biological sequences, molecular strings, meteorological fields, and segmentation masks. Training follows a two-stage modality-then-language curriculum: Stage 1 aligns modality-specific components with the frozen backbone, and Stage 2 consolidates them with the language backbone using mixed scientific and general corpora. Experiments show that MKB achieves competitive scientific understanding across biological and molecular benchmarks, produces high-fidelity native outputs for weather forecasting, biological generation, and medical-image segmentation, and largely retains the general capabilities of its Qwen3-VL backbone. These results demonstrate the feasibility of the proposed paradigm, suggesting that shared-backbone models with modality-tailored components can provide a promising foundation for future cross-domain scientific multimodal exploration. The model and code are publicly available at https://github.com/Shanghai-Academy-of-AI-For-Science/MKB and https://huggingface.co/sais-org/MKB.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-17T13:56:50Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Hesen Chen</name>
+    </author>
+    <author>
+      <name>Xinyu Su</name>
+    </author>
+    <author>
+      <name>Xiaomeng Yang</name>
+    </author>
+    <author>
+      <name>Yuetan Lin</name>
+    </author>
+    <author>
+      <name>Zixiong Yang</name>
+    </author>
+    <author>
+      <name>Junyi An</name>
+    </author>
+    <author>
+      <name>Fenglei Cao</name>
+    </author>
+    <author>
+      <name>Yifeng Jiao</name>
+    </author>
+    <author>
+      <name>Yunqi Zhang</name>
+    </author>
+    <author>
+      <name>Yuan Cheng</name>
+    </author>
+    <author>
+      <name>Zhiyu Tan</name>
+    </author>
+    <author>
+      <name>Hao Li</name>
+    </author>
+    <author>
+      <name>Libo Wu</name>
+    </author>
+    <author>
+      <name>Yuan Qi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.09948v1</id>
+    <title>An adaptive and evolvable deep reinforcement learning framework for weather prediction</title>
+    <updated>2026-07-07T09:21:23Z</updated>
+    <link href="https://arxiv.org/abs/2608.09948v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.09948v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>No single AI weather model excels at all variables, pressure levels, and lead times. Rather than building yet another architecture, we reframe the forecasting problem as one of coordination. Here we present Feitian Adaptive Ensemble Weather (FTAE-Weather), a lightweight framework that learns, through deep reinforcement learning, when and where to trust each member of an open pool of pretrained forecasters. A tactical Weight-Agent reads the current atmospheric state and assigns variable- and horizon-specific fusion weights, while a strategic Evolve-Agent periodically prunes underperforming models and absorbs newly released ones. Asynchronous prediction caching keeps training cost independent of the slowest constituent model. Adding fewer than 0.01 percent extra parameters, FTAE-Weather reduces RMSE by from 17.2 percent to 78.3 percent over the best individual model in 10 atmospheric variables and outperforms conventional ensemble baselines across lead times from 72 to 360 hours. The framework thus converts a growing, fragmented inventory of specialist models into a single prediction system that strengthens as the field of AI weather forecasting releases new architectures-turning model diversity from a coordination challenge into a compounding scientific advantage.</summary>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-07T09:21:23Z</published>
+    <arxiv:primary_category term="physics.ao-ph"/>
+    <author>
+      <name>Qiang Wu</name>
+    </author>
+    <author>
+      <name>Han Li</name>
+    </author>
+    <author>
+      <name>Jianping Huang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.05655v1</id>
+    <title>GeoXplain: On-the-Fly Visual Explanations for Weather Foundation Models</title>
+    <updated>2026-07-06T21:51:46Z</updated>
+    <link href="https://arxiv.org/abs/2607.05655v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.05655v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Weather and climate foundation models produce high-dimensional forecasts whose learned relationships are difficult to inspect with static plots alone. GeoXplain is an interactive Python-based visualization toolkit for exploring geospatial attribution maps across climate variables, atmospheric pressure levels, and forecast time. The toolkit accepts attribution bundles containing attribution grids together with corresponding metadata and renders them in a notebook widget or browser with map and globe modes, linked timelines, pressure-level controls, target annotations, and optional physical-field overlays. We frame GeoXplain as a model-agnostic earth-system visualization toolkit and present the GeoXplain Aurora Adapter as its first computation backend. The adapter computes explanations for the Aurora foundation model, either in a local GPU process, through a GPU listener, or through a SLURM-backed listener, while preserving the same Python call site for analysts. It currently supports gradient saliency, Integrated Gradients, RISE, ViT-CX, multi-frame saliency and Integrated Gradients rollouts, and retrieval of ERA5 overlays. GeoXplain can be installed as a PyPI package with pip install geoxplain. The code is open-source and available at https://github.com/clemenskoprolin/geoxplain.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-06T21:51:46Z</published>
+    <arxiv:comment>9 pages, 6 figures. Submitted to VISxClimate at IEEE VIS 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Clemens Walter Koprolin</name>
+    </author>
+    <author>
+      <name>Leonardo Trentini</name>
+    </author>
+    <author>
+      <name>Benedikt Soja</name>
+    </author>
+    <author>
+      <name>Mennatallah El-Assady</name>
+    </author>
+    <author>
+      <name>Christina Humer</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.03279v1</id>
+    <title>From Global to Local: Efficient Regional Weather Downscaling with Global Weather Foundation Model</title>
+    <updated>2026-07-03T12:49:06Z</updated>
+    <link href="https://arxiv.org/abs/2607.03279v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.03279v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Accurate regional weather prediction requires resolving fine-scale structure while remaining consistent with global dynamics. Traditional limited area models rely on computationally expensive simulations, while many learning-based approaches frame the problem as super-resolution, overlooking statistical and physical mismatches across scales. We propose a foundation-model-driven downscaling framework that learns regional refinements of global forecasts by augmenting a pretrained weather model backbone with lightweight, multi-scale prediction heads operating directly in its latent space. Despite being trained on substantially coarser inputs, the pretrained backbone supports regional adaptation at resolutions corresponding to a two-order-of-magnitude increase in grid-cell resolution, without the need for retraining. The proposed approach uses regional numerical simulations as training targets and is evaluated not only against gridded datasets but also against ground-based weather station observations, enabling analysis of systematic biases between global reanalysis, regional simulations, and in-situ weather station observations. Our experiments show improved accuracy in comparison to NWP on most of the metrics at the fraction of computational cost. Moreover, we observe that building on a latent space of globally pre-trained weather foundation model offers better downscaling capabilities than the standard image-based super-resolution approaches.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-03T12:49:06Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Wiktor Kamzela</name>
+    </author>
+    <author>
+      <name>Jakub Kubiak</name>
+    </author>
+    <author>
+      <name>Adam Dobosz</name>
+    </author>
+    <author>
+      <name>Jędrzej Miczke</name>
+    </author>
+    <author>
+      <name>Anatol Kaczmarek</name>
+    </author>
+    <author>
+      <name>Piotr Wyrwiński</name>
+    </author>
+    <author>
+      <name>Wojciech Stefaniak</name>
+    </author>
+    <author>
+      <name>Wojciech Kotłowski</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.02829v1</id>
+    <title>Less Tokens, Better Forecasts: Sparse Residual Routing for Efficient Weather Prediction</title>
+    <updated>2026-07-02T23:43:01Z</updated>
+    <link href="https://arxiv.org/abs/2607.02829v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.02829v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Existing ViT-based weather forecasting models apply uniform computation across all spatial tokens, even though nearby atmospheric grid points often contain similar values and large regions evolve smoothly over time. This makes much of the intermediate per-token computation redundant. Standard token-efficiency methods, such as pruning or merging, reduce cost by removing or fusing tokens. However, weather forecasting is a spatiotemporal dense prediction problem in which a history of atmospheric states must be mapped to future values on the original latitude-longitude grid. Thus, every grid cell must retain a physically meaningful representation, especially under autoregressive rollout. We introduce Sparse-Reslim, a parameter-free plug-in routing module that makes sparse token processing compatible with this fixed-grid requirement. Sparse-Reslim routes only 25% of spatial tokens through the expensive middle transformer blocks and treats those blocks as residual updates: it computes the change produced for the routed tokens and scatters only this delta back to the full sequence. Unselected tokens keep their pre-routing representations exactly, so no grid cell is dropped or replaced by a mask token, and no fusion layer or additional parameters are introduced. Across ERA5 resolutions up to the operational 0.25\textdegree{} standard and two model families, a deterministic Transformer and a diffusion model, Sparse-Reslim improves forecast accuracy on every evaluated variable while substantially reducing cost: training is about 2.5x faster in the main settings and reaches 3.18x speedup at 0.25\textdegree{}, with over 2.2x lower peak memory. A controlled decomposition shows that the accuracy gain comes primarily from sparse routing itself, while random token selection provides an additional regularization benefit without selector overhead.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-02T23:43:01Z</published>
+    <arxiv:comment>ECCV 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Janet Wang</name>
+    </author>
+    <author>
+      <name>Yunbei Zhang</name>
+    </author>
+    <author>
+      <name>Lin Zhao</name>
+    </author>
+    <author>
+      <name>Xi Xiao</name>
+    </author>
+    <author>
+      <name>Jihun Hamm</name>
+    </author>
+    <author>
+      <name>Xiao Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.30414v1</id>
+    <title>Diffusion Fine-tuning with Rewarded Moment Matching Distillation</title>
+    <updated>2026-06-29T15:00:56Z</updated>
+    <link href="https://arxiv.org/abs/2606.30414v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.30414v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Distillation and Reinforcement Learning (RL) fine-tuning are the primary pillars of diffusion post-training. While traditionally studied in isolation, the interaction between these phases remains poorly understood, and in particular how fine-tuning impacts the generative quality of distilled models. We introduce Rewarded Moment Matching Distillation (RMMD), a novel framework that simultaneously distills diffusion models and maximizes a reward function. RMMD preserves the high-fidelity ``naturalness'' characteristic of advanced distillation (such as 8-step Moment Matching) by adapting the sampling loop for on-policy training and repurposing the distillation loss as a proxy for integral KL regularization. By evaluating the FID-Reward Pareto fronts on ImageNet, we demonstrate that RMMD achieves superior trade-offs compared to single-step baselines (DI++) and multi-step competitors (DRaFT, HyperNoise). Finally, we apply RMMD to GenCast, a state-of-the-art weather forecasting model, to distill it while optimizing the Continuous Ranked Probability Score (CRPS) metric. The resulting distilled model achieves a 7.5x speedup while outperforming the teacher model on 93% of target weather variables, and being better calibrated. This proves that RMMD scales to complex, high-dimensional scientific domains.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-29T15:00:56Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Alexis Jacq</name>
+    </author>
+    <author>
+      <name>Guillaume Couairon</name>
+    </author>
+    <author>
+      <name>Valentin De Bortoli</name>
+    </author>
+    <author>
+      <name>Quentin Berthet</name>
+    </author>
+    <author>
+      <name>Arnaud Doucet</name>
+    </author>
+    <author>
+      <name>Romuald Elie</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.25076v1</id>
+    <title>Machine learning is revolutionizing weather forecasting -- the next step is a change in how we work</title>
+    <updated>2026-06-23T18:33:33Z</updated>
+    <link href="https://arxiv.org/abs/2606.25076v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.25076v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Following the success of machine learning in producing weather predictions with competitive skill compared to complex traditional systems, this article shifts attention from forecast output to the working practices that make prediction systems possible. We argue that machine learning and recent digital technologies will reshape the forecasting value chain: how models are coded and developed, how observations and Earth-system data are exploited, how data and computing are managed, how systems are verified, and how information is created, evaluated and turned into services. We discuss six non-exhaustive areas in which agentic software engineering, open and compressed data, shared verification workflows, interactive computing and generative methods may make modelling, evaluation and service creation faster, more interactive and more widely accessible. These changes will require weather and climate centres to adapt their infrastructures, data stewardship, trust and quality-assurance frameworks, skills and service delivery while maintaining scientific understanding, operational reliability, human expertise and their public-service role.</summary>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-23T18:33:33Z</published>
+    <arxiv:primary_category term="physics.ao-ph"/>
+    <author>
+      <name>Peter Dueben</name>
+    </author>
+    <author>
+      <name>Peter Bauer</name>
+    </author>
+    <author>
+      <name>Oliver Fuhrer</name>
+    </author>
+    <author>
+      <name>Nikolay Koldunov</name>
+    </author>
+    <author>
+      <name>Jørn Kristiansen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.17659v1</id>
+    <title>Physics-Constrained Neural Networks for Improved Short-Term Weather Forecasting: A Case Study over the South Pacific</title>
+    <updated>2026-06-16T08:18:48Z</updated>
+    <link href="https://arxiv.org/abs/2606.17659v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.17659v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This study introduces enhancements to physics-constrained neural networks (PCNNs) that improve the accuracy and stability of hybrid short-term weather forecasting models. Building on the WeatherGFT architecture, three innovations are proposed. First, an upgraded numerical solver, combining a fifth-order weighted essentially non-oscillatory scheme (WENO-5), a beta-plane approximation, and subgrid-scale viscosity, permits a fourfold increase in the integration time step to 1200 s while reducing the daily mean squared error by up to 26%. Second, a unified autoregressive hybrid block replaces the original chain of 24 specialised modules, eliminating overfitting to specific lead times. Third, the physical core is integrated with two state-of-the-art neural backbones, resulting in PI-PredFormer and PI-IAM4VP. Evaluation on the WeatherBench South Pacific subset from 2000 to 2004 shows that these hybrids reduce root mean squared error at 1-12 h lead times by 8-22% compared to purely neural counterparts, while better preserving physical consistency. These results demonstrate that incremental refinement of hybrid components offers a practical route toward more accurate and efficient short-range weather forecasting.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-16T08:18:48Z</published>
+    <arxiv:comment>Presented at ICLR 2026 Workshop AI and PDE</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Egor Bugaev</name>
+    </author>
+    <author>
+      <name>Fedor Buzaev</name>
+    </author>
+    <author>
+      <name>Dmitry Efremenko</name>
+    </author>
+    <author>
+      <name>Denis Derkach</name>
+    </author>
+    <author>
+      <name>Fedor Ratnikov</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.14134v1</id>
+    <title>Source Surface Height Optimisation for Improved Solar Wind Velocity Forecasting Across Solar Cycles 23, 24 and 25</title>
+    <updated>2026-06-12T05:46:11Z</updated>
+    <link href="https://arxiv.org/abs/2606.14134v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.14134v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The potential field source surface (PFSS) model is a cornerstone of many state-of-the-art space weather forecasting frameworks. It includes a single physical free parameter, the source surface (SS) height. Traditionally, a fixed SS height of 2.5 solar radii has been adopted in most studies. However, several studies have investigated the SS height in the PFSS model using various datasets and temporal intervals. Earlier efforts primarily aimed to improve estimates of the heliospheric open magnetic flux. Our recent study Kumar et al. (2025), showed that optimising the SS height substantially improves the performance of the Wang Sheeley Arge (WSA) solar wind speed prediction model at L1. That analysis employed two types of GONG synoptic magnetic field maps, namely standard (STD) and zero-point-corrected (ZPC) maps, over selected periods of solar cycles (SCs) 24 and 25. In this study, we perform a comprehensive investigation of SCs 23 to 25 using synoptic magnetic field maps derived from ground-based (GONG) and space-based (SDO/HMI) observatories. Our results demonstrate that optimising the SS height in the PFSS model significantly improves the WSA model performance compared to the commonly adopted fixed SS height. We find that during solar minimum, higher SS heights (less than or equal to 2.5 solar radii) yield better solar wind speed predictions at L1, whereas during active phases the opposite trend is observed. Although the absolute optimised SS height varies across SCs, the overall distribution pattern remains similar. These finding suggests a relationship between SS height and SC phase over long time scales. Overall, the SS height optimisation enhances the background solar wind speed prediction models in the heliosphere.</summary>
+    <category term="astro-ph.SR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-12T05:46:11Z</published>
+    <arxiv:comment>Accepted for publication in Astrophysical Journal</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.SR"/>
+    <author>
+      <name>Sandeep Kumar</name>
+      <arxiv:affiliation>Udaipur Solar Observatory, Physical Research Laboratory, Udaipur, 313001, India</arxiv:affiliation>
+      <arxiv:affiliation>Discipline of Physics, Indian Institute of Technology Gandhinagar, Palaj, Gandhinagar-382 355, Gujarat, India</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Nandita Srivastava</name>
+      <arxiv:affiliation>Udaipur Solar Observatory, Physical Research Laboratory, Udaipur, 313001, India</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Dana-Camelia Talpeanu</name>
+      <arxiv:affiliation>Solar-Terrestrial Centre of Excellence SIDC, Royal Observatory of Belgium, 1180 Brussels, Belgium</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.13422v4</id>
+    <title>Practical Quantum Advantage before Fault Tolerance via Quantum-Informed Machine Learning</title>
+    <updated>2026-07-28T14:03:23Z</updated>
+    <link href="https://arxiv.org/abs/2606.13422v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.13422v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Early quantum devices can deliver a practical advantage before fault tolerance. The role we identify is a statistical module within a classical scientific workflow: a compressed memory with a collective two-copy readout, evaluated against a verifiable definition of practical quantum advantage. We develop this mechanism in quantum-informed machine learning for chaotic dynamical systems. A family of $k$-indexed higher-order quantum statistical priors (Q-Priors) hosts the $k$-point marginal of the invariant measure on $n_q = kq$ qubits. We prove a two-stage advantage. In the representation stage, superposition and entanglement compactly store non-factorisable spatial correlations of the invariant measure on $n_q$ qubits. In the extraction stage, joint Bell measurements estimate any \emph{post hoc} Pauli functional with a copy-pair count independent of $n_q$, whereas any adaptive single-copy protocol for the corresponding full-Pauli read-out requires $Ω(2^{n_q})$ copies; this is a provable quantum-classical separation in copy-measurement complexity. The two-copy read-out is realised in simulation and on superconducting processors. Two case studies instantiate the mechanism in workflows of scientific value. In a turbulent channel-flow study, the readout yields the velocity-direction coherence as a named non-diagonal correlator, and the $k = 2$ Q-Prior recovers invariant-measure statistics that the unregularised baseline loses. In a medium-range weather forecasting workflow on the ECMWF ERA5 reanalysis, the diagonal $k \leq 2$ Q-Prior steers a Koopman rollout, improves anomaly correlation skill and stabilises long-horizon rollouts against collapse onto a static mean field. Together, the mechanism and these two case studies satisfy our practical-advantage definition, identifying a candidate route to practical quantum advantage before fault-tolerant hardware.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.flu-dyn" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-11T14:52:38Z</published>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Maida Wang</name>
+    </author>
+    <author>
+      <name>Xiao Xue</name>
+    </author>
+    <author>
+      <name>Minh Chung</name>
+    </author>
+    <author>
+      <name>Peter V. Coveney</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.02886v2</id>
+    <title>Scalable Uncertainty Quantification for Extreme Weather Forecasting via Empirical Neural Tangent Kernels</title>
+    <updated>2026-06-03T03:56:35Z</updated>
+    <link href="https://arxiv.org/abs/2606.02886v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.02886v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deep learning weather models now match numerical weather prediction accuracy while running orders of magnitude faster, but produce deterministic forecasts without uncertainty estimates, a critical gap for high-stakes decisions during extreme weather events. This paper proposes Neural Tangent Kernel-based uncertainty quantification (NTK-UQ) using last-layer empirical features. Theoretical analysis predicts that UQ quality is architecture-dependent through two mechanisms. First, a variance collapse mechanism explains when UQ fails: when the eigenvalue truncation rank approaches the effective rank of the feature space, the GP correction term consumes nearly all prior variance, destroying discrimination between tropical cyclones and routine conditions; architectures with concentrated spectra (spectral operators) require aggressive truncation ($k \leq 10$), while attention-based models tolerate full-rank computation. Second, decomposition performance depends on the non-Gaussian, heavy-tailed structure of extreme weather: Independent Component Analysis exploits higher-order statistics (kurtosis, negentropy) to isolate heavy-tailed extreme-event features, achieving higher discrimination than singular value decomposition, which captures only second-order variance. A data-driven selection rule chooses ICA or SVD from the feature eigenspectrum concentration ratio, correctly prescribing the superior decomposition for all four evaluated architectures. Compared to split conformal prediction (the natural post-hoc baseline), NTK-UQ achieves 31--37\% sharper prediction intervals at 90\% coverage, and uniquely produces \emph{adaptive} intervals that scale with extreme event severity, which conformal prediction cannot achieve by construction. The framework requires no retraining; inference-time uncertainty requires only a single matrix-vector product per sample.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-01T20:57:06Z</published>
+    <arxiv:comment>Proceedings of the 32nd ACM SIGKDD Conference on Knowledge Discovery and Data Mining V.2 (KDD '26)</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Jose Marie Antonio Miñoza</name>
+    </author>
+    <author>
+      <name>Rex Gregor Laylo</name>
+    </author>
+    <author>
+      <name>Sebastian C. Ibañez</name>
+    </author>
+    <arxiv:doi>10.1145/3770855.3818106</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3770855.3818106" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.02508v1</id>
+    <title>AI and physics-based weather forecasting: A comparative study</title>
+    <updated>2026-06-01T17:21:26Z</updated>
+    <link href="https://arxiv.org/abs/2606.02508v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.02508v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In the last few years, AI-based models have become the centre of attention in weather forecasting due to their increasing accuracy and efficiency. Pioneering among weather services, ECMWF has developed its Artificial Intelligence Forecasting System (AIFS) model, which was first to provide data-driven ensemble forecasts in June 2024. Since July 2025, the AIFS ensemble model has been operational and runs in parallel with ECMWF's physics-based Integrated Forecasting System (IFS), which is considered the gold standard in weather prediction. The new AIFS model can generate forecasts ten times faster than the classical numerical weather prediction model, while consuming approximately a thousand times less energy. We present the results of our systematic assessment of the performance of the IFS and AIFS models by comparing the accuracy of raw and post-processed medium-range 10-m wind-speed ensemble forecasts generated operationally by the two models for the period between July and November 2025 for more than 9000 synoptic observation stations across the globe. The post-processed case involves the parametric ensemble model output statistics (EMOS) as well as the non-parametric quantile regression (QR) approach to correct any systematic inaccuracies in the raw forecasts. The predictive performance of raw IFS ensemble forecasts proves to be substantially superior to the skill of the raw AIFS predictions for all investigated forecast horizons. As expected, post-processing significantly improves the skill of both IFS and AIFS predictions, and, across most verification metrics, EMOS is superior to QR, especially for short lead times. Compared to the raw ensemble, the differences in skill between the matching IFS and AIFS predictions are substantially decreased by post-processing and are mostly significant at short lead times, when the IFS forecasts outperform their AIFS counterparts.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-01T17:21:26Z</published>
+    <arxiv:comment>24 pages, 9 figures, 1 table</arxiv:comment>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Mátyás Kocsis</name>
+    </author>
+    <author>
+      <name>Sándor Baran</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.02663v1</id>
+    <title>AdaWeather: Adaptively Mixing Probabilistic Weather Forecasts with Logarithmic Regret</title>
+    <updated>2026-06-01T09:46:26Z</updated>
+    <link href="https://arxiv.org/abs/2606.02663v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.02663v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent advances in machine learning have produced probabilistic weather forecasting models comparable to state-of-the-art numerical weather predictors. But no model consistently dominates spatio-temporally, and relative performance is highly context-dependent. This motivates adaptive methods for combining multiple forecasts to obtain improvements and robustness. While combined forecasts have been proposed in the literature, these are achieved either through supervised learning or through prediction with expert advice methods. We introduce AdaWeather, an adaptive framework that combines many probabilistic forecasts using both machine learning as well as mixture of experts to arrive at a unified improved probabilistic forecast. While traditional expert methods develop the regret bounds with respect to the best single expert in hindsight, we extend the algorithm and analysis to show our method has logarithmic regret compared to the best static mixture of experts in hindsight. Empirically, we focus on forecasting temperature, and observe improvements over existing methods.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-01T09:46:26Z</published>
+    <arxiv:comment>36 pages, 16 figures. Submitted to arXiv. Forecast aggregation for probabilistic weather prediction using offline supervised learning and online prediction with expert advice. Includes theoretical regret guarantees and empirical evaluation on temperature forecasting. Submitted to NeurIPS 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Saptarishi Dhanuka</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Sarvesh Iyer</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Manmeet Singh</name>
+      <arxiv:affiliation>Western Kentucky University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Mihir More</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Rushil Gupta</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Dhruman Gupta</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Parthasarathi Mukhopadhyay</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Sandeep Juneja</name>
+      <arxiv:affiliation>Ashoka University</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.29976v3</id>
+    <title>Evaluating Skill and Stability of ArchesWeather and ArchesWeatherGen under Multi-Decadal Climate Simulations</title>
+    <updated>2026-08-18T12:00:22Z</updated>
+    <link href="https://arxiv.org/abs/2605.29976v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.29976v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We evaluate the climate simulation capabilities of ArchesWeather and ArchesWeatherGen, two machine learning models originally trained for weather forecasting and evaluated up to a 10-day lead time. ArchesWeather is a deterministic model, while ArchesWeatherGen is a probabilistic flow-matching model leveraging ArchesWeather's forecasts, enabling ensemble-based uncertainty quantification. In this work, we adapt these models to act as forced atmospheric models by using additional conditioning on the monthly mean sea surface temperature (SST) and sea ice cover (SIC) as boundary conditions. In particular, we follow the AI Model Intercomparison Project (AIMIP) Phase 1 protocol, which, analogous to the Atmospheric Model Intercomparison Project (AMIP), proposes a standardized experimental setup to evaluate the climate skill of ML-based forced atmospheric models. We present a comprehensive evaluation of both models under these conditions, including comparison against numerical climate models, ablation studies that examine key design choices in the extension, and an analysis of forced versus unforced configurations. Despite being originally developed for weather forecasting, we demonstrate that forced configurations of ArchesWeather and ArchesWeatherGen produce stable long-term climate simulations, have a stable annual cycle, and capture the drift of many climate variables. The models faithfully reproduce ERA5's climatology, large-scale circulations and interannual variability, and they capture the tails of the distributions.</summary>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-28T14:15:25Z</published>
+    <arxiv:comment>29 pages, 16 figures, preprint</arxiv:comment>
+    <arxiv:primary_category term="physics.ao-ph"/>
+    <author>
+      <name>Renu Singh</name>
+    </author>
+    <author>
+      <name>Robert Brunstein</name>
+    </author>
+    <author>
+      <name>Antonia Jost</name>
+    </author>
+    <author>
+      <name>Yana Hasson</name>
+    </author>
+    <author>
+      <name>Thomas Rackow</name>
+    </author>
+    <author>
+      <name>Claire Monteleoni</name>
+    </author>
+    <author>
+      <name>Christian Lessig</name>
+    </author>
+    <author>
+      <name>Guillaume Couairon</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.28153v1</id>
+    <title>Skillful high-resolution weather forecasting independent of physical models</title>
+    <updated>2026-05-27T08:37:36Z</updated>
+    <link href="https://arxiv.org/abs/2605.28153v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.28153v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Accurate and timely weather forecasts are critical for high-impact decisions in modern society. Machine-learning-based weather prediction is emerging as an alternative for producing initial conditions, forecasts, and even both in end-to-end systems. These methods deliver predictions faster and often with higher skill than traditional numerical weather prediction (NWP). However, even end-to-end models typically rely on NWP-generated reanalyses for supervision, thereby inheriting the biases and resolution limitations of those NWPs, and limiting adaptation to settings where suitable reanalysis products are unavailable, infrequently updated, or expensive to produce. Here we introduce ObsCast, a regional system that generates both analysis and predictions, without using any NWP-derived data in either training or inference, while still achieving state-of-the-art performance in short-term high-resolution regional modeling. Over the contiguous United States and Europe, ObsCast outperforms operational NWP for near-surface variables through 18 h and produces skillful precipitation forecasts. It provides a simpler and more adaptable route to build and refine regional forecasting services directly from local observations, without the need to develop complex and costly traditional forecasting pipelines.</summary>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-27T08:37:36Z</published>
+    <arxiv:comment>26 pages, 10 figures</arxiv:comment>
+    <arxiv:primary_category term="physics.ao-ph"/>
+    <author>
+      <name>Pengcheng Zhao</name>
+    </author>
+    <author>
+      <name>Siqi Xiang</name>
+    </author>
+    <author>
+      <name>Weixin Jin</name>
+    </author>
+    <author>
+      <name>Zekun Ni</name>
+    </author>
+    <author>
+      <name>Jiang Bian</name>
+    </author>
+    <author>
+      <name>Zuliang Fang</name>
+    </author>
+    <author>
+      <name>Hongyu Sun</name>
+    </author>
+    <author>
+      <name>Bin Zhang</name>
+    </author>
+    <author>
+      <name>Richard E. Turner</name>
+    </author>
+    <author>
+      <name>Jonathan Weyn</name>
+    </author>
+    <author>
+      <name>Haiyu Dong</name>
+    </author>
+    <author>
+      <name>Kit Thambiratnam</name>
+    </author>
+    <author>
+      <name>Qi Zhang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.19366v1</id>
+    <title>Accurate, Efficient, and Explainable Deep Learning Approaches for Environmental Science Problems</title>
+    <updated>2026-05-19T04:58:10Z</updated>
+    <link href="https://arxiv.org/abs/2605.19366v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.19366v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Environmental science plays a pivotal role in safeguarding ecosystems, a domain driven by large-scale, heterogeneous data. In the big data era, artificial intelligence (AI) has emerged as a transformative tool for learning patterns and supporting decision-making. This dissertation develops AI-based approaches tailored to complex environmental science problems to achieve Environmental Intelligence, studying three specific challenges. First, we focus on flood prediction and management in coastal river systems. Conventional physics-based models are computationally intensive, limiting real-time application. To overcome this, we propose a deep learning (DL)-based model, WaLeF, for water level forecasting, and a forecast-informed DL model, FIDLAr, to manage water levels. Evaluated in a flood-prone coastal system in South Florida characterized by extreme rainfall and sea level fluctuations, FIDLAr outperforms baselines in accuracy and efficiency while providing interpretable outputs. Second, we target global weather prediction, which is challenged by massive data scale. Traditional physics methods are deterministic and computationally heavy. We propose CoDiCast, a conditional diffusion model tailored for probabilistic weather forecasting. Adapted from generative AI for predictive tasks, experiments show CoDiCast achieves accurate, efficient forecasts with explicit uncertainty quantification. Lastly, we address scientific question-answering in environmental science. When answering in-domain questions, large language models (LLMs) often suffer from hallucinations due to out-of-date or limited knowledge. While retrieval-augmented generation (RAG) retrieves domain-specific knowledge, existing methods trade off accuracy, efficiency, or explainability. We propose Hypercube-RAG, built on a structured text cube framework, which successfully exhibits all three properties simultaneously.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-19T04:58:10Z</published>
+    <arxiv:comment>161 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Jimeng Shi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.18333v2</id>
+    <title>QLIF-CAST: Quantum Leaky-Integrate-and-Fire for Time-Series Weather Forecasting</title>
+    <updated>2026-07-22T06:18:37Z</updated>
+    <link href="https://arxiv.org/abs/2605.18333v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.18333v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Accurate and efficient time-series forecasting remains a challenging problem for both classical and quantum neural architectures, particularly in multivariate environmental settings. This work adapts the Quantum Leaky Integrate-and-Fire (QLIF) spiking neural network for time-series regression tasks, specifically short-term multivariate weather forecasting. We extend QLIF beyond classification and demonstrate its applicability to continuous-valued prediction problems. The QLIF-CAST model encodes neuron excitation states as single-qubit quantum superpositions, driven by R_x rotation gates and T1 relaxation decay, and is embedded within a hybrid quantum-classical recurrent architecture. We conduct two distinct evaluations. First, a controlled comparison against a parameter-matched classical LIF baseline on a multivariate weather dataset shows that QLIF-CAST achieves 15.4% lower MSE and 4.4% lower MAE, demonstrating that quantum neuronal dynamics reduce prediction error over classical equivalents. Second, a cross-domain comparative analysis with state-of-the-art quantum LSTM (QLSTM) and quantum neural network (QNN) models on air quality and wind speed benchmarks reveals that QLIF-CAST converges in up to 94% less training time, occupying a distinct position in the speed-error trade-off space. Hardware verification on IBM Marrakesh (156-qubit QPU) confirms reliable circuit execution with only 1.2% average deviation from simulation.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-18T12:49:46Z</published>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Alberto Marchisio</name>
+    </author>
+    <author>
+      <name>Aayan Ebrahim</name>
+    </author>
+    <author>
+      <name>Nouhaila Innan</name>
+    </author>
+    <author>
+      <name>Muhammad Kashif</name>
+    </author>
+    <author>
+      <name>Muhammad Shafique</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.15752v1</id>
+    <title>Forecasting megaelectron-volt electron flux in the Earth's outer radiation belt using supervised machine learning algorithms and a timeseries foundation model</title>
+    <updated>2026-05-15T09:13:02Z</updated>
+    <link href="https://arxiv.org/abs/2605.15752v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.15752v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Accurate forecasting of megaelectron-volt (MeV) electrons in the outer Earth's radiation belt, which can pose significant risks to satellites, is essential for risk mitigation and spacecraft operations. We develop a machine-learning-based pipeline for forecasting 1-MeV electron flux variations, focusing first on a 6-hour forecast horizon. Using precipitating electrons measured by POES NOAA-15, near 1-MeV electron flux measured by GOES, solar wind measurements near L1, and geomagnetic activity indices as inputs in 2013-2023, we train algorithms including linear regression, 1-D convolutional and long short-term memory neural networks, and Transformer-Encoder to forecast 1-MeV electron flux in McIlwain's L-shells between 2.8 and 6.0 with 0.1 bin resolution. Particularly, we exploit the timeseries foundation model TimesFM for (1) a zero-shot prediction and (2) a hybrid application involving the ridge regression on the past dynamic covariates combined with the TimesFM inference on the residuals. Using data from January-June 2024 as an out-of-sample test, we find that the hybrid application of TimesFM, named TimesFM+Cov, yields the best results with an average R2 of 0.9 across L-shells, compared to an average R2 under 0.78 for all other models. The R2 of TimesFM+Cov remains above 0.9 for L-shells between 2.8 and 4.7 and drops to 0.77 at L=6.0, indicating improvements of 12% at the lowest L-shell and 48% at the highest L-shell compared to our second-best models. Our work offers an alternative perspective on how a pretrained foundation model could be adapted for space weather forecasting.</summary>
+    <category term="astro-ph.IM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.EP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-15T09:13:02Z</published>
+    <arxiv:comment>19 pages, 6 figures, 1 table</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.IM"/>
+    <author>
+      <name>Rungployphan Kieokaew</name>
+    </author>
+    <author>
+      <name>Ryad Guezzi</name>
+    </author>
+    <author>
+      <name>François Ginisty</name>
+    </author>
+    <author>
+      <name>Hadrien Mariaccia</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.27313v1</id>
+    <title>PINN-Cast: Exploring the Role of Continuous-Depth NODE in Transformers and Physics Informed Loss as Soft Physical Constraints in Short-term Weather Forecasting</title>
+    <updated>2026-04-30T01:51:58Z</updated>
+    <link href="https://arxiv.org/abs/2604.27313v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.27313v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Operational weather prediction has long relied on physics-based numerical weather prediction (NWP), whose accuracy comes at the cost of substantial compute and complex simulation workflows. Recent transformer-based forecasters offer efficient data-driven alternatives, however transformers are physics-agnostic models. Additionally, standard transformer encoders evolve representations through discrete layer updates that may be less suited to modeling smooth latent dynamics. In this work, we propose a continuous-depth transformer encoder for weather forecasting that integrates Neural Ordinary Differential Equation (Neural ODE) dynamics within each encoder block. Specifically, we replace discrete residual updates with ODE-based updates solved using adaptive numerical integration. We also introduce a two-branch attention module that combines conventional patch-wise self-attention with an auxiliary branch that applies a derivative operator to attention logits, providing an additional change-sensitive interaction signal. To further align forecasts with governing principles, we propose a customized physics-informed training objective that enforces physical consistency as a soft constraint. We evaluate the proposed method against a standard discrete transformer baseline and an existing continuous-time Neural ODE forecasting variant, demonstrating the importance of PINN-Cast in short term weather forecasting.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-30T01:51:58Z</published>
+    <arxiv:comment>14 pages, 4 Figures, Accepted in 26th International Conference on Computational Science (ICCS 2026)</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Hira Saleem</name>
+    </author>
+    <author>
+      <name>Flora Salim</name>
+    </author>
+    <author>
+      <name>Cormac Purcell</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.24645v1</id>
+    <title>K-MetBench: A Multi-Dimensional Benchmark for Fine-Grained Evaluation of Expert Reasoning, Locality, and Multimodality in Meteorology</title>
+    <updated>2026-04-27T16:13:14Z</updated>
+    <link href="https://arxiv.org/abs/2604.24645v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.24645v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The development of practical (multimodal) large language model assistants for Korean weather forecasters is hindered by the absence of a multidimensional, expert-level evaluation framework grounded in authoritative sources. To address this, we introduce K-MetBench, a diagnostic benchmark grounded in national qualification exams. It exposes critical gaps across four dimensions: expert visual reasoning of charts, logical validity via expert-verified rationales, Korean-specific geo-cultural comprehension, and fine-grained domain analysis. Our evaluation of 55 models reveals a profound modality gap in interpreting specialized diagrams and a reasoning gap where models hallucinate logic despite correct predictions. Crucially, Korean models outperform significantly larger global models in local contexts, demonstrating that parameter scaling alone cannot resolve cultural dependencies. K-MetBench serves as a roadmap for developing reliable, culturally aware expert AI agents. The dataset is available at https://huggingface.co/datasets/soyeonbot/K-MetBench .</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-27T16:13:14Z</published>
+    <arxiv:comment>39 pages, 32 figures, 14 tables, including appendices. Accepted to Findings of the Association for Computational Linguistics (ACL 2026)</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Soyeon Kim</name>
+    </author>
+    <author>
+      <name>Cheongwoong Kang</name>
+    </author>
+    <author>
+      <name>Myeongjin Lee</name>
+    </author>
+    <author>
+      <name>Eun-Chul Chang</name>
+    </author>
+    <author>
+      <name>Jaedeok Lee</name>
+    </author>
+    <author>
+      <name>Jaesik Choi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.22580v1</id>
+    <title>Explanation of Dynamic Physical Field Predictions using WassersteinGrad: Application to Autoregressive Weather Forecasting</title>
+    <updated>2026-04-24T14:12:58Z</updated>
+    <link href="https://arxiv.org/abs/2604.22580v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.22580v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>As the demand to integrate Artificial Intelligence into high-stakes environments continues to grow, explaining the reasoning behind neural-network predictions has shifted from a theoretical curiosity to a strict operational requirement. Our work is motivated by the explanations of autoregressive neural predictions on dynamic physical fields, as in weather forecasting. Gradient-based feature attribution methods are widely used to explain the predictions on such data, in particular due to their scalability to high-dimensional inputs. It is also interesting to remark that gradient-based techniques such as SmoothGrad are now standard on images to robustify the explanations using pointwise averages of the attribution maps obtained from several noised inputs. Our goal is to efficiently adapt this aggregation strategy to dynamic physical fields. To do so, our first contribution is to identify a fundamental failure mode when averaging perturbed attribution maps on dynamic physical fields: stochastic input perturbations do not induce stationary amplitude noise in attribution maps, but instead cause a geometric displacement of the attributions. Consequently, pointwise averaging blurs these spatially misaligned features. To tackle this issue, we introduce WassersteinGrad, which extracts a geometric consensus of perturbed attribution maps by computing their entropic Wasserstein barycenter. The results, obtained on regional weather data and a meteorologist-validated neural model, demonstrate promising explainability properties of WassersteinGrad over gradient-based baselines across both single-step and autoregressive forecasting settings.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-24T14:12:58Z</published>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Younes Essafouri</name>
+    </author>
+    <author>
+      <name>Laure Raynaud</name>
+    </author>
+    <author>
+      <name>Luciano Drozda</name>
+    </author>
+    <author>
+      <name>Laurent Risser</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.16238v3</id>
+    <title>Advancing Subseasonal Forecasting with Machine Learning</title>
+    <updated>2026-09-04T16:02:26Z</updated>
+    <link href="https://arxiv.org/abs/2604.16238v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.16238v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Decision-makers rely on weather forecasts to plant crops, manage wildfires, allocate water and energy, and prepare for weather extremes. Today, such forecasts enjoy unprecedented accuracy out to two weeks thanks to steady advances in physics-based dynamical models and data-driven artificial intelligence (AI) models. However, model skill drops precipitously at subseasonal timescales (2 - 6 weeks ahead), due to compounding errors, systemic model biases, and the chaotic nature of the atmosphere. To counter this degradation, we introduce probabilistic bias correction (PBC), a machine learning framework that substantially reduces systematic error by learning to correct historical probabilistic forecasts. When applied to the leading dynamical and AI models from the European Centre for Medium-Range Weather Forecasts (ECMWF), PBC doubles the modest subseasonal skill of the AI Forecasting System and improves the skill of the operationally-debiased dynamical model for 91% of pressure, 92% of temperature, and 98% of precipitation targets. We designed PBC for operational deployment, and, in ECMWF's 2025 real-time forecasting competition, its global forecasts placed first for all weather variables and lead times, outperforming the dynamical models from six operational forecasting centers, an international dynamical multi-model ensemble, ECMWF's AI Forecasting System, and the forecasting systems of 34 teams worldwide. These probabilistic skill gains translate into more accurate prediction of extreme events and have the potential to improve agricultural planning, energy management, and disaster preparedness in vulnerable communities.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-17T16:58:06Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Hannah Guan</name>
+    </author>
+    <author>
+      <name>Soukayna Mouatadid</name>
+    </author>
+    <author>
+      <name>Paulo Orenstein</name>
+    </author>
+    <author>
+      <name>Judah Cohen</name>
+    </author>
+    <author>
+      <name>Haiyu Dong</name>
+    </author>
+    <author>
+      <name>Zekun Ni</name>
+    </author>
+    <author>
+      <name>Jeremy Berman</name>
+    </author>
+    <author>
+      <name>Genevieve Flaspohler</name>
+    </author>
+    <author>
+      <name>Alex Lu</name>
+    </author>
+    <author>
+      <name>Jakob Schloer</name>
+    </author>
+    <author>
+      <name>Joshua Talib</name>
+    </author>
+    <author>
+      <name>Jonathan A. Weyn</name>
+    </author>
+    <author>
+      <name>Lester Mackey</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.28173v1</id>
+    <title>Skillful Kilometer-Scale Regional Weather Forecasting via Global and Regional Coupling</title>
+    <updated>2026-03-30T08:40:36Z</updated>
+    <link href="https://arxiv.org/abs/2603.28173v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.28173v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Data-driven weather models have advanced global medium-range forecasting, yet high-resolution regional prediction remains challenging due to unresolved multiscale interactions between large-scale dynamics and small-scale processes such as terrain-induced circulations and coastal effects. This paper presents a global-regional coupling framework for kilometer-scale regional weather forecasting that synergistically couples a pretrained Transformer-based global model with a high-resolution regional network via a novel bidirectional coupling module, ScaleMixer. ScaleMixer dynamically identifies meteorologically critical regions through adaptive key-position sampling and enables cross-scale feature interaction through dedicated attention mechanisms. The framework produces forecasts at $0.05^\circ$ ($\sim 5 \mathrm{km}$ ) and 1-hour resolution over China, significantly outperforming operational NWP and AI baselines on both gridded reanalysis data and real-time weather station observations. It exhibits exceptional skill in capturing fine-grained phenomena such as orographic wind patterns and Foehn warming, demonstrating effective global-scale coherence with high-resolution fidelity. The code is available at https://anonymous.4open.science/r/ScaleMixer-6B66.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-30T08:40:36Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Weiqi Chen</name>
+    </author>
+    <author>
+      <name>Wenwei Wang</name>
+    </author>
+    <author>
+      <name>Qilong Yuan</name>
+    </author>
+    <author>
+      <name>Lefei Shen</name>
+    </author>
+    <author>
+      <name>Bingqing Peng</name>
+    </author>
+    <author>
+      <name>Jiawei Chen</name>
+    </author>
+    <author>
+      <name>Bo Wu</name>
+    </author>
+    <author>
+      <name>Liang Sun</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.21768v3</id>
+    <title>Extending Precipitation Nowcasting Horizons via Spectral Fusion of Radar Observations and Foundation Model Priors</title>
+    <updated>2026-04-25T04:10:10Z</updated>
+    <link href="https://arxiv.org/abs/2603.21768v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.21768v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Precipitation nowcasting is critical for disaster mitigation and aviation safety. However, radar-only models frequently suffer from a lack of large-scale atmospheric context, leading to performance degradation at longer lead times. While integrating meteorological variables predicted by weather foundation models offers a potential remedy, existing architectures fail to reconcile the profound representational heterogeneities between radar imagery and meteorological data. To bridge this gap, we propose PW-FouCast, a novel frequency-domain fusion framework that leverages Pangu-Weather forecasts as spectral priors within a Fourier-based backbone. Our architecture introduces three key innovations: (i) Pangu-Weather-guided Frequency Modulation to align spectral magnitudes and phases with meteorological priors; (ii) Frequency Memory to correct phase discrepancies and preserve temporal evolution; and (iii) Inverted Frequency Attention to reconstruct high-frequency details typically lost in spectral filtering. Extensive experiments on the SEVIR and MeteoNet benchmarks demonstrate that PW-FouCast achieves state-of-the-art performance, effectively extending the reliable forecast horizon while maintaining structural fidelity. Our code is available at https://github.com/Onemissed/PW-FouCast.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-23T10:05:51Z</published>
+    <arxiv:comment>Accepted by IJCNN 2026. Code is available at https://github.com/Onemissed/PW-FouCast</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Yuze Qin</name>
+    </author>
+    <author>
+      <name>Qingyong Li</name>
+    </author>
+    <author>
+      <name>Zhiqing Guo</name>
+    </author>
+    <author>
+      <name>Wen Wang</name>
+    </author>
+    <author>
+      <name>Yan Liu</name>
+    </author>
+    <author>
+      <name>Yangli-ao Geng</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.21131v1</id>
+    <title>Diffusion-based Probabilistic Air Quality Forecasting with Mechanistic Insight</title>
+    <updated>2026-03-22T09:06:43Z</updated>
+    <link href="https://arxiv.org/abs/2603.21131v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.21131v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Current operational air quality forecasts are computationally expensive, sensitive to errors in physics and emissions, and often neglect weather-related uncertainty. To address these limitations, we present AirFusion, a hybrid, diffusion-based framework that synergistically integrates knowledge from chemical transport models with real-world observational constraints to enable accurate and efficient probabilistic regional air quality prediction. We apply AirFusion to generate operational 6-day, 30-member ensemble forecasts of surface ozone across China, initialized with observations and driven by ensemble weather forecasts. AirFusion outperforms existing operational benchmarks, achieving substantially lower forecast errors against surface measurements, while also providing ensemble-based diagnostics that explicitly quantify the impacts of weather uncertainty on air quality predictability. Moreover, AirFusion can rapidly adapt to evolving emissions through fine-tuning with only one month of recent observations. These attributes establish AirFusion as a powerful and extensible framework for next-generation probabilistic air quality forecasting, with clear potential for application to other pollutants and regions.</summary>
+    <category term="physics.ao-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-22T09:06:43Z</published>
+    <arxiv:primary_category term="physics.ao-ph"/>
+    <author>
+      <name>Ao Ding</name>
+    </author>
+    <author>
+      <name>Aoxing Zhang</name>
+    </author>
+    <author>
+      <name>Tzung-May Fu</name>
+    </author>
+    <author>
+      <name>Yuanlong Huang</name>
+    </author>
+    <author>
+      <name>Qianjie Chen</name>
+    </author>
+    <author>
+      <name>Yuyang Chen</name>
+    </author>
+    <author>
+      <name>Jiajia Mo</name>
+    </author>
+    <author>
+      <name>Wei Tao</name>
+    </author>
+    <author>
+      <name>Wai-Chi Cheng</name>
+    </author>
+    <author>
+      <name>Lei Zhu</name>
+    </author>
+    <author>
+      <name>Xin Yang</name>
+    </author>
+    <author>
+      <name>Guy Brasseur</name>
+    </author>
+  </entry>
+</feed>

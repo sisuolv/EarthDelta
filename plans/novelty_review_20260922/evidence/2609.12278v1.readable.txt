@@ -1,0 +1,281 @@
+Amortized Low-Rank Adaptation for Model-Based Reinforcement Learning
+
+World models let agents plan by predicting the consequences of their actions, but changes in the environment can make them inaccurate. We study the problem of adapting a world model to an unknown test-time environment, drawn from a known environment family, using only a few episodes of interaction. Existing approaches trade off computational cost against expressivity, i.e., the range of models a method can produce. For example, in-context learning is computationally cheap but limited in expressivity, and gradient-based adaptation is expressive but computationally expensive. We present CLAW ( C ontext-conditioned L ow-rank A daptation of W orld models), which addresses this tradeoff by using a hypernetwork to generate low-rank (LoRA) adapters at test time. During pretraining, we simulate adaptation to a variety of environments and jointly train the hypernetwork and base world model. At test time, we freeze the base model and use a forward pass of the hypernetwork to generate adapters from a small batch of test-time transitions. We evaluate CLAW in locomotion and manipulation environment families that vary in dynamics, embodiment, and reward. We show that, using only seconds of test-time data, CLAW outperforms gradient-based adaptation and in-context learning during online adaptation. We also show that CLAW avoids overfitting in data-scarce regimes, that its advantage comes from the expressive adapters rather than context conditioning, and that pretraining the hypernetwork jointly with the base model outperforms training it post hoc.
+
+1 Introduction
+
+In reinforcement learning (RL), learned world models allow agents to plan by predicting the consequences of their actions ( Ha and Schmidhuber, 2018 ; Hafner et al., 2023 ; Hansen et al., 2024 ) . However, changes in the environment can make a world model inaccurate, and it is often desirable to adapt it without collecting large test-time datasets. In this paper, we study the problem of adapting a world model to an unknown test-time environment drawn from a known environment family (e.g., a set of locomotion environments with varying dynamics, embodiments, or rewards).
+
+We cast this problem as a meta-reinforcement learning problem where we amortize adaptation during pretraining, enabling online adaptation with little data. Existing approaches face a tradeoff: they are either computationally cheap but limited in expressivity (e.g., in-context learning), or expressive but computationally expensive (e.g., gradient-based weight adaptation). We present CLAW ( C ontext-conditioned L ow-rank A daptation of W orld models), an adaptation method which addresses this tradeoff. CLAW uses hypernetworks ( Ha et al., 2017 ) , neural networks trained to produce weights for other neural networks, to produce low-rank (LoRA) adapters ( Hu et al., 2021 ) for the world model using a small batch of test-time transitions. This enables adaptation with the computational efficiency of in-context learning while retaining the expressivity of weight-space adaptation.
+
+We validate CLAW with experiments in a variety of locomotion and manipulation environment families, where we vary dynamics, embodiments and rewards. We show that CLAW outperforms gradient-based and in-context learning baselines during online adaptation, that it avoids overfitting in data-scarce regimes, that its advantage comes from the expressivity of the generated adapters (rather than context conditioning), and that pretraining the hypernetwork jointly with the base model outperforms training it post hoc.
+
+2 Related Work
+
+2.1 Adaptation in Model-Based RL
+
+There are three main approaches to adapt a world model to test-time environments. The first approach changes the model’s weights directly by, e.g., gradient-based re-training ( Levy et al., 2025 ; Levy et al., 2026 ; Xu et al., 2025 ; Pfrommer et al., 2020 ; Lanier et al., 2025 ; Kim et al., 2026 ; Wang et al., 2025 ) ; the same approach, applied to policies rather than world models, also appears in model-free RL ( Ball et al., 2023 ; Kostrikov et al., 2021 ; Yin et al., 2025 ; Amin et al., 2025 ) . This approach is highly expressive (i.e., can produce a large range of models) at the cost of increased test-time compute and high sample complexity.
+
+The second approach infers a learned embedding of the test-time environment (e.g., a latent task variable, a belief, or context embedding) and conditions a fixed model on it ( Rakelly et al., 2019 ; Zintgraf et al., 2019 ; Zintgraf et al., 2018 ; Duan et al., 2016 ; Mishra et al., 2017 ; James et al., 2018 ; Kumar et al., 2021 ; Yu et al., 2017 ; Zhang et al., 2024 ; Chen et al., 2021 ; Reed et al., 2022 ; Jiang et al., 2022 ; Laskin et al., 2022 ; Liu et al., 2025 ) . This approach is computationally inexpensive (embedding inference is often a single forward pass of a neural network) but limited in expressivity since the weights are fixed at test time.
+
+A third approach skips test-time adaptation entirely. Instead, it trains one model to be robust across an entire family of environments ( Tobin et al., 2017 ; Peng et al., 2017 ; Andrychowicz et al., 2020 ; Lee et al., 2020 ) . This approach does not require test-time adaptation mechanisms, but sacrifices accuracy on the test-time environment for robustness across the whole family.
+
+Our approach, CLAW , is a combination of the first and second approaches. We use a test-time context embedding to generate low-rank adapters ( Hu et al., 2021 ) that modify the model weights. CLAW takes the best of both approaches: model adaptation is nearly instantaneous (a single forward pass of the hypernetwork), and has the expressivity of full-weight finetuning, depending on the adapter rank.
+
+2.2 Selecting What to Adapt
+
+During weight-based model adaptation, it is not always clear what weights within the model should be adapted. Some approaches adapt all the weights, e.g., TD-MPC2 adapts the entire model during online learning ( Hansen et al., 2024 ) . This has the benefit of maximum adaptation expressivity at the cost of increased test-time computation and potential model collapse ( Smith et al., 2022a ; Smith et al., 2022b ; Yin et al., 2025 ) . Other approaches adapt specific world model modules, e.g., the dynamics module ( Levy et al., 2026 ) , or specific layers, e.g., the last layers ( Levy et al., 2025 ; Harrison et al., 2018 ; Davydov et al., 2024 ) . These approaches are computationally cheaper and avoid model collapse at the expense of manual module/layer selection and reduced adaptation expressivity. A third approach does not modify weights and instead modulates the model’s intermediate activations, e.g., FiLM’s feature-wise affine transforms ( Perez et al., 2017 ) . This also avoids manual selection, but limits adaptation to modulation of existing activations rather than a full weight-space update, which is more expressive ( Jayakumar et al., 2020 ) .
+
+Our approach is different because it inserts LoRA adapters ( Hu et al., 2021 ) into all layers of the world model. Therefore, we maintain most of the adaptation expressivity of full-model adaptation at a fraction of test-time compute cost. Moreover, the pretraining procedure ( Algorithm 1 ) implicitly teaches the hypernetwork how strongly to adapt each layer, obviating the need for manual module/layer selection.
+
+2.3 Hypernetworks in RL
+
+Hypernetworks have been used in meta-RL before ( Finn et al., 2017 ; Nagabandi et al., 2018 ; Raghu et al., 2019 ) to replace test-time gradient descent with a forward pass of a neural network ( Huang et al., 2020 ; Xian et al., 2021 ; Przewięźlikowski et al., 2022 ; Beck et al., 2023 ; Rezaei-Shoshtari et al., 2022 ; Beukman et al., 2023 ) . These methods often produce full weight tensors (instead of LoRA adapters).
+
+In the domain of large language models (LLMs), existing work generates LoRA adapters from text prompts ( Ye and Ren, 2021 ; Mahabadi et al., 2021 ; Ortiz-Barajas et al., 2024 ; Charakorn et al., 2025 ; Chen et al., 2024 ; Jukić et al., 2025 ; Liu et al., 2026 ) . A recent paper ( Bianchi et al., 2026 ) proposes generating LoRA adapters for a robot policy from a language instruction and a demo video. These are all forms of amortized optimization ( Amos, 2023 ) in which a hypernetwork is trained to amortize test-time low-rank adaptation.
+
+Existing hypernetwork approaches either generate full model weights (which is expensive and/or intractable for large world models), or generate adapters from explicit task descriptions for a fixed pretrained model. Neither approach addresses efficient world model adaptation from test-time transitions. CLAW fills this gap by jointly pretraining the world model and hypernetwork to infer adapters directly from test-time interactions, enabling repeated, low-cost adaptation during deployment.
+
+3 Preliminaries
+
+Each environment e is a Markov Decision Process (MDP), which we assume is drawn at test time from a uniform distribution p(\mathcal{E}) . For example, p(\mathcal{E}) could assign probabilities to bipedal locomotion environments that differ in actuator strength. At each step t , the agent receives state s_{t} , selects an action, and receives reward r_{t} together with the next state s_{t+1} .
+
+We define two functions that produce the agent’s actions: policies and planners. Policies produce actions directly from states, i.e., a_{t}=\pi(s_{t}) , and are often instantiated as neural networks. In contrast, planners select an action by evaluating candidate actions using a learned model of the MDP. That is, given world model parameters \theta , a planner call is given by a_{t}=\pi(s_{t},\theta) , where we overload \pi for notational convenience in the next paragraph. Planners are often instantiated as sampling-based algorithms, e.g., MPPI ( Williams et al., 2015 ) .
+
+We refer to the tuple \zeta_{t}=(s_{t},a_{t},r_{t},s_{t+1}) as a transition. A trajectory \tau=(\zeta_{0},\zeta_{1},\dots,\zeta_{M-1}) collects a sequence of M transitions. p(\tau\mid e,\pi) denotes the distribution over trajectories induced by acting in environment e according to the policy or planner \pi . A batch of trajectories with size N is the tuple b=(\tau_{1},\dots,\tau_{N}) , where each trajectory is drawn independently and identically distributed from p(\tau\mid e,\pi) . At test time, the agent interacts with environments from p(\mathcal{E}) which it may or may not have encountered during pretraining.
+
+3.1 World Model
+
+World models are learned approximations of MDPs that agents can use to plan actions. They often consist of an encoder, a dynamics function, a value function, and a reward function ( Hafner et al., 2019 ; Hafner et al., 2023 ; Hansen et al., 2024 ; Levy et al., 2026 ) . These modules are neural networks jointly trained using data from high-fidelity simulation or the real world. We refer to the parameters for all modules as \theta_{w} , the base parameters. In this paper, the agent uses \theta_{w} with a planner \pi_{\mathrm{upd}} to select actions, i.e., a_{t}=\pi_{\mathrm{upd}}(s_{t},\theta_{w}) . Figure 1 shows the control flow for action selection given a set of candidate actions.
+
+First, the encoder produces a latent state z_{t} from an environment state s_{t} . Then, the dynamics module predicts the next latent state z_{t+1} given z_{t} and a_{t} . Next, the reward and value modules use z_{t+1} to compute the reward r_{t+1} and value v_{t+1} . Finally, the planner ranks a_{t} using the estimated return r_{t+1}+\gamma\,v_{t+1} , where \gamma\in[0,1) is the discount factor.
+
+In this paper, we apply our method, CLAW , to the TD-MPC2 world model architecture ( Hansen et al., 2024 ) because it consistently achieves strong performance across a variety of continuous control tasks using a single set of hyperparameters. 1 1 1 TD-MPC2 pretrains a model-free policy to seed a sampling-based planner. To avoid confusion, we include the parameters for this policy within \theta_{w} . We emphasize that CLAW is agnostic to world model architecture since our only requirement is that we can sample environments during pretraining and insert LoRA adapters into world model modules. Therefore, CLAW can be applied to, e.g., action-conditioned JEPA world models ( Maes et al., 2026 ; Assran et al., 2025 ) or Dreamer-style architectures ( Hafner et al., 2019 ; Hafner et al., 2023 ) .
+
+3.2 Low-Rank Adaptation
+
+At test time, the base parameters \theta_{w} stay frozen and we insert LoRA adapters ( Hu et al., 2021 ) into the world model’s layers. Concretely, for an adapted layer with base weight matrix W_{0}\in\mathbb{R}^{d_{\mathrm{out}}\times d_{\mathrm{in}}} , where d_{\mathrm{out}} and d_{\mathrm{in}} are the layer’s output and input dimensions, the effective weight is
+
+W\;=\;W_{0}\;+\;AB,\qquad A\in\mathbb{R}^{d_{\mathrm{out}}\times d_{r}},\qquad B\in\mathbb{R}^{d_{r}\times d_{\mathrm{in}}},\qquad d_{r}\ll\min(d_{\mathrm{out}},d_{\mathrm{in}}). (1)
+
+The factors A and B constitute the adapter, and d_{r} is the low-rank bottleneck dimension. We define \phi_{w} as the collection of all A,B factors across the adapted layers. For simplicity, we adapt all world model layers and keep rank d_{r} constant.
+
+3.3 Hypernetworks
+
+A hypernetwork is a neural network H_{\theta_{h}} that outputs the weights of another network ( Ha et al., 2017 ) . Given an input x , the target network parameters \phi are produced as
+
+\phi=H_{\theta_{h}}(x), (2)
+
+where \theta_{h} are the weights for the hypernetwork. In the next section, we present more details on the architecture and training procedure for our LoRA-generating hypernetwork.
+
+4 Approach
+
+We now present CLAW , a model-based RL adaptation algorithm that uses a hypernetwork to generate low-rank adapters at test time. This section is structured as follows: First, we detail the architecture of our hypernetwork ( Section 4.1 ). Then, we describe a pretraining procedure to jointly train the base model and hypernetwork ( Section 4.2 ).
+
+4.1 Hypernet-Based Adapter Generation
+
+mean pool
+
+We use a hypernetwork to generate LoRA adapters for each environment, online at test time. Using a context batch b_{\mathrm{con}} of N_{\mathrm{con}} trajectories of M transitions each, it generates LoRA adapters \phi_{w} for the world model’s base weights \theta_{w} . Formally:
+
+\phi_{w}\;=\;H_{\theta_{h}}(b_{\mathrm{con}}). (3)
+
+We now describe the architecture of H and how b_{\mathrm{con}} is used to generate \phi_{w} .
+
+First, we generate an embedding u_{\mathrm{emb}} for each transition \zeta\in b_{\mathrm{con}} using a small multi-layer perceptron (MLP) h_{\mathrm{emb}} . Then, we average the embeddings and feed them into a second MLP h_{\mathrm{con}} to produce a context embedding u_{\mathrm{con}} that identifies the environment. Note that embedding each transition independently, then averaging, discards information about transition order.
+
+Once we have identified the environment with u_{\mathrm{con}} , we feed it into h_{\mathrm{gen}} , an MLP, to generate \Delta\phi_{w} , which is added to a learned template \phi_{0} to produce \phi_{w} , i.e.,
+
+\phi_{w}=\phi_{0}+\Delta\phi_{w}. (4)
+
+Templates have been shown to improve learning performance in hypernetworks ( Beck et al., 2023 ) .
+
+Generating \Delta\phi_{w} from a single forward pass would require an impractically large generator network h_{\mathrm{gen}} . Instead, h_{\mathrm{gen}} is a small network we reuse to generate \Delta\phi_{w} in chunks. Concretely, following Von Oswald et al. (2020) , we divide \Delta\phi_{w} into K chunks and generate chunk k by feeding the chunk embedding u_{k} and the context embedding u_{\mathrm{con}} into h_{\mathrm{gen}} . Figure 2 illustrates the full procedure.
+
+4.2 Amortizing Low-Rank Adaptation
+
+We now describe the procedure to jointly pretrain the world model and hypernetwork, and thereby amortize test-time low-rank adaptation. At a high level, CLAW wraps a standard world model pretraining algorithm with a loop that iterates between environments sampled from an environment family. This allows us to train the hypernetwork to generate adapters for each environment. In the following subsections we explain: 1) a single-environment training step for the base model and hypernetwork parameters (i.e., \theta_{w} , \theta_{h} ), 2) a training loss that averages over environments, thus meta-training the base and hypernetwork for online adaptation, and 3) the full pretraining algorithm, instantiated for the TD-MPC2 architecture ( Hansen et al., 2024 ) .
+
+Single-Environment Training Step.
+
+Given environment j , we start by filling two buffers: \mathcal{B}_{\mathrm{con}}^{j} , a context buffer containing trajectories collected using a context-collection policy \pi_{\mathrm{con}} , and \mathcal{B}_{\mathrm{upd}}^{j} , a buffer containing trajectories collected using the agent’s planner, \pi_{\mathrm{upd}} . Next, we sample a batch b_{\mathrm{con}} of N_{\mathrm{con}} trajectories from \mathcal{B}_{\mathrm{con}}^{j} and produce environment-specific low-rank adapters using the hypernetwork, i.e., \phi_{w}=H_{\theta_{h}}(b_{\mathrm{con}}) . Then, we combine \theta_{w} and \phi_{w} per Eq. 1 , and use a batch b_{\mathrm{upd}} of N_{\mathrm{upd}} trajectories sampled from \mathcal{B}_{\mathrm{upd}}^{j} to compute the loss \mathcal{L} (detailed in the next section). Finally, we differentiate \mathcal{L} with respect to \theta_{w} and \theta_{h} , and update \theta_{w} and \theta_{h} with an Adam optimizer ( Kingma and Ba, 2014 ) .
+
+The result is a hypernetwork trained to produce low-rank adapters \phi_{w} for \theta_{w} using b_{\mathrm{con}} , and a base model trained to be adapted with \phi_{w} . A visualization of this procedure can be seen in Fig. 3 .
+
+Our method collects b_{\mathrm{con}} using the context-collection policy \pi_{\mathrm{con}} instead of the agent’s planner. There are two reasons for this approach:
+
+It ensures the distribution of context trajectories is the same during training and testing, facilitating environment identification for the hypernetwork H .
+
+In future work, we can directly optimize the policy \pi_{\mathrm{con}} to produce trajectories b_{\mathrm{con}} which are better at identifying the environment and/or lead to better test-time performance.
+
+In our experiments, \pi_{\mathrm{con}} is always a random-action policy. This fixes context data quality across adaptation baselines so that performance differences reflect the adaptation method rather than the collected context data. However, practitioners may choose to use a different policy, e.g., one that is safe for real-life deployment (but not necessarily high-performing). The use of a non-random \pi_{\mathrm{con}} is fully supported by CLAW as long as \pi_{\mathrm{con}} can be queried during pretraining.
+
+Multi-Environment Training Loss.
+
+The loss in Fig. 3 decomposes as
+
+\mathcal{L}(\theta_{w},\phi_{w},b_{\mathrm{upd}})\;=\;\mathcal{L}_{\mathrm{TDMPC2}}(\Theta_{w},b_{\mathrm{upd}})\;+\;\lambda\|\phi_{w}\|_{2}^{2}, (5)
+
+where \Theta_{w} are the merged base and adapter weights per Eq. 1 , \lambda\in\mathbb{R}_{\geq 0} weighs the adapter’s L_{2} penalty, and \mathcal{L}_{\mathrm{TDMPC2}} is the training loss for a TDMPC2 world model described by Hansen et al. (2024) . If a different world model architecture is used, \mathcal{L}_{\mathrm{TDMPC2}} may be replaced with the corresponding loss. Figure 3 computes a single-environment, single-batch approximation of the objective in the following minimization problem:
+
+\min_{\theta_{w},\,\theta_{h}}\;\mathbb{E}_{e}\left[\,\mathbb{E}_{b_{\mathrm{con}},\,b_{\mathrm{upd}}}\left[\mathcal{L}\right]\right], (6)
+
+where e\sim p(\mathcal{E}) , and b_{\mathrm{con}} and b_{\mathrm{upd}} are batches of N_{\mathrm{con}} and N_{\mathrm{upd}} trajectories, respectively. Each trajectory is drawn i.i.d. from p(\tau\mid e,\pi_{\mathrm{con}}) and p(\tau\mid e,\pi_{\mathrm{upd}}) , respectively.
+
+Problem Equation 6 illustrates how our method can be applied to any world model architecture. If we remove b_{\mathrm{con}} and the \lambda\|\phi_{w}\|_{2}^{2} term, the inner expectation of Eq. 6 is the objective of a standard world model training problem. Our approach, CLAW , defines the hypernetwork machinery (green box in Fig. 3 ), and uses it to amortize low-rank adaptation by wrapping the standard objective with an expectation over the environment family p(\mathcal{E}) .
+
+Applying CLAW to the TD-MPC2 Architecture.
+
+Algorithm 1 shows the TD-MPC2 ( Hansen et al., 2024 ) pretraining algorithm modified to use CLAW . It includes the following additions: 1) logic to sample a rollout environment from p(\mathcal{E}) every episode, thereby approximating the outer expectation in Eq. 6 ; 2) logic to sample a training environment from p(\mathcal{E}) every step, thereby stabilizing multi-environment training; 3) a buffer \mathcal{B}_{\mathrm{con}}^{j} per environment j with corresponding samples b_{\mathrm{con}} , and 4) a forward pass of H_{\theta_{h}} to produce adapters \phi_{w} given b_{\mathrm{con}} .
+
+We denote additions to the original TD-MPC2 algorithm with green highlights in Algorithm 1 . Our algorithm uses a modified version of the TD-MPC2 weight update, TDMPC2Update , which we include as Algorithm 2 in Appendix A . The result of Algorithm 1 is a base TD-MPC2 model and hypernet that can generate test-time LoRA adapters for any layer of the base model.
+
+We emphasize that CLAW can be applied regardless of the chosen world model architecture or training algorithm. Specifically, an adapter-generating hypernetwork can be trained as long as one can sample environments, maintain a buffer for each of them, and maintain an unbroken gradient chain between the loss and hypernetwork (as shown by the red lines in Fig. 3 ).
+
+5 Experiments
+
+We test CLAW on the environment families shown in Table 1 , where each family consists of a set of environments that differ in one property. We use 5 seeds per experiment and report 95% confidence intervals for the mean across seeds, computed with Student’s t distribution. Appendix B lists the architecture, optimization, and per-experiment hyperparameters needed to reproduce every experiment below. We will include a public codebase in the final version of this paper.
+
+Family Robot Objective Environment property # Environments Walker Walker2d Walk forward Actuator strength 20 Reach Meta-World arm Reach target position Goal position 6 Push Meta-World arm Place puck at goal Puck goal position 6 Cheetah Half-Cheetah Run Running direction 2 Cheetah/Walker Half-Cheetah / Walker2d Run forward Robot embodiment 2
+
+5.1 Experiment 1: Online Adaptation
+
+Question.
+
+How does CLAW ’s performance compare to online, gradient-based adaptation?
+
+Setup.
+
+For each environment in a family, we begin by collecting 3 episodes of context data with \pi_{\mathrm{con}} (7.5–75s of data depending on the environment). Then, we roll out a pretrained model, adapting it at every step using the context data. Gradient-based baselines take one gradient step per environment step, adapting a set of LoRA adapters. On the other hand, CLAW uses its hypernetwork to generate new LoRA adapters at every environment step. We report episode return (or success rate) averaged across environments and seeds.
+
+Baselines.
+
+We compare CLAW against adaptation on models trained on a single task (ST) or with Domain Randomization ( Tobin et al., 2017 , DR;) . DR pretrains a base model on all environments in the family, and ST pretrains a base model on a single environment in the family. We also compare against a non-adapting oracle baseline, which appends the environment’s ground-truth parameter directly to the state, e.g., actuator strength, or running direction (specified with a one-hot vector). Since every other method must infer this parameter from context data, the oracle’s performance serves as a ceiling on the performance achievable with perfect environment identification. World model hyperparameters are fixed across baselines.
+
+Results.
+
+Results are shown in Fig. 4 . In all families, CLAW closely tracks the oracle’s performance. In the manipulation families (Push and Reach), DR and ST climb toward that ceiling, but they take many environment steps to get there, and performance is very noisy. In Walker, DR and ST get worse instead of catching up. In Cheetah, ST catches up but DR does not. DR’s low performance is likely due to Cheetah’s two running directions forming a bimodal distribution of behavior, which DR training resolves into a single “average” model that is not good at either behavior.
+
+5.2 Experiment 2: Adaptation when Data Is Limited
+
+Question.
+
+Given that test-time data is often expensive and/or scarce, how does CLAW ’s performance compare to the return achieved by applying many steps of gradient-based adaptation on a fixed test-time dataset?
+
+Setup.
+
+For each family and environment, we collect 3 episodes of context data using \pi_{\mathrm{con}} (between 7.5 and 75 seconds depending on the environment). Then, we use this data to adapt all methods offline, freeze the models, and evaluate them. For the gradient-based adaptation baselines, we sweep a range of offline gradient steps, thereby testing how performance changes as a function of offline adaptation. We report the same metrics as Experiment 1.
+
+Baselines.
+
+As in Experiment 1, we compare to DR, ST, and an oracle, here also swept over adaptation gradient steps.
+
+Results.
+
+Results are shown in Fig. 5 . CLAW mostly tracks oracle performance, and outperforms other baselines. Moreover, as the number of SGD steps increases, performance collapses for all gradient-based methods as they overfit to the data. This is supported by the collapse of the oracle: since it already knows the environment, the only thing left for it to fit is noise in the small dataset.
+
+5.3 Experiment 3: Comparison to In-Context Learning
+
+Question.
+
+Does CLAW ’s performance depend on generating expressive world-model adapters, or merely conditioning on the context embedding? How does this relationship change with model size?
+
+Setup.
+
+For each environment in the Cheetah/Walker family in Table 1 , we roll out one episode adapting at every timestep (as in previous experiments). We choose this family because we need a harder family than the others to tell the in-context baselines apart. Cheetah/Walker provides this since state and action spaces differ completely across environments. We also sweep over model size and report the same evaluation metrics as Experiment 1.
+
+Baselines.
+
+We compare against two in-context learning baselines that condition a fixed model on context, rather than adapting its weights, to isolate the source of CLAW ’s performance. Concatenation (Concat) feeds the hypernetwork’s context embedding directly into the world model’s state (instead of using it to generate adapters); this is akin to the approaches of Kumar et al. (2021) ; Rakelly et al. (2019) ; Liu et al. (2025) . We also compare to a hypernetwork trained to generate FiLM parameters ( Perez et al., 2017 ) , which scale and shift features.
+
+Results.
+
+Results are shown in Fig. 6 . At the smallest sizes, no method learns enough to separate performance. At the largest sizes, the base model has enough capacity to represent every environment without conditioning, so performance does not separate either. CLAW ’s advantage is clearest at intermediate sizes where it outperforms both baselines. These results align with those of Jayakumar et al. (2020) , who predict that hypernetwork-generated weights are more expressive than the conditioning mechanisms of FiLM and Concat.
+
+5.4 Experiment 4: LoRA Rank Sensitivity
+
+Question.
+
+For a fixed model size, how does CLAW ’s performance change with LoRA rank?
+
+Setup.
+
+We fix the model size and pretrain a hypernetwork with CLAW for a range of LoRA ranks. We use the Cheetah/Walker family and select an intermediate size where in-context baseline performance is separable. As LoRA rank increases, we increase the number of chunk embeddings K in Fig. 2 and keep all other hyperparameters fixed. This controls for hypernetwork capacity, so any performance change reflects the rank increase, not a larger generator network. Then, we evaluate online adaptation performance as in Experiment 1.
+
+Baselines.
+
+We compare against the same in-context learning baselines as Experiment 3.
+
+Results.
+
+Results are shown in Fig. 7 . We report performance vs. adapter rank and adapter size as a percentage of the base parameter count. CLAW ’s performance rises with rank and percentage. On the parameter axis, FiLM outperforms CLAW at low budgets, and CLAW needs around four times FiLM’s parameter budget to match its return. Past that budget, CLAW surpasses FiLM, whose performance stays constant since it has no comparable knob to spend a larger budget on.
+
+5.5 Experiment 5: Post-Hoc Hypernet Comparison
+
+Question.
+
+How does training the base model and hypernetwork jointly ( CLAW ) compare to training a hypernetwork on top of a frozen pretrained base model ( Bianchi et al., 2026 , cf.) ?
+
+Setup.
+
+We evaluate performance on Cheetah using the same metrics as previous experiments. The post-hoc hypernet’s total number of training steps and training data match what CLAW would see for this family (500k steps total, split between both environments).
+
+Baseline.
+
+First, we pretrain a plain TD-MPC2 base on Walker only for 250k steps. Then, we freeze it and train a hypernetwork for 250k steps to generate adapters for the Cheetah environment. We refer to this as the “post-hoc hypernet.” This matches the approach proposed by Bianchi et al. (2026) , who train a hypernetwork to generate LoRA adapters using a frozen robotics foundation model.
+
+Results.
+
+Results are shown in Fig. 8 . CLAW outperforms a post-hoc hypernet, showing that jointly training the base model and hypernetwork leads to better performance.
+
+6 Conclusion, Limitations, and Future Work
+
+We introduce CLAW , a method for world model adaptation that uses a hypernetwork to generate LoRA adapters online, replacing gradient-based test-time adaptation. Across all tested environment families, CLAW outperforms online gradient-based and in-context learning baselines. Moreover, under limited data, CLAW avoids the overfitting that degrades gradient-based approaches. We also present ablations showing that CLAW ’s performance comes from generating world model adapters rather than merely conditioning on a context embedding, that performance improves with LoRA rank, and that training the hypernetwork jointly with the base model outperforms training it post hoc.
+
+CLAW is limited by the identifiability of the environment when using the data-collection policy \pi_{\mathrm{con}} . Additionally, CLAW learns to generate adapters only for the environments seen during pretraining. Future work includes pretraining and/or architectural improvements for better generalization, applying CLAW to sim-to-real transfer, optimizing the data-collection policy for downstream performance, and algorithmically selecting which environments to train on ( Dennis et al., 2020 ) .
+
+AI Use Statement
+
+We used generative AI to implement methods and for general coding assistance, to edit and format this paper, and to summarize existing literature and surface relevant work we had not considered. We did not use generative AI for any other task. We have reviewed all AI-assisted work. We take responsibility for the final content of this work, including text, claims or artifacts produced with the aid of generative AI.
+
+Ethics Statement
+
+We are not aware of any ethical concerns raised by this work.
+
+Reproducibility Statement
+
+Appendix B reports every hyperparameter used to reproduce our experiments. We will also include a code base with instructions on how to run every experiment in this paper.
+
+Appendix A TDMPC2Update: World Model and Policy Update
+
+Algorithm 2 is the TD-MPC2 weight update ( Hansen et al., 2024 ) modified to train the hypernetwork alongside the base model. It runs in two phases. The first phase computes the world model loss and updates the world model base slice \theta_{w}^{\mathrm{wm}} jointly with the hypernetwork parameters \theta_{h} . The second phase computes the policy loss and updates the policy base slice \theta_{w}^{\pi} , again jointly with \theta_{h} . Between the two phases we regenerate the policy adapter {\phi_{w}^{\pi}} with the updated hypernetwork, so the policy loss uses the adapter the current hypernetwork produces. The update ends by refreshing the target critic and the Q -scale. The target critic EMA tracks base weights only, since its adapter is regenerated on every call.
+
+Appendix B Hyperparameters and Experimental Details
+
+This appendix reports every hyperparameter needed to reproduce our experiments. Tables 2 and 3 give the architecture, adapter, optimization, and planning hyperparameters shared by all methods and experiments unless a table below states otherwise. Tables 4 , 5 and 6 cover Experiments 1 and 2, which share pretrained checkpoints across the Walker, Reach, Push, and Cheetah families. Tables 7 , 8 and 9 cover Experiments 3, 4, and 5, which all use the Cheetah/Walker family.
+
+B.1 Shared Architecture and Adapter Hyperparameters
+
+Component Value Encoder Hidden features 256, 512 SimNorm groups / temperature 8 / 1.0 Dynamics Hidden features 512, 512, 512 SimNorm groups / temperature 8 / 1.0 Critic Hidden features 512, 512 Ensemble size / subsampled per target 5 / 2 Return bins / range 101 / [-10,10] Dropout 0.01 Policy Hidden features 512, 512 Log-std range [-10,2] Reward Hidden features 512, 512 Bins / range 101 / [-10,10] Hypernetwork H_{\theta_{h}} ( Section 4.1 ) Context dimension C 64 Transition-embedding MLP h_{\mathrm{emb}} hidden width 256 Generator MLP h_{\mathrm{gen}} hidden width 128 Chunk size c (parameters per generated chunk) 64 Chunk-embedding dimension 32
+
+Parameter Value TD-MPC2 loss and optimizer ( Algorithm 2 ) Optimizer Adam ( Kingma and Ba, 2014 ) Learning rate (world model / encoder / policy) 3e-4 / 9e-5 / 3e-4 Hypernetwork learning rate ( CLAW only) 3e-4 Gradient clip norm 20 Planning horizon 3 Discount factor \gamma 0.99 Temporal decay 0.5 Target critic EMA decay 0.99 Consistency / reward / value / entropy coefficients 20.0 / 0.1 / 0.1 / 1e-4 Adapter regularization weight \lambda ( Eq. 5 ) 0.01 Batch size 256 Initial SGD burst before rollout begins 1,000 steps Planner (MPPI ( Williams et al., 2015 ) ) Horizon 3 Iterations 6 Population size 512 Policy-seeded trajectories 24 Temperature 0.5 Action noise std range [0.05,2.0] Elites 64
+
+B.2 Experiments 1 and 2: Environment Families and Pretraining
+
+Family \dim(s) \dim(a) Episode length Envs. (train) Pretraining steps Eval. freq. Prefill steps/env. Walker 24 6 1000 20 350,000 50,000 3,000 Reach 39 4 100 6 50,000 10,000 1,000 Push 39 4 100 6 300,000 25,000 3,000 Cheetah 17 6 1000 2 500,000 50,000 3,000
+
+Method Adapts weights? Mechanism CLAW no (base frozen after pretraining) One hypernet forward pass per environment step. Generates rank-16 LoRA adapters. DR, ST yes one gradient step per environment step, on fresh rank-16 adapters Oracle no ground-truth environment parameter appended to the state
+
+Parameter Value Context data 3 episodes, collected with \pi_{\mathrm{con}} Offline gradient steps swept (DR, ST, oracle) \{0,1,100,1000,10000\} CLAW adaptation 1 hypernetwork forward pass (no gradient steps) Evaluation episodes per environment 10 Seeds 5
+
+B.3 Experiments 3–5: Cheetah/Walker Model-Capacity Studies
+
+Experiments 3, 4, and 5 all use the Cheetah/Walker family ( \dim(s){=}24 , padded for Cheetah; \dim(a){=}6 ; episode length 1000, 2 environments) and share an evaluation protocol: each method re-adapts before every planner call, evaluated over 10 episodes per environment with 5 seeds.
+
+Size Encoder features Dynamics features Critic/Policy/Reward features Ensemble LoRA rank Params. |\theta_{w}| A 256, 512 512, 512, 512 512, 512 5 16 4,960,618 B 256, 128 384, 384, 128 384, 384 2 16 1,214,651 D 192, 48 192, 192, 48 192, 192 2 16 325,467 E 128, 32 128, 128, 32 128, 128 2 16 161,787 F 64, 32 64, 64, 32 64, 64 2 8 60,667 G 32, 32 32, 32, 32 32, 32 2 4 25,467 H 16, 32 16, 16, 32 16, 16 2 2 11,707 I 8, 32 8, 8, 32 8, 8 2 1 5,787
+
+Method LoRA rank Adapter params % of world model Return CLAW 1 1,200 2.25% 547.8 \pm 41.9 CLAW 2 2,400 4.50% 685.8 \pm 35.7 CLAW 4 4,800 9.00% 721.5 \pm 54.0 CLAW 8 9,600 17.99% 817.3 \pm 35.6 CLAW 16 19,200 35.98% 814.2 \pm 86.6 CLAW 32 38,400 71.97% 917.0 \pm 67.9 FiLM — 1,280 2.40% 714.3 \pm 44.3 Concat — — — 556.2 \pm 64.2
+
+Method Task(s) Steps Trainable CLAW (joint) Walker + Cheetah 500,000 (250,000/task) base and hypernetwork Post-hoc, pass 1 Walker only 250,000 base only (plain TD-MPC2, no hypernetwork) Post-hoc, pass 2 Cheetah only 250,000 hypernetwork only (base frozen)
+
+References

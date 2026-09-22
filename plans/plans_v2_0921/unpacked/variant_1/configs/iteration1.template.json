@@ -1,0 +1,183 @@
+{
+  "schema_version": "earthdelta-one-iteration-1",
+  "status": "TEMPLATE_NOT_EXECUTABLE_WEATHER_CONFIG",
+  "repository": {
+    "expected_branch": "audit/round2-review-20260921",
+    "expected_delivery_head": "403b55db65f4c35c1a85d0794ad0de2765b07d96",
+    "audited_source_head": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+    "repo_path": null,
+    "run_root": null
+  },
+  "authorization": {
+    "allowed_task_ids": [
+      "R2I-01"
+    ],
+    "stop_after_task": "R2I-01",
+    "auto_advance": false,
+    "allow_targeted_cpu_synthetic_tests": true,
+    "cpu_test_policy": "Only small targeted tests within known host limits; record limit before run; no full-suite/large allocation by default.",
+    "allow_gpu_s0": false,
+    "allow_model_training": false,
+    "allow_weather_cache": false,
+    "allow_confirmation": false,
+    "allow_download": false,
+    "allow_dependency_install": false,
+    "allow_repository_push": false,
+    "owner_approval_record": null
+  },
+  "resources": {
+    "cpu_seconds_cap": null,
+    "host_memory_bytes_cap": null,
+    "gpu_hours_cap": null,
+    "gpu_memory_bytes_cap": null,
+    "weather_forward_calls_cap": null,
+    "optimizer_steps_cap": null,
+    "hpo_trials_cap": null,
+    "candidate_count_cap": null,
+    "data_read_bytes_cap": null,
+    "artifact_disk_bytes_cap": null,
+    "independent_process_count_cap": null,
+    "basis": "MEASURE_FROM_AUTHORIZED_PILOT_OR_EXISTING_ALLOCATION; no guessed hardware hours"
+  },
+  "runtime_mode": {
+    "serial": true,
+    "shared_model_concurrency": false,
+    "activation_checkpoint_replay": false,
+    "memory_enabled": false,
+    "jepa_enabled": false,
+    "dynamic_rank_enabled": false,
+    "spectral_training_enabled": false,
+    "calibration_enabled": false,
+    "extra_variance_regularizer_enabled": false
+  },
+  "backbone": {
+    "family": "Stormer",
+    "preferred_patch_size": 4,
+    "checkpoint_path": null,
+    "checkpoint_sha256": null,
+    "checkpoint_trust_source": null,
+    "upstream_repo_path": null,
+    "upstream_commit": "58dfee5a6037399a40fefd492bc00421e0c885a8",
+    "normalization_dir": null,
+    "normalization_policy": "official_inference_zero_mean",
+    "normalization_digest": null,
+    "required_parity_steps": [
+      1,
+      4
+    ],
+    "step_hours": 6,
+    "parity_tolerance": null,
+    "parity_tolerance_basis": null
+  },
+  "data": {
+    "store_path": null,
+    "pilot_selection_manifest": null,
+    "channel_order_hash": null,
+    "coordinates_hash": null,
+    "history_offsets_hours": null,
+    "initial_state_access_basis": "retrospective_initial_state_assumption",
+    "availability_source": "scenario",
+    "observed_first_seen_records": null,
+    "split_roles_path": null,
+    "process_group_definition": null,
+    "role_names": [
+      "fit",
+      "dev_select",
+      "dev_probe",
+      "confirm"
+    ]
+  },
+  "reference_and_bank": {
+    "f_ref_manifest": null,
+    "static_adapter_path": null,
+    "bank_manifest": null,
+    "candidate_registry": null,
+    "bank_fit_config": null,
+    "hold_steps": 4,
+    "continuation": "reference_after_hold_from_edited_state",
+    "candidate_count": null,
+    "candidate_families": [
+      "no_edit",
+      "frozen_singletons"
+    ],
+    "include_joint_candidates": false,
+    "joint_candidate_inference_claim": false,
+    "freeze_before_dev_probe": true
+  },
+  "metric": {
+    "schema_id": null,
+    "space": "fixed_linear_physical_view",
+    "q_eff_path": null,
+    "q_digest": null,
+    "variable_order": null,
+    "scale_path": null,
+    "scale_digest": null,
+    "primary_lead_hours": null,
+    "development_diagnostic_leads_hours": [
+      6,
+      24
+    ],
+    "guard_leads_hours": [
+      72
+    ],
+    "reduction_axes": [
+      "H",
+      "S",
+      "F"
+    ],
+    "preserve_axes": [
+      "B",
+      "K"
+    ],
+    "missing_policy": "error",
+    "cost_penalty_lambda": null,
+    "cost_unit": null,
+    "cost_penalty_used": null
+  },
+  "statistics": {
+    "effect_threshold_status": "TO_BE_PREREGISTERED_AFTER_PILOT_VARIANCE_ESTIMATE",
+    "delta_min_oracle_vs_ref": "TO_BE_PREREGISTERED_AFTER_PILOT_VARIANCE_ESTIMATE",
+    "delta_min_oracle_vs_static": "TO_BE_PREREGISTERED_AFTER_PILOT_VARIANCE_ESTIMATE",
+    "delta_min_legal_vs_static": "TO_BE_PREREGISTERED_AFTER_PILOT_VARIANCE_ESTIMATE",
+    "delta_min_factorization_vs_direct": "TO_BE_PREREGISTERED_AFTER_PILOT_VARIANCE_ESTIMATE",
+    "output_noninferiority_margin": "TO_BE_PREREGISTERED_AFTER_PILOT_VARIANCE_ESTIMATE",
+    "long_lead_guard_margin": "TO_BE_PREREGISTERED_AFTER_PILOT_VARIANCE_ESTIMATE",
+    "value_justification_independent_of_mde": null,
+    "alpha": null,
+    "target_power": null,
+    "pilot_variance": null,
+    "mde": null,
+    "planned_independent_n": null,
+    "max_independent_n": null,
+    "block_length": null,
+    "bootstrap_replicates": null,
+    "multiple_comparison_rule": null,
+    "max_looks": null,
+    "seed": null,
+    "threshold_certificate_path": null
+  },
+  "failure_policy": {
+    "registered_origin_denominator": null,
+    "reference_failure_action": null,
+    "candidate_failure_action": null,
+    "declared_policy_fallback": null,
+    "retries_cap": null,
+    "incomplete_oracle": "NO_FULL_ORACLE_PASS; retain all failures; no zero imputation"
+  },
+  "confirmation": {
+    "enabled": false,
+    "allowed_only_after_final_freeze": true,
+    "manifest_path": null,
+    "ledger_path": null,
+    "methods_hash": null,
+    "registry_hash": null,
+    "protocol_hash": null
+  },
+  "stage_validation": {
+    "R2I-01": "Allow code/CPU work without effect thresholds; real S0 requires trusted assets, identifiers, numeric tolerance, resource cap and explicit GPU authorization.",
+    "R2I-02": "Exploratory bank/cache needs frozen fit/development roles, registry, training/caching caps and authorization; formal delta_min may remain unfilled.",
+    "R2I-03": "Descriptive development allowed without threshold; formal PASS/STOP needs complete preregistered threshold/power/denominator specification.",
+    "R2I-04": "Requires explicit next-task grant and fixed shared labels/simulation/HPO cap; no confirm use.",
+    "R2I-05": "Requires separate output cap; confirm only after whole comparison frozen and explicit one-use approval."
+  }
+}

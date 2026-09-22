@@ -1,0 +1,20 @@
+{
+  "validated_at_utc": "2026-09-22T03:46:25.927526+00:00",
+  "planning_spec_valid": true,
+  "execution_ready": false,
+  "local_links_checked": 6,
+  "missing_links": [],
+  "source_files_checked": 48,
+  "source_files_changed": [],
+  "tracked_diff_unchanged": true,
+  "tracked_diff_sha256": "0db5900cf89eb7d53a7c66af9dc071b1ee82f26ea67fc874be3731944bad8cd2",
+  "planned_trajectories": {
+    "standard": 4648,
+    "reduced": 2376
+  },
+  "gpu_jobs_submitted": 0,
+  "llm_api_calls": 0,
+  "scope": "Planning document consistency and source integrity; no claim of weather efficacy.",
+  "credential_pattern_absent_in_deliverables": true,
+  "cpu_action_compatibility": "PASS"
+}

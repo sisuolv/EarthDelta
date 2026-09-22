@@ -1,0 +1,70 @@
+{
+  "created_utc": "2026-09-21T03:58:18.200104+00:00",
+  "scope": "independent synthetic algebra only; no repository code imported",
+  "repository_tests_run": false,
+  "weather_experiments_run": false,
+  "checks": [
+    {
+      "name": "weighted_finite_response_identity",
+      "passed": true,
+      "max_abs_error": 2.220446049250313e-16,
+      "note": ""
+    },
+    {
+      "name": "opposite_error_sign_requires_negative_cross_term",
+      "passed": true,
+      "max_abs_error": 2.220446049250313e-16,
+      "note": ""
+    },
+    {
+      "name": "nonlinear_endpoint_transform_identity",
+      "passed": true,
+      "max_abs_error": 7.105427357601002e-15,
+      "note": "This does not imply transform(error)==error of transformed endpoints."
+    },
+    {
+      "name": "gram_linear_surrogate",
+      "passed": true,
+      "max_abs_error": 1.7763568394002505e-15,
+      "note": ""
+    },
+    {
+      "name": "linear_cross_term",
+      "passed": true,
+      "max_abs_error": 2.220446049250313e-16,
+      "note": ""
+    },
+    {
+      "name": "nonlinear_interaction_separate_from_gram_overlap",
+      "passed": true,
+      "max_abs_error": 5.551115123125783e-17,
+      "note": ""
+    },
+    {
+      "name": "feedback_output_can_represent_parameter_dynamics",
+      "passed": true,
+      "max_abs_error": 2.220446049250313e-16,
+      "note": ""
+    },
+    {
+      "name": "conditional_covariance_correction",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "note": "Relevant with compressed information; exact deterministic du has no conditional variance given full input."
+    },
+    {
+      "name": "gain_prediction_error_expansion",
+      "passed": true,
+      "max_abs_error": 1.1102230246251565e-16,
+      "note": ""
+    },
+    {
+      "name": "no_edit_gain_is_zero",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "note": ""
+    }
+  ],
+  "passed": 10,
+  "total": 10
+}

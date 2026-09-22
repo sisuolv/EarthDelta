@@ -245,7 +245,13 @@ def test_gate_rejects_wrong_normalization_digest(temp_gate_dir):
 
 
 def test_gate_accepts_correct_normalization_digest(temp_gate_dir):
-    """Test that gate accepts when normalization digest matches expected."""
+    """Test that gate accepts when normalization digest matches expected.
+
+    Fixture update (round 3): the expected value is now the SCHEMA-QUALIFIED
+    identity (``ed-norm-identity/1:<hex>``) rather than a bare digest, because
+    the gate now refuses to compare identities across serialization schemas.
+    The assertion itself is unchanged.
+    """
     # Create normalization contract from NPZ
     norm = NormalizationContract.from_npz_dir(
         str(temp_gate_dir["norm_dir"]),
@@ -254,8 +260,8 @@ def test_gate_accepts_correct_normalization_digest(temp_gate_dir):
         policy=POLICY_OFFICIAL_ZERO_DIFF_MEAN,
     )
 
-    # Correct expected digest
-    correct_digest = norm.digest
+    # Correct expected identity (schema-qualified)
+    correct_digest = norm.identity_digest
 
     result = verify_normalization_parity(
         norm,
@@ -264,6 +270,31 @@ def test_gate_accepts_correct_normalization_digest(temp_gate_dir):
     )
 
     assert result["passed"] == True, f"Gate should accept correct normalization digest: {result}"
+
+
+def test_gate_rejects_legacy_unversioned_digest_even_when_hex_matches(temp_gate_dir):
+    """A legacy, unversioned digest must fail closed, not be silently upgraded.
+
+    The bare hex here is byte-identical to the current digest, so a naive
+    string comparison would pass. It must not: the expected value carries no
+    schema version, so it cannot be reinterpreted under the current schema.
+    """
+    norm = NormalizationContract.from_npz_dir(
+        str(temp_gate_dir["norm_dir"]),
+        variables=list(temp_gate_dir["variables"]),
+        intervals=(6, 24),
+        policy=POLICY_OFFICIAL_ZERO_DIFF_MEAN,
+    )
+
+    result = verify_normalization_parity(
+        norm,
+        temp_gate_dir["norm_dir"],
+        expected_digest=norm.digest,  # bare hex, no schema prefix => legacy format
+    )
+
+    assert result["passed"] is False, "Legacy-format digest must not certify identity"
+    assert result.get("format_version_mismatch") is True
+    assert "format version mismatch" in result.get("error", "").lower()
 
 
 # =============================================================================

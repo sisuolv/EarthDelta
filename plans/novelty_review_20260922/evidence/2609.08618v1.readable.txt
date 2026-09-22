@@ -1,0 +1,1105 @@
+Target-Independent Micro-Interventions for Predicting Training Response Across Language-Model Families
+
+Benchmark scores describe what a checkpoint can do now, but they do not
+determine how it will respond to the next training episode. We measure this
+missing state by branching four short, standardized, target-independent
+micro-interventions from the same checkpoint and recording their effects in a
+common capability space. Together with current capability, these responses
+form L-State ; its pulse block supports a flexible direct readout and a
+structure-preserving operator readout. Under smooth local dynamics, the
+operator construction admits an end-to-end cross-family bound with explicit
+source- and target-family coordinate heterogeneity. In three-family
+leave-one-family-out development, both pulse readouts reduce source-standardized
+MSE by 39.4% relative to capability alone, while separating the best response
+and direction estimates. On sealed GLM-4-9B, the direct and operator readouts
+reduce MSE by 71.8% and 78.3%, respectively, and the operator readout raises
+sign balanced accuracy from 0.366 to 0.754. On sealed Granite-3.1-8B, the direct
+readout reaches RMSE 0.544 and a development-fitted action-wise selector reaches
+0.554, compared with 1.172 for capability alone. A five-family audit finds that
+the operator coordinate varies by action and family, and that modeling these
+deviations improves retrospective held-trajectory prediction. Target-independent
+interventions therefore expose training-response information that current
+capability misses, with direct and structured readouts covering complementary
+transfer regimes.
+
+
+
+1 Introduction
+
+Suppose two language-model checkpoints obtain the same scores on mathematics,
+code, science, and reading. Are they equally good starting points for another
+round of training? Identical current scores leave the answer unresolved. One
+checkpoint may learn a new skill quickly, another may forget neighboring
+skills, and a third may remain nearly unchanged. Present-day scores record
+what a model currently does; controlled micro-training records how that
+checkpoint changes under a fixed training contract.
+
+We study whether the missing information can be measured by intervention. From
+the same checkpoint, we independently branch four short, standardized, and
+target-independent training episodes. We evaluate the capability change caused
+by each episode and concatenate those responses with the checkpoint’s current
+capabilities. This 25-dimensional object is an L-State : five current
+capabilities plus four five-dimensional response vectors (Figure 1 ). Figure 2 connects this construction to the
+complete theory-to-evidence program. Its 20-dimensional pulse block supports
+two complementary cross-family readouts. The direct readout learns a
+multi-output map from the measured pulse responses to a target-action response.
+The operator readout organizes those same measurements as a local response
+operator and applies a source-estimated action coordinate. Both readouts live
+in a common evaluation space, so families with different parameters, gradients,
+and hidden representations can be compared through the same measured responses.
+
+The resulting prediction problem is deliberately strict. To predict the
+response of Qwen, for example, a readout may use target-action responses from
+Mistral and OLMo and may measure Qwen’s current capability and standard-pulse
+responses. Qwen target-action responses remain sealed until every prediction
+byte is frozen. This leave-one-family-out (LOFO) design measures transfer of a
+behavioral response state across distinct model families.
+
+Our core insight is that target-independent pulse responses form a transferable
+training state with two complementary readouts. The direct readout learns a
+flexible map from the pulse block; the operator readout factors prediction into
+local response geometry and a source-estimated action coordinate. Under the
+conditions in Section 3, Theorem 3.6 supports the operator and
+Eq. ( 15 ) separates target identification, source calibration, and
+cross-family coordinate bias. Development data determine which structure best
+serves each endpoint.
+
+In three-family LOFO development, both pulse readouts reduce continuous-response
+MSE by 39.4% relative to capability alone: the direct readout has the lowest
+response RMSE and the operator the highest sign balanced accuracy. We freeze
+the operator for response and direction and the full-state readout for action
+scoring before opening GLM-4-9B labels. On GLM, direct and operator MSE reductions
+reach 71.8% and 78.3%, while the operator raises sign balanced accuracy by
+38.8 points over capability.
+
+GLM also exposes an operator inversion on science: all 27 states and four
+additional realizations preserve the reversed sign, while the source action
+coordinate is shrunken and unstable. We therefore freeze an action-wise selector
+from held-out development-family wins before opening Granite-3.1-8B. On Granite,
+the direct readout reaches RMSE 0.544, the selector 0.554, the operator retains
+0.657 coordinate-macro sign balanced accuracy, and the full L-State readout
+reduces action regret by 25.5%.
+
+Our contributions are:
+
+We introduce an intervention-derived learning state with direct and
+structure-preserving operator readouts.
+
+We derive conditional response, sign, regret, and exact-action guarantees
+with explicit source- and target-family coordinate-bias terms.
+
+Across development and two sealed families, pulse readouts improve
+response prediction over capability; a development-fitted selector reaches
+RMSE 0.554 on Granite versus 1.172 for capability.
+
+We test pooled action coordinates across five families, quantify family
+and family–action deviations, and link heterogeneity to readout selection.
+
+2 Related Work
+
+Predicting adaptation.
+
+Static diagnostic probes can predict fine-tuning performance in studied NLP
+settings ( Zhu et al., 2022 ) ; analyses of intermediate checkpoints reveal
+training regularities shared across scales ( Xia et al., 2023 ) ; and
+observational scaling laws compress benchmark measurements into a low-dimensional
+capability space ( Ruan et al., 2024 ) . Transferability scores similarly
+ask which pretrained representation or checkpoint will adapt well ( Nguyen et al., 2020 ; Munn & Wei, 2025 ) . Resource-constrained model selection
+has also been formulated as extrapolating full fine-tuning performance from
+smaller-data runs through a rectified scaling law ( Lin et al., 2024 ) .
+Model-level representation work constructs compact embeddings for correctness,
+routing, and benchmark-performance prediction ( Zhuang et al., 2025 ) , and
+training-free functional fingerprints compare heterogeneous models ( Wu et al., 2026 ) . These methods characterize current functional behavior; L-State derives its representation from controlled training interventions and
+predicts candidate-action response vectors.
+Closest in experimental goal, TuneAhead combines dataset descriptors
+with a short standardized probe to forecast scalar final scores for runs based
+on Qwen2.5-7B-Instruct ( Luo et al., 2026 ) . A concurrent preprint is closer
+in mechanism: it models learning through a parameter–optimizer receiving state
+and target-specific update geometry in nanoGPT, ResNet, and diffusion
+experiments ( Wang, 2026 ) . L-State differs in representation and
+validation: current capabilities and target-independent pulse responses live in
+a common evaluation space, predict a signed response vector over several
+candidate actions, and are evaluated by family-held-out development followed by
+chronologically sealed tests on GLM-4-9B and Granite-3.1-8B with downstream
+action regret.
+
+From training data to behavior.
+
+Datamodels learn how training-set composition changes predictions ( Ilyas et al., 2022 ) ; influence functions and optimizer-aware gradient
+methods trace or rank training examples by their target effect ( Koh & Liang, 2017 ; Xia et al., 2024 ) . Task arithmetic represents completed
+fine-tuning runs as directions in a shared parameter space ( Ilharco et al., 2023 ) . Recent work transports completed task vectors across
+heterogeneous-width models by aligning observed internal activations and their
+functional effect ( Rinaldi et al., 2026 ) . L-State takes a complementary
+route: it treats the checkpoint as the object being identified, measures
+target-independent pulse responses in evaluation space, and predicts future
+candidate-action responses. Our question is also conditional in the sense of Hewitt et al. (2021) : do pulse responses provide usable information
+beyond current capability?
+
+Intervention and domain transfer.
+
+Informative controlled inputs are central to active system identification ( Wagenmaker & Jamieson, 2020 ) . This analogy motivates standardized pulses, but
+our local response model states the training-domain assumptions explicitly.
+Following domain-generalization evaluation lessons ( Gulrajani & Lopez-Paz, 2021 ) , family identity defines the outer split and all
+selection occurs on source families. The prospective stage extends this design
+with chronological seals: endpoint rules, response predictions, and
+utility-conditioned action choices are serialized before held-out-family
+target-action labels enter scoring.
+
+3 L-State and Its Pulse Readouts
+
+3.1 Why Static Capability Is Insufficient
+
+Each model family m has a state space \mathcal{X}_{m} . A shared evaluation
+contract maps x\in\mathcal{X}_{m} to capabilities c_{m}(x)\in\mathbb{R}^{d} , with larger
+coordinates better. For a micro-training action u , strength h , and training
+randomness \xi , define the population response
+
+r_{m}^{h}(x,u)=\frac{\mathbb{E}_{\xi}[c_{m}(U^{h}_{m,u}(x;\xi))]-c_{m}(x)}{h}. (1)
+
+If c_{m}(x)=c_{m^{\prime}}(x^{\prime})=c , write e=\|f(c,u)-r_{m}^{h}(x,u)\|_{2} and e^{\prime}=\|f(c,u)-r_{m^{\prime}}^{h}(x^{\prime},u)\|_{2} . Every capability-only predictor satisfies
+
+\max\{e,e^{\prime}\}\geq\tfrac{1}{2}\|r_{m}^{h}(x,u)-r_{m^{\prime}}^{h}(x^{\prime},u)\|_{2}. (2)
+
+Moreover, an exact capability-only response map exists on a domain if and only
+if, for every u , the response is constant on every capability level set.
+
+Thus the missing state variable is precisely the within-level-set variation of
+training response. Under the geometry developed next, controlled interventions
+make that variation observable.
+
+3.2 Local Intervention Geometry
+
+The transfer chain uses five explicit protocol conditions: a named pulse gauge,
+smooth local dynamics, spanning pulse excitation, positive source coverage, and
+bounded measurement and misspecification errors. Whether target actions have
+the same coordinate across families is left as a hypothesis and enters the
+bounds quantitatively.
+
+In the common named-pulse gauge, fix a reference family set and positive
+normalized weights \{\pi_{m}\}_{m} and \{\omega_{u}\}_{u} . Write
+
+a_{m,u}=a_{0}+\alpha_{u}+\beta_{m}+\gamma_{m,u}=\bar{a}_{u}+\delta_{m,u}, (3)
+
+where \bar{a}_{u}=a_{0}+\alpha_{u} is pooled, \beta_{m} is the family deviation, and \gamma_{m,u} is the family–action interaction. Identifiability uses
+
+\sum_{u}\omega_{u}\alpha_{u}=0,\quad\sum_{m}\pi_{m}\beta_{m}=0,\quad\sum_{m}\pi_{m}\gamma_{m,u}=0\ \forall u,\quad\sum_{u}\omega_{u}\gamma_{m,u}=0\ \forall m. (4)
+
+Thus \bar{a}_{u}=\sum_{m}\pi_{m}a_{m,u} and \delta_{m,u}=a_{m,u}-\bar{a}_{u} . Exact sharing is the nested hypothesis
+
+H_{\rm share}:\quad\beta_{m}=0\ \text{and}\ \gamma_{m,u}=0\quad\text{for all }m,u. (5)
+
+Work in a local Euclidean chart around x and write the random training
+displacement as \Delta_{m,u}^{h}(x,\xi) . Let the capability Jacobian be L_{c} -Lipschitz along every segment traversed by this displacement. Suppose the
+family-specific coordinate a_{m,u}\in\mathbb{R}^{r} and a checkpoint-specific update
+map G_{m}(x) obey
+
+\displaystyle\left\|\frac{\mathbb{E}\Delta_{m,u}^{h}}{h}-G_{m}(x)a_{m,u}\right\|_{2} \displaystyle\leq\epsilon_{g}, (6) \displaystyle\mathbb{E}\|\Delta_{m,u}^{h}\|_{2}^{2} \displaystyle\leq h^{2}V^{2}\|a_{m,u}\|_{2}^{2}.
+
+Under Eq. ( 6 ), the response in Eq. ( 1 )
+has the form
+
+\displaystyle r_{m}^{h}(x,u) \displaystyle=B_{m}(x)a_{m,u}+d_{m}(x,u,h), (7) \displaystyle B_{m}(x) \displaystyle=Jc_{m}(x)G_{m}(x),
+
+with
+
+\|d_{m}(x,u,h)\|_{2}\leq\|Jc_{m}(x)\|_{2}\epsilon_{g}+\tfrac{1}{2}L_{c}hV^{2}\|a_{m,u}\|_{2}^{2}. (8)
+
+The first term measures departure of the expected update from the
+family-specific coordinate factorization; the second is the finite-radius
+curvature cost. Training randomness enters through the expected displacement
+and its second moment, while repeat averaging controls the empirical estimation
+noise below. Cross-family sharing is governed separately by
+Eq. ( 5 ).
+
+3.3 Identifying the Checkpoint Response Operator
+
+For a fixed family, let k target-independent pulses q_{1},\ldots,q_{k} have
+coordinate matrix Q_{m}=[a_{m,q_{1}},\ldots,a_{m,q_{k}}]\in\mathbb{R}^{r\times k} .
+Their population and empirical response matrices satisfy
+
+Y_{m}=B_{m}Q_{m}+D_{m},\qquad\widehat{Y}_{m}=B_{m}Q_{m}+E_{m},\qquad E_{m}=D_{m}+Z_{m}, (9)
+
+where D collects local residuals and Z collects training and evaluation
+noise.
+
+For a fixed target coordinate a_{\star} , the response Ba_{\star} is uniquely
+determined from BQ for every B\in\mathbb{R}^{d\times r} if and only if a_{\star}\in\operatorname{col}(Q) . Hence every action in \mathbb{R}^{r} is identifiable
+if and only if Q has full row rank. In that case, \widehat{B}=\widehat{Y}Q^{\dagger} satisfies
+
+\|\widehat{B}-B\|_{\nu}\leq\frac{\|E\|_{\nu}}{\sigma_{r}(Q)},\qquad\nu\in\{2,F\}. (10)
+
+For full-row-rank Q , the exact worst-case spectral amplification is
+
+\sup_{\|E\|_{2}\leq 1}\|EQ^{\dagger}\|_{2}=\frac{1}{\sigma_{r}(Q)}. (11)
+
+Under \|Q\|_{F}^{2}\leq E_{0} and k\geq r , its minimum is \sqrt{r/E_{0}} , attained exactly by tight frames satisfying QQ^{\top}=(E_{0}/r)I_{r} .
+
+Our estimator uses the same four named standard pulses as coordinate anchors,
+giving Q_{m}=I_{4} separately in every family. This gauge convention aligns the
+meanings of the four axes. Cross-family equality of target-action coefficients
+remains the separate hypothesis H_{\rm share} . The convention also removes an explicit Q_{m}^{\dagger} factor from operator recovery. With an independently fixed
+action metric and energy budget, Theorem 3.4 selects tight-frame
+interventions. With common
+pulse strength h , the stored differences R=h\widehat{Y} change only the global scale. The empirical state is
+
+z_{m}(x)=\big[\widehat{c}_{m}(x);\operatorname{vec}R_{m}(x)\big]\in\mathbb{R}^{25}. (12)
+
+Every pulse branches from an independent copy of the checkpoint.
+
+3.4 Estimating a Pooled Action under Family Heterogeneity
+
+Enumerate the source checkpoints as \mathcal{S}=\{s_{1},\ldots,s_{n}\} , where s_{i} belongs to family m(s_{i}) , and
+write \delta_{s_{i},u}=\beta_{m(s_{i})}+\gamma_{m(s_{i}),u} . Stack source operators
+and responses as
+
+\displaystyle\mathcal{B}_{S} \displaystyle=\begin{bmatrix}B_{s_{1}}\\
+\vdots\\
+B_{s_{n}}\end{bmatrix}, \displaystyle y_{S}(u) \displaystyle=\mathcal{B}_{S}\bar{a}_{u}+v^{\rm het}_{S,u}+e_{S}, (13) \displaystyle v^{\rm het}_{S,u} \displaystyle=\begin{bmatrix}B_{s_{1}}\delta_{s_{1},u}\\
+\vdots\\
+B_{s_{n}}\delta_{s_{n},u}\end{bmatrix}, \displaystyle G_{S} \displaystyle=\mathcal{B}_{S}^{\top}\mathcal{B}_{S}=\sum_{s}B_{s}^{\top}B_{s}.
+
+The source-coverage radius is \underline{\sigma}_{S}=\sigma_{r}(\mathcal{B}_{S})=\sqrt{\lambda_{\min}(G_{S})} , while H_{S,u}=\|v^{\rm het}_{S,u}\|_{2} measures the linear response-scale cost of imposing a pooled
+coordinate on heterogeneous source families.
+
+Assume \underline{\sigma}_{S}>0 , \|e_{S}\|_{2}\leq\epsilon_{S} , \|\bar{a}_{u}\|_{2}\leq A , and \|v^{\rm het}_{S,u}\|_{2}\leq H_{S,u} . With exact source operators, \widehat{a}_{u}=\mathcal{B}_{S}^{\dagger}y_{S}(u) obeys \|\widehat{a}_{u}-\bar{a}_{u}\|_{2}\leq(H_{S,u}+\epsilon_{S})/\underline{\sigma}_{S} .
+If \|\widehat{\mathcal{B}}_{S}-\mathcal{B}_{S}\|_{2}\leq\tau_{S}<\underline{\sigma}_{S} , then
+
+\widehat{a}_{u}=\widehat{\mathcal{B}}_{S}^{\dagger}y_{S}(u),\qquad\|\widehat{a}_{u}-\bar{a}_{u}\|_{2}\leq\frac{\tau_{S}A+H_{S,u}+\epsilon_{S}}{\underline{\sigma}_{S}-\tau_{S}}. (14)
+
+Under H_{\rm share} , H_{S,u}=0 and the original shared-coordinate bound is
+recovered as a special case. The converse need not hold: H_{S,u} measures
+only the linear response-scale mismatch on the observed source operators.
+
+Adding a source checkpoint changes the coverage Gram from G_{S} to G_{S}+B_{\rm new}^{\top}B_{\rm new} , so \lambda_{\min} is nondecreasing. A
+full-column-rank new source increases the lower bound by at least \sigma_{r}(B_{\rm new})^{2} . Coverage alone, however, does not establish
+sharedness: the added family can also increase H_{S,u} . Additional sources
+tighten the complete bound only when their coverage gain outpaces operator,
+response, and coordinate-heterogeneity errors.
+
+3.5 Prospective Transfer to an Unseen Family
+
+Let \star denote a previously unseen family. Its target-independent pulses
+give \widehat{B}_{\star} , while source-family target responses give \widehat{a}_{u} , an estimate of the pooled coordinate \bar{a}_{u} . The prediction is \widehat{r}_{\star}(u)=\widehat{B}_{\star}\widehat{a}_{u} .
+
+Let Q_{\star} be expressed in the same fixed named-pulse gauge, have full row
+rank, and let \widehat{B}_{\star}=\widehat{Y}_{\star}Q_{\star}^{\dagger} . Assume \|\bar{a}_{u}\|_{2}\leq A , a_{\star,u}=\bar{a}_{u}+\delta_{\star,u} with \|\delta_{\star,u}\|_{2}\leq D_{\star,u} , \|r_{\star}^{h}(u)-B_{\star}a_{\star,u}\|_{2}\leq\epsilon_{\star,u} , target pulse
+perturbation \|E_{\star}\|_{2}\leq\eta_{\star} , and the source conditions of Theorem 3.5 . Then
+
+\|\widehat{r}_{\star}(u)-r_{\star}^{h}(u)\|_{2}\leq\Delta_{\star,u}, (15)
+
+where
+
+\displaystyle\Delta_{\star,u}={} \displaystyle\frac{\eta_{\star}A}{\sigma_{r}(Q_{\star})}+\epsilon_{\star,u} (16) \displaystyle+\|B_{\star}\|_{2}D_{\star,u} \displaystyle+\left(\|B_{\star}\|_{2}+\frac{\eta_{\star}}{\sigma_{r}(Q_{\star})}\right)\frac{\tau_{S}A+H_{S,u}+\epsilon_{S}}{\underline{\sigma}_{S}-\tau_{S}}.
+
+Equation ( 16 ) separates target identification, target
+locality, unseen-family coordinate bias, and source heterogeneity. Appendix B gives the full
+proofs, a finite-repeat version, and the ridge-regularized source estimator used
+by the operator readout. For that estimator, the same theorem holds after
+replacing the last fraction in Eq. ( 16 ) by the ridge
+coordinate radius in Eq. ( 20 ). If scoring uses a
+realized response \widetilde{r}_{\star}(u)=r_{\star}^{h}(u)+\omega_{u} with \|\omega_{u}\|_{2}\leq\kappa_{u} , its total radius is \overline{\Delta}_{\star,u}=\Delta_{\star,u}+\kappa_{u} .
+
+If |r_{\star,j}^{h}(u)|>\Delta_{\star,u} , then \operatorname{sign}\widehat{r}_{\star,j}(u)=\operatorname{sign}r_{\star,j}^{h}(u) . For a finite candidate set with J(u)=hv^{\top}r_{\star}^{h}(u)-\operatorname{cost}(u) , simultaneous radii imply
+
+J(u^{\star})-J(\widehat{u})\leq h\|v\|_{2}\big(\Delta_{\star,u^{\star}}+\Delta_{\star,\widehat{u}}\big). (17)
+
+If the true best-versus-runner-up utility margin exceeds h\|v\|_{2}(\Delta_{\star,u^{\star}}+\max_{u\neq u^{\star}}\Delta_{\star,u}) ,
+then \widehat{u}=u^{\star} .
+Balanced-accuracy, normalized-regret, and realized-response versions appear in
+Appendix B .
+
+3.6 Two Pulse Readouts and Task-Matched Endpoints
+
+Direct pulse readout.
+
+Let p(s)=\operatorname{vec}R(s) denote the 20-dimensional pulse block of the
+L-State at checkpoint s . For each target action, this readout fits a source-only
+multi-output ridge map from p(s) to the five-dimensional target response.
+It lets the data learn an unconstrained linear combination of the measured
+pulse responses.
+
+Operator readout.
+
+We ridge-fit a target coordinate from source responses and predict \widehat{y}_{\rm op}(s,u)=R(s)\widehat{a}_{u} . This preserves a zero point and
+constrains predictions to the local operator geometry measured by the same
+L-State pulse block. This is the structured predictor covered by Theorem 3.6 .
+
+Full L-State readout.
+
+For each action, a multi-output ridge map also predicts the response from the
+complete 25-dimensional state z(s)=[c(s);p(s)] . All regularization and
+standardization choices for the direct, operator, and full-state readouts use
+complete source
+trajectories. Appendix C gives the objectives.
+
+Shared-coordinate hypothesis audit.
+
+After all five family labels are open, we fit one coordinate per observed
+family–action cell and apply Eq. ( 3 ). Here the
+five observed families have equal weight, so their retrospective mean \bar{a}_{u}^{(5)} is distinct from the prospective source-reference mean.
+Appendix G defines the common-scale pooling error D_{u} , shared-signal fraction S_{u} , and dead-zone error D_{u}^{\rm DZ} , and
+gives the exact difference, retrospective equivalence, and predictive tests.
+Those tests use unpenalized least squares; ridge is used only for coordinate
+stability summaries. Thus H_{\rm share} is tested directly.
+
+Action-wise pulse selector.
+
+The first sealed family reveals that the source-calibrated operator can be
+action-heterogeneous. We therefore compare the direct and operator readouts
+separately for each semantic action using the three held-out development-family
+folds. The direct readout is selected after a strict response-RMSE win in at
+least two of the three folds; ties retain the operator readout. This rule selects
+the operator readout for mathematics and reading and the direct readout for code
+and science. The selector uses development-family responses
+and is serialized before the second sealed family’s target branches begin.
+The deployed endpoint policy uses this selector for continuous response, the
+operator readout for direction, and the full-state map for utility-conditioned
+action scoring.
+
+Empirical consequences.
+
+The theorem chain calls for a capability-only reference, pulse reliability and
+geometry checks, direct sharedness diagnostics, and end-to-end response, sign,
+and utility tests. The protocol evaluates them in that order and freezes each
+held-out family’s predictions before opening its target-action responses.
+
+4 Theory-Guided Experimental Design
+
+The experiments compare the two pulse readouts before testing the structured
+transfer chain. Development measures the capability gap and the aggregate gains
+of the direct and operator readouts; the first seal tests the composed operator
+prediction and exposes an action-specific calibration inversion; repeat
+interventions locate that failure; and the second seal tests the frozen
+action-wise response route.
+
+4.1 Development Families and Sealed Families
+
+The development study uses Qwen2.5-7B-Instruct ( Qwen Team, 2025 ) ,
+Mistral-7B-Instruct-v0.3 ( Jiang et al., 2023 ; Mistral AI, 2024 ) , and
+OLMo-2-1124-7B-Instruct ( Walsh et al., 2025 ) . Each family contributes three
+frozen seeds. Every seed starts from a zero-output rank-4 LoRA adapter ( Hu et al., 2022 ) and follows eight balanced state-generation episodes,
+yielding checkpoints t00 through t08 . The development set therefore contains
+27 states per family and 81 states in total.
+
+After the initial endpoint rule is fixed, we apply the same state construction
+and training contract to GLM-4-9B-0414 ( Zhipu AI, 2025 ) . This first
+sealed family adds 27 held-out states from three new trajectories. The GLM
+science-action inversion then motivates the action-wise pulse selector above. We fit
+its action-wise choices exclusively on the three development families and seal
+the resulting policy before running Granite-3.1-8B-Instruct at revision 4009206d5fc9 ( IBM Granite Team, 2024 ) . Granite supplies another
+27 states from three fresh trajectories. The complete study covers 135 states
+from five 7–9B instruction-tuned model families.
+
+4.2 Data Separation and Training Contract
+
+Data have disjoint roles. Four deterministic synthetic tasks generate state
+trajectories. Four different synthetic tasks provide the standard pulses:
+schema mapping, two-step rule chaining, symbolic rewriting, and table
+aggregation; this pulse set is synthetic and disjoint from the target benchmark
+tasks. Semantic target actions
+train on 32 examples from GSM8K ( Cobbe et al., 2021 ) , MBPP ( Austin et al., 2021 ) , SciQ ( Welbl et al., 2017 ) , or BoolQ ( Clark et al., 2019 ) . Capabilities are negative clipped token NLL on disjoint
+held-out examples from those four tasks plus WikiText-2 ( Merity et al., 2017 ) . Exact normalized-text hashes are disjoint across
+state generation, pulse training, target training, and capability evaluation.
+
+All primary pulse and target branches freeze base weights and train rank-4 LoRA
+on attention query and value projections for eight AdamW steps, consuming 32
+examples. The target-early reference reads a target-specific intermediate after two steps and eight
+examples, while locality calibration deliberately includes four- and
+sixteen-step variants. Each branch starts with reset optimizer moments and
+restores an identical checkpoint hash. This short-LoRA protocol measures
+immediate training response under one shared optimization contract.
+
+4.3 Family-Level Gating and Baselines
+
+In development, each outer fold trains on two model families and tests on the
+third. The program serializes predictions and hashes before opening the fold’s
+label vault, while source-trajectory inner cross-validation selects
+hyperparameters. The complete comparison includes a source-mean reference, Capability , a direct pulse readout, scalar training statistics, a
+trajectory/index-matched source state, and the Operator readout. Target Early provides a separate target-specific reference.
+
+Each sealed stage freezes its reporting rule, all 540 core response predictions,
+and all 810 utility-conditioned action choices before target-action training.
+The Granite stage additionally freezes 216 selector-extension rows that copy
+the chosen direct or operator response and direction predictions. Both Granite freeze
+receipts record zero target branches. The target vault then opens and scores
+five core methods over 27 states, four actions, five response coordinates, and
+six utilities. Current capability is the common reference. The direct readout
+fits the 20-dimensional L-State pulse block, while the operator readout applies
+the structured factorization to the same block. The matched-state reference averages
+development responses at the same trajectory seed, state index, and action
+identity.
+
+4.4 Metrics and Uncertainty
+
+Continuous response error is standardized using only the source-family mean
+and population standard deviation for each outer fold, action, and coordinate;
+the resulting RMSE is dimensionless. The later five-family sharedness audit
+instead uses one common three-development-family scale for every family so that
+all deviations have the same ruler. We report MSE gain as 1-\mathrm{RMSE}_{m}^{2}/\mathrm{RMSE}_{\mathrm{cap}}^{2} . Direction is balanced accuracy on response
+components outside a coordinate-specific dead zone estimated from three-repeat
+pulse reliability. We also report median response cosine.
+
+For decisions, six fixed utility vectors—five one-hot capabilities and one
+balanced vector—choose among the four semantic actions. We report top-1 action
+accuracy and realized normalized regret. Because each semantic action has one
+preregistered training realization, the decision metric measures realized
+performance under the fixed training protocol.
+
+The development analysis uses 10,000 family-then-trajectory bootstrap
+resamples for full-state readout endpoints and 1,000 aligned-pulse permutations with
+full source refitting. Each sealed-family core endpoint analysis uses 10,000
+whole-trajectory resamples over its three trajectories. GLM direction is
+evaluated over 184 components selected by source-frozen dead zones; Granite
+uses the same frozen coordinate thresholds. The action-wise pulse selector is
+summarized by frozen pooled and action-macro point estimates, while continuous
+response retains all scored components. Four
+additional GLM science-action responses per state test repeat stability, and a
+separate nine-state study evaluates four-, eight-, and sixteen-step exposure.
+Fresh processes reproduce the canonical development, GLM, and Granite analysis
+hashes.
+
+4.5 Retrospective Five-Family Sharedness Audit
+
+This audit begins only after all five target-label vaults are open and leaves
+every sealed prediction unchanged. Full-rank frozen action matrices recover the
+pulse operators algebraically, replaying operator-readout predictions below 10^{-9} error.
+Primary comparisons use one development-frozen response scale, complete
+trajectory blocks, and exact sign flips over the 15 observed
+family–trajectory clusters. The audit is conditional on these five families,
+fixed pulse measurements, and one training realization; Appendix G gives recovery, conditioning, resampling, and
+sensitivity details.
+
+5 Results
+
+5.1 L-State Readouts in Three-Family Development
+
+Development first asks whether the L-State pulse block carries transferable
+response information and how readout structure changes the endpoint. The direct
+readout uses the pulse block as features, the operator readout preserves its
+matrix geometry, and current capability provides the reference. Across the
+three LOFO folds, the direct and operator readouts have nearly identical
+aggregate response error: RMSE 7.772 and 7.777 versus 9.987 for capability. Each
+reduces source-standardized MSE by 39.4%. The direct readout has the lowest
+response-RMSE point estimate, while the operator readout has the highest
+aggregate sign balanced accuracy, 0.675 versus 0.602 for capability. The full
+L-State readout separately reduces
+realized normalized regret from 0.472 to 0.248. The complete method table
+appears in Appendix D ; aligned-pulse refits exceed
+the registered per-fold null 95th percentile on Qwen and Mistral.
+
+5.2 Sealed GLM Test of the Operator Readout
+
+The first sealed test asks whether the structured readout transfers without
+target-action responses. We freeze 540 response predictions and 810 action
+choices before opening GLM labels. The direct readout reaches RMSE 0.712, a 71.8% MSE
+reduction relative to capability. The operator readout reaches RMSE 0.624, a
+78.3% reduction, and has
+the highest sign balanced-accuracy point estimate among the five frozen core
+methods, increasing from 0.366 for capability to 0.754. The full L-State
+readout lowers realized normalized regret from 0.592 to 0.434; the matched-state
+reference attains 0.410. Complete frozen-method and
+resampling comparisons appear in Appendices A and E .
+
+5.3 From an Operator Failure to Action-Wise Readout Selection
+
+The GLM science action separates the measured representation from the
+structure imposed by the operator factorization. The operator readout has sign
+BA zero, whereas the direct readout reaches 1.0 on the
+determinate science coordinates. Four additional target realizations preserve
+the target sign in all 27 states, while source-fit operator coordinates span -0.555 to 0.322. This locates the instability on the source-coordinate side
+without identifying a unique cause. Motivated by this sealed failure, we fit an
+action-wise selector using only the three development families. It retains the
+operator readout for mathematics and reading and chooses the direct readout for
+code and science. The mapping is frozen before Granite labels open.
+
+5.4 Sealed Granite Test of Action-Wise Readout Selection
+
+Granite tests the frozen route on a second family. The direct readout has the
+lowest point-estimate RMSE among the single readouts at 0.544; the operator
+readout reaches 0.634, and the development-fitted selector reaches 0.554,
+versus 1.172 for capability. The selector therefore preserves most of the
+direct readout’s aggregate response gain while improving over both capability
+and the globally applied operator readout. The operator readout produces
+non-degenerate action-wise direction estimates with aggregate sign BA 0.657,
+compared with 0.654 for capability. The full L-State readout lowers regret from
+0.291 to 0.217 and raises top-1 from 53.1% to 63.6%. Frozen receipts and
+complete comparisons appear in Appendices A and H .
+
+5.5 Testing the Operator Readout’s Action Coordinate
+
+The direct and operator readouts use the same pulse measurement but place
+different constraints on it. The operator readout estimates one pooled action
+coordinate from source families, so we test that structure directly after all
+five family labels are open. The
+common-scale pooling error ranges from D_{u}=0.342 for mathematics to 1.038 for
+reading; code has the highest shared-signal fraction ( S_{u}=0.800 ), science the
+lowest ( S_{u}=0.269 ), and reading has negative mean coordinate cosine. Appendix
+Table 13 gives the full action-wise audit.
+
+At level 0.05, exact sharing is rejected for code, science, and reading.
+Mathematics remains unresolved by the difference test; all four D_{u}^{\rm DZ} values exceed one, so no action meets the retrospective
+one-dead-zone equivalence criterion. Joint tests detect family main effects,
+total deviation, and the family–action interaction increment (all p\leq 3.05\times 10^{-4} ). Shared, family-main, and full family–action models
+have held-trajectory RMSE 0.824, 0.802, and 0.750; the full model reduces MSE by
+17.3% overall and 48.0% for science. This fixed-family diagnosis explains how
+family and action deviations affect the operator structure. Appendix G gives intervals, decomposition, and sensitivities.
+
+6 Conclusion
+
+Target-independent micro-interventions turn a checkpoint into a measured
+training-response state. A direct readout learns a flexible map from its L-State
+pulse block; an operator readout factors the same block into local response
+geometry and an action coordinate. Both cut development MSE by 39.4% relative
+to capability alone. On GLM, the operator readout reaches RMSE 0.624 and sign
+balanced accuracy 0.754; on Granite, the direct readout reaches RMSE 0.544 and
+the frozen action-wise selector reaches 0.554, versus 1.172 for capability
+alone. The theory supports pulse identification and conditional operator
+transfer, while source families choose readouts by action and endpoint. The
+five-family audit quantifies deviations in the pooled operator coordinate, and the full L-State
+readout adds action-ranking gains. The central result is a transferable
+intervention measurement supporting complementary direct and structured
+readouts.
+
+AI use statement
+
+Generative AI tools assisted with conceptual and theoretical development,
+mathematical claims and proof drafting, experimental design, implementation,
+execution, result analysis, figure creation, literature review, and manuscript
+drafting, editing, and formatting. The authors reviewed all AI-assisted work,
+tested the code, audited the proofs, replayed the frozen experimental evidence,
+and checked the cited sources. The authors take responsibility for the final
+content, including text, claims, code, and artifacts produced with generative-AI
+assistance.
+
+Reproducibility statement
+
+Sections 4–5 specify the data separation, training contract, frozen prediction
+protocol, metrics, and replay procedure. Appendices A–K provide complete
+proofs, experimental details, development and sealed-family tables, repeat and
+duration studies, probe-cost accounting, and artifact hashes. Each headline
+result is linked to a frozen evidence file and a fresh-process replay receipt.
+
+References
+
+Appendix A Sealed-Family Summary Tables
+
+Signed continuous response and direction Method RMSE \downarrow MSE gain \uparrow Sign BA \uparrow Capability 1.339 0.000 0.366 Direct pulse 0.712 0.718 0.571 Operator † 0.624 0.783 0.754
+
+Action selection Method Regret \downarrow Reduction \uparrow Top-1 \uparrow Capability 0.592 0.000 0.340 Matched state 0.410 0.307 0.432 Full L-State † 0.434 0.267 0.395
+
+† Frozen endpoint readout. MSE gain and regret reduction
+use capability as the reference.
+
+Continuous response Method RMSE \downarrow MSE gain \uparrow Capability 1.172 0.0% Direct pulse 0.544 78.4% Operator 0.634 70.7% Action-Wise Pulse Selector 0.554 77.7%
+
+Direction Method Sign BA \uparrow Capability 0.654 Direct pulse 0.535 Operator † 0.657 Full L-State 0.664
+
+Action selection Method Regret \downarrow Top-1 \uparrow Capability 0.291 0.531 Direct pulse 0.215 0.623 Matched state 0.212 0.648 Full L-State † 0.217 0.636
+
+† Registered endpoint readout. MSE gain uses capability as the
+reference. Selector RMSE pools all 540 scalar response components. Sign BA
+pools actions within each capability coordinate, computes balanced accuracy
+coordinate-wise, and macro-averages across coordinates. The matched-state reference uses aligned
+source-state responses and therefore a stronger information set than the
+deployment readouts.
+
+Appendix B Core Proofs
+
+B.1 Capability Level Sets
+
+Let r=r_{m}^{h}(x,u) , r^{\prime}=r_{m^{\prime}}^{h}(x^{\prime},u) , and y=f(c,u) . The triangle
+inequality gives \|r-r^{\prime}\|_{2}\leq\|r-y\|_{2}+\|y-r^{\prime}\|_{2} , so at least one of the two errors is
+at least \|r-r^{\prime}\|_{2}/2 .
+
+For the characterization, if r_{m}^{h}(x,u)=f(c_{m}(x),u) , equal capabilities
+imply equal responses. Conversely, if responses are constant on every
+capability level set, define f(c,u) as the common response of any checkpoint
+in that level set. Constancy makes this definition independent of the chosen
+representative.
+∎
+
+B.2 Factorization from Smooth Dynamics
+
+Suppress (m,x,u,h) and write \Delta=\Delta_{m,u}^{h}(x,\xi) . The integral
+Taylor formula gives
+
+c_{m}(x+\Delta)-c_{m}(x)=Jc_{m}(x)\Delta+\rho(\Delta), (18)
+
+where
+
+\displaystyle\|\rho(\Delta)\|_{2} \displaystyle\leq\int_{0}^{1}\|Jc_{m}(x+t\Delta)-Jc_{m}(x)\|_{2}\,\|\Delta\|_{2}\,dt \displaystyle\leq\tfrac{1}{2}L_{c}\|\Delta\|_{2}^{2}.
+
+Taking expectations, dividing by h , and inserting \mathbb{E}\Delta/h=G_{m}(x)a_{m,u}+e_{g} yields
+
+r_{m}^{h}(x,u)=Jc_{m}(x)G_{m}(x)a_{m,u}+Jc_{m}(x)e_{g}+\mathbb{E}\rho(\Delta)/h.
+
+The assumed bounds on e_{g} and the second moment of \Delta give
+Eq. ( 8 ).
+∎
+
+For deterministic gradient flow with primitive losses L_{a_{m}}=\sum_{j=1}^{r}a_{m,j}L_{j} , the update map at x has columns -\nabla L_{j}(x) . The theorem then recovers B_{:,j}=-Jc(x)\nabla L_{j}(x) , with an O(h\|a_{m}\|_{2}^{2}) remainder whenever
+the induced capability velocity is locally Lipschitz.
+
+B.3 Pulse Identifiability and Design
+
+If a_{\star}=Q\lambda , then Ba_{\star}=(BQ)\lambda , so the pulse observations
+determine the target response. If a_{\star}\notin\operatorname{col}(Q) , choose z\in\operatorname{null}(Q^{\top}) with z^{\top}a_{\star}\neq 0 and a nonzero w\in\mathbb{R}^{d} . The matrix H=wz^{\top} obeys HQ=0 but Ha_{\star}\neq 0 ; hence B and B+H have identical pulse responses and
+different target responses. Applying this statement to every a_{\star}\in\mathbb{R}^{r} gives the full-row-rank characterization.
+
+When Q has full row rank, QQ^{\dagger}=I_{r} , and therefore
+
+\widehat{B}-B=(BQ+E)Q^{\dagger}-B=EQ^{\dagger}.
+
+Submultiplicativity and \|Q^{\dagger}\|_{2}=1/\sigma_{r}(Q) give both norm bounds in
+Eq. ( 10 ).
+∎
+
+The upper bound \|EQ^{\dagger}\|_{2}\leq\|E\|_{2}\|Q^{\dagger}\|_{2} is attained by choosing a
+rank-one E aligned with a leading left singular vector of Q^{\dagger} .
+Thus the exact amplification is \|Q^{\dagger}\|_{2}=1/\sigma_{r}(Q) .
+
+Let \sigma_{1}\geq\cdots\geq\sigma_{r}>0 be the singular values of Q .
+Then
+
+\sigma_{r}(Q)^{2}\leq\frac{1}{r}\sum_{j=1}^{r}\sigma_{j}(Q)^{2}=\frac{\|Q\|_{F}^{2}}{r}\leq\frac{E_{0}}{r}.
+
+Equality holds exactly when the energy budget is tight and all r singular
+values are equal, equivalently QQ^{\top}=(E_{0}/r)I_{r} . Taking reciprocals proves
+the minimax statement.
+∎
+
+If each of k pulses is independently repeated n times, every coordinate of
+the repeat-mean noise is mean-zero sub-Gaussian with variance proxy \sigma^{2}/n , and
+each pulse residual has norm at most \epsilon_{p} , then with probability at
+least 1-\delta ,
+
+\|E\|_{2}\leq\sqrt{k}\epsilon_{p}+\sigma\sqrt{\frac{2dk\log(2dk/\delta)}{n}}. (19)
+
+This follows from a coordinatewise tail bound, a union bound over dk entries, and \|Z\|_{2}\leq\|Z\|_{F} . Combining
+Eqs. ( 10 ) and ( 19 ) supplies a finite-repeat
+choice of the target-pulse term \eta_{\star} in Theorem 3.6 ; the
+source target-response, target-action residual, and realized-response terms
+retain their displayed radii.
+
+B.4 Source Coverage and Action Coordinates
+
+With exact operators, \widehat{a}_{u}-\bar{a}_{u}=\mathcal{B}_{S}^{\dagger}(v^{\rm het}_{S,u}+e_{S}) , whose norm is at
+most (H_{S,u}+\epsilon_{S})/\underline{\sigma}_{S} .
+
+For estimated operators, Weyl’s inequality gives \sigma_{r}(\widehat{\mathcal{B}}_{S})\geq\underline{\sigma}_{S}-\tau_{S}>0 . Rewriting the source
+response as
+
+y_{S}(u)=\widehat{\mathcal{B}}_{S}\bar{a}_{u}+(\mathcal{B}_{S}-\widehat{\mathcal{B}}_{S})\bar{a}_{u}+v^{\rm het}_{S,u}+e_{S}
+
+and left-multiplying by \widehat{\mathcal{B}}_{S}^{\dagger} yields
+
+\widehat{a}_{u}-\bar{a}_{u}=\widehat{\mathcal{B}}_{S}^{\dagger}\big[(\mathcal{B}_{S}-\widehat{\mathcal{B}}_{S})\bar{a}_{u}+v^{\rm het}_{S,u}+e_{S}\big].
+
+The pseudoinverse norm is at most 1/(\underline{\sigma}_{S}-\tau_{S}) , proving
+Eq. ( 14 ).
+∎
+
+The source-diversity statement follows from G_{S\cup\{\mathrm{new}\}}=G_{S}+B_{\mathrm{new}}^{\top}B_{\mathrm{new}} and
+Weyl monotonicity for positive semidefinite matrices. In particular,
+
+\lambda_{\min}(G_{S\cup\{\mathrm{new}\}})\geq\lambda_{\min}(G_{S})+\sigma_{r}(B_{\mathrm{new}})^{2}.
+
+If source block s has operator error at most \beta_{s} , the stacked
+perturbation satisfies \tau_{S}\leq(\sum_{s}\beta_{s}^{2})^{1/2} . Applying
+Eq. ( 19 ) to each source block and taking a joint event
+therefore supplies the finite-repeat source term in Eq. ( 16 ).
+
+Under the same source conditions, including \tau_{S}<\underline{\sigma}_{S} , the ridge estimator in
+Eq. ( 24 ) also admits an explicit source bound. For \lambda\geq 0 , let
+
+\widehat{a}_{u,\lambda}=(\widehat{\mathcal{B}}_{S}^{\top}\widehat{\mathcal{B}}_{S}+\lambda I)^{-1}\widehat{\mathcal{B}}_{S}^{\top}y_{S}(u).
+
+Let \widehat{\gamma}_{i} denote the singular values of \widehat{\mathcal{B}}_{S} , and define
+
+b_{\lambda}=\frac{\lambda}{\widehat{\gamma}_{r}^{2}+\lambda},\qquad\rho_{\lambda}=\max_{i}\frac{\widehat{\gamma}_{i}}{\widehat{\gamma}_{i}^{2}+\lambda}.
+
+For \lambda>0 , or for \lambda=0 with full column rank,
+
+\|\widehat{a}_{u,\lambda}-\bar{a}_{u}\|_{2}\leq b_{\lambda}A+\rho_{\lambda}(\tau_{S}A+H_{S,u}+\epsilon_{S}). (20)
+
+Indeed, the ridge normal equations express the error as a regularization-bias
+term plus the ridge inverse applied to (\mathcal{B}_{S}-\widehat{\mathcal{B}}_{S})\bar{a}_{u}+v^{\rm het}_{S,u}+e_{S} .
+Singular-value decomposition
+gives the two displayed coefficients; in particular, \rho_{\lambda}\leq\min\{1/(\underline{\sigma}_{S}-\tau_{S}),1/(2\sqrt{\lambda})\} for \lambda>0 .
+
+B.5 Unseen-Family Transfer and Decisions
+
+By Theorem 3.3 , \|\widehat{B}_{\star}-B_{\star}\|_{2}\leq\eta_{\star}/\sigma_{r}(Q_{\star})=:\varepsilon_{B,\star} . Let \zeta_{u}=(\tau_{S}A+H_{S,u}+\epsilon_{S})/(\underline{\sigma}_{S}-\tau_{S}) from Theorem 3.5 . Writing r_{\star}^{h}(u)=B_{\star}(\bar{a}_{u}+\delta_{\star,u})+d_{\star,u} gives
+
+\displaystyle\widehat{B}_{\star}\widehat{a}_{u}-r_{\star}^{h}(u)={} \displaystyle(\widehat{B}_{\star}-B_{\star})\bar{a}_{u} \displaystyle+\widehat{B}_{\star}(\widehat{a}_{u}-\bar{a}_{u})-B_{\star}\delta_{\star,u}-d_{\star,u}.
+
+Since \|\widehat{B}_{\star}\|_{2}\leq\|B_{\star}\|_{2}+\varepsilon_{B,\star} , taking norms and
+substituting \|\bar{a}_{u}\|_{2}\leq A , \|\delta_{\star,u}\|_{2}\leq D_{\star,u} , \zeta_{u} , and \varepsilon_{B,\star} gives
+Eq. ( 16 ).
+∎
+
+If \epsilon_{\star,u} is instantiated by the smooth local remainder in
+Eq. ( 8 ), its curvature term uses \|a_{\star,u}\|_{2}\leq A+D_{\star,u} and can therefore scale as (A+D_{\star,u})^{2} ; H_{S,u} accounts only for the linear pooling mismatch.
+
+For completeness, let \mathcal{C}_{j}\subseteq\{+,-\} contain the nonempty
+source-dead-zone-determinate classes of coordinate j , and let M_{j,s} of N_{j,s} cells in class s fail the sign margin. Over the valid coordinate
+set \mathcal{J} ,
+
+\operatorname{BA}_{\rm macro}\geq 1-\frac{1}{|\mathcal{J}|}\sum_{j\in\mathcal{J}}\frac{1}{|\mathcal{C}_{j}|}\sum_{s\in\mathcal{C}_{j}}\frac{M_{j,s}}{N_{j,s}}. (21)
+
+When \rho_{J}=J(u^{\star})-\min_{u}J(u)>0 , Eq. ( 17 ) divided by \rho_{J} bounds normalized regret. For realized responses, define \widetilde{J}(u)=hv^{\top}\widetilde{r}_{\star}(u)-\operatorname{cost}(u) , \widetilde{u}^{\star}\in\arg\max_{u}\widetilde{J}(u) , and \widetilde{\rho}_{J}=\max_{u}\widetilde{J}(u)-\min_{u}\widetilde{J}(u) . Then
+
+\widetilde{J}(\widetilde{u}^{\star})-\widetilde{J}(\widehat{u})\leq h\|v\|_{2}\big(\overline{\Delta}_{\star,\widetilde{u}^{\star}}+\overline{\Delta}_{\star,\widehat{u}}\big), (22)
+
+and division by positive \widetilde{\rho}_{J} gives realized normalized regret.
+The realized sign and exact-action conditions replace \Delta by \overline{\Delta} .
+
+Equation ( 15 ) implies |\widehat{r}_{\star,j}(u)-r_{\star,j}^{h}(u)|\leq\Delta_{\star,u} for every
+coordinate. A response farther than this radius from zero keeps its sign,
+which proves the sign statement.
+Every class cell that clears the margin is therefore correct. For coordinate j and class s , recall is at least 1-M_{j,s}/N_{j,s} . Averaging first over
+the nonempty classes of each coordinate and then over valid coordinates proves
+Eq. ( 21 ).
+
+For action selection, add and subtract predicted utilities and use optimality
+of \widehat{u} :
+
+\displaystyle J(u^{\star})-J(\widehat{u}) \displaystyle\leq|J(u^{\star})-\widehat{J}(u^{\star})|+|\widehat{J}(\widehat{u})-J(\widehat{u})| \displaystyle\leq h\|v\|_{2}(\Delta_{\star,u^{\star}}+\Delta_{\star,\widehat{u}}).
+
+Division by the positive utility range \rho_{J} gives the normalized-regret
+bound.
+For every u\neq u^{\star} , the predicted best-versus- u gap is at least the
+true gap minus h\|v\|_{2}(\Delta_{\star,u^{\star}}+\Delta_{\star,u}) . The stated utility-margin
+condition makes all these differences positive, so the predicted maximizer is u^{\star} .
+Applying the same add-and-subtract argument to \widetilde{J} and the
+simultaneous radii \overline{\Delta}_{\star,u} proves
+Eq. ( 22 ); division by positive \widetilde{\rho}_{J} gives its normalized form.
+For high-probability radii, take a joint event covering every source block,
+target pulse, candidate action, and scored coordinate before applying these
+deterministic arguments. A union bound over the finite index set constructs
+such an event from marginal tail bounds.
+∎
+
+Appendix C Complete Experimental Protocol
+
+The direct pulse and full L-State readouts use the same ridge objective with z(s)=p(s) and z(s)=[c(s);p(s)] , respectively:
+
+\widehat{W}_{u,\alpha}=\arg\min_{W}\sum_{s\in\mathcal{S}_{\mathrm{src}}}\|W^{\top}z(s)-y(s,u)\|_{2}^{2}+\alpha\|W\|_{F}^{2}, (23)
+
+The structured operator objective used in Section 3.6 is
+
+\widehat{a}_{u}=\arg\min_{a}\sum_{s\in\mathcal{S}_{\mathrm{src}}}\|R(s)a-y(s,u)\|_{2}^{2}+\lambda\|a\|_{2}^{2},\qquad\widehat{y}_{\rm op}(s,u)=R(s)\widehat{a}_{u}. (24)
+
+C.1 State Generation
+
+Each trajectory starts from the same base model with a newly initialized
+zero-output LoRA adapter. Four synthetic generators—sequence reversal,
+lexicon classification, date normalization, and template paraphrase—appear
+twice in a balanced eight-episode order. States t00 through t08 are saved,
+including adapter and parent hashes. Three fixed trajectory seeds give nine
+states per trajectory and 27 per family.
+
+C.2 Primary Training Episode
+
+The base model is frozen. LoRA rank is 4 with scaling 8, dropout 0, and query
+and value projection targets. Training uses BF16, eager attention, maximum
+length 512, micro-batch 1, gradient accumulation 4, AdamW learning rate 10^{-4} , betas (0.9,0.999) , epsilon 10^{-8} , no weight decay, and global
+gradient clipping at 1.0. Eight optimizer steps consume 32 examples. Every
+branch creates new optimizer moments and restores the source adapter afterward;
+the restored tensor hash must match exactly.
+
+C.3 Response Evaluation
+
+Each capability is the mean negative completion-token NLL after per-token
+clipping to [0,20] , so larger is better. Before and after evaluations use the
+same 32 held-out examples and tokenizer outputs. The primary response is the
+paired per-example difference. The main state and readouts use this paired
+quantity; generated-answer diagnostics are stored as a separate trace.
+
+C.4 Leakage Controls
+
+The data registry binds source IDs, normalized text hashes, processed-file
+hashes, and roles. Exact cross-role text intersections are zero; source indices
+for public train and evaluation splits are disjoint; synthetic pulse-to-target
+13-gram Jaccard is below 0.01. The analysis reads validated completed
+manifests, and the label vault opens target responses after the frozen outer
+prediction artifact is serialized.
+
+Appendix D Development Results
+
+Method RMSE \downarrow Cosine \uparrow Sign BA \uparrow Regret \downarrow Top-1 \uparrow Source mean 7.895 0.624 0.479 0.268 0.574 Capability 9.987 0.504 0.602 0.472 0.309 Direct pulse 7.772 0.620 0.531 0.299 0.500 Scalar statistics 8.738 0.591 0.547 0.365 0.449 Matched state 7.913 0.607 0.491 0.232 0.566 Operator 7.777 0.672 0.675 0.303 0.350 Full L-State 8.293 0.734 0.589 0.248 0.541 Target early (2 steps) 8.067 0.488 0.671 0.283 0.416 Directional blend 7.876 0.628 0.643 0.292 0.422
+
+Family Full L-State Capability MSE gain Sign BA Qwen 0.926 2.947 0.901 0.787 Mistral 13.866 15.117 0.159 0.610 OLMo 3.631 7.876 0.787 0.500
+
+Family Capability BA Operator BA Capability R L-State R Matched R Qwen 0.829 0.743 0.497 0.375 0.352 Mistral 0.617 0.752 0.276 0.143 0.235 OLMo 0.561 0.521 0.643 0.225 0.110
+
+k RMSE MSE gain Cosine Sign BA Regret 1 9.108 0.168 0.670 0.604 0.300 2 9.614 0.073 0.650 0.615 0.259 3 8.358 0.300 0.724 0.598 0.262 4 8.293 0.311 0.734 0.589 0.248
+
+D.1 Aligned-Pulse Permutation
+
+For every outer fold and permutation, we shuffle whole pulse-response matrices
+across states within each source family, rebuild the complete 25-dimensional
+input, repeat source-trajectory hyperparameter selection, refit, and score the
+unchanged target family. The one-sided family results are:
+
+Family Aligned gain Null 95th p Qwen 0.901 0.873 0.0010 Mistral 0.159 0.135 0.0330 OLMo 0.787 0.870 0.6014
+
+We report raw per-fold one-sided p -values; the preregistered comparison uses
+each fold’s null 95th percentile.
+
+D.2 Source-Fit Blend Weights
+
+Weights below multiply the learned readout; one minus the weight multiplies the
+operator readout. Reciprocal source-family fits select the weights while
+target-family pulse reliability fixes the sign dead zones and target-action
+labels remain sealed.
+
+Held out Math Code Science Reading General Qwen 0.00 0.80 0.05 0.00 0.50 Mistral 0.05 0.00 0.30 0.75 0.05 OLMo 0.30 0.85 0.00 0.00 0.10
+
+This development-suite interpolation raises sign balanced accuracy from 0.589
+to 0.643 and reduces RMSE from 8.293 to 7.876. The first GLM seal uses the
+registered operator/full-state endpoint assignment summarized in the main paper.
+
+Appendix E Prospective GLM Details
+
+E.1 Freeze Order and Complete Comparison
+
+The prospective contract first binds the rule learned from the 81 development
+states. It then builds 27 GLM states and their four target-independent pulse
+responses. While the target branch count remains zero, the pipeline serializes
+540 response predictions and 810 utility-conditioned action decisions. Scoring
+begins after the label-opening receipt is published and all 108 GLM target
+branches finish. Table 7 gives all five frozen methods.
+
+Method RMSE \downarrow MSE gain \uparrow Cosine \uparrow Sign BA \uparrow Regret \downarrow Top-1 \uparrow Capability 1.339 0.000 0.431 0.366 0.592 0.340 Direct pulse 0.712 0.718 0.552 0.571 0.451 0.389 Matched state 0.939 0.508 0.535 0.569 0.410 0.432 Operator 0.624 0.783 0.421 0.754 0.513 0.352 Full L-State 0.841 0.606 0.471 0.359 0.434 0.395
+
+Response and direction by target action Action Cap. RMSE Direct RMSE Oper. RMSE Cap. BA Direct BA Oper. BA Det. u_{\rm math} 1.533 0.541 0.085 0.833 0.833 0.833 45 u_{\rm code} 1.214 0.571 0.454 0.479 0.500 0.850 48 u_{\rm science} 0.966 0.613 0.825 1.000 1.000 0.000 28 u_{\rm reading} 1.554 1.015 0.815 0.167 0.438 0.641 63
+
+Response and direction by capability coordinate Coordinate Cap. RMSE Direct RMSE Oper. RMSE Cap. BA Direct BA Oper. BA Det. Math 1.366 0.720 0.216 0.071 0.071 0.721 19 Code 1.553 0.546 0.499 1.000 1.000 1.000 52 Science 1.244 0.984 1.024 0.392 0.399 0.516 86 Reading 1.686 0.852 0.772 0.000 0.815 0.778 27 General 0.545 0.146 0.073 – – – 0
+
+E.2 Response Slices
+
+The determinate direction set contains 169 positive and 15 negative responses.
+The general coordinate falls inside its source-frozen dead zone for all 108
+records, so its direction entry is shown as a dash.
+
+E.3 Action and Trajectory Slices
+
+Utility Capability Full L-State Matched state Math 0.987/0.000 0.398/0.074 0.539/0.037 Code 0.000/1.000 0.000/1.000 0.000/1.000 Science 0.000/1.000 0.000/1.000 0.000/1.000 Reading 0.988/0.000 0.985/0.000 0.797/0.185 General 0.749/0.037 0.474/0.296 0.375/0.370 Balanced 0.827/0.000 0.745/0.000 0.749/0.000
+
+Seed Operator MSE gain Operator BA BA gain L-State regret Regret reduction 20260901 0.781 0.706 0.322 0.434 0.254 20260902 0.785 0.735 0.372 0.409 0.299 20260903 0.783 0.860 0.523 0.457 0.250
+
+Quantity Estimate 2.5% 97.5% Operator MSE gain 0.783 0.781 0.785 Operator sign BA 0.754 0.705 0.860 Operator sign BA gain 0.388 0.322 0.523 L-State regret reduction 0.267 0.250 0.299
+
+Whole-trajectory resampling gives percentile ranges of [78.1\%,78.5\%] for operator MSE reduction, [0.705,0.860] for its sign BA, [32.2,52.3] points for its sign gain, and [25.0\%,29.9\%] for full-state
+regret reduction. These intervals summarize variation across the three
+prospective GLM trajectories.
+
+Appendix F Mechanism Diagnosis and Action-Wise Response Selection
+
+F.1 Five-Repeat Science Intervention
+
+The registered repeat phase adds four independent science-action branches to
+the original branch for every GLM state. It completes 108 new branches, restores
+all state adapters, and leaves the canonical target tree unchanged. Table 11 scores the byte-frozen capability, direct, and operator predictions
+against the original response and the five-response mean and median.
+
+Truth summary Capability Direct pulse Operator Original 0.9664/1.000 0.6132/1.000 0.8246/0.000 Five-repeat mean 0.9667/1.000 0.6115/1.000 0.8245/0.000 Five-repeat median 0.9643/1.000 0.6111/1.000 0.8243/0.000
+
+Across the 27 states, the science-coordinate response has mean within-state
+standard deviation 0.00446 and unanimous five-repeat sign in 27/27 states. The
+source science-action coordinate uses \alpha=1000 and has norm 0.0539; its
+held-out-family fits have norms 0.0588–1.108 and pairwise cosine -0.555 –0.322.
+
+F.2 Development-Fitted Readout Selection
+
+The direct readout is selected after a strict held-out-family win in at least
+two of the three development folds; the remaining actions retain the operator
+readout. Table 12 records the frozen mapping. The direction
+selector is retained as a diagnostic; the registered Granite direction endpoint
+uses the operator readout.
+
+Action Response Wins Direction Wins Math Operator 0/3 Operator 0/3 Code Direct 3/3 Operator 1/3 Science Direct 2/3 Direct 3/3 Reading Operator 1/3 Direct 2/3
+
+On Granite, the Action-Wise Pulse Selector reaches pooled and action-macro RMSE of 0.5537
+and 0.5479. Its pooled and action-macro sign BA are 0.6496 and 0.6470. The
+source-only direction diagnostic has pooled BA 0.5689 and action-macro BA
+0.6558, illustrating the
+importance of stating the aggregation rule explicitly.
+
+Appendix G Five-Family Semantic-Coordinate Audit
+
+G.1 Operator Recovery and Estimation Contract
+
+The audit uses 540 previously scored operator family–action–state rows: five
+families, four actions, and 27 states per family. The frozen four-action
+coordinate matrix is full rank in each of the five family folds. Their
+condition numbers are 23.4 for Qwen,
+1244.8 for Mistral, 34.7 for OLMo, and 33.6 for both GLM and Granite. Algebraic
+operator recovery replays every frozen operator-readout prediction with maximum absolute
+error below 10^{-9} . Re-fitting the three development-family science
+coordinates from the recovered operators agrees with the original direct fit
+to 3.3\times 10^{-15} , providing a check beyond prediction replay.
+
+The ridge grid spans zero through 10 and is refined between 0.1 and 2. Holding
+out a complete trajectory in every family–action cell selects relative ridge
+0.7. Each absolute cell penalty equals 0.7 times the mean eigenvalue of that
+cell’s design Gram. All reported response-scale quantities use the common
+three-development-family scale. The family-specific outer-fold scale and every
+candidate ridge remain in the sensitivity artifact.
+
+For this retrospective decomposition, the reference set is the five observed
+families with \pi_{m}=1/5 ; write its mean as \bar{a}_{u}^{(5)} to distinguish it
+from the prospective source-reference coordinate, and suppress the superscript
+below. Let W_{u} be the inverse-squared response scale frozen on the three
+development families, and let Z analogously use the frozen reliability dead
+zones. For N family–state cells and d response coordinates, define
+
+\displaystyle D_{u}^{2} \displaystyle=\frac{1}{Nd}\sum_{m,s}\left\|W_{u}^{1/2}R_{m}(s)(\beta_{m}+\gamma_{m,u})\right\|_{2}^{2}, (25) \displaystyle(D_{u}^{\rm DZ})^{2} \displaystyle=\frac{1}{Nd}\sum_{m,s}\left\|Z^{1/2}R_{m}(s)(\beta_{m}+\gamma_{m,u})\right\|_{2}^{2}, \displaystyle S_{u} \displaystyle=\frac{L_{u}^{2}}{L_{u}^{2}+D_{u}^{2}},\qquad L_{u}^{2}=\frac{1}{Nd}\sum_{m,s}\|W_{u}^{1/2}R_{m}(s)\bar{a}_{u}\|_{2}^{2}.
+
+Thus D_{u} is common-scale pooling error and S_{u} is the shared-signal
+fraction. Exact tests enumerate all 2^{15} restricted-residual cluster sign
+patterns and use Holm correction across actions. The separate diagnostic
+equivalence test is H_{0}:D_{u}^{\rm DZ}\geq 1 against H_{1}:D_{u}^{\rm DZ}<1 ; the
+dead zones were frozen prospectively, but their use as a sharedness margin was
+chosen retrospectively. Tests and predictive comparisons use unpenalized least
+squares; ridge 0.7 applies only to coordinate-stability summaries.
+
+Action Cosine min/mean Norm ratio D_{u} (95%) S_{u} D_{u}^{\rm DZ} (95%) DZ exceed Math .315/.696 3.55 .342 [.311,.370] .648 2.468 [2.252,2.710] 24.3% Code .448/.653 2.43 .356 [.326,.394] .800 2.620 [2.454,2.815] 39.7% Science -.770 /.057 11.20 .633 [.605,.672] .269 4.417 [4.324,4.523] 40.1% Reading -.732 / -.017 19.43 1.038 [.976,1.105] .404 2.837 [2.714,2.998] 32.3%
+
+G.2 Difference, Interaction, and Predictive Diagnostics
+
+The action-specific restricted-residual sign-flip values before/after Holm
+adjustment are .0874/.0874 for mathematics, .00165/.00494 for code, 6.10\times 10^{-5} / .000244 for science, and .0239/.0477 for reading.
+The joint family-main, total-deviation, and interaction-increment values are 6.10\times 10^{-5} , 1.83\times 10^{-4} , and 3.05\times 10^{-4} . These are
+fixed-15-cluster diagnostics whose validity relies on approximate restricted
+residual sign symmetry; they are not tests over a population of model families.
+
+Coordinate model All Math Code Science Reading Shared action .824 .757 .887 .800 .848 + family main effect .802 .794 .863 .720 .823 + family–action interaction .750 .756 .799 .577 .840
+
+Compared with the shared model, the full model’s descriptive held-trajectory
+MSE improvement is 17.3% overall, 0.3% for mathematics, 18.8% for code,
+48.0% for science, and 1.8% for reading. The three folds have heavily
+overlapping training sets, so their resampled ranges are descriptive rather
+than formal confidence intervals.
+
+Deleting one family at a time gives mean-cosine ranges .628–.781 for
+mathematics, .573–.700 for code, -.121 –.486 for science, and -.136 –.167 for reading. The corresponding D_{u} ranges are .163–.371,
+.285–.427, .500–.752, and .555–1.333. The science and reading effects persist
+after removing Mistral, while their magnitude depends on the particular
+observed family set. The analysis characterizes the fixed pulse measurements,
+chosen ridge, and available target-action training realization across these
+five families.
+
+Appendix H Prospective Granite Details
+
+H.1 Complete Core Comparison
+
+The Granite contract binds revision 4009206d5fc9 , a fixed prompt and
+tokenization identity, the 540-row core prediction file, the 810-row action
+decision file, and the 216-row selector extension before target labels open.
+All 108 target branches complete and the fresh-process replay receipt matches
+the canonical core and extension outputs.
+
+Method RMSE MSE gain Cosine Sign BA Regret Regret red. Top-1 Capability 1.1716 0.0000 0.7382 0.6537 0.2906 0.0000 0.5309 Direct pulse 0.5439 0.7845 0.3155 0.5354 0.2149 0.2604 0.6235 Matched state 0.6916 0.6516 0.4710 0.5351 0.2119 0.2707 0.6481 Operator 0.6344 0.7068 0.1725 0.6566 0.2530 0.1296 0.5926 Full L-State 0.6805 0.6627 0.5079 0.6640 0.2166 0.2545 0.6358
+
+Action RMSE Sign BA Determinate Math 0.5963 0.6958 79 Code 0.8878 0.8252 89 Science 0.2860 0.4256 43 Reading 0.6198 0.6420 46
+
+Quantity Estimate 2.5% 97.5% Operator MSE gain 0.7068 0.6990 0.7110 Operator sign BA 0.6566 0.6081 0.6584 Operator sign BA gain 0.0028 -0.0615 0.0823 L-State regret reduction 0.2545 0.1565 0.4012
+
+Whole-trajectory resampling gives [69.9\%,71.1\%] for the operator MSE reduction, [0.608,0.658] for its sign BA, [-6.15,8.23] points for its sign gain, and [15.7\%,40.1\%] for full-state regret reduction. The sealed Granite result
+reproduces large response and action gains while replacing the GLM
+science-action inversion with non-degenerate direction estimates.
+
+Appendix I Pulse Identification and Cross-Duration Robustness
+
+I.1 Pulse Identification and Local-Dynamics Checks
+
+Theorem 3.2 requires a stable local response measurement,
+and Theorems 3.3 – 3.4 connect operator
+recovery to the pulse basis. Pulse measurement is stable: the median intraclass correlation is 0.967 and
+the median signal-to-noise ratio is 29.2, with 19 of 20 reliability cells at
+ICC 0.75 or above. This stability supports endpoint-specific readout selection
+within a reliable pulse assay; the development and GLM contrasts show that
+direction quality depends on readout geometry.
+
+Pulse-count ablation shows that three to four directions carry the strongest
+continuous signal. One, two, three, and four pulses yield RMSE
+9.108, 9.614, 8.358, and 8.293, respectively; action regret is 0.300, 0.259,
+0.262, and 0.248. Different endpoints favor different pulse counts: sign
+balanced accuracy peaks with two pulses at 0.615, while RMSE and regret attain
+their best values with four. The near-rank-complete three- and four-pulse
+settings deliver the strongest continuous prediction, while the two-pulse
+direction peak explains the endpoint-specific readouts.
+
+Finally, controlled pulse mixtures have median relative residual 0.342; changing
+exposure from eight steps to four or sixteen gives median relative residual
+0.747; and a fixed-step amplitude scan gives 0.757 away from the reference
+amplitude. The smaller mixture residual and the duration response quantify the
+finite-step geometry induced by the smooth-factorization result.
+
+The cross-duration study reuses nine GLM states and evaluates four-, eight-,
+and sixteen-step pulse and target exposures. The operator readout has the best aggregate raw
+response RMSE and sign BA among the five core methods at every duration.
+The full L-State readout reduces source-standardized RMSE against capability by 45.3%, 37.3%,
+and 25.1%, and reduces action regret by 21.8%, 22.7%, and 29.3% at four,
+eight, and sixteen steps. Both improvements hold in all nine
+duration-by-trajectory slices. Retrospectively fitted operator action coordinates
+retain cosine 0.952–0.997 at four steps and 0.973–0.992 at sixteen steps
+relative to the eight-step coordinate. This measures within-GLM duration
+stability only; it is not evidence for cross-family coordinate sharing. The
+registered endpoint aggregates and
+coordinate-stability diagnostics appear below; the complete five-method
+raw-primary, per-step, and trajectory tables accompany the evidence artifact.
+
+I.2 Registered Duration Experiment
+
+The duration experiment evaluates nine GLM states under four-, eight-, and
+sixteen-step pulse and target exposures. Raw capability difference is the
+primary response; per-step response is a separately reported diagnostic. The
+eight-step branches are reused read-only, 144 new branches cover the other two
+durations, and every adapter is restored.
+
+Steps Cap. response Oper. response Cap. action L-State action 4 .4428/.3564 .1012/.6793 .5592/.3333 .4375/.4259 8 .4529/.3828 .1875/.6623 .5771/.3333 .4460/.3889 16 .4861/.3814 .2878/.7878 .6063/.3333 .4285/.3704
+
+At four, eight, and sixteen steps, capability/full-L-State source-standardized RMSE is
+1.2801/0.7000, 1.3147/0.8240, and 1.4574/1.0922, respectively, yielding the
+reported 45.3%, 37.3%, and 25.1% reductions.
+
+Across all nine duration-by-trajectory slices, the full L-State readout has lower
+response RMSE and lower action regret than capability. Duration-specific operator diagnostic
+coordinates have cosine 0.952–0.997 at four steps and 0.973–0.992 at sixteen
+steps relative to the eight-step coordinate.
+
+Appendix J Probe Cost Accounting
+
+Resource Four-pulse probe One target action Break-even Optimizer steps 32 8 4.0 Training examples 128 32 4.0 Evaluation examples 800 320 2.5
+
+Appendix K Reproducibility and Artifact Lineage
+
+The development run binds the frozen data registry, configuration, source tree,
+model manifests, state adapters, branch outputs, validated input set, and 18
+analysis outputs by SHA-256. Fresh-process replay matches every canonical
+development hash.
+
+The first sealed GLM run extends the chain chronologically. It binds the GLM model
+snapshot at revision 645b8482494e , source tree b975229c6ef7 , frozen rule 5349b83e483a , prediction manifest 865be9eb5612 , and label-opening receipt a5c9bd24048d . The
+prediction manifest records 540 response predictions and 810 action choices
+before target training begins. After scoring, the result contains 540 rows and
+has SHA-256 4cf352bcf3c7 ; the scored JSONL has SHA-256 271332267cd4 . A fresh process reproduces both canonical outputs and
+publishes a PASS receipt bound to analysis manifest 017469bd7363 .
+
+The revision chain adds registered repeat, duration, selector, and second-family
+stages. The action-wise pulse selector has content hash fb885c94a096 . The
+second sealed Granite run binds source tree 07738052a7a5 , configuration ef2100d7317f , core freeze receipt 8c9758675ebc , and selector
+extension receipt 54fda8b3a183 ; both receipts record zero target
+branches. All 108 target branches validate, analysis manifest 3c644bad binds the scored outputs, and fresh replay passes all five
+core/extension comparisons. The revision registry records E0–E9 as PASS and
+maps each headline number to its replayed evidence file.
+
+The retrospective five-family coordinate audit is a separate derivative stage
+that reads those frozen scored rows without retraining. Its analysis manifest
+has SHA-256 e05a19e13c74 ; the copied deterministic analysis script has
+SHA-256 13ba7e5f46db . The manifest binds every reported table, the
+10,000-resample seed and count, the exhaustive sign-flip contract, and the
+operator-replay checks.

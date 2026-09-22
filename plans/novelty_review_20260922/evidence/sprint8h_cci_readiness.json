@@ -1,0 +1,14 @@
+{
+  "queried_at_utc": "2026-09-22T03:31:50.931304+00:00",
+  "command_kind": "read_only_jobs_list",
+  "returncode": 0,
+  "jobs_submitted": 0,
+  "scope": "Recent visible jobs do not establish free capacity or a guaranteed scheduling delay.",
+  "api_reachable": true,
+  "recent_jobs_returned": 10,
+  "recent_state_counts": {
+    "RUNNING": 7,
+    "STARTING": 2,
+    "FAILED": 1
+  }
+}

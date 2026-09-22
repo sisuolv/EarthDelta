@@ -1,0 +1,491 @@
+DART: Distillation-Aware Reparameterization for Training-Free LoRA Reuse in Few-Step Video Diffusion Models
+
+Step distillation reduces the cost of video generation, but reusing a LoRA trained for a longer trajectory can alter its functional effect or degrade target quality. Static parameter compatibility offers one perspective on this problem; our observations show that similar measured geometry can coexist with different adapter behavior under a shortened denoising schedule. We propose DART, a training-free method that combines low-rank coordinate transport with target-schedule response calibration using forward evaluations and no source training videos. On a four-step Wan2.2 target, DART-F improves the joint quality score from 0.9029 to 0.9227 and changes macro functional retention from -0.4644 to +0.1349 . Component analysis shows that calibration accounts for most of the quality improvement, while coordinate transport provides complementary gains when combined with calibration. Adapter-level results reveal positive functional effects for some adapters and strong attenuation with reduced negative functional effects for others. Evaluations on two additional targets show the same aggregate trend. These results motivate evaluating distilled-model LoRA reuse jointly through functional preservation and negative-transfer avoidance, without assuming recovery for every adapter.
+
+
+
+1 Introduction
+
+Reusing a LoRA trained on a base model for a few-step distilled model is a practical requirement for combining video generation speed with customization. Step distillation and consistency training reduce inference cost by shortening the denoising process ( Salimans and Ho, 2022 ; Song et al., 2023 ) , while Low-Rank Adaptation (LoRA) enables lightweight adaptation while keeping the base-model parameters fixed ( Hu et al., 2022 ) . As subject, style, and motion adapters accumulate, retraining these modules for every distilled version incurs repeated computation and may be impossible when private training data are unavailable. Few-step generation therefore requires a way to reuse existing adapters.
+
+Direct reuse can cause an adapter to lose its intended effect or damage video structure. CASA relates transfer failure to spectral-routing interference between distillation and LoRA updates and coordinates them through spectral arbitration ( Wang et al., 2026 ) , establishing the relevance of weight-space compatibility. We investigate a complementary issue: similar measured static compatibility can coexist with different adapter behavior under the target denoising schedule. This motivates measuring the adapter’s incremental response at target states and timesteps in addition to examining its parameter geometry.
+
+Our central observation is that preserving base generation ability and preserving adapter function can be separate outcomes. A LoRA function arises from the joint action of its parameter update and the denoiser, and depends on the latent state, timestep, and conditioning input at which the update is applied. Distillation shortens the denoising process and changes these conditions. Consequently, a target model can maintain good base generation quality while producing a different response to the same LoRA update. We call the change in denoiser output before and after applying an adapter under the same input conditions the adapter’s incremental response. We use this response to guide reuse under target conditions, with functional preservation and avoidance of negative transfer as separate evaluation objectives. This perspective connects static parameter analysis to the adapter’s action during generation.
+
+We study this separation in image-to-video generation. Four paired conditions load and unload the LoRA on the source and target models, allowing adapter-induced functional changes to be distinguished from the model’s own generation quality. Across the six retained adapters, static coordinate defects lie in a narrow range around 0.27\% , yet functional transfer outcomes differ substantially; response diagnostics at target timesteps further show that source and target incremental responses can differ in both direction and magnitude (Section 3 ). In the tested configurations, response calibration accounts for most of the quality gain, while its mean functional retention remains negative. The full configuration gives a further quality improvement and positive mean retention (Table 1 ). These results indicate that mitigating quality damage from an adapter and recovering its intended function require separate evidence.
+
+Based on these observations, we propose DART, a distillation-aware reparameterization method that guides LoRA reuse with incremental responses under the target denoising schedule. DART first constructs a low-rank distillation bridge and establishes transfer coordinates for the source update in clustered singular subspaces. It then uses paired forward evaluations to measure each channel’s response at target timesteps and solves for fixed channel coefficients that calibrate response direction, magnitude, and allocation across denoising steps. Coordinate transport supplies the channel directions to be calibrated, while response measurements determine how those directions should be combined in the target denoising process. For channel combinations that the selected probes cannot distinguish, calibration keeps the transported initial coefficients to limit changes unsupported by observations. The conversion requires neither source training videos nor backpropagation; the resulting adapter can be loaded directly into the target model.
+
+We make the following contributions.
+
+We identify a gap between measured static parameter compatibility and schedule-dependent adapter behavior, and use a four-anchor evaluation to separate target quality from adapter-induced functional effects.
+
+We propose DART, a training-free reparameterization method that combines low-rank coordinate transport with forward-only response calibration under the target denoising schedule.
+
+Across the primary Wan2.2 setting and two additional targets, DART improves aggregate quality and signed functional retention over Direct in the reported evaluations, while adapter-level analysis reveals both positive functional effects and mitigation of negative transfer.
+
+2 Related Work
+
+2.1 Parameter-efficient customization
+
+Low-Rank Adaptation (LoRA) represents a task update with two low-rank factors while keeping the base model fixed, following a broader line of parameter-efficient adapters and prompt-based updates ( Houlsby et al., 2019 ; Li and Liang, 2021 ; Lester et al., 2021 ; Hu et al., 2022 ) . Video customization methods extend this lightweight interface to appearance, subject, and motion: Tune-A-Video and AnimateDiff adapt image diffusion models for video generation, while MotionDirector and VMC learn motion-specific controls ( Wu et al., 2023 ; Guo et al., 2024 ; Zhao et al., 2024 ; Jeong et al., 2024 ) . These approaches learn or attach an adapter for a compatible model and denoising trajectory; DART addresses the complementary deployment problem of reusing that adapter after distillation changes the target coordinates and trajectory, without retraining.
+
+2.2 Few-step video generation
+
+Progressive distillation, consistency training, and fast ODE solvers shorten diffusion trajectories and reduce inference cost ( Salimans and Ho, 2022 ; Song et al., 2023 ; Luo and others, 2024 ; Lu et al., 2022 ) . Video diffusion models extend these ideas to spatiotemporal generation, including Imagen Video, Make-A-Video, CogVideo, and ModelScopeT2V ( Ho and others, 2022 ; Singer et al., 2022 ; Hong et al., 2022 ; Wang et al., 2023 ; Ho et al., 2022 ) , with Wan and HunyuanVideo providing representative open video foundation models ( WanTeam et al., 2025 ; Kong et al., 2024 ) . VBench supplies broad quality and image-conditioning metrics for evaluating the resulting videos ( Huang et al., 2024b ) . These works improve the speed or measurement of generation, whereas DART studies whether a customization learned for a long trajectory remains functional on a shortened target schedule.
+
+2.3 Data-free adapter transfer
+
+Data-free adapter transfer avoids source training data. CASA provides a spectral-arbitration baseline for video LoRA reuse by relating failure to routing interference between distillation and LoRA updates ( Wang et al., 2026 ) . Its weight-space analysis motivates examining parameter compatibility. Our observations raise an additional question: how does the update affect denoiser outputs at target states and timesteps? DART combines coordinate adaptation with target-schedule response calibration and evaluates quality separately from signed functional effects. We compare against CASA in its original training-free formulation. DART is an alternative transfer framework, rather than a modification of CASA; the comparison does not isolate the relative merits of the two coordinate-transport procedures.
+
+Appendix F distinguishes weight-space transfer and merging, adapter reparameterization and mapping, and function-space response matching. It positions DART as target-schedule-conditioned, channel-level, forward-only calibration for distilled image-to-video (I2V) LoRA reuse.
+
+3 Exploratory Study of LoRA Reuse
+
+CASA studies transfer in weight space ( Wang et al., 2026 ) : full-model and LoRA updates largely preserve singular values, while structured rotations within singular subspaces create routing interference. This establishes static spectral compatibility as an important part of data-free transfer.
+
+We ask how measured static compatibility relates to functional behavior after distillation. Four-anchor evaluation separates functional effects from quality; static geometry and response summaries provide descriptive context. A global-scale sweep supplies an additional baseline. We use a 40-step Wan2.2-I2V-A14B source and its four-step target. For each adapter, eight prompts are crossed with eleven first-frame reference images, yielding 88 videos per method. Of the eight initially evaluated LoRAs, six are retained; LoRAs 02 and 08 are excluded because source gains are near zero. Appendix D reports the complete inventory and functional roles. Appendix Figure 4 and Table 4 give the diagnostics and anchor summary.
+
+3.1 Four anchors separate function from quality
+
+For adapter i , let A_{i} be Source without LoRA, B_{i} Source with the original LoRA, C_{i} Target without LoRA, and D_{i,m} Target with transfer method m . For a functional score s , the adapter-level recovery is
+
+\mathrm{FGR}_{i,m}=\frac{\bar{s}(D_{i,m})-\bar{s}(C_{i})}{\bar{s}(B_{i})-\bar{s}(A_{i})}. (1)
+
+The bar pools the eight prompts before the ratio. The proxy is selected from source anchors before target outcomes: CSD for LoRA 01 and VideoMAE for LoRA 03–07. Target no-LoRA quality averages Q_{C}=0.9236 , versus Q_{D}=0.9029 for Direct, while coordinate defects remain in the narrow 2.635 – 2.652 range (units of 10^{-3} ). Functional and quality outcomes are therefore not interchangeable.
+
+3.2 Similar static geometry, different functional outcomes
+
+After cluster-aware alignment, coordinate defect is about 0.27\% across ten layers per adapter, with subspace alignment 0.999553 and spectral alignment 0.999999658 . These values barely vary, whereas direct Q_{\rm joint} spans 0.8045 – 0.9329 and direct FGR spans -1.2714 – 0.3397 ; these measured geometry summaries do not distinguish the observed outcomes in this adapter set.
+
+3.3 Global scaling as a supporting comparison
+
+A global scale is a simple data-free baseline. All scales use the same evaluation cases, seeds, and scoring protocol. The endpoints are target no-LoRA at \alpha=0 ( Q_{\rm joint}=0.9236 , R_{\rm LoRA}=0 ) and Direct at \alpha=1 ( 0.9029 , -0.4644 ). Reducing the scale to 0.75 raises retention to 0.1178 but lowers quality to 0.9011 . The no-LoRA endpoint has the highest quality but no functional recovery, while 0.75 has the highest retention among the tested scales. These sampled results expose a quality–function trade-off, rather than establish that every possible global scale is inadequate. Appendix Table 12 reports the full sweep.
+
+3.4 Responses under the target schedule
+
+The measured branch-mismatched observations have lower response-direction cosine and larger target-to-source magnitude ratio than the matched observations. This descriptive difference motivates measuring responses under target conditions; it does not isolate a causal effect of schedule shortening. Table 3 reports the group sizes and summaries.
+
+Design implication.
+
+These observations motivate evaluating adapter-induced functional effects alongside quality and measured static compatibility. DART combines coordinate adaptation with response calibration to address this joint evaluation problem; the observations do not establish that either component guarantees recovery.
+
+4 DART
+
+4.1 Problem and method overview
+
+We transfer a source LoRA update C from source weights W_{s} to distilled target weights W_{t} . The notation describes one adapted layer, with the same construction applied to the selected layers. The target uses m denoising times \tau_{1},\ldots,\tau_{m} . A probe x contains a latent state, a prompt, and a reference image. Because distillation changes both the weights and the trajectory, we consider coordinate compatibility and measured responses under these target conditions.
+
+Figure 1 gives the procedure. We first construct a bridge checkpoint and transport the adapter into its coordinates. We then measure channel responses using paired forward evaluations, fit channel coefficients, and attach the resulting update to the target. The main text presents the construction and the consequences needed to interpret it. Appendix B defines the response space and provides the operator construction, assumptions, and proofs.
+
+4.2 Bridge construction and coordinate transport
+
+The bridge isolates a selected part of the distillation change for coordinate alignment. Let \Pi_{r_{b}} denote the selected rank- r_{b} approximation, where r_{b} is the bridge rank. We define the bridge weights W_{b} and the residual drift R by
+
+W_{b}=W_{s}+\Pi_{r_{b}}(W_{t}-W_{s}),\qquad R=W_{t}-W_{b}. (2)
+
+The bridge is used for alignment and probing; deployment uses W_{t} , so residual drift R remains relevant.
+
+Clustered singular subspace alignment gives a left map P_{U} and a right map P_{V} . They align source and bridge directions while allowing rotations within clusters of nearly equal singular values. The transported adapter is
+
+\widetilde{C}=P_{U}CP_{V}^{\top}. (3)
+
+Appendix B.2 defines the maps and their support conditions. These conditions distinguish a coordinate change from a projection that can discard part of the adapter. For a fixed model pair and alignment configuration, bridge construction, model-weight SVD, clustering, and coordinate-map construction are cached once; map application and response calibration remain adapter-specific.
+
+If P_{U} and P_{V} are isometries on the column and row spaces occupied by C , then \widetilde{C} and C have the same rank, nonzero singular values, and Frobenius norm.
+
+Under the stated support conditions, transport preserves rank and energy. These invariants do not imply preservation of the generated adapter effect.
+
+4.3 Channels and measured responses
+
+A single multiplier can change only the strength of the complete update. To allow distinct corrections, we decompose \widetilde{C} into r_{c} fixed rank-one matrices C_{k} and assign one coefficient a_{k} to each channel. Here a is the coefficient vector and a_{0} is the vector of ones. The calibrated update is
+
+C_{t}(a)=\sum_{k=1}^{r_{c}}a_{k}C_{k},\qquad C_{t}(a_{0})=\widetilde{C},\qquad a_{0}=\mathbf{1}. (4)
+
+The channel count r_{c} defines the coefficient space, while bridge rank r_{b} selects the distillation change used for alignment.
+
+We fit coefficients to their measured responses. Let f_{t,j}(W;x) be the denoiser output at target time \tau_{j} and probe x ; for update A , define its effect relative to the bridge baseline
+
+\mathcal{R}_{t,j}(A;x)=f_{t,j}(W_{b}+A;x)-f_{t,j}(W_{b};x). (5)
+
+Paired evaluations at W_{b}\pm\epsilon C_{k} estimate each local channel response. Stacking probes and target times gives the measured operator \widehat{\mathcal{G}}_{d} for target configuration d ; Appendix B.3 gives the finite-difference construction.
+
+Two coefficient vectors are equivalent on the measured target configuration when \widehat{\mathcal{G}}_{d}a=\widehat{\mathcal{G}}_{d}a^{\prime} . The rank of \widehat{\mathcal{G}}_{d} is the schedule-visible rank r_{\rm vis} .
+
+Calibration can identify only channel combinations exposed by the selected probes.
+
+4.4 Response calibration
+
+We fit direction, source-relative magnitude, and step-allocation descriptors. After weighting and stacking them, B_{d} maps channel coefficients to descriptors and b_{d} contains their targets; Appendix B.4 specifies both.
+
+A positive identity penalty \lambda_{\rm id} discourages unsupported changes from a_{0} . We therefore minimize
+
+\mathcal{L}_{d}(a)=\|B_{d}a-b_{d}\|_{2}^{2}+\lambda_{\rm id}\|a-a_{0}\|_{2}^{2},\qquad a_{d}^{\star}=\arg\min_{a}\mathcal{L}_{d}(a). (6)
+
+This quadratic objective has the unique solution
+
+a_{d}^{\star}=(B_{d}^{\top}B_{d}+\lambda_{\rm id}I)^{-1}(B_{d}^{\top}b_{d}+\lambda_{\rm id}a_{0}). (7)
+
+The deployed update is C_{d}^{\star}=C_{t}(a_{d}^{\star}) on W_{t} ; the positive-definite system requires no denoiser backward pass.
+
+With \lambda_{\rm id}>0 , the optimal change a_{d}^{\star}-a_{0} has zero projection onto the null space of \widehat{\mathcal{G}}_{d} . If the desired descriptor b_{d} lies outside the span of B_{d}a_{0} , every single global scale has strictly positive descriptor error.
+
+Unobservable combinations stay at the transported identity. Channel calibration can fit multiple measured descriptor directions, but cannot guarantee attainable targets or exact prediction of generated videos.
+
+Appendix B analyzes this local response model, including regularization bias, residual drift, finite-difference error, and target dependence. These conditional results explain the construction and its limitations; they do not establish semantic recovery or characterize all deployment trajectories.
+
+Variants.
+
+DART-W uses the transported update with a=a_{0} . DART-C retains the direct channel coordinates and solves Equation 7 . DART-F performs both transport and calibration.
+
+5 Experiments
+
+5.1 Setup and metrics
+
+We study image-to-video (I2V) LoRA reuse from the 40-step Wan2.2-I2V-A14B source to a four-step distilled target. We initially evaluate eight source LoRAs. For each LoRA, we design eight prompts and pair each prompt with all eleven first-frame reference images, generating 8\times 11=88 videos per adapter and method. All 88 videos contribute to the reported quality and FGR statistics. Appendix G displays two of the eleven reference images.
+
+The initial eight-adapter set yields 8\times 88=704 videos per method. LoRAs 02 and 08 are excluded because their near-zero source-side functional gains make ratio-based FGR unstable, leaving six adapters in the primary benchmark. Each retained method is therefore evaluated on 6\times 88=528 videos. The five-method comparison—Direct, CASA, DART-W, DART-C, and DART-F—contains 5\times 528=2{,}640 videos, excluding the additional source and no-LoRA anchor conditions. Appendix D documents the adapter selection and functional roles.
+
+Videos are generated at 640\times 640 , with 129 frames and 16 fps. We use bfloat16 inference and LightX2V. DART-W, DART-C, and DART-F are the controlled variants defined above. We use four probes for response calibration; these probes are distinct from the 88-video evaluation count. No source training videos are used during conversion.
+
+We follow VBench and VBench-I2V ( Huang et al., 2024b ) , reporting six normalized VBench quality dimensions and two image-to-video consistency dimensions; dynamic degree is excluded. VBench-Q averages the six quality dimensions and I2V-Avg averages I2V-S and I2V-B. Quality components are paired within each video and aggregated from unrounded scores, using the same primary videos in the method and adapter summaries.
+
+Tables use green, yellow, and blue backgrounds for the first three values; arrows mark the preferred direction.
+
+5.2 Unified scores and main comparison
+
+For a compact two-axis view, we use the group-balanced quality score
+
+Q_{\rm joint}(m)=\frac{1}{2}\bigl(\mathrm{VBench\mbox{-}Q}(m)+\mathrm{I2V\mbox{-}Avg}(m)\bigr). (8)
+
+To summarize functional retention, we first pool the 88 prompt–image cases for each adapter and then average adapter-level ratios with equal weight:
+
+R_{\rm LoRA}(m)=\frac{1}{N}\sum_{i=1}^{N}\frac{\bar{s}(D_{i,m})-\bar{s}(C_{i})}{\bar{s}(B_{i})-\bar{s}(A_{i})}. (9)
+
+The source denominator is selected before target outcomes are inspected, and near-zero source gains are excluded. For this proxy-based metric, R_{\rm LoRA}=1 means that the source-normalized gain equals one on average, 0 means zero net normalized gain, and a negative value means a negative macro signed effect relative to target no-LoRA. The macro score does not imply recovery for each adapter or exact semantic inversion.
+
+Category Method Q_{\rm joint}\uparrow R_{\rm LoRA}\uparrow VBench-Q \uparrow I2V-Avg \uparrow Baselines Direct attachment 0.9029 -0.4644 0.8502 0.9556 CASA 0.8918 -0.6071 0.8467 0.9369 DART variants DART-W 0.8950 -0.5347 0.8465 0.9436 DART-C 0.9200 -0.2973 0.8697 0.9702 DART-F 0.9227 +0.1349 0.8732 0.9721
+
+Direct attachment has negative mean retention, even though its target quality is not uniformly poor. DART-F raises Q_{\rm joint} from 0.9029 to 0.9227 , a gain of 0.0198 . Its quality is close to the target no-LoRA mean of 0.9236 , and it is the only configuration in this comparison with positive mean R_{\rm LoRA} . DART-C accounts for most of the joint-quality improvement; the full configuration gives the highest aggregate scores among the evaluated methods.
+
+DART-F ranks first on seven reported dimensions and second on imaging; DART-C ranks first on imaging. Adapter-level effects are heterogeneous: DART-F improves four of six adapters in Q_{\rm joint} and decreases two. The largest improvement occurs on LoRA 01, which exhibits severe quality degradation under Direct. Appendix E.1 reports the per-adapter changes and the effect of excluding LoRA 01; Table 5 gives the complete quality dimensions. Section 5.5 discusses the distinct functional outcomes.
+
+5.3 Component ablation
+
+Appendix Table 6 reports the component comparison. Calibration accounts for most of the quality gain: DART-C improves Q_{\rm joint} by 0.0171 over Direct. Coordinate transport alone decreases aggregate quality by 0.0079 in this setting, but adding it to calibration yields a further 0.0027 gain. The full configuration is also the only variant with positive macro functional retention. These results support a complementary contribution of transport within DART, without establishing that transport alone improves reuse or that the two stages contribute equally.
+
+LoRA 04 provides an adapter-level counterexample to a calibration-only explanation. Its primary FGR is -0.8459 for Direct, +0.3910 for CASA, +0.4910 for DART-W, -0.8104 for DART-C, and +0.5377 for DART-F. Thus, calibration in the original channel coordinates leaves the functional effect close to the Direct failure, whereas transport alone restores a positive effect and transport followed by calibration gives the strongest result. Appendix Figure 6 visualizes the corresponding ArcShot example. This case supports the necessity of transport for LoRA 04, while the heterogeneous adapter-level results prevent a claim that transport improves every adapter.
+
+5.4 Functional retention and additional targets
+
+The primary per-adapter FGR values in Appendix Table 10 complement the aggregate scores. DART-F produces positive effects relative to the target no-LoRA anchor for LoRAs 04, 05, and 07, with FGR +0.5377 , +0.5229 , and +0.2780 . LoRAs 01, 03, and 06 remain negative, although their FGR improves over Direct. Positive macro retention therefore coexists with adapter-specific failures, and improved quality alone is not evidence of functional preservation. All functional comparisons below use this primary adapter-level ratio and its macro average.
+
+Target model Method Q_{\rm joint}\uparrow R_{\rm LoRA}\uparrow HunyuanVideo 1.5 Direct 0.8778 -0.4372 CASA 0.8897 -0.2447 DART 0.9014 0.0771 CausalWan2.2-I2V-A14B Direct 0.8976 -0.4186 CASA 0.9026 -0.1843 DART 0.9117 0.1286
+
+On both additional targets, full DART obtains the highest joint quality and the only positive mean retention among the compared methods (Table 2 ). This provides additional evidence that the observed aggregate trend is not specific to the primary Wan2.2 target. Conversion remains target-specific, and these evaluations do not establish behavior on unseen target families or schedules.
+
+5.5 Response diagnostics and adapter-level behavior
+
+Table 3 summarizes the source-to-target response observations introduced in Section 3 . Three branch-mismatched observations have mean direction cosine 0.0650 and target-to-source magnitude ratio 1.2912 ; nine matched observations have 0.4529 and 0.9556 . Both quantities ideally equal one. These small descriptive groups motivate response calibration, but do not demonstrate a causal recovery mechanism. Appendix Table 13 also reports norms and the pooled summary.
+
+Subset Count Direction cosine Magnitude ratio Branch mismatched 3 0.0650 1.2912 Branch matched 9 0.4529 0.9556
+
+Calibration exhibits heterogeneous adapter-level behavior. The reported coefficients for LoRAs 04, 05, and 07 include both active and attenuated channels, alongside positive primary functional effects. For LoRAs 01, 03, and 06, all 32 coefficients are near zero and primary FGR remains negative, although it improves over Direct. These observations are consistent with strong attenuation and mitigation of incompatible transfer. They do not establish that the suppressed adapters retain their intended function. We therefore interpret DART through both functional recovery and negative-transfer mitigation, without guaranteeing either outcome for every adapter. Appendix Table 14 reports the complete coefficient summary.
+
+5.6 Qualitative evidence
+
+LoRA 06 (DroneShot) is a camera-motion adapter whose functional role is to produce rising, retreating, overhead, descending, and wide-area aerial camera movements. The prompt used for Figure 2 is: The drone shot starts with the main subject in the first frame and gradually ascends upwards, with a smooth and natural transition. In the displayed frames, Source with the original LoRA and DART-F show the requested upward camera movement, while Direct and CASA switch abruptly to a distant view and leave a subject-shaped remnant. This example is descriptive, and the illustrated behavior does not override the negative primary FGR and quality decline for LoRA 06 reported in the quantitative results.
+
+Figure 3 shows LoRA 05 (Anime Lore), which targets cel-animation appearance, anime lighting, and stylized action effects. Its prompt is: The subject in the first frame draws a sword in a single sweeping motion, glowing energy trailing the blade, wind kicking up leaves while dramatic anime speed lines converge behind. Source with the original LoRA and DART-F retain the coherent sword sweep and trailing energy; Direct produces an oversized green blade, DART-C over-amplifies the energy into a bright ring, and DART-W recovers a more localized blade effect. The example complements the quantitative component ablation without serving as a substitute for the reported metrics.
+
+Limitations.
+
+The six-adapter evaluation has heterogeneous outcomes: three adapters lack positive primary retention, and one accounts for the largest quality gain. Four-anchor proxies measure selected effects rather than complete semantic preservation; near-zero source gains require exclusion. Robustness to probe count and repeated seeds remains unestablished. Conversion is target-specific, but its 96-minute model-pair preprocessing is reusable. Subtracting this setup gives DART-F a per-adapter cost of 130.5 minutes, with 528 forward evaluations. Its 79.91 GiB GPU memory figure is the maximum peak across eight conversion runs, not their mean (Appendix Table 15 ). Larger adapter sets and repeated-seed evaluation remain future work.
+
+6 Conclusion
+
+LoRA reuse on distilled video models should be evaluated jointly through functional preservation and negative-transfer avoidance. In the measured adapter set, similar static geometry coexists with different functional outcomes. DART combines coordinate reparameterization with forward-only response calibration and improves aggregate quality and signed functional retention in the reported settings. Calibration contributes most of the quality gain, with an additional improvement from transport in the full configuration. Adapter-level results include positive functional effects and attenuation with reduced negative functional effects, motivating cautious evaluation of reuse behavior rather than an assumption of successful recovery for every adapter.
+
+References
+
+Statement on Language Model Assistance
+
+The authors used language-model assistance for drafting, editing, table formatting, and code organization. The authors are responsible for the research ideas, mathematical claims, implementation, experiments, citations, and final verification.
+
+Appendix A Additional Exploratory Diagnostics
+
+The scale sweep, source-to-target response comparison, and static geometry summary provide supporting descriptive evidence. The main text focuses on aggregate reuse behavior and adapter-level functional effects.
+
+Appendix B Theory and Notation
+
+This appendix supplies the definitions and derivations referenced by the six main method equations. It distinguishes properties of coordinate transport, measured linear responses, and the nonlinear denoiser. Each claim is stated with the conditions needed for its proof.
+
+B.1 Probe domain and response space
+
+Let an adapted layer have input and output dimensions n_{\rm in} and n_{\rm out} . Its weights and updates belong to \mathbb{R}^{n_{\rm out}\times n_{\rm in}} . For each fixed configuration of the remaining layers, the denoiser output belongs to a finite dimensional space \mathcal{Y}=\mathbb{R}^{q} . A probe contains a latent state, a prompt, and a reference image. Their domains are \mathcal{Z} , \mathcal{P} , and \mathcal{I} . The probe domain, target time interval, target schedule, and response space are
+
+\displaystyle\Omega \displaystyle=\mathcal{Z}\times\mathcal{P}\times\mathcal{I}, \displaystyle\tau_{j} \displaystyle\in[0,T],\quad T>0, (10) \displaystyle S_{t} \displaystyle=(\tau_{1},\ldots,\tau_{m}), \displaystyle\mathcal{H}_{t} \displaystyle=L^{2}(\Omega,\mu;\mathcal{Y})^{m}.
+
+The measure \mu is a probability measure on probes. The empirical analysis uses finitely many probes x_{n} with masses \mu_{n}>0 that sum to one. Step weights \omega_{j}>0 also sum to one. For square integrable responses, the inner product is
+
+\langle u,v\rangle_{\mathcal{H}_{t}}=\sum_{j=1}^{m}\omega_{j}\int_{\Omega}u_{j}(x)^{\top}v_{j}(x)\,d\mu(x). (11)
+
+All matrix derivatives below hold the probe, target time, and remaining layer weights fixed. Let f_{t,j}(W;x) be the target denoiser output at time \tau_{j} . The exact response based at the bridge is
+
+\mathcal{R}_{t}(A)=\bigl(f_{t,j}(W_{b}+A;x)-f_{t,j}(W_{b};x)\bigr)_{j=1}^{m}\in\mathcal{H}_{t}. (12)
+
+Both terms use the same baseline construction. Changing the baseline would change the response being compared.
+
+B.2 Transport construction and invariants
+
+Write \Delta=W_{t}-W_{s} , K=\Pi_{r_{b}}(\Delta) , W_{b}=W_{s}+K , and R=\Delta-K . Choose source and bridge singular subspace bases U_{s},U_{b} with the same number of orthonormal columns, and similarly choose V_{s},V_{b} . The cluster partition \mathcal{G} groups nearly equal singular values. Block orthogonal Procrustes rotations Q_{U} and Q_{V} align corresponding clusters. Their dimensions match the selected left and right bases, respectively. The maps are
+
+P_{U}=U_{b}Q_{U}U_{s}^{\top},\qquad P_{V}=V_{b}Q_{V}V_{s}^{\top},\qquad\widetilde{C}=P_{U}CP_{V}^{\top}. (13)
+
+For a nonzero update, the static diagnostic compares its coordinates under the source and bridge bases
+
+\delta_{\rm coord}(C)=\frac{1}{\|C\|_{F}}\min_{Q_{U},Q_{V}\in\mathbb{O}_{\mathcal{G}}}\left\|U_{b}^{\top}CV_{b}-Q_{U}(U_{s}^{\top}CV_{s})Q_{V}^{\top}\right\|_{F}. (14)
+
+Here \mathbb{O}_{\mathcal{G}} denotes the appropriate block orthogonal groups. This diagnostic is separate from the functional response.
+
+Compact subspace maps need not be orthogonal on the entire ambient space. Proposition 1 requires that they be isometries on the spaces occupied by the adapter. For the construction above, sufficient support conditions are
+
+U_{s}U_{s}^{\top}C=C,\qquad CV_{s}V_{s}^{\top}=C. (15)
+
+To prove the proposition, write a compact singular value decomposition C=L\Sigma H^{\top} . The support conditions imply that P_{U}L and P_{V}H have orthonormal columns. Consequently,
+
+\widetilde{C}=(P_{U}L)\Sigma(P_{V}H)^{\top},\qquad\widetilde{C}^{\top}\widetilde{C}=(P_{V}H)\Sigma^{2}(P_{V}H)^{\top}. (16)
+
+This is a singular value decomposition with the same nonzero singular values. Therefore,
+
+\operatorname{rank}(\widetilde{C})=\operatorname{rank}(C),\qquad\|\widetilde{C}\|_{F}^{2}=\operatorname{tr}(\Sigma^{2})=\|C\|_{F}^{2}. (17)
+
+If the support conditions fail, the maps can remove components outside the selected spaces, and the invariant claim does not apply. In plain terms, coordinate transport preserves adapter size only when its subspaces contain the adapter.
+
+B.3 Measured channels and visible equivalence
+
+Let C_{k} be the fixed rank-one channels with \widetilde{C}=\sum_{k=1}^{r_{c}}C_{k} . Paired forward evaluations define
+
+\widehat{g}_{d,j,k}(x)=\frac{f_{t,j}(W_{b}+\epsilon C_{k};x)-f_{t,j}(W_{b}-\epsilon C_{k};x)}{2\epsilon},\qquad\epsilon>0. (18)
+
+The target index d includes the selected schedule, probes, and response construction. With \widehat{g}_{d,k}=(\widehat{g}_{d,j,k})_{j=1}^{m} , the linear measured operator and its visible rank are
+
+\widehat{\mathcal{G}}_{d}\colon\mathbb{R}^{r_{c}}\rightarrow\mathcal{H}_{t},\qquad\widehat{\mathcal{G}}_{d}a=\sum_{k=1}^{r_{c}}a_{k}\widehat{g}_{d,k},\qquad r_{\rm vis}=\operatorname{rank}(\widehat{\mathcal{G}}_{d}). (19)
+
+This operator is linear by construction. It is a local approximation to the nonlinear denoiser response, not an assertion that the full video generator is linear in a .
+
+Two coefficient vectors have the same measured response exactly when
+
+a\sim_{d}a^{\prime}\quad\Longleftrightarrow\quad\widehat{\mathcal{G}}_{d}(a-a^{\prime})=0\quad\Longleftrightarrow\quad a-a^{\prime}\in\operatorname{Null}(\widehat{\mathcal{G}}_{d}). (20)
+
+The equality follows directly from linearity. Rank nullity then gives
+
+r_{c}=r_{\rm vis}+\dim\operatorname{Null}(\widehat{\mathcal{G}}_{d}). (21)
+
+In plain terms, the target probes determine how many distinct coefficient changes can be identified.
+
+B.4 Descriptor construction and the coefficient solution
+
+For the empirical probe measure, let E stack response entries with weights \sqrt{\omega_{j}\mu_{n}} . Then E preserves the empirical response norm and the finite matrix G_{d}=E\widehat{\mathcal{G}}_{d} has one column per channel. For a response g , define its step mean \bar{g}_{n}=\sum_{j}\omega_{j}g_{j}(x_{n}) . Let the matrices \mathcal{A} and \mathcal{C} act on this weighted representation by
+
+\mathcal{A}(Eg)=\bigl(\sqrt{\mu_{n}}\bar{g}_{n}\bigr)_{n},\qquad\mathcal{C}(Eg)=\bigl(\sqrt{\omega_{j}\mu_{n}}(g_{j}(x_{n})-\bar{g}_{n})\bigr)_{j,n}. (22)
+
+Thus \mathcal{A} forms the step mean, while \mathcal{C} retains deviations from that mean.
+
+Let e_{s}\neq 0 be the source mean response in the same descriptor space under the fixed probe correspondence, and set u_{s}=e_{s}/\|e_{s}\|_{2} . The source and target descriptors must have matching dimensions. The desired relative amplitude is \rho\geq 0 , and P_{s}^{\perp}=I-u_{s}u_{s}^{\top} removes the source direction. With \lambda_{\rm mag},\lambda_{\rm step}\geq 0 and \lambda_{\rm id}>0 , the expanded objective is
+
+\displaystyle\mathcal{L}_{d}(a)={} \displaystyle\|P_{s}^{\perp}\mathcal{A}G_{d}a\|_{2}^{2} (23) \displaystyle+\lambda_{\rm mag}\bigl(u_{s}^{\top}\mathcal{A}G_{d}a-\rho\|e_{s}\|_{2}\bigr)^{2} \displaystyle+\lambda_{\rm step}\|\mathcal{C}G_{d}a\|_{2}^{2}+\lambda_{\rm id}\|a-a_{0}\|_{2}^{2}.
+
+The first three terms are written as one least squares residual by defining
+
+B_{d}=\begin{bmatrix}P_{s}^{\perp}\mathcal{A}G_{d}\\
+\sqrt{\lambda_{\rm mag}}u_{s}^{\top}\mathcal{A}G_{d}\\
+\sqrt{\lambda_{\rm step}}\mathcal{C}G_{d}\end{bmatrix},\qquad b_{d}=\begin{bmatrix}0\\
+\sqrt{\lambda_{\rm mag}}\rho\|e_{s}\|_{2}\\
+0\end{bmatrix}. (24)
+
+Each zero denotes a vector of the corresponding block dimension. The matrices \mathcal{A} , \mathcal{C} , and the source descriptors are fixed while optimizing a . Differentiating Equation 6 yields
+
+(B_{d}^{\top}B_{d}+\lambda_{\rm id}I)a_{d}^{\star}=B_{d}^{\top}b_{d}+\lambda_{\rm id}a_{0}. (25)
+
+For every nonzero coefficient vector z ,
+
+z^{\top}(B_{d}^{\top}B_{d}+\lambda_{\rm id}I)z=\|B_{d}z\|_{2}^{2}+\lambda_{\rm id}\|z\|_{2}^{2}>0. (26)
+
+The Hessian is twice this positive definite matrix, so the objective has a unique minimizer and Equation 7 follows. In plain terms, the identity penalty makes calibration well defined even when the measured channels are redundant.
+
+B.5 Global scaling and invisible coefficients
+
+Define v_{d}=B_{d}a_{0} and y_{d}=b_{d} . A single scale produces only descriptors of the form \alpha v_{d} . Orthogonal projection gives
+
+\min_{\alpha\in\mathbb{R}}\|\alpha v_{d}-y_{d}\|_{2}^{2}=\|P_{\operatorname{span}(v_{d})}^{\perp}y_{d}\|_{2}^{2}. (27)
+
+When v_{d}\neq 0 , differentiating the scalar quadratic gives
+
+\alpha^{\star}=\frac{v_{d}^{\top}y_{d}}{v_{d}^{\top}v_{d}},\qquad\|\alpha^{\star}v_{d}-y_{d}\|_{2}^{2}=\|y_{d}\|_{2}^{2}-\frac{(v_{d}^{\top}y_{d})^{2}}{\|v_{d}\|_{2}^{2}}. (28)
+
+If v_{d}=0 , the error is \|y_{d}\|_{2}^{2} for every scale and the same projection identity holds. The minimum is positive exactly when y_{d} is outside the span of v_{d} . This proves the scalar part of Proposition 2 . In plain terms, scaling cannot reach a descriptor direction outside the one produced by the original coefficient vector.
+
+Now let N=\operatorname{Null}(\widehat{\mathcal{G}}_{d}) and decompose a-a_{0}=a_{\perp}+a_{N} with a_{N}\in N and a_{\perp}\perp N . Since B_{d} is a composition of measured responses and fixed linear descriptors, B_{d}a_{N}=0 . Therefore,
+
+\mathcal{L}_{d}(a_{0}+a_{\perp}+a_{N})=\|B_{d}(a_{0}+a_{\perp})-b_{d}\|_{2}^{2}+\lambda_{\rm id}\|a_{\perp}\|_{2}^{2}+\lambda_{\rm id}\|a_{N}\|_{2}^{2}. (29)
+
+For fixed a_{\perp} , the unique minimizing a_{N} is zero. Thus
+
+P_{\operatorname{Null}(\widehat{\mathcal{G}}_{d})}(a_{d}^{\star}-a_{0})=0. (30)
+
+The same argument applies to \operatorname{Null}(B_{d}) , which can be larger if descriptors discard measured information. In plain terms, calibration leaves unidentifiable coefficient combinations at identity.
+
+B.6 Calibration bias
+
+The bias relation does not require B_{d} to have full column rank. Let B_{d}=U\Sigma V^{\top} be its compact singular value decomposition with positive singular values \sigma_{\ell} , and let r_{d}=b_{d}-B_{d}a_{0} . Define the unregularized least squares solution closest to a_{0} as a_{d}^{\dagger}=a_{0}+B_{d}^{\dagger}r_{d} , where the dagger on B_{d} denotes its pseudoinverse. Solving the normal equation in singular coordinates gives
+
+\displaystyle a_{d}^{\star}-a_{0} \displaystyle=\sum_{\ell}\frac{\sigma_{\ell}}{\sigma_{\ell}^{2}+\lambda_{\rm id}}(u_{\ell}^{\top}r_{d})v_{\ell}, (31) \displaystyle a_{d}^{\dagger}-a_{0} \displaystyle=\sum_{\ell}\frac{u_{\ell}^{\top}r_{d}}{\sigma_{\ell}}v_{\ell}.
+
+Subtracting the unregularized normal equation also gives
+
+(B_{d}^{\top}B_{d}+\lambda_{\rm id}I)(a_{d}^{\star}-a_{d}^{\dagger})=-\lambda_{\rm id}(a_{d}^{\dagger}-a_{0}). (32)
+
+Each identifiable correction is multiplied by \sigma_{\ell}^{2}/(\sigma_{\ell}^{2}+\lambda_{\rm id}) . In plain terms, identity regularization suppresses corrections most strongly along weakly measured descriptor directions.
+
+B.7 Bridge to deployment response
+
+The calibrated response is measured at W_{b} , but deployment uses W_{t}=W_{b}+R . For a fixed update A , assume the denoiser is twice continuously differentiable on a neighborhood of all matrices W_{b}+sR+tA with (s,t)\in[0,1]^{2} . Assume the resulting responses and mixed derivatives are integrable in the response norm. Define
+
+\Phi_{j}(s,t;x)=f_{t,j}(W_{b}+sR+tA;x). (33)
+
+The difference between the deployment and bridge responses is the alternating sum of its four corners. Applying the fundamental theorem of calculus in each variable gives
+
+\displaystyle f_{t,j}(W_{t}+A;x)-f_{t,j}(W_{t};x)-\mathcal{R}_{t,j}(A;x) (34) \displaystyle=\int_{0}^{1}\int_{0}^{1}D_{W}^{2}f_{t,j}(W_{b}+sR+tA;x)[R,A]\,dt\,ds.
+
+This identity depends on the selected bridge through R and on calibration through A=C_{t}(a_{d}^{\star}) . It vanishes when either is zero, and can also vanish through the mixed interaction. In plain terms, the error from applying a bridge-calibrated update at the target depends on how the remaining drift interacts with that update.
+
+B.8 Finite difference error
+
+For each channel and probe, let g(s)=f_{t,j}(W_{b}+sC_{k};x) . Assume g is three times continuously differentiable on [-\epsilon,\epsilon] and \|g^{\prime\prime\prime}(s)\|_{2}\leq M_{jk}(x) there. The vector valued integral remainder gives
+
+\displaystyle\widehat{g}_{d,j,k}(x)-g^{\prime}(0)={} \displaystyle\frac{1}{4\epsilon}\int_{0}^{\epsilon}(\epsilon-u)^{2}g^{\prime\prime\prime}(u)\,du (35) \displaystyle+\frac{1}{4\epsilon}\int_{-\epsilon}^{0}(\epsilon+u)^{2}g^{\prime\prime\prime}(u)\,du.
+
+Bounding the integrands and evaluating the scalar integrals yields
+
+\|\widehat{g}_{d,j,k}(x)-g^{\prime}(0)\|_{2}\leq\frac{\epsilon^{2}}{6}M_{jk}(x). (36)
+
+If these bounds are square integrable, stacking them also bounds the channel operator error. In plain terms, the probing radius controls the local approximation error under the stated smoothness assumption. This conclusion concerns the response estimate and does not bound the error of a full generated trajectory.
+
+B.9 Target specific conversion regret
+
+For each target configuration d , write \mathcal{L}_{d}(a)=a^{\top}Q_{d}a-2q_{d}^{\top}a+c_{d} , where Q_{d}=B_{d}^{\top}B_{d}+\lambda_{\rm id}I\succ 0 and q_{d}=B_{d}^{\top}b_{d}+\lambda_{\rm id}a_{0} . Completing the square gives
+
+\mathcal{L}_{d}(a)=\mathcal{L}_{d}(a_{d}^{\star})+(a-a_{d}^{\star})^{\top}Q_{d}(a-a_{d}^{\star}). (37)
+
+To compare shared conversions, assume a common coefficient dimension and a fixed channel correspondence across target configurations. For a finite collection of targets with positive weights p_{d} summing to one, a shared coefficient vector therefore incurs
+
+\sum_{d}p_{d}\bigl(\mathcal{L}_{d}(a)-\mathcal{L}_{d}(a_{d}^{\star})\bigr)=\sum_{d}p_{d}\|a-a_{d}^{\star}\|_{Q_{d}}^{2}\geq 0, (38)
+
+where \|z\|_{Q_{d}}^{2}=z^{\top}Q_{d}z . Equality holds exactly when a equals every target optimum. The best shared vector solves
+
+a_{\rm shared}^{\star}=\left(\sum_{d}p_{d}Q_{d}\right)^{-1}\sum_{d}p_{d}Q_{d}a_{d}^{\star}. (39)
+
+Thus different optima imply a strictly positive minimum shared cost. In plain terms, target specific conversion is justified when the measured target objectives favor different coefficients, rather than merely because the targets have different names.
+
+Appendix C Additional Evaluation Results
+
+C.1 Four anchors, quality dimensions, and components
+
+The following tables provide the four-anchor summary, complete quality dimensions, and component ablation. Functional comparisons use the primary per-adapter FGR definition throughout.
+
+Adapter Q_{C}\uparrow Q_{D}\uparrow \Delta Q\uparrow Direct FGR \uparrow Coord. defect \downarrow LoRA 01 0.9249 0.8045 -0.1204 -1.2714 2.635 LoRA 03 0.9231 0.9162 -0.0070 -0.5381 2.652 LoRA 04 0.9356 0.9329 -0.0027 -0.8459 2.647 LoRA 05 0.9152 0.9012 -0.0140 +0.3004 2.648 LoRA 06 0.9096 0.9301 +0.0205 -0.7712 2.652 LoRA 07 0.9333 0.9326 -0.0007 +0.3397 2.652 Mean or range 0.9236 0.9029 -0.0207 -0.4644 0.017
+
+Primary functional results use the adapter-level ratios in Table 10 and their macro average in Table 1 . Negative values denote decreases relative to the target no-LoRA anchor.
+
+The qualitative ablation is now reported in Figure 3 in the main text, so that the visual evidence is not repeated in the appendix.
+
+Method Subj. \uparrow Bkg. \uparrow Flicker \uparrow Smooth \uparrow Aesthetic \uparrow Imaging \uparrow I2V-S \uparrow I2V-B \uparrow Direct 0.8766 0.9218 0.9779 0.9872 0.6713 0.6666 0.9532 0.9580 CASA 0.8634 0.9153 0.9839 0.9909 0.6315 0.6955 0.9328 0.9409 DART-W 0.8640 0.9144 0.9844 0.9916 0.6375 0.6871 0.9396 0.9476 DART-C 0.9148 0.9393 0.9862 0.9916 0.6885 0.6978 0.9692 0.9713 DART-F 0.9247 0.9469 0.9862 0.9917 0.6932 0.6964 0.9718 0.9724
+
+Category Variant Components Quality Transport Calibration Q_{\rm joint} \uparrow I2V-S \uparrow I2V-B \uparrow I2V-Avg \uparrow Baseline Direct ✗ ✗ 0.9029 0.9532 0.9580 0.9556 Single component DART-W ✓ ✗ 0.8950 0.9396 0.9476 0.9436 DART-C ✗ ✓ 0.9200 0.9692 0.9713 0.9702 Full method DART-F ✓ ✓ 0.9227 0.9718 0.9724 0.9721
+
+Appendix D LoRA Inventory
+
+We initially collected eight public LoRAs for the high-noise branch of Wan2.2-I2V-A14B. They span animation and anime styles, subject actions, camera motion, rotation, and local gestures. The primary benchmark retains LoRAs 01, 03, 04, 05, 06, and 07. LoRAs 02 and 08 are excluded because their source-side functional gains are close to zero, making the denominator of the ratio-based FGR unstable. The exclusion is determined from the source anchors before target outcomes are inspected.
+
+Table 7 records each adapter’s identity, benchmark status, and functional role. The adapter IDs are fixed throughout the paper and match the generation manifest. Reporting all eight initially collected adapters makes the two exclusions and the retained benchmark explicit.
+
+ID Status Name Functional role 01 Retained City the Animation Elastic 2D animation and secondary motion 02 Excluded KungFu Continuous martial-arts actions 03 Retained Fly Takeoff, hovering, diving, and fast flight 04 Retained ArcShot Arc or orbit camera motion with parallax 05 Retained Anime Lore Cel-animation appearance and anime lighting 06 Retained DroneShot Rising, retreating, overhead, descending, and wide-area aerial camera motion 07 Retained Turntable 360 Subject rotation with a mostly fixed camera 08 Excluded Paw Pose Paw raising, waving, joining, and reaching gestures
+
+LoRA 04 qualitative component case.
+
+LoRA 04 (ArcShot) targets an arc or orbit camera movement with parallax. The prompt used in Figure 6 is: arc shot, the camera arcs low around the subject in the first frame looking upward for a heroic angle, the subject holding a confident pose while clouds streak overhead. Direct and DART-C largely preserve the side view and do not recover the requested low-angle arc. DART-W recovers part of the camera movement, while DART-F most clearly approaches the rising low-angle view exhibited by Source with the original LoRA. The visual ordering agrees with the primary FGR values reported in Appendix Table 10 : -0.8459 for Direct, +0.3910 for CASA, +0.4910 for DART-W, -0.8104 for DART-C, and +0.5377 for DART-F.
+
+Appendix E Detailed Results and Diagnostics
+
+The following tables retain adapter-level summaries and diagnostic inventories. Primary quality and FGR use all 88 videos per adapter and method, covering the eight prompts crossed with eleven first-frame reference images. The method, adapter, and Direct anchor tables use the same cases; source and no-LoRA anchors use the corresponding 88-case evaluations. Each video uses the six-dimension quality mean, excluding dynamic degree, and the two-dimension I2V mean. Means and differences are calculated before rounding, so differences of displayed entries can differ in the final decimal place.
+
+E.1 Adapter-level quality and influence of LoRA 01
+
+Table 8 reports all six adapters. DART-F improves Q_{\rm joint} by +0.1213 , +0.0021 , +0.0052 , and +0.0160 for LoRAs 01, 03, 04, and 05; the changes for LoRAs 06 and 07 are -0.0255 and -0.0006 . Excluding LoRA 01, the mean quality gain is -0.0006 , compared with +0.0198 across all six adapters. The positive aggregate quality gain is therefore driven by the large improvement on LoRA 01, and should not be interpreted as a uniform adapter-level benefit. This exclusion summary is descriptive and does not estimate uncertainty across seeds.
+
+Adapter Direct Q_{\rm joint} \uparrow DART-F Q_{\rm joint} \uparrow Q_{\rm joint} gain \uparrow Direct Ref-DINO \uparrow DART-F Ref-DINO \uparrow Gain \uparrow LoRA 01 0.8045 0.9258 +0.1213 0.3931 0.8969 +0.5038 LoRA 03 0.9162 0.9183 +0.0021 0.8680 0.8459 -0.0221 LoRA 04 0.9329 0.9381 +0.0052 0.9073 0.9552 +0.0479 LoRA 05 0.9012 0.9172 +0.0160 0.8562 0.9008 +0.0446 LoRA 06 0.9301 0.9046 -0.0255 0.9122 0.8037 -0.1086 LoRA 07 0.9326 0.9319 -0.0006 0.9263 0.9300 +0.0037 Mean 0.9029 0.9227 +0.0198
+
+Adapter Q_{\rm joint,A}\uparrow Q_{\rm joint,B}\uparrow Q_{\rm joint,C}\uparrow Q_{\rm joint,D}\uparrow (Q_{\rm joint,D}-Q_{\rm joint,C})\uparrow I2V-A \uparrow I2V-B \uparrow I2V-C \uparrow I2V-D \uparrow Direct FGR \uparrow LoRA 01 0.8975 0.8457 0.9249 0.8045 -0.1204 0.9425 0.9072 0.9730 0.8789 -1.2714 LoRA 03 0.9042 0.9073 0.9231 0.9162 -0.0070 0.9555 0.9622 0.9744 0.9658 -0.5381 LoRA 04 0.9205 0.9226 0.9356 0.9329 -0.0027 0.9761 0.9834 0.9850 0.9845 -0.8459 LoRA 05 0.9044 0.8884 0.9152 0.9012 -0.0140 0.9508 0.9327 0.9623 0.9454 +0.3004 LoRA 06 0.9015 0.9247 0.9096 0.9301 +0.0205 0.9703 0.9797 0.9730 0.9808 -0.7712 LoRA 07 0.9294 0.9327 0.9333 0.9326 -0.0007 0.9783 0.9819 0.9824 0.9781 +0.3397 Mean 0.9096 0.9036 0.9236 0.9029 -0.0207
+
+Adapter Proxy Primary FGR \uparrow Direct CASA DART-W DART-C DART-F LoRA 01 CSD -1.2714 -4.0210 -3.9538 -0.0043 -0.0187 LoRA 03 VideoMAE -0.5381 -0.6924 -0.5015 -0.8025 -0.2578 LoRA 04 VideoMAE -0.8459 +0.3910 +0.4910 -0.8104 +0.5377 LoRA 05 VideoMAE +0.3004 +0.4249 +0.5474 +0.3467 +0.5229 LoRA 06 VideoMAE -0.7712 -0.1317 -0.1266 -0.8760 -0.2527 LoRA 07 VideoMAE +0.3397 +0.3866 +0.3355 +0.3629 +0.2780 Mean -0.4644 -0.6071 -0.5347 -0.2973 +0.1349
+
+Adapter Layers Coord. defect \downarrow Subspace \uparrow Spectral \uparrow \|C\|_{F} Direct FGR \uparrow CASA FGR \uparrow Direct Q_{\rm joint} \uparrow LoRA 01 10 0.002635\mathbin{\pm}0.000041 0.999553 0.999999658 52.2873 -1.2714 -4.0210 0.8045 LoRA 03 10 0.002652\mathbin{\pm}0.000024 0.999553 0.999999658 0.1162 -0.5381 -0.6924 0.9162 LoRA 04 10 0.002647\mathbin{\pm}0.000026 0.999553 0.999999658 2.1596 -0.8459 +0.3910 0.9329 LoRA 05 10 0.002648\mathbin{\pm}0.000028 0.999553 0.999999658 0.1711 +0.3004 +0.4249 0.9012 LoRA 06 10 0.002652\mathbin{\pm}0.000019 0.999553 0.999999658 2.0664 -0.7712 -0.1317 0.9301 LoRA 07 10 0.002652\mathbin{\pm}0.000024 0.999553 0.999999658 0.0957 +0.3397 +0.3866 0.9326
+
+\bm{\alpha} Mean Q_{\rm joint} \uparrow R_{\rm LoRA}\uparrow 0.00 0.9236 0.0000 0.10 0.8944 0.0321 0.25 0.8932 0.0657 0.50 0.8918 0.0044 0.75 0.9011 0.1178 1.00 0.9029 -0.4644
+
+Subset \bm{n} Direction cosine \uparrow Magnitude ratio Target norm Source norm Branch mismatched 3 0.0650 1.2912 68.70 95.19 Branch matched 9 0.4529 0.9556 90.25 96.04 All 12 0.3559 1.0395 84.86 95.83
+
+Adapter Channels Mean Range Deviation Near zero Near one \bm{\Delta\mathrm{FGR}}\uparrow LoRA 01 32 -0.0004 [-0.0227,0.0172] 1.0005 32 0 +1.2527 LoRA 03 32 -0.0000 [-0.0008,0.0006] 1.0000 32 0 +0.2803 LoRA 04 32 0.4687 [-0.0012,1.0000] 0.7290 7 12 +1.3836 LoRA 05 32 0.4579 [-0.0014,1.0000] 0.722507 9 11 +0.2225 LoRA 06 32 -0.0002 [-0.0032,0.0023] 1.0002 32 0 +0.5185 LoRA 07 32 0.434578 [-0.0006,1.0000] 0.832800 8 11 -0.0617
+
+Category Method Requirements Conversion cost Source data Backward Training Forwards (per LoRA) \downarrow Total time (min) \downarrow Cached time (min) \downarrow Max. peak GPU (GiB) \downarrow Immediate Direct ✗ ✗ ✗ 0 <0.1 <0.1 0.00 Training-free DART-W ✗ ✗ ✗ 0 165.0 69.0 1.94 DART-C ✗ ✗ ✗ 528 158.0 62.0 80.71 DART-F ✗ ✗ ✗ 528 226.5 130.5 79.91
+
+Reuse and aggregation. The shared 96-minute setup comprises bridge construction, model-weight SVD, clustering, and coordinate-map construction for the fixed source and four-step distilled models. All three measured DART variants include this setup; additional LoRAs reuse its results. For N LoRAs under the same model-pair configuration, the estimated DART-F total is 96+130.5N minutes, or 130.5+96/N minutes per LoRA. The GPU entries 1.94, 80.71, and 79.91 GiB summarize the maximum peaks of the original eight runs; they are not averaged or reduced by amortization.
+
+Appendix F Extended Related Work and Positioning
+
+DART studies reuse of an existing LoRA on a distilled image-to-video (I2V) model, conditioned on a reference image and a text prompt. The related literature addresses parameter compatibility, adapter representation, and functional alignment. These are overlapping perspectives: a mapping can support merging, and a weight update can be selected using response measurements. The distinction below concerns what each method transforms or matches, rather than assigning every method to a mutually exclusive category. Results from text-to-image generation or language modeling supply methodological context, not direct evidence of I2V transfer performance.
+
+F.1 Weight-space LoRA transfer and merging
+
+Weight-space methods address interference or compatibility between parameter updates. TIES-Merging trims small task-vector entries, resolves sign conflicts, and merges sign-consistent parameters ( Yadav et al., 2023 ) . KnOTS specifically addresses LoRA merging by jointly aligning updates through SVD before applying a merging rule ( Stoica et al., 2024 ) . These methods primarily combine capabilities from multiple adapted models. DART instead transfers one existing adapter to a distilled target; it does not aggregate a library of task adapters.
+
+CASA is the closest evaluated baseline in the video reuse setting. It projects LoRA and model-drift updates into source singular coordinates and arbitrates routing interference within spectral clusters ( Wang et al., 2026 ) . DART shares the concern for parameter compatibility, but uses transported rank-one channels as the directions for subsequent response calibration. Static compatibility is consequently an input to its construction, while measured incremental denoiser responses under the target schedule determine the channel coefficients. Our CASA comparison evaluates complete transfer procedures; it does not isolate which coordinate transformation is superior.
+
+F.2 Adapter reparameterization and mapping
+
+Reparameterization changes an adapter’s coordinates or factors, while mapping can connect different model representations. LoRA-X constrains the source adapter to a base-model subspace and transfers it to compatible target subspaces without additional transfer training ( Farhadzadeh et al., 2025 ) . This is prior evidence that training-free cross-model transfer is possible; DART does not claim that idea itself. DART starts from an existing LoRA update and additionally measures how its transported channels act under the target denoising configuration. Preserving rank or spectral energy through a coordinate change does not establish preservation of the generated effect.
+
+X-Adapter pursues plugin compatibility through trained feature-mapping layers between old and upgraded diffusion models ( Ran et al., 2024 ) . It keeps the old model’s plugin interface and uses remapped features to guide the upgraded model. This differs from DART’s conversion into a target-loadable LoRA with fixed channel coefficients, without learning an additional feature-mapping network. The comparison concerns the representation and conversion procedure, not an unmeasured performance ranking.
+
+F.3 Function-space alignment and response matching
+
+Function-space methods use model behavior as the transfer signal. Knowledge distillation matches teacher outputs ( Hinton et al., 2015 ) , while FitNets also uses intermediate teacher representations to guide a student ( Romero et al., 2015 ) . Progressive distillation and consistency models connect related ideas to shorter diffusion trajectories ( Salimans and Ho, 2022 ; Song et al., 2023 ) . DART operates after target distillation: its calibration descriptors concern the adapter-induced change relative to an unadapted baseline, rather than requiring the target to imitate the source model’s complete output. Its local measured-response model also does not guarantee equality of the final generated videos.
+
+Trans-LoRA uses synthetic task data to train transferred adapters for new base models ( Wang et al., 2024 ) . It illustrates why avoiding the original training dataset and avoiding further training are distinct properties. DART requires neither source training videos nor denoiser backpropagation during conversion, but it does use probe inputs and forward evaluations. Thus, source-data-free conversion should not be read as absence of calibration observations.
+
+Gradient-free coefficient selection also has precedents. LoRAHub composes multiple task LoRAs using a few target-task examples and gradient-free optimization ( Huang et al., 2024a ) . DART instead fits coefficients for rank-one channels of one transported adapter using measured response descriptors across target timesteps and a regularized linear solve. The distinction lies in the coefficient granularity, measured signal, and deployment problem, rather than the absence of gradients alone.
+
+F.4 DART’s specific combination and scope
+
+DART combines coordinate transport with target-schedule-conditioned, channel-level, forward-only calibration for distilled image-to-video LoRA reuse . Each qualifier specifies a concrete part of the method:
+
+Target-schedule-conditioned: probes and target timesteps enter the measured response operator. Each I2V probe specifies a latent state, text prompt, and reference image, held fixed within a paired response measurement. Conversion produces one fixed coefficient vector for that configuration, not a separate runtime coefficient vector at every step.
+
+Channel-level: coefficients weight fixed rank-one directions within the transported update, rather than only scaling the complete adapter or weighting multiple task adapters.
+
+Forward-only: paired finite-difference evaluations at the bridge estimate channel responses, followed by the closed-form regularized solve. Training-free refers to the absence of iterative denoiser or LoRA training; calibration still fits coefficients and incurs forward-evaluation cost.
+
+Distilled I2V LoRA reuse: the converted adapter is deployed on the existing few-step image-conditioned target. The purpose is to recover useful adapter effects or reduce negative transfer while evaluating image-conditioning fidelity separately from functional retention. The reported evaluations do not establish transfer performance for text-to-video generation.
+
+Table 16 summarizes these conceptual boundaries. Our positioning is the specific combination of these choices, not a claim that coordinate alignment, response matching, or gradient-free fitting is individually new. The reported component ablations support complementary effects in the evaluated setting; they do not establish superiority over every work discussed here or recovery for every adapter.
+
+Perspective Primary object DART’s relationship Weight-space transfer / merging Parameter updates and their interference or compatibility Transport supplies directions; target-schedule responses additionally determine their weights. Reparameterization / mapping Adapter factors, coordinates, or model representations Coordinate preservation alone does not guarantee preservation of the generated effect. Function-space / response matching Model outputs or intermediate responses Calibration fits descriptors of incremental adapter responses on fixed probes and target timesteps. DART combination Transported rank-one channels and their measured responses Forward-only conversion yields a fixed LoRA for the selected distilled I2V target.
+
+Appendix G First-frame Reference Images
+
+The I2V generation design uses eleven first-frame reference images and eight prompts designed for each LoRA. Each prompt is paired with every reference image, giving 8\times 11=88 generated videos per adapter and method. Figure 7 displays two of the eleven input images: an anime-style gray wolf in side view and an anime-style black cat in a nighttime scene. These are conditioning inputs, rather than generated-video outputs.
+
+(a) Anime-style gray wolf, side view
+
+(b) Anime-style black cat in a nighttime scene

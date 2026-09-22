@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "scope": "PACKAGE_TOOLS_ONLY_NOT_EARTHDELTA_REPOSITORY",
+  "check_count": 8,
+  "checks": [
+    {
+      "name": "tools/preflight.py parses",
+      "passed": true,
+      "scope": "PACKAGE_TOOL_ONLY"
+    },
+    {
+      "name": "tools/validate_package.py parses",
+      "passed": true,
+      "scope": "PACKAGE_TOOL_ONLY"
+    },
+    {
+      "name": "tampered_document_rejected",
+      "passed": true
+    },
+    {
+      "name": "unauthorized_second_task_rejected",
+      "passed": true
+    },
+    {
+      "name": "cyclic_task_dependencies_rejected",
+      "passed": true
+    },
+    {
+      "name": "training_enabled_template_rejected",
+      "passed": true
+    },
+    {
+      "name": "non_repository_preflight_is_blocked_and_does_not_mutate_input",
+      "passed": true
+    },
+    {
+      "name": "preflight_refuses_receipt_overwrite",
+      "passed": true
+    }
+  ],
+  "repository_tests_executed": false,
+  "weather_tests_executed": false,
+  "remote_repository_modified": false
+}

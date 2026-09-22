@@ -1,0 +1,496 @@
+{
+  "schema_version": "1.0",
+  "package_id": "EarthDelta-R2-NextIteration-20260921",
+  "project": "EarthDelta",
+  "phase": "R2_NEXT_ITERATION_ONLY",
+  "repository": {
+    "branch": "audit/round2-review-20260921",
+    "observed_head": "403b55db65f4c35c1a85d0794ad0de2765b07d96",
+    "audited_source_head": "fb767f7f6efbc428be39c9ad84f5905331d6e40f"
+  },
+  "research_verdict": "CONTINUE_BOUNDED_WITH_NARROW_CLAIMS",
+  "implementation_readiness": "BLOCKED_FOR_REAL_WEATHER_EVIDENCE",
+  "current_task": "R2-P0-01",
+  "do_not_proceed_beyond": "R2-P0-01",
+  "approved_task_ids": [
+    "R2-P0-01"
+  ],
+  "initial_allowed_operations": [
+    "repo_readonly",
+    "minimal_code_patch",
+    "synthetic_cpu_tests"
+  ],
+  "automatic_unlock": false,
+  "requires_explicit_reviewer_authorization_for_each_next_task": true,
+  "evidence_pass_is_not_authorization": true,
+  "tasks": [
+    {
+      "task_id": "R2-P0-01",
+      "title": "最小可信执行路径：官方参考、身份、Q 与小样本准入",
+      "priority": "P0_NEXT_ITERATION",
+      "depends_on": [],
+      "legacy_mapping": "旧 P0-02/03 残留的必要子集；B01/B02/B05/B06/B10；B07/B08/B09 仅实际入口；B13/B14 同文件小修。",
+      "scientific_purpose": "保证后面的收益属于正确的预报系统和同一目标；花最少补丁修复测量路径，而非清空全部 finding。",
+      "files_to_inspect": [
+        "earthdelta/bridge/stormer_bridge.py",
+        "earthdelta/metrics_contract.py",
+        "earthdelta/heads.py",
+        "earthdelta/contracts.py",
+        "scripts/export_upstream_reference.py",
+        "scripts/s0_gate.py",
+        "earthdelta/data/make_splits.py",
+        "earthdelta/data/pull_wb2.py",
+        "reference/stormer/inference.py",
+        "reference/stormer/stormer/models/iterative_module.py",
+        "tests/test_s0_fail_closed.py",
+        "tests/test_upstream_parity.py",
+        "tests/test_differentiable_rollout.py",
+        "codex_audit_round2/results/evidence/pytest_cpu.log"
+      ],
+      "files_to_modify": [
+        "earthdelta/bridge/stormer_bridge.py",
+        "earthdelta/metrics_contract.py",
+        "scripts/export_upstream_reference.py",
+        "scripts/s0_gate.py"
+      ],
+      "files_to_create": [
+        "earthdelta/pilot_contract.py",
+        "scripts/r2_pilot_preflight.py",
+        "tests/test_r2_pilot_contract.py",
+        "tests/test_r2_s0_binding.py"
+      ],
+      "files": [
+        "earthdelta/bridge/stormer_bridge.py",
+        "earthdelta/metrics_contract.py",
+        "earthdelta/pilot_contract.py",
+        "scripts/export_upstream_reference.py",
+        "scripts/r2_pilot_preflight.py",
+        "scripts/s0_gate.py",
+        "tests/test_r2_pilot_contract.py",
+        "tests/test_r2_s0_binding.py"
+      ],
+      "implementation_steps": [
+        "先运行包内只读 repo_preflight，记录本地 HEAD、工作树、关键源码对象；403b55d 与 fb767f7 的原条目对象一致是已核验远程事实，不免除本地 drift 检查。不得 reset、切换用户分支、覆盖 dirty 文件或自动 git push。",
+        "只修复该 pilot 实際路径。NormalizationContract 新增显式 official_zero_diff_mean policy；新正式入口必须显式指定，旧非零均值接口保留 legacy 标识和兼容回归。policy 必须进入 digest。不要凭“均值小”跳过协议一致性。",
+        "exporter 在独立进程/命名空间导入 pinned 官方网络与 GlobalForecastIterativeModule.forward_validation，独立从官方变量顺序及 NPZ 构造 transforms，增量均值为零，不再使用受审 NormalizationContract。若官方模块依赖缺失就 BLOCKED；不能伪装导入或默认换 SDPA。",
+        "exporter 和 s0_gate 接受同一 --config、--authorization、--task-state；显式 checkpoint 路径、patch size 和 upstream-reference 目录。只验证选择的一个 checkpoint；ps4 是历史主规格，不得借 ps2 成绩放行 ps4。旧 CLI 可保留，但不能生成本包的新准入证书。",
+        "数值比较前绑定 expected checkpoint SHA256 与实际字节、官方 commit/配置、norm policy/digest、变量和单位、真实 lat/lon、raw input 与 normalized input hash、exact shape、dtype、interval 和 rollout steps。验证预注册全部轨迹，至少覆盖一步和本 pilot 的多步路径；不是只载入 6h_1step。输入 hash 必须是实际参与前向的同一内容。",
+        "在 metrics_contract.py 增加 full_objective_loss / full_objective_gain：输入原生注册目标 [B,H,V,Lat,Lon]；先在 float64 中形成误差及增量，用相同 positive scale 与在 H/V/Lat/Lon 上一次归一化的 q 结算，输出 [B] 或 [B,K]。显式检查 real floating、finite、广播形状、有效总分母和 missing policy。保留旧逐 F 诊断 reducer，不冒充全目标。禁止统一用 max(eps,sum_w) 掩盖空目标。",
+        "pilot_contract.py 提供 require_stage_authorization、validate_metric_and_registry_header、validate_slice_index、validate_loaded_sample、assert_artifact_binding；正式路径必须调用，不只添加无人使用 dataclass。R2-P0-01 只需 S0 小输入的检查能力；真实数据扫描须另获授权。后续 loader 每次读取都验证与该契约一致。",
+        "六小时核验延迟只能标 scenario；本迭代 memory 输入为零且禁止已核验近期误差进入 serving。retrospective 初始化必须标明 perfect-analysis 研究设定，不宣称真实业务可得。不要为这一限制重写历史 manifest。",
+        "用已知非零合成 bank 检查 zero→nonzero→zero、串行 hook cleanup 与 loss→bank 梯度，冻结主干无梯度。caller coeff 梯度不列为本任务 bank 准入；不启用共享模型并发或 activation checkpoint replay。",
+        "主 gate 仅在必需检验完成且结果/身份产物成功写出后提交 PASS；未知异常回滚为失败。已知纯清理警告可单列 execution_status，但不得保留含未分类 error 的 PASS。顺手修安全报告格式化，不建立新报告框架。",
+        "当前只执行实现和合成 CPU 验证。运行回归前检查test收集/fixture，忽略任何仍会读取真实模型或天气资产的测试并记录理由；CUDA_VISIBLE_DEVICES为空，upstream测试另行排除，不能用默认not-slow冒充纯合成隔离。没有明确 GPU/checkpoint-load/data-read 授权与 cap，真实 exporter/S0 不运行，code_status=CPU_VALIDATED、run_status=BLOCKED；提供准确缺项与可运行命令后停止。"
+      ],
+      "tests": [
+        "test_official_policy_ignores_nonzero_diff_mean：独立零均值真值计算；legacy 数值不被静默改写。",
+        "test_gate_rejects_identity_mismatch：checkpoint/norm/variable/grid/raw input/shape 任一错、缺任一 multistep，驱动真实 gate orchestration 均不通过。",
+        "test_full_q_gain_matches_endpoint_losses：非均匀 lead/area/variable q；gain=loss_ref−loss_edit；若由 R 建 b/H，两者用同一 Q_eff 并一致。",
+        "test_invalid_metric_inputs：负权重、非有限、全零有效目标、零/负 scale、错误广播拒绝；合法零权重 mask 不生成 NaN。",
+        "test_slice_contract：缺 history/target 时间、坐标顺序变更、空/NaN 数据、旧 marker 指向新 store 均拒绝。",
+        "test_bank_gradient_and_serial_cleanup：冻结网络、非零常系数，bank 梯度非零；不声称 caller 系数图已修复。",
+        "test_orchestration_late_error_and_report_missing_value：真正调用 orchestrator/report，不用测试自造 dict 替代。"
+      ],
+      "commands": [
+        "python3 \"$PACKAGE/tools/repo_preflight.py\" --repo \"$REPO\" --out \"$RUN/preflight.json\"",
+        "cd \"$REPO\" && CUDA_VISIBLE_DEVICES=\"\" python3 -m pytest tests/test_r2_pilot_contract.py tests/test_r2_s0_binding.py -q",
+        "cd \"$REPO\" && CUDA_VISIBLE_DEVICES=\"\" PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python python3 -m pytest tests/ -m \"not slow\" --ignore=tests/test_upstream_parity.py -q -rs",
+        "# 下列是实现后的接口，仅有匹配授权/cap/资产才运行；不是本包已存在的科学结果。",
+        "cd \"$REPO\" && python3 scripts/r2_pilot_preflight.py --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --stage s0 --out \"$RUN/input_guard\"",
+        "cd \"$REPO\" && python3 scripts/export_upstream_reference.py --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --out \"$RUN/upstream\"",
+        "cd \"$REPO\" && python3 scripts/s0_gate.py --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --upstream-reference \"$RUN/upstream\" --out \"$RUN/s0\""
+      ],
+      "artifacts": [
+        "preflight.json",
+        "source_reconciliation.md",
+        "pytest_cpu.log",
+        "contract_checks.json",
+        "input_guard/manifest.json",
+        "upstream/manifest.json（真实执行才有）",
+        "s0/validation_certificate.json（真实执行才有）",
+        "decision.json"
+      ],
+      "success_criteria": [
+        "必要源码合同与反例通过；保留旧测试，实际失败/跳过原因完整记录。",
+        "TASK 全部 PASS 还必须有同一配置/资产的真实独立 S0 证书；CPU pass 或 mock 证书绝不替代。"
+      ],
+      "failure_criteria": [
+        "确定的数值/身份/数据合同错误 → INVALID_IMPLEMENTATION。",
+        "GPU、依赖、checkpoint、输入或权限缺失 → BLOCKED，不下载或伪造。"
+      ],
+      "failure_action": "任何状态都先写本任务 decision.json 并停止。仅 CPU_VALIDATED 不解锁 R2-P0-02；真实 S0 PASS 也只可提出解锁建议，须有 reviewer 明确授权和资源 cap。",
+      "decision_after_completion": "任何状态都先写本任务 decision.json 并停止。仅 CPU_VALIDATED 不解锁 R2-P0-02；真实 S0 PASS 也只可提出解锁建议，须有 reviewer 明确授权和资源 cap。",
+      "suggested_commit_message": "fix(r2): bind minimal pilot to independent Stormer reference and metric contract",
+      "status": "READY",
+      "gate": {
+        "pass_means": "选定系统可可信测量，不代表编辑有益",
+        "fail_means": "实现/资产不合格，非科学否证",
+        "ci_crossing": "不适用收益CI；parity阈值未定则 BLOCKED，不调宽tol迁就结果"
+      }
+    },
+    {
+      "task_id": "R2-P0-02",
+      "title": "最小 bank、完整候选缓存与 oracle/static 生存证据",
+      "priority": "P0_NEXT_ITERATION",
+      "depends_on": [
+        "R2-P0-01"
+      ],
+      "legacy_mapping": "对应旧 P0-04/05；不重排其后的完整研究 DAG。",
+      "scientific_purpose": "用最小真实库回答值得预测的编辑空间是否存在，保留 oracle 与合法技能的区别。",
+      "files_to_inspect": [
+        "earthdelta/lowrank.py",
+        "earthdelta/bridge/stormer_bridge.py",
+        "earthdelta/contracts.py",
+        "earthdelta/probe.py",
+        "earthdelta/paired.py",
+        "earthdelta/data/make_splits.py",
+        "earthdelta/data/pull_wb2.py",
+        "earthdelta/pilot_contract.py",
+        "codex_audit_round2/context/round1/experiments/P0_SURVIVAL_EXPERIMENTS.md"
+      ],
+      "files_to_modify": [],
+      "files_to_create": [
+        "earthdelta/data/pilot_index.py",
+        "earthdelta/evaluation/r2_survival.py",
+        "scripts/r2_bank_oracle.py",
+        "tests/test_r2_pilot_index.py",
+        "tests/test_r2_registry_and_oracle.py",
+        "tests/test_r2_block_statistics.py"
+      ],
+      "files": [
+        "earthdelta/data/pilot_index.py",
+        "earthdelta/evaluation/r2_survival.py",
+        "scripts/r2_bank_oracle.py",
+        "tests/test_r2_block_statistics.py",
+        "tests/test_r2_pilot_index.py",
+        "tests/test_r2_registry_and_oracle.py"
+      ],
+      "implementation_steps": [
+        "在实现前复用同名/等价已有模块；若无才新增上述小文件。接收同一 CONFIG/AUTH/STATE，验证 predecessor S0 与新实际模型/数据一致；S0 后任何相关源码/权重/policy 改变都重做受影响证书。",
+        "pilot_index.py 以实际数据 time/lat/lon/channel 为依据，用 UTC exact lookup 联结 history、issue、各 target；不能按日历偏移盲取第 n 行。保存 issue_id、process_group_id 和每个端点索引。只检查本轮读取的完整小子集，不重写整个 pull_wb2 发布系统。",
+        "先执行获批 profile：测真实前向/训练步/各 lead rollout/存储成本。登记 bank、cache、低容量策略和确认的预算分配；必须留出合法策略检验份额，不能把全部 cap 花在 oracle。任何机器小时/吞吐此前未知。",
+        "优先复用有合法训练来源的 Fs/bank；否则在 fit 上训练一个静态 Fs 及小 K 非零 bank。使用固定有界系数和现有 ExpertLoRA；不需要 caller coeff 梯度。训练后冻结参考与 bank。静态对照报告相同 trainable 参数规模或实测训练成本下的强版本，不用未调优 frozen 替代。",
+        "bank 资格检查：每个专家在非零训练覆盖强度下造成可重复响应；零系数恢复 Fs；记录响应多样性、有效权重与非零统计。禁止为了通过资格过滤 confirm 上坏专家。初始 A 非零/B=0 是正常初始化，不等于训练失败或科学 STOP。",
+        "有限 registry 含显式 no-edit、各注册 singleton。K/rank/系数/窗口由 fit/dev 与 cap 冻结；若主张组合，少量 pair 在看对应结果前注册并实际运行。实浮点、非空、唯一ID、bound/max_active/成本/窗口全验证；B15 在此阻断，不要求重写通用 planner。",
+        "固定 Fref 后一次 reference 与全部非线性候选同输入、同目标、同边界运行。利用现有 cached_responses 或同语义批量缓存，不用中心差分/仅top3当全库oracle。每行保存 raw/native target、预测或可重算片段、q_hash、candidate_id、status、计费调用与失败理由；失败候选不能从分母抹掉。cache_manifest.json绑定registry/bank/Q/split/代码与各文件hash，并分别指向legal inputs和离线truth/outcomes；后续只从此清单解析路径。",
+        "fit/dev 选择 best-static 与轻量 regime 的结构参数；confirm 不重选。分析 V_H 及相对 dev-static 的 gap，另报强静态 Fs/F0 成绩。完整原生注册目标结算；如学习头要固定线性 D，它只影响后续训练目标，不能偷换此处原生收益。",
+        "登记 δ_gain/δ_dynamic 的价值依据与独立的 pilot 方差、alpha/power/N/MDE。未定时保留规定占位符，只出 DEV_DESCRIPTIVE，不出正式 PASS。正式 confirm 阈值冻结后，才允许单次确认。",
+        "先生成 dev 缓存并保留未见 confirm。默认不在 E1 用掉后续方法选择所需的最终 confirm；允许基于明确审阅的 DEV_PROMISING 进入有界 E2。若单独开启 E1 confirm，必须预登记后续策略/阈值不受其结果影响，或另留全新 confirm。"
+      ],
+      "tests": [
+        "空store/缺时次/重复时间/单位或坐标错/placeholder正式身份均在真实 loader 入口拒绝。",
+        "no-edit实际gain为零；finite oracle=max全部注册候选；若候选失败 incomplete_oracle=true，不能获得正式 headroom PASS。",
+        "同一起报全部候选及lead属于同折；bootstrap重采样process后候选/方法严格配对。",
+        "best-static仅fit/dev冻结；测试扰动confirm标签不能改变selected static ID或registry。",
+        "e=±1、u∈{0,±0.5}的合成测试：oracle=.75、无信息最优legal=0；不能将oracle PASS映射成policy PASS。",
+        "统一分母、固定候选数、sqrt-after-aggregate；所有CPU测试仅检验代数和流程，不填入天气metrics。"
+      ],
+      "commands": [
+        "cd \"$REPO\" && python3 -m pytest tests/test_r2_pilot_index.py tests/test_r2_registry_and_oracle.py tests/test_r2_block_statistics.py -q",
+        "cd \"$REPO\" && python3 scripts/r2_bank_oracle.py --stage profile --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --out \"$RUN/profile\"",
+        "cd \"$REPO\" && python3 scripts/r2_bank_oracle.py --stage fit-bank --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --out \"$RUN/bank\"",
+        "cd \"$REPO\" && python3 scripts/r2_bank_oracle.py --stage cache --role dev --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --bank \"$RUN/bank/bank_manifest.json\" --out \"$RUN/cache_dev\"",
+        "cd \"$REPO\" && python3 scripts/r2_bank_oracle.py --stage analyze --role dev --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --table \"$RUN/cache_dev/candidate_outcomes.parquet\" --out \"$RUN/oracle_dev\"",
+        "# role=confirm 的 cache/analyze 只有在单独批准、阈值与分析程序冻结后才执行；不自动替换上述 dev。"
+      ],
+      "artifacts": [
+        "profile/cost_ledger.json",
+        "pilot_index.parquet",
+        "data_slice_certificate.json",
+        "bank/bank_manifest.json",
+        "bank/training_log.jsonl",
+        "candidate_registry.json",
+        "cache_dev/candidate_outcomes.parquet",
+        "cache_dev/cache_manifest.json",
+        "cache_dev/predictions/index.json",
+        "oracle_dev/oracle_static_gaps.json",
+        "oracle_dev/bootstrap_intervals.json",
+        "threshold_certificate.json",
+        "label_resource_ledger.json",
+        "decision.json"
+      ],
+      "success_criteria": [
+        "合格非零冻结库、实际完整注册候选、同目标与分母。",
+        "正式 HEADROOM_PASS 要求原生主目标 gain 和 static gap 各自下界超过已冻结 δ；只表示可尝试预测。",
+        "DEV_PROMISING 是 reviewer 批准的探索性投入标签，不能伪称 confirm PASS。"
+      ],
+      "failure_criteria": [
+        "bank无法在cap内合格 → STOP_CURRENT_SETUP；禁止零库假否证。",
+        "oracle上界低于δ_gain → STOP_CURRENT_BANK；dynamic gap上界不足且静态有价值 → PIVOT_STATIC。",
+        "CI跨阈值 → INCONCLUSIVE；缺候选/数据 → BLOCKED或INVALID，不加大训练。"
+      ],
+      "failure_action": "停止并提交E1证据。仅 HEADROOM_PASS 或明确批准且有资源上限的 DEV_PROMISING 可申请 R2-P0-03；无自动解锁。singleton结果不得升级为组合H的结论。",
+      "decision_after_completion": "停止并提交E1证据。仅 HEADROOM_PASS 或明确批准且有资源上限的 DEV_PROMISING 可申请 R2-P0-03；无自动解锁。singleton结果不得升级为组合H的结论。",
+      "suggested_commit_message": "feat(r2): collect qualified finite-edit headroom with static controls",
+      "status": "LOCKED",
+      "gate": {
+        "pass_means": "冻结有限库有hindsight空间，不证明deployable收益",
+        "fail_means": "停止当前库或转静态；不是全领域否证",
+        "ci_crossing": "INCONCLUSIVE；只按预注册追加规则和cap处理"
+      }
+    },
+    {
+      "task_id": "R2-P0-03",
+      "title": "同缓存上的合法策略、四象限与标签效率区分",
+      "priority": "P0_NEXT_ITERATION",
+      "depends_on": [
+        "R2-P0-02"
+      ],
+      "legacy_mapping": "对应旧 P0-06 的必要子集，保留其四象限及direct-gain挑战。",
+      "scientific_purpose": "区分hindsight空间和可部署可学习性，并检验响应分解在有限标签下的实际增量价值。",
+      "files_to_inspect": [
+        "earthdelta/heads.py",
+        "earthdelta/paired.py",
+        "earthdelta/metrics_contract.py",
+        "earthdelta/selection.py",
+        "earthdelta/memory.py",
+        "earthdelta/evaluation/r2_survival.py",
+        "earthdelta/pilot_contract.py"
+      ],
+      "files_to_modify": [
+        "earthdelta/heads.py",
+        "earthdelta/metrics_contract.py"
+      ],
+      "files_to_create": [
+        "earthdelta/baselines/r2_cached_policy.py",
+        "scripts/r2_legal_policy.py",
+        "tests/test_r2_legal_information.py",
+        "tests/test_r2_four_cells.py"
+      ],
+      "files": [
+        "earthdelta/baselines/r2_cached_policy.py",
+        "earthdelta/heads.py",
+        "earthdelta/metrics_contract.py",
+        "scripts/r2_legal_policy.py",
+        "tests/test_r2_four_cells.py",
+        "tests/test_r2_legal_information.py"
+      ],
+      "implementation_steps": [
+        "复用同一bank/registry、实际候选表、起报和分组；不得因oracle赢家分布重划样本。定义 shared legal context；若已有合格提取器就复用，否则仅对注册历史原生输入作固定线性空间池化，fit-only标准化，不新增学习型天气encoder。feature维数/历史长度在dev预算内冻结。",
+        "若context用参考后段tokens，必须先记录reference preview与选定编辑必要重放的实际额外成本；不能称零额外成本。起报后仅消费自身预测，不能使用已实现候选u或target。",
+        "在独立合法feature文件中仅保存 issue_id/时间/合法context/版本；training target/cache另文件保存。predict子命令不得接受truth、e0、真实du或candidate outcomes。先持久化selected_actions与其hash，再由独立score子命令读取结果表评分。",
+        "实现小型regime路由（fit-only聚类/原型，按fit或dev平均gain选择候选）和低容量direct-gain ridge/MLP。默认使用现有numpy/torch，不为此安装新库；同调参配置数、训练步骤和仿真资格。所有方法含显式no-edit与相同feasible registry。",
+        "复用 ComposedPredictionHead 的e0/du头，不新造复杂架构。新增默认关闭的calibration开关，返回gain_analytic和可选gain_calibrated；旧gain兼容路径显式标注。memory为固定零且无已核验误差注入，JEPA off。no-edit响应和score结构为零，不能靠启用掩码把所有动作关掉。",
+        "原生全目标可以作为head训练目标；若为小模型压缩训练输出，只允许预先声明的线性D及训练期拟合的固定基，记录D和Q_D并单列surrogate分数。所有最终动作仍用完整原生Q结算，报告summary/full-field决策差距；禁止声称压缩gain恒等于原生gain。此处不另立learned response basis创新。",
+        "direct-gain标签直接由原生候选损失差给出；直接edited-forecast作为同仿真资格的低容量诊断臂（使用相同输出读出），没有未来标签的候选轨迹同样可训练该对照。一条truth给全部候选标签，不按候选数虚增对手的标签成本。",
+        "四格必须实际替换各自e或u，固定同一candidate registry，并用actual outcome结算；有true e或true u的格仅离线诊断。报告全e0误差及响应方向误差，但kill依据实际policy收益/regret/损害，不以低全场R²单独停止。",
+        "若触发B04 batched Gram路径，在本任务修复正确ellipsis收缩并覆盖广播组合；不为本次有限候选实验新增连续QP或端到端caller系数训练。B03仍defer，不能将其缺失用于弱化已实现的基线。",
+        "按时间块/过程crossfit，fit/dev之外保持confirm封闭。外层被评估起报的标签也不得用于bank训练：最小方案是在bank未见的policy开发块上做crossfit，固定bank只在独立fit训练；每外折的归一化/聚类/读出与HPO都只用其训练侧，不能先用全部折拟合后再称OOF。预注册少量标签预算点和固定seed；全部方法使用相同label subset与仿真资格，双头增加响应预训练时对手也可使用相同预训练/辅助任务额度。分别出given-bank/controller账本与含bank的end-to-end账本。",
+        "输出实际policy-static增益及dual-direct差值CI/非劣比较。direct-gain无显著差异不等于双头无价值；要用预注册最小额外价值与非劣界判断，label/cost优势无证据时不宣称已成立。跨阈值记录INCONCLUSIVE。"
+      ],
+      "tests": [
+        "predict接口没有truth/outcomes；poison未来payload或改变score目标不改变已保存动作；真实predict调用用于测试。",
+        "candidate置换一致，no-edit得分/du为零；default calibration off且旧checkpoint兼容明确。",
+        "四格替换与完整outcome结算；mean/zero-response诊断；e全场差但响应投影正确的反例不误杀。",
+        "全部候选同issue同fold；fit-only标准化/聚类/输出投影；训练标签子集一致，bank标签不丢账。",
+        "合法策略不能因读取真实du被误报为低成本deployable；统一成本扣除或约束，不混用两种口径。"
+      ],
+      "commands": [
+        "cd \"$REPO\" && python3 -m pytest tests/test_r2_legal_information.py tests/test_r2_four_cells.py -q",
+        "cd \"$REPO\" && python3 scripts/r2_legal_policy.py fit-crossfit --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --cache-manifest \"$CACHE_MANIFEST\" --out \"$RUN/policy_dev\"",
+        "cd \"$REPO\" && python3 scripts/r2_legal_policy.py predict --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --features \"$LEGAL_FEATURES\" --models \"$MODEL_MANIFEST\" --registry \"$REGISTRY\" --out \"$RUN/actions\"",
+        "cd \"$REPO\" && python3 scripts/r2_legal_policy.py score --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --actions \"$RUN/actions/selected_actions.parquet\" --outcomes \"$OUTCOMES\" --out \"$RUN/policy_score\""
+      ],
+      "artifacts": [
+        "policy_dev/crossfit_predictions.parquet",
+        "policy_dev/model_manifest.json",
+        "policy_dev/legal_features.npz",
+        "policy_dev/legal_input_manifest.json",
+        "actions/selected_actions.parquet",
+        "actions/action_commit.json",
+        "policy_score/legal_policy_gain.json",
+        "policy_score/four_cell_scorecard.json",
+        "policy_score/label_efficiency.json",
+        "policy_score/summary_fullfield_gap.json",
+        "information_ledger.json",
+        "label_resource_ledger.json",
+        "decision.json"
+      ],
+      "success_criteria": [
+        "合法pred/pred或合法direct策略相对强静态的下CI超过δ_policy，且guard合格；dev成功仅探索性。",
+        "双头价值独立判决：label/cost曲线或dual-direct差值达到注册最低额外价值，不能用oracle近似代替。"
+      ],
+      "failure_criteria": [
+        "充分证据排除合法最低有用增益 → STOP_CURRENT_PLANNER；只缺功效 → INCONCLUSIVE。",
+        "direct/regime有效但双头被支持为无额外价值 → PIVOT_DIRECT_GAIN或缩窄claim，不全盘否定编辑。",
+        "信息污染/标签账本不公平/summary偷换主指标 → INVALID，不评分。"
+      ],
+      "failure_action": "停止并提交E2。仅出现可信合法信号（包括明确缩窄到direct-gain的信号）且reviewer批准，才解锁R2-P0-04；否则汇总STOP/PIVOT/INCONCLUSIVE，不恢复JEPA等模块。",
+      "decision_after_completion": "停止并提交E2。仅出现可信合法信号（包括明确缩窄到direct-gain的信号）且reviewer批准，才解锁R2-P0-04；否则汇总STOP/PIVOT/INCONCLUSIVE，不恢复JEPA等模块。",
+      "suggested_commit_message": "feat(r2): discriminate legal edit policies under matched supervision budgets",
+      "status": "LOCKED",
+      "gate": {
+        "pass_means": "在注册信息/资源下存在合法策略收益；双头贡献另判",
+        "fail_means": "当前planner不值得扩大或应转直接策略",
+        "ci_crossing": "INCONCLUSIVE；禁止用不显著冒充等效或重调confirm"
+      }
+    },
+    {
+      "task_id": "R2-P0-04",
+      "title": "条件性参数编辑必要性挑战：virtual 与输出反馈",
+      "priority": "P0_NEXT_ITERATION",
+      "depends_on": [
+        "R2-P0-03"
+      ],
+      "legacy_mapping": "对应旧 P0-07 的有界关键挑战，保留而不预先扩大。",
+      "scientific_purpose": "在有限资源而非无限表达能力层面，判断真正执行参数编辑是否必要。",
+      "files_to_inspect": [
+        "earthdelta/bridge/stormer_bridge.py",
+        "earthdelta/heads.py",
+        "earthdelta/lowrank.py",
+        "earthdelta/evaluation/r2_survival.py",
+        "earthdelta/pilot_contract.py"
+      ],
+      "files_to_modify": [],
+      "files_to_create": [
+        "earthdelta/baselines/r2_output_correction.py",
+        "scripts/r2_output_challenge.py",
+        "tests/test_r2_output_challenge.py"
+      ],
+      "files": [
+        "earthdelta/baselines/r2_output_correction.py",
+        "scripts/r2_output_challenge.py",
+        "tests/test_r2_output_challenge.py"
+      ],
+      "implementation_steps": [
+        "仅在E2有可信合法信号且本任务获批后实现/训练；不要提前搭完整纠错框架。继承同一Fref、样本、变量、时效、Q、hold窗口和资源账本。",
+        "对已冻结合法策略运行actual edit；有限动作按选中ID分组/串行调用现有tuple接口即可，无须caller系数梯度。与缓存实际轨迹做同版本一致性核对。",
+        "virtual：Fref + predicted_du。只有原生full-field预测响应或已注册可验证的线性lift才能形成完整预报；若仅summary无合法lift，标VIRTUAL_FULLFIELD_BLOCKED，不伪造全场。lift的计算/误差计入。",
+        "联合输出纠错：在相同合法context及明确计费的reference预览上，用低容量head联合预测注册时效/变量的残差；与双头相同固定输出读出/训练预算。",
+        "feedback纠错：每个注册步用当时自身预测状态和共享合法context产生注册变量的修正（其余原生变量按明确规则保留），在hold窗口内反馈到下一步Fref；不读取真实未来状态作teacher forcing推理。至少输出全模型原生状态供后续传播。",
+        "固定参数规模机制对照与相同实测成本前沿分别报告，不强行声称同时完全匹配。计入bank训练、context提取、reference preview、必要重放、planner、adapter和回退成本。",
+        "用E2冻结信息和fit/dev调参；在同一注册主要目标与后续guard上评价，不因纠错失败删除难变量。任何新longlead（如120/240h）需新授权，本迭代默认不扩张。",
+        "若同一最终confirm用于E1/E2/E3，必须全部政策、HPO和分析规则在揭盲前冻结并一次批量评分；否则改用独立新confirm，不能反复查看同一确认集后适配。"
+      ],
+      "tests": [
+        "zero-corrector完全还原Fref；非零第一步修正影响后续预测；不注入未来真值。",
+        "actual与virtual分别落盘，summary-only不能冒充fullfield；lift hash/单位必须匹配。",
+        "hold之外不再注入新的修正，但继续各自已改变的状态，不重置到原始reference轨迹。",
+        "相同机会分母、失败回退计费；成本前沿与非劣统计使用同一注册定义。"
+      ],
+      "commands": [
+        "cd \"$REPO\" && python3 -m pytest tests/test_r2_output_challenge.py -q",
+        "cd \"$REPO\" && python3 scripts/r2_output_challenge.py fit --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --cache-manifest \"$CACHE_MANIFEST\" --out \"$RUN/correctors\"",
+        "cd \"$REPO\" && python3 scripts/r2_output_challenge.py predict --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --models \"$MODEL_MANIFEST\" --features \"$LEGAL_FEATURES\" --out \"$RUN/forecasts\"",
+        "cd \"$REPO\" && python3 scripts/r2_output_challenge.py score --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --forecast-manifest \"$RUN/forecasts/manifest.json\" --outcomes \"$OUTCOMES\" --out \"$RUN/comparison\""
+      ],
+      "artifacts": [
+        "comparison/correction_frontier.json",
+        "comparison/lead_variable_metrics.parquet",
+        "comparison/guard_harm.json",
+        "forecasts/manifest.json",
+        "information_ledger.json",
+        "label_resource_ledger.json",
+        "decision.json"
+      ],
+      "success_criteria": [
+        "参数编辑在至少一个预注册有限资源区间具可重复实际收益/标签效率优势，guard不越界。",
+        "不要求全部指标全面支配，也不由无限容量等价性判失败。"
+      ],
+      "failure_criteria": [
+        "输出/反馈在关键效果非劣且成本更优，并达到预注册统计条件 → PIVOT_OUTPUT。",
+        "virtual同效更便宜 → 缩窄为response surrogate，不主张必须实际编辑。",
+        "效果CI不足 → INCONCLUSIVE；输入/成本权限不一致 → INVALID。"
+      ],
+      "failure_action": "停止；将证据交R2-P0-05汇总。不新增第二backbone、长时效全训或新的纠错算法。",
+      "decision_after_completion": "停止；将证据交R2-P0-05汇总。不新增第二backbone、长时效全训或新的纠错算法。",
+      "suggested_commit_message": "feat(r2): test actual parameter edits against matched output correction",
+      "status": "LOCKED",
+      "gate": {
+        "pass_means": "特定有限资源条件下参数编辑有保留理由",
+        "fail_means": "转输出修复或response surrogate，不等于所有方法无效",
+        "ci_crossing": "INCONCLUSIVE；不把未显著支配当作编辑胜利"
+      }
+    },
+    {
+      "task_id": "R2-P0-05",
+      "title": "证据汇总与下一迭代继续/停止判决",
+      "priority": "P0_NEXT_ITERATION",
+      "depends_on": [
+        "R2-P0-01"
+      ],
+      "legacy_mapping": "旧P0-08的最小报告功能；不是下一研究阶段。",
+      "scientific_purpose": "避免把工程完成、oracle上限和可部署贡献混成一个PASS。",
+      "files_to_inspect": [
+        "artifacts/round2_next/**/decision.json",
+        "artifacts/round2_next/**/threshold_certificate.json",
+        "artifacts/round2_next/**/manifest.json",
+        "STOP_CONDITIONS.md（本包）",
+        "codex_tasks.json（本包工作副本）"
+      ],
+      "files_to_modify": [],
+      "files_to_create": [
+        "scripts/r2_iteration_decision.py",
+        "tests/test_r2_iteration_decision.py"
+      ],
+      "files": [
+        "scripts/r2_iteration_decision.py",
+        "tests/test_r2_iteration_decision.py"
+      ],
+      "implementation_steps": [
+        "本任务只读已产生的运行产物，不训练、不加载模型、不生成新预测。可在E1/E2/E3任何终止点由reviewer单独授权，汇总未到达节点为LOCKED_UNREACHED，不能伪造其PASS。",
+        "读取各任务实际code/run/research状态、确认集访问记录、threshold certificate、资源消耗及核心B项处置。禁止从文件存在、CPU pass或旧历史报告推测真实S0成功。",
+        "按STOP_CONDITIONS的优先顺序生成research_verdict、implementation_readiness、claim_status、next_evidence、remaining_budget、unresolved_limitations。实现失败、缺资源、统计不足和科学否证分别表示。",
+        "将oracle/static空间、合法policy技能、dual相对direct的额外价值、actual相对输出的必要性分别判决；不得合成一个不透明总分。若E3未执行，parameter_edit_necessity=UNVERIFIED。",
+        "保留原研究决策文本，生成带时间和run_id的新ITERATION_DECISION.md；更新工作副本CODEX_TASKS/JSON实际状态，但approved_task_ids和授权收据只能由reviewer新授权更改。",
+        "任何CONTINUE仅给下一笔明确证据与预算建议。本迭代在本任务结束；不创建或执行全量P1/P2 DAG。"
+      ],
+      "tests": [
+        "oracle_PASS且policy_NOT_RUN不能输出deployable或dual-value PASS。",
+        "CPU_VALIDATED/realS0_BLOCKED必须保持implementation BLOCKED；缺阈值不得生成正式confirm PASS。",
+        "CI跨δ输出INCONCLUSIVE；无显著差异不能自动等效；incomplete候选oracle不能自动complete。",
+        "上游STOP后下游LOCKED_UNREACHED可汇总，但不能改写为SKIPPED_SUCCESS。"
+      ],
+      "commands": [
+        "cd \"$REPO\" && python3 -m pytest tests/test_r2_iteration_decision.py -q",
+        "cd \"$REPO\" && python3 scripts/r2_iteration_decision.py --run-root \"$RUN_ROOT\" --config \"$CONFIG\" --authorization \"$AUTH\" --task-state \"$STATE\" --out \"$RUN/final\""
+      ],
+      "artifacts": [
+        "final/ITERATION_DECISION.md",
+        "final/iteration_decision.json",
+        "final/evidence_index.json",
+        "final/audit_disposition.json",
+        "工作副本CODEX_TASKS.md",
+        "工作副本codex_tasks.json"
+      ],
+      "success_criteria": [
+        "所有结论可回指实际run、配置、阈值、统计和成本；无结果保持缺失状态。",
+        "明确下一笔预算是否值得投入，以及对应证据，不自动扩大范围。"
+      ],
+      "failure_criteria": [
+        "缺绑定/矛盾状态/未授权confirm → INVALID_REPORT，并定位问题。",
+        "科学STOP/PIVOT是正常判决产物，不把它当脚本异常。"
+      ],
+      "failure_action": "迭代结束，停止。任何新实验需要新的授权与范围，不从本包自动衍生后续任务。",
+      "decision_after_completion": "迭代结束，停止。任何新实验需要新的授权与范围，不从本包自动衍生后续任务。",
+      "suggested_commit_message": "docs(r2): freeze bounded-iteration evidence and research disposition",
+      "status": "LOCKED",
+      "gate": {
+        "pass_means": "报告完整可信，不代表研究结论为正",
+        "fail_means": "证据或报告合同不合格，应修复记录",
+        "ci_crossing": "继承INCONCLUSIVE并停止，不隐藏不确定性"
+      },
+      "dependency_gate_mode": "requires_readable_predecessor_decision_not_scientific_pass"
+    }
+  ],
+  "dag_edges": [
+    [
+      "R2-P0-01",
+      "R2-P0-02"
+    ],
+    [
+      "R2-P0-02",
+      "R2-P0-03"
+    ],
+    [
+      "R2-P0-03",
+      "R2-P0-04"
+    ],
+    [
+      "R2-P0-01",
+      "R2-P0-05"
+    ]
+  ],
+  "final_summary_rule": "R2-P0-05 may summarize an early terminal result after explicit approval; unreached tasks stay LOCKED_UNREACHED, never success.",
+  "threshold_placeholder": "TO_BE_PREREGISTERED_AFTER_PILOT_VARIANCE_ESTIMATE"
+}

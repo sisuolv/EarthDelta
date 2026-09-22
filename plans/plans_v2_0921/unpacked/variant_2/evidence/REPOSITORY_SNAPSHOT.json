@@ -1,0 +1,55 @@
+{
+  "package_id": "EarthDelta-R2-NextIteration-20260921",
+  "observed_on": "2026-09-21",
+  "repository": "sisuolv/EarthDelta",
+  "branch": "audit/round2-review-20260921",
+  "observed_branch_head": "403b55db65f4c35c1a85d0794ad0de2765b07d96",
+  "audited_source_head": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+  "round1_source_head": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+  "source_identity_verified_by": "GitHub root Git tree comparison; no local repo checkout or test rerun in this delivery",
+  "root_comparison": {
+    "all_preexisting_root_entries_equal": true,
+    "only_added_entry": "codex_audit_round2",
+    "matching_entries": {
+      ".gitignore": "72851d6834f8e832403e2022919e787e713e96ec",
+      "README.md": "ac85225141d56baceed632b8783b9cfed2688965",
+      "checkpoints": "d84171d8010f8fc232d545b72a8320157a1d97b9",
+      "earthdelta": "867ea7c5ad43ffd7850cda3b6627287032a4db8f",
+      "plans": "3e2d34421293ea1d3553213c7cdfbffcd84bbd08",
+      "pyproject.toml": "adcad73a0ae57fa8fe3bdaf830f200c20969fa55",
+      "reference": "f127c7c902a02525645bffd09a1acff0dc4b51a4",
+      "scripts": "17893b917ce06ffd7fed2655e15bb0a129268320",
+      "tests": "e3c5d9d8bd207b492554487e7d9b0bd669ab4193"
+    }
+  },
+  "cpu_record": {
+    "evidence_type": "REPOSITORY_LOG_READ_NOT_RERUN",
+    "collected": 290,
+    "passed": 283,
+    "skipped": 7,
+    "failed": 0,
+    "source_path": "codex_audit_round2/results/evidence/pytest_cpu.log",
+    "blob_sha": "e8532a8c82356b11b6eefb38e612bcac9e71c0dc",
+    "skip_breakdown": {
+      "checkpoint_memory": 3,
+      "cuda": 2,
+      "upstream_reference_missing": 2
+    }
+  },
+  "not_executed_in_this_delivery": [
+    "repository CPU tests",
+    "real GPU/xformers S0",
+    "checkpoint load",
+    "weather data validation",
+    "bank training",
+    "oracle/weather evaluation",
+    "policy training"
+  ],
+  "local_assets": "UNVERIFIED; no local repository path is established by a GitHub URL",
+  "sources": [
+    "https://api.github.com/repos/sisuolv/EarthDelta/branches?per_page=100",
+    "https://api.github.com/repos/sisuolv/EarthDelta/git/trees/fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+    "https://api.github.com/repos/sisuolv/EarthDelta/git/trees/403b55db65f4c35c1a85d0794ad0de2765b07d96",
+    "https://github.com/sisuolv/EarthDelta/blob/403b55db65f4c35c1a85d0794ad0de2765b07d96/codex_audit_round2/results/evidence/pytest_cpu.log"
+  ]
+}

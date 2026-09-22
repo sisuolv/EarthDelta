@@ -1,0 +1,884 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/ug3FMwEHgtBYCgk8saQCFnLGgDg</id>
+  <title>arXiv Query: search_query=(all:"model merging" OR all:"weight space") AND (all:response OR all:surrogate OR all:predicting) AND submittedDate:"202501010000 TO 202609222359"&amp;id_list=&amp;start=0&amp;max_results=35</title>
+  <updated>2026-09-22T02:56:54Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(all:%22model+merging%22+OR+all:%22weight+space%22)+AND+((all:response+OR+(all:surrogate+OR+all:predicting))+AND+submittedDate:%22202501010000+TO+202609222359%22)&amp;start=0&amp;max_results=35&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>35</opensearch:itemsPerPage>
+  <opensearch:totalResults>146</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2609.24084v1</id>
+    <title>From Bits to Beliefs: Recoverable Semantic Fingerprints for Black-Box Verification of Large Language Models</title>
+    <updated>2026-09-21T04:11:07Z</updated>
+    <link href="https://arxiv.org/abs/2609.24084v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.24084v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Open-weight large language models (LLMs) can be copied, modified, and redeployed behind black-box APIs, making post-release ownership verification difficult. Existing black-box fingerprints often rely on secret query-key pairs that reproduce predefined responses, and can therefore be easily disrupted by fine-tuning, pruning, quantization, model merging, and serving-time prompt changes. We propose SimPrint, a recoverable semantic fingerprinting framework for black-box LLM ownership verification. Rather than relying on isolated exact matches, SimPrint encodes a private owner signature into a coded semantic fingerprint domain, distributing ownership evidence across natural binary question-answering probes. It implants only base-deviating probes through a low-interference batch update that preserves the original model behavior, and later recovers the signature by parsing suspect-model responses into reliable bits or erasures with an error-correcting recovery mechanism. Because verification only uses input-output queries, SimPrint remains applicable when model weights or activations are inaccessible. Experiments on three open-weight LLMs show that SimPrint reliably recovers the owner signature in both clean and modified settings, remains robust under fine-tuning, pruning, quantization, model merging, and serving-time perturbations, and maintains comparable downstream utility.</summary>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-21T04:11:07Z</published>
+    <arxiv:primary_category term="cs.CR"/>
+    <author>
+      <name>Jiaxin Hong</name>
+    </author>
+    <author>
+      <name>Yuxin Peng</name>
+    </author>
+    <author>
+      <name>Hongyao Yu</name>
+    </author>
+    <author>
+      <name>Hao Fang</name>
+    </author>
+    <author>
+      <name>Shuoyang Sun</name>
+    </author>
+    <author>
+      <name>Bin Chen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.16229v1</id>
+    <title>Test-Time Unlearning via Sparse Autoencoder</title>
+    <updated>2026-09-14T18:58:09Z</updated>
+    <link href="https://arxiv.org/abs/2609.16229v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.16229v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Machine unlearning aims to remove specific knowledge from a trained large language model (LLM) without retraining from scratch. Existing methods modify model weights via gradient ascent and its advances. While effective on certain benchmarks, these weight-based approaches exhibit a sharp forget-utility trade-off, where stronger forgetting of target knowledge can degrade model utility, and unlearned knowledge may reappear under post-unlearning fine-tuning or prompt attacks. We propose ARIA (autoencoder-gated inference-time unlearning), a test-time unlearning method that leaves model weights intact and gates access to unwanted knowledge only when generation enters a forget-related state. ARIA uses sparse autoencoder (SAE) latents to train a lightweight linear detector, then applies an interpretable intervention on triggered states with negligible test-time overhead. Empirical evaluations on TOFU, R-TOFU, and WMDP show that ARIA improves the forget-retain trade-off over weight-based baselines across both a thinking model (DeepSeek-R1-Distilled-Qwen-1.5B) and an instruction model (Gemma-3-1B-it), e.g., reducing WMDP-cyber forget-set accuracy significantly while keeping MMLU within 1% of the pre-unlearning model. We further introduce three post-unlearning adversarial attacks targeting weight-space and decoding-space recovery, and find that ARIA remains robust under all three, with forgetting changing by less than 1% under attack. A feature-level case study leveraging the interpretability of ARIA suggests that some retain degradation may reflect response styles underlying the unlearning data rather than leakage of the targeted knowledge itself, highlighting a potential source of bias in unlearning task construction.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-14T18:58:09Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Pingzhi Li</name>
+    </author>
+    <author>
+      <name>Jinhao Duan</name>
+    </author>
+    <author>
+      <name>Vaishnav Tadiparthi</name>
+    </author>
+    <author>
+      <name>Nakul Agarwal</name>
+    </author>
+    <author>
+      <name>Kwonjoon Lee</name>
+    </author>
+    <author>
+      <name>Ehsan Moradi Pari</name>
+    </author>
+    <author>
+      <name>Hossein Nourkhiz Mahjoub</name>
+    </author>
+    <author>
+      <name>Sijia Liu</name>
+    </author>
+    <author>
+      <name>Tianlong Chen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.12954v1</id>
+    <title>Fractional porous medium equation on manifolds with nonnegative Ricci curvature: existence of solutions and smoothing effects via potential methods</title>
+    <updated>2026-09-11T15:12:20Z</updated>
+    <link href="https://arxiv.org/abs/2609.12954v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.12954v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We study the fractional porous medium equation on complete noncompact Riemannian manifolds with nonnegative Ricci curvature for $s\in(0,1]$ and $n&gt;2s$. Assuming that the manifold is $s$-nonparabolic, so that the fractional Laplacian admits a suitable positive minimal Green function, we use this Green function to introduce a natural weighted space of initial data, strictly larger than $L^1$. This leads to a weak dual, or potential, formulation of the equation, for which we prove existence for nonnegative initial data in the weighted space. We then establish quantitative local smoothing estimates for initial data in either $L^1$ or the Green-weighted space. Under additional noncollapsing and uniform volume-growth assumptions, we obtain global smoothing estimates. We also show that, even in $\mathbb{R}^n$, data in the Green-weighted space need not generate bounded solutions unless a suitable uniform weighted integrability condition is imposed. The short- and long-time behaviors predicted by our estimates are shown to be optimal in appropriate senses. When $s\in(0,1/2)$, the results require only $\operatorname{Ric}\geq0$, together with a noncollapsing assumption where needed. Our estimates also cover the case $s=1$, several of them being new in that setting. Finally, we extend the approach to more general filtration equations.</summary>
+    <category term="math.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-11T15:12:20Z</published>
+    <arxiv:primary_category term="math.AP"/>
+    <author>
+      <name>Dorothea-Enrica von Criegern</name>
+    </author>
+    <author>
+      <name>Gabriele Grillo</name>
+    </author>
+    <author>
+      <name>Dario Daniele Monticelli</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.12897v1</id>
+    <title>Tracing and Coordinating Cross-Layer Influence for Multimodal Model Merging</title>
+    <updated>2026-09-11T14:24:07Z</updated>
+    <link href="https://arxiv.org/abs/2609.12897v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.12897v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multimodal model merging aims to consolidate task experts into a single model that retains their complementary capabilities. Most unimodal model merging methods combine expert updates within individual layers, and multimodal approaches largely follow this design. However, an expert update changes the representations passed to subsequent layers, allowing its influence to propagate across depth and affect how visual and textual information interact. When visual and language updates are combined, later updates act on inputs already modified by earlier ones, coupling their effects. This poses two challenges: (1) how to characterize the multimodal influence of individual expert updates across depth, and (2) how to jointly combine expert updates based on their multimodal influence. To address these challenges, we propose TAC-Merge for tracing and coordinating cross-layer influence in multimodal model merging. It contains two modules, i.e., multimodal influence mapping (MIM) and coupled merge control (CMC). MIM constructs graphs of update effects and uses Ricci curvature together with expert predictions to define a shared fusion objective. CMC models interactions among coefficient adjustments and jointly optimizes regional weights to synthesize one shared model. Experiments across diverse multimodal tasks demonstrate the effectiveness of TAC-Merge in consolidating complementary expert capabilities and supporting generalization to unseen tasks.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-11T14:24:07Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Pengyang Zhou</name>
+    </author>
+    <author>
+      <name>Xiaobin Tu</name>
+    </author>
+    <author>
+      <name>Zhengxi Liu</name>
+    </author>
+    <author>
+      <name>Rongkun Xue</name>
+    </author>
+    <author>
+      <name>Haochen Li</name>
+    </author>
+    <author>
+      <name>Miancan Liu</name>
+    </author>
+    <author>
+      <name>Ziyuan Chen</name>
+    </author>
+    <author>
+      <name>Yinggui Wang</name>
+    </author>
+    <author>
+      <name>Jinkui Ren</name>
+    </author>
+    <author>
+      <name>Xiantao Zhang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.25429v1</id>
+    <title>Distance Is Not Enough: Forget-Retain Alignment Gap Predicts LLM Relearning Robustness</title>
+    <updated>2026-08-26T06:39:49Z</updated>
+    <link href="https://arxiv.org/abs/2608.25429v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.25429v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Machine unlearning aims to make a model forget specific data, yet unlearned LLMs often fail to stay unlearned: brief fine-tuning can revive removed knowledge. Existing robustness predictors rely on global weight-space displacement, but distance alone can be misleading when random or destructive updates collapse performance. We argue that relearning robustness depends on update structure: robust unlearning should affect forget-critical weights while sparing retain-critical ones. We introduce the Forget-Retain Alignment Gap (FRAG), a training-free predictor that scores an update's forget-retain alignment without running a relearning attack, and separates selective from dense updates more reliably than global distance. Building on the forget-critical, retain-sparing principle, Forget-Retain Pruning (FRP) improves relearning robustness. Our results suggest that weight selectivity better explains robustness than distance alone. Code is available at https://github.com/Yi1-Chen/FRAG.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-26T06:39:49Z</published>
+    <arxiv:comment>Accepted to EMNLP 2026 Main Conference</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Yi Chen</name>
+    </author>
+    <author>
+      <name>Hanna Hsieh</name>
+    </author>
+    <author>
+      <name>Shuhong Liu</name>
+    </author>
+    <author>
+      <name>Chuanbo Hua</name>
+    </author>
+    <author>
+      <name>Zihan Ma</name>
+    </author>
+    <author>
+      <name>Kun Wang</name>
+    </author>
+    <author>
+      <name>Joo-Young Kim</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.22034v1</id>
+    <title>Align, Unify, Suppress, Route: A Coherentist View of Transformer Computation</title>
+    <updated>2026-08-22T16:29:20Z</updated>
+    <link href="https://arxiv.org/abs/2608.22034v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.22034v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Mechanistic interpretability has identified transformer circuits, but lacks a shared vocabulary for describing how their functions compose across tasks and architectures. We introduce Coherentist Probabilistic Compositionalism (CPC), an interpretive framework that grounds transformer computation in coherentist theories of interpretation and describes it through four operator roles. Alignment identifies candidate relations, unification integrates supporting information, suppression reduces incompatible alternatives, and routing carries selected information to the output. Across 15 models from five architecture families, the suppression, unification, and routing weight-space signatures correlate with held-out activation-level role measures above random baselines. Suppression is more stable across tasks than unification. Ablating alignment heads reduces downstream suppressive activity beyond a random-head control in 10 models, but similar effects on no-conflict prompts indicate a general upstream dependency, not contradiction-specific coupling. Explicit contradictions significantly shift a layerwise coherence proxy in 14 models; after removing shared residual covariance, the gap has the predicted direction in every model. Base and instruction-tuned variants preserve induction-head score structure ($r{\geq}0.98$) without a consistent shift of operator signatures towards later layers. These results support CPC as a shared vocabulary for comparing transformer mechanisms while showing that their depth and geometric expression remain architecture-specific.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-22T16:29:20Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Nura Aljaafari</name>
+    </author>
+    <author>
+      <name>Andre Freitas</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.13197v2</id>
+    <title>Algorithmic Information Dynamics of Learning: A Certified, Differentiable Complexity Controller for Grokking</title>
+    <updated>2026-09-15T03:40:59Z</updated>
+    <link href="https://arxiv.org/abs/2609.13197v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.13197v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Algorithmic Information Dynamics (AID) studies systems by perturbing them and measuring changes in algorithmic complexity, but its usual estimator, the Block Decomposition Method, is piecewise constant, restricting the calculus to finite differences. We use $K^{\mathrm{CDM}}_{\mathrm{s}F}$, a certified, differentiable estimator, to bring the calculus into learning dynamics: grokking, where a complexity order parameter is known but has not been made to act. As a transient loss kick, the estimator becomes a controller that accelerates grokking in Levin's description-length--versus-time sense, within a data-dependent Occam boundary whose finite-size trend, $f_c\sim\ln p/p$, is consistent with a coupon-collector interpretation. Ablations show that a complexity gate matches a train-loss gate in rescuing failing seeds with $27\%$ less intervention; among the tested signals, only map complexity marks the transition's completion; the certified prior and the per-parameter $\nabla K$ attribution are both fungible (a uniform-prior sensor makes bit-identical gate decisions, and random supports match $\nabla K$-selected ones above a sparsity threshold); and direct field perturbation shows a nucleation-like response to the Occam field (no linear regime is resolved over the probed amplitudes, so these measurements do not justify a fluctuation--dissipation surrogate), with a finite-field response growing by orders of magnitude toward the phase-transition. These measurements account for the empirically tuned staircase: bang--bang pulses, stall-fired and released on yield, whose iteration plausibly builds the response it exploits. The kick transfers to sparse parity and to a transformer; a sustained weight-space loss fails. The algorithmic estimator's distinct contribution is timing (when to fire and when to release), not attribution.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IT" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-14T00:07:43Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Luan Ozelim</name>
+    </author>
+    <author>
+      <name>Abicumaran Uthamacumaran</name>
+    </author>
+    <author>
+      <name>Hector Zenil</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.11997v2</id>
+    <title>Subregular affine cells and the level $-1$ vertex algebra of type $D$</title>
+    <updated>2026-08-30T10:25:39Z</updated>
+    <link href="https://arxiv.org/abs/2608.11997v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.11997v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We prove the simple-object prediction of Shan--Yan--Zhao and a basis-preserving dual-cell realization for the distinguished vacuum block of the simple affine vertex algebras $L_{-1}(D_\ell)$, $\ell\ge5$. The block has exactly $\ell+1$ simple objects, indexed by the subregular affine left cell containing $s_0$. The proof combines a primitive-ideal inclusion, an independent exhaustion argument, and a finite-length step. A noncritical Sugawara lift supplies finite-dimensional weight-space detectors in the original Shan--Yan--Zhao category-$\mathcal O$ block, so dévissage applies to its ordinary Grothendieck group. We then identify this group, basis by basis, with the $q=1$ specialization of the corresponding dual affine left-cell module. An injective signed normalized-character realization identifies the resulting image with the canonical dual-cell image in the completed singular-orbit module and hence supplies the corresponding abstract $\widehat W$-module structure. We do not identify this action with a functorial action arising from affine twisting functors or Kashiwara--Tanisaki localization. The subregular inverse Kazhdan--Lusztig calculation of Bezrukavnikov--Kac--Krylov also yields uniform character formulas.</summary>
+    <category term="math.QA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.RT" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-12T12:34:30Z</published>
+    <arxiv:comment>47</arxiv:comment>
+    <arxiv:primary_category term="math.QA"/>
+    <author>
+      <name>Sihai Jin</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.11499v1</id>
+    <title>HyperFix: Combinatorial Nonlinear Correction for Task Vector Merging</title>
+    <updated>2026-08-11T23:27:33Z</updated>
+    <link href="https://arxiv.org/abs/2608.11499v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.11499v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Task vectors enable model merging without joint retraining. In practice, the subset of task vectors to be merged may vary, but many existing methods use scalar tuning for a particular subset, requiring repeated tuning across subsets and restricting task vector merging to linear rescaling. We therefore formulate merging across varying task subsets as a combinatorial correction problem and introduce HyperFix, a lightweight hypernetwork that predicts subset-conditioned nonlinear corrections in weight space. Trained once on singleton, pair, and triple subsets from a task bank, HyperFix generalizes to larger subsets without per-subset optimization. Our local perturbation analysis bounds the residual correction beyond linear merging and motivates learning it from small task updates. Experiments across diverse benchmarks show that HyperFix outperforms existing task vector merging methods while reducing tuning cost.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-11T23:27:33Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Hyo Seo Kim</name>
+    </author>
+    <author>
+      <name>Ren Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.10867v1</id>
+    <title>Can Bayesian Optimization Efficiently Find a Strong Single Expert in Neural Thickets?</title>
+    <updated>2026-08-11T12:41:49Z</updated>
+    <link href="https://arxiv.org/abs/2608.10867v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.10867v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Gradient-free post-training has emerged as a compelling alternative to gradient-based optimization for large language models (LLMs), but existing approaches remain costly. We ask whether structured search can identify a strong single expert under a modest evaluation budget. Motivated by evidence that useful weight updates lie in low-dimensional subspaces, we apply Bayesian optimization within a random linear embedding of weight space. Our method requires no backpropagation and uses a Gaussian process surrogate to guide candidate evaluations efficiently. Across several reasoning benchmarks with Qwen2.5-Instruct models from 0.5B to 3B parameters, Bayesian optimization using five times less candidate evaluations matches or exceeds RandOpt. These results show that surrogate-guided search can substantially reduce the evaluation cost of gradient-free post-training while producing stronger deployable single experts.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-11T12:41:49Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Nigel Bastian Cendra</name>
+    </author>
+    <author>
+      <name>Abdelhamid Ezzerg</name>
+    </author>
+    <author>
+      <name>Fernando Julio Cendra</name>
+    </author>
+    <author>
+      <name>Jeremias Knoblauch</name>
+    </author>
+    <author>
+      <name>Jakob Zeitler</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.10447v1</id>
+    <title>Towards Efficient Reasoning in LLM-Based Recommender Systems via Model Merging</title>
+    <updated>2026-08-11T04:01:35Z</updated>
+    <link href="https://arxiv.org/abs/2608.10447v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.10447v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language model-based recommender systems are increasingly adopting slow-thinking models that generate step-by-step reasoning before making predictions, often achieving higher accuracy than fast-thinking models that predict directly. However, their reasoning traces are often unnecessarily verbose, increasing inference costs without commensurate accuracy gains. Existing training-based approaches to reasoning compression often incur substantial adaptation costs, while inference-time methods are brittle and difficult to scale. These limitations motivate model merging as a promising training-free direction for transferring specialised behaviours between models in a shared parameter space. In particular, merging a slow-thinking model with a fast-thinking counterpart provides a natural mechanism for balancing recommendation accuracy and reasoning conciseness. To this end, we propose, to our knowledge, the first model merging framework for reasoning compression in recommender systems. Unlike conventional merging methods that apply uniform merge coefficients across model components, our method performs fine-grained merging at the level of individual attention heads, capturing heterogeneous patterns in recommendation reasoning. Each attention head is assigned a distinct merge coefficient according to its contribution to critical reasoning evidence and its sensitivity to parameter change, enabling selective injection of the concise behaviour of the fast-thinking model into the slow-thinking model and reducing reasoning verbosity without compromising recommendation quality. Experiments on three benchmark datasets show that our method reduces reasoning length by up to 24.3% while outperforming competitive model merging baselines in maintaining recommendation accuracy. The code is available at https://github.com/linhledieu/REAM.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-11T04:01:35Z</published>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Linh Dieu Le</name>
+    </author>
+    <author>
+      <name>Tong Chen</name>
+    </author>
+    <author>
+      <name>Shazia Sadiq</name>
+    </author>
+    <author>
+      <name>Hongzhi Yin</name>
+    </author>
+    <author>
+      <name>Ming Jin</name>
+    </author>
+    <author>
+      <name>Junliang Yu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.09490v2</id>
+    <title>When Do Task Vectors Interfere? Mapping the Validity Boundaries of Weight-Space Composition</title>
+    <updated>2026-08-31T03:14:55Z</updated>
+    <link href="https://arxiv.org/abs/2608.09490v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.09490v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Task arithmetic composes skills by adding weight displacements, and merged models are then judged on benchmark suites. We measure when that composition is functionally additive, and find that the answer depends as much on how the model is prompted as on which tasks are merged. Across two-dimensional composition surfaces -- five model settings from 0.5B to 8B, two families, LoRA and full fine-tuning -- pairwise non-additivity is real, seed-stable, and transfers in coarse order to unseen task pairs: all eight preregistered sign predictions held. But it is input-conditioned everywhere we measured: the same merged model that shows a six-point interaction contrast on code prompts shows none on math prompts, and wrapping the identical code prompts in the instruction template the adapters were trained on collapses the contrast twenty-fold, from +6.9 to +0.3 points -- while re-serializing them in an untrained chat template leaves it intact (+12.5), falsifying our own preregistered prediction. Execution benchmarks (pass@1) inherit the training-format wrapper's blindness. Weight-space composition therefore supports coarse, input- and format-conditioned functional statements -- not a universal merging-performance predictor, and not one that training-format evaluations can see.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-10T11:58:04Z</published>
+    <arxiv:comment>12 pages, 3 figures; includes references and an expanded appendix</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Chencheng Zhu</name>
+    </author>
+    <author>
+      <name>Xiaoyang Li</name>
+    </author>
+    <author>
+      <name>Taotao Cai</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.08542v1</id>
+    <title>When Skills Meet Safety: Benchmarking and Characterizing the Adaptive Jailbreak Robustness of Skill-Merged LLMs</title>
+    <updated>2026-08-09T07:41:06Z</updated>
+    <link href="https://arxiv.org/abs/2608.08542v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.08542v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Model merging has become the default way to give an aligned language model new skills without retraining: a practitioner folds task vectors from math, code, or domain specialists into a safety-aligned base using task arithmetic, TIES, or DARE. This convenience is known to carry a safety cost, but almost all of that evidence rests on static refusal tests: fixed harmful prompts scored for compliance. We argue this is misleading. Because safety alignment is "shallow," concentrated in the first few generated tokens, a merged model's static refusal can stay clean while a real adaptive attack still breaks it. We introduce SkillSafe-Bench, a controlled benchmark that scores skill-merged models on static refusal, adaptive jailbreak robustness, and capability retention under a conservative two-judge AND rule. Across six open-weight bases (five families, two scales), static safety does not predict robustness to attack: under a semantic template attack, safe-looking merges on the fragile bases (both Qwen scales and Gemma) are jailbroken 60-76% of the time while others (Llama, Phi-4) stay robust. We further show the static effect of merging is base-conditional, characterize same-recipe abliteration-style safety erosion through a data-free geometric signal (the overlap of a task vector with a safety subspace), and outline SubSafe-Merge, which projects this overlap away to remove that erosion at held capability. Adaptive evaluation is not optional for merged LLMs: the models that most need it look safe under static screening.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-09T07:41:06Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Yu Ma</name>
+    </author>
+    <author>
+      <name>Hongli Shi</name>
+    </author>
+    <author>
+      <name>Jing Li</name>
+    </author>
+    <author>
+      <name>Xinran Xu</name>
+    </author>
+    <author>
+      <name>Weiwei Hou</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.06756v1</id>
+    <title>Capek 0.5: An Execution-Centric Vision-Language Model for Embodied Intelligence</title>
+    <updated>2026-08-07T03:24:25Z</updated>
+    <link href="https://arxiv.org/abs/2608.06756v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.06756v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Vision-language models are increasingly serving as the reasoning core of embodied agents. Robot execution is inherently iterative: each action reshapes the scene and physical state, continually renewing what must be perceived, reasoned about, and verified. Meeting these demands requires complementary capabilities that differ in supervision signals, prediction formats, and verification criteria. Existing approaches typically develop these capabilities against isolated, task-specific objectives, leaving open how they should be organized and integrated around execution as a whole. We present Capek 0.5, an embodied vision-language model built around an execution-centric capability taxonomy. Rather than organizing training by datasets or tasks, the taxonomy groups embodied capabilities according to their functional roles throughout execution and comprises four capability families: Spatial Reasoning, Temporal Understanding, Action Guidance, and State Verification. Each capability is first acquired by a dedicated specialist through reinforcement learning with verifiable rewards from a shared backbone, and the specialists are then consolidated into a single inference-time model through weight-space merging followed by routed policy-space distillation. We instantiate Capek 0.5 at the 2B and 35B-A3B scales and evaluate it from three complementary perspectives: comprehensive benchmark suites including Capek-StateBench, a new benchmark for state verification; a controlled study of capability retention from specialists to the unified model; and closed-loop evaluation in simulated embodied environments. Capek 0.5 improves the large majority of matched benchmark rows over its initialization, retains all four specialized capabilities in one checkpoint with quantified losses, and transfers to closed-loop embodied task execution.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-07T03:24:25Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Ying Chen</name>
+    </author>
+    <author>
+      <name>Weizhen Li</name>
+    </author>
+    <author>
+      <name>Zhe Hu</name>
+    </author>
+    <author>
+      <name>Zhenjiang Li</name>
+    </author>
+    <author>
+      <name>Rui Jiang</name>
+    </author>
+    <author>
+      <name>Zhifeng Gu</name>
+    </author>
+    <author>
+      <name>Lihuang Fang</name>
+    </author>
+    <author>
+      <name>Jiangping Liu</name>
+    </author>
+    <author>
+      <name>Lei Yi</name>
+    </author>
+    <author>
+      <name>Jie Chen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.04448v1</id>
+    <title>When does training on downscaled images yield the same gradients?</title>
+    <updated>2026-08-05T04:53:46Z</updated>
+    <link href="https://arxiv.org/abs/2608.04448v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.04448v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Diffusion transformers deliver strong image generation, but their training cost grows superlinearly with resolution. Recent work justifies training or sampling at reduced resolution on a spectral premise: at high noise, a downscaled latent preserves almost the full surviving signal. Whether a downscaled step also preserves the native training gradient signal, however, has remained unresolved. We reduce how that signal changes under downscaling to two terms: a noise-dependent term governed by the downscale ratio, which decays at high noise as the spectral premise predicts, and a σ-independent floor governed by the target grid's absolute token count, carried by the compute graph itself and removed by no noise level. The measured (route, σ) map corroborates the account and uncovers structure the spectral picture cannot express: on the 1024-&gt;768 route, a window (0.65 &lt; σ&lt; 0.95), predicted by no spectral criterion at any tolerance, where the downscaled gradient stays within a small margin of the native one. Training LoRA adapters with downscaled steps restricted to the routes and noise windows the map validates reduces training time by 14.6% at a fixed step budget while remaining near-native in weight space. Code is available at https://github.com/sorryhyun/anima_lora.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-05T04:53:46Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Seunghyun Ji</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.04181v1</id>
+    <title>MergeSE: Post-Hoc Model Merging for Software Engineering Tasks Without Retraining</title>
+    <updated>2026-08-04T19:39:02Z</updated>
+    <link href="https://arxiv.org/abs/2608.04181v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.04181v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Fine-tuned code models often behave as domain specialists and can degrade sharply under distribution shift: in our clone-detection setting, a model trained on same-language clones drops 71\% F1 on cross-language clones, while multi-task training falls to 0.151 F1 on unseen AI-generated clones. Our companion study shows that post-hoc model merging can address this fragmentation, achieving 93\% of multi-task performance without training data while generalizing 4$\times$ better to unseen clone types. However, no practical tool exists that lets SE researchers diagnose checkpoint compatibility, merge specialists, validate results on SE benchmarks, and export models for deployment. We present \textbf{MergeSE}, an open-source CLI and web tool for training-free model merging of HuggingFace encoder checkpoints. While motivated by OOD generalization in clone detection, MergeSE supports SE classification workflows more broadly through a built-in registry of nine task types, including vulnerability detection, defect prediction, and code-smell detection. MergeSE provides five operations: \textit{tasks}, \textit{inspect}, \textit{merge}, \textit{evaluate}, and \textit{export}. It supports five merging algorithms, including TIES, DARE-TIES, Wudi, PCB, and averaging; detects cross-task classification-head mismatches; produces seedable deterministic outputs; and includes bundled benchmark samples for smoke-test reproduction. A full merge of two 124M-parameter checkpoints completes in under 5 seconds on CPU. End-to-end validation confirms that MergeSE-produced checkpoints match reference implementations and recover cross-domain performance from domain-specific specialists. The tool is available online at https://mergese.usask.ca, and the development repository is at https://github.com/srlabUsask/MergeSE.</summary>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-04T19:39:02Z</published>
+    <arxiv:comment>Accepted at ASE 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.SE"/>
+    <author>
+      <name>Palash R. Roy</name>
+    </author>
+    <author>
+      <name>Banani Roy</name>
+    </author>
+    <author>
+      <name>Kevin A. Schneider</name>
+    </author>
+    <author>
+      <name>Chanchal K. Roy</name>
+    </author>
+    <arxiv:doi>10.1145/3832783.3834630</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3832783.3834630" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.03620v2</id>
+    <title>A Theory of Conditional Collapse under Low-Rank Weight-Space Ablations: I. The Single-Block Theory and Synthetic Validation</title>
+    <updated>2026-08-07T15:43:46Z</updated>
+    <link href="https://arxiv.org/abs/2608.03620v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.03620v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Activation patching and weight-space ablation both claim a component is causally responsible for a behavior, yet they act on different objects: one forward pass versus the parameters behind every forward pass. We ask when they agree.
+  We study an idealized model where a conditional computation is carried additively through a residual stream, $F(x)=F_0(x)+\sum_iα_i(x)v_i$, read out by a linear functional, and prove three exact results. First, deleting a subset of carriers collapses a matched input pair onto the same unconditional output \emph{if and only if} the removal is symmetric on the pair and leaves no outside contrast; the error is deterministic, and we give its exact form even when the two conditions hold only approximately. Second, patching a carrier moves the readout by its donor-receiver \emph{contrast}, while ablating it moves the readout by its \emph{absolute level}; neither bounds the other, and we construct pairs where every single-carrier patch flips the decision while no single-carrier ablation does. Third, for an attention head composed with its own layer's normalization and MLP, we derive an exact first-order interaction formula with a provably second-order remainder, vanishing identically when only the MLP is ablated but not, in general, when a head is.
+  Small transformers trained on a synthetic conditional task illustrate all three predictions: across thirty-nine ablation configurations the measured interaction is strongly rank-correlated with the idealized model's predictive accuracy (Spearman $-0.83$), and a second task and architecture reproduces the same pattern, including a further polarity reversal.
+  The single-block interaction result extends past one residual block, and the synthetic validation is tested against a real pretrained model, in a companion paper that takes this theory further along both axes.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-04T13:10:19Z</published>
+    <arxiv:comment>25 pages, 2 figures. Part I of a two-part series; see the companion paper "Cross-Layer Interaction under Weight-Space Ablation" (Part II)</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Abdallah Khemais</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.02271v1</id>
+    <title>Z-PEFT: Zero-shot Backdoor Detection in Parameter-Efficient Fine-Tuning via Canonical Spectral Signatures</title>
+    <updated>2026-08-03T14:10:54Z</updated>
+    <link href="https://arxiv.org/abs/2608.02271v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.02271v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Parameter-Efficient Fine-tuned (PEFT) models are frequently downloaded from open repositories by practitioners. This widespread practice creates a significant attack surface, as malicious actors can publish backdoored models that induce specific behaviors in response to predefined triggers. We study the problem of weight-space backdoor detection, where a detector classifier predicts whether a model is malicious using only its weights, enabling a lightweight safety mechanism. Most existing methods are designed and evaluated in a closed-world setting, where the detector is trained and tested on the same attack type. In contrast, we evaluate backdoor detection under novel conditions, including previously unseen attacks and datasets. We propose Z-PEFT, a lightweight meta-classifier that relies exclusively on layer-wise spectral measures for classification. Our experiments show that strong performance in the closed-world setting does not necessarily translate to high accuracy in zero-shot backdoor detection. Among weight-space detectors, Z-PEFT achieves the best performance while maintaining low and scalable computational cost.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-03T14:10:54Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Nicola Pitzalis</name>
+    </author>
+    <author>
+      <name>Donald Shenaj</name>
+    </author>
+    <author>
+      <name>Giacomo Cignoni</name>
+    </author>
+    <author>
+      <name>Andrea Cossu</name>
+    </author>
+    <author>
+      <name>Davide Bacciu</name>
+    </author>
+    <author>
+      <name>Antonio Carta</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.29548v1</id>
+    <title>Generalized reflected BSDEs with irregular obstacles driven by RCLL increasing processes on general filtered space</title>
+    <updated>2026-07-31T15:41:42Z</updated>
+    <link href="https://arxiv.org/abs/2607.29548v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.29548v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We study generalized backward stochastic differential equations (GBSDEs) and generalized reflected backward stochastic differential equations (GRBSDEs) on a general filtered probability space satisfying the usual conditions, without assuming that the underlying filtration is quasi-left-continuous. The equations are driven by a prescribed predictable, bounded, nondecreasing RCLL process \(A\), which acts as a possibly discontinuous stochastic clock, which we call a driver. We first establish a priori estimates, stability, existence, and uniqueness results for GBSDEs whose generator is Lipschitz continuous with respect to the state variable. Since \(A\) may have jumps, the analysis is carried out in weighted spaces defined through the stochastic exponential \(\mathcal{E}(βA)\). We then investigate GRBSDEs with an optional regulated lower obstacle. When the generator is independent of the state variable, we develop two complementary approaches. The first relies on a Snell-envelope representation and optimal stopping arguments, while the second is based on a modified penalization procedure adapted to the discontinuities of the right jumps of the obstacle. The general Lipschitz case is subsequently obtained through a fixed-point argument in an appropriate weighted Banach space.</summary>
+    <category term="math.PR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-31T15:41:42Z</published>
+    <arxiv:primary_category term="math.PR"/>
+    <author>
+      <name>Badr Elmansouri</name>
+    </author>
+    <author>
+      <name>Youssef Ouknine</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.20887v1</id>
+    <title>TwistedMerge: Certified Higher-Order Diagnostics and Abstention for Model Merging</title>
+    <updated>2026-07-23T03:24:50Z</updated>
+    <link href="https://arxiv.org/abs/2607.20887v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.20887v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Model merging combines independently trained or fine-tuned models, but pairwise alignability does not imply globally consistent alignment. We formulate merging as a finite descent problem in which checkpoints are local objects, alignment maps are transitions, and cycle products are residuals. TwistedMerge is a conservative certification pipeline that separates fixed-chart averaging, synchronization-removable gauge inconsistency, a certified central obstruction on a specified comparison complex, and nonabelian holonomy. A residual is promoted to a cohomology class only after inverse-consistency, coefficient-identification, centrality, and closure tests; otherwise the method abstains and returns an ordinary or synchronized fallback. We prove a constant-edge no-go result, frozen-complex three-way and predeclared-family error-control theorems, and a refinement test for comparison-complex sensitivity. A planted neural alignment defect is removed by cycle-consistent synchronization, showing that a nonzero cycle score alone is not a higher obstruction. Controlled central systems recover the predicted non-coboundary and projective-rank behavior, while noisy estimates move from certification to abstention without false lifts on the tested controls. A trained low-rank-adapter audit shows that naive factor averaging depends on the chosen GLr representative, whereas global factor synchronization and dense-delta SVD are stable. On natural checkpoint collections, cycle residuals do not predict merge degradation and no natural central or period-index class is certified. The results position descent theory as a falsifiable certification and abstention framework.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.AG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-23T03:24:50Z</published>
+    <arxiv:comment>34 Pages, Comments welcome!</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Ting Gong</name>
+    </author>
+    <author>
+      <name>Shitan Xu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.20201v1</id>
+    <title>The Quadrilateral Loss: Additivity as a Measurable Behavior of Dense Neural Networks</title>
+    <updated>2026-07-22T14:23:37Z</updated>
+    <link href="https://arxiv.org/abs/2607.20201v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.20201v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Additive models buy interpretability by forbidding feature interactions, a constraint that neural instantiations enforce architecturally. We introduce the quadrilateral loss, a differentiable penalty that treats additivity as a measurable behavior instead: a second-order mixed difference on pairs of training points swapping one coordinate, which vanishes if and only if the coordinate carries no interaction, remains informative for piecewise-linear networks, and equals in expectation the per-coordinate interaction mass of the interventional Shapley-GAM. The loss turns additivity into a dial - most learned interactions prove removable almost for free, and on small datasets a moderate penalty improves accuracy and additivity simultaneously - and into an online observable: its per-feature surrender curves show, across seeds and datasets, that pre-regularization interaction magnitude barely predicts what a regularized model retains, undermining post-hoc interaction rankings. Against this instrument we compare routes to exact additivity, spanning structural masks, behavioral penalties (optionally crystallized into exact structure), weight decay, backfitting, the shared-section model, and bagged boosted stumps: constraining behavior before structure dominates weight-space constraints, rankings reverse between data regimes, and converging routes agree on the shape functions themselves. Three silent failure modes we document share one anatomy: guarantees imported into settings that quietly void their preconditions.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-22T14:23:37Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Antonio Di Cecco</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.19971v2</id>
+    <title>Unified Prediction and Planning via Conflict-Aware Disjoint Parameter Training</title>
+    <updated>2026-08-27T13:01:29Z</updated>
+    <link href="https://arxiv.org/abs/2607.19971v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.19971v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Accurate motion prediction of surrounding agents and safe motion planning are two closely coupled key tasks for social robot navigation in crowded environments. Deploying these systems on resource-constrained edge devices necessitates compact, unified models that can perform both tasks simultaneously. However, within these compact shared encoders, recent unified models often overlook severe representational conflicts that arise from the distinct objectives of predicting neighbor behaviors versus ego-centric safety planning. To address this issue, we first identify the Skill Conflict$\unicode{x2014}$a phenomenon where overlapping parameter assignments cause distinct tasks to compete for the same weights, preventing the model from fully specializing in individual skills. To resolve this, we propose a novel model-merging-based framework, Disjoint Parameter Training (DPT). DPT mitigates performance degradation caused by Skill Conflict through distributed parameter learning, which separates the key parameter regions of each task while preserving their core capabilities prior to merging. In addition, we observe that sparse merging, which selectively integrates only the most influential parameters for each task rather than combining all task-specific parameters, yields optimal performance by preventing interference among adjacent features and concentrating representational capacity. DPT can be applied in parallel with a variety of merging methods. Evaluated on standard crowd navigation benchmarks (JRDB and JTA), our framework demonstrates superior performance, validating its versatility and effectiveness for safe, resource-efficient robot navigation.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-22T09:54:22Z</published>
+    <arxiv:comment>Accepted at ECCV 2026. 38 pages, 14 figures. Project page: https://dpt2026.github.io/</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Taewon Seo</name>
+    </author>
+    <author>
+      <name>Seonae Jeon</name>
+    </author>
+    <author>
+      <name>Giwon Lee</name>
+    </author>
+    <author>
+      <name>Kuk-Jin Yoon</name>
+    </author>
+    <author>
+      <name>Daehee Park</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.18985v2</id>
+    <title>Athena-Brain Technical Report: An Efficient Robot Brain for General Intelligence and Embodied Interaction</title>
+    <updated>2026-07-25T09:51:58Z</updated>
+    <link href="https://arxiv.org/abs/2607.18985v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.18985v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language models (LLMs) have demonstrated remarkable capabilities in language understanding, reasoning, and world knowledge. As embodied agents become increasingly capable, there is a growing demand for compact models that can serve as an on-device brain, preserving the broad general intelligence of LLMs while enabling effective high-level interaction with embodied environments. Existing approaches, however, often prioritize either general-purpose intelligence or specialized embodied capabilities, making it challenging to satisfy both requirements within a single model. We present \textbf{Athena-Brain-8B}, an 8B LLM designed to serve as an on-device brain for embodied intelligence for embodied intelligence. Through a multi-stage post-training pipeline consisting of General Supervised Fine-Tuning, General Reinforcement Learning, Embodied Expert training, and Model Merge, Athena-Brain-8B maintains strong general capabilities while acquiring strong high-level embodied interaction capabilities and generating concise responses for efficient embodied interaction. Experimental results demonstrate the effectiveness of Athena across both general and embodied evaluations. Compared with the corresponding Qwen3-8B thinking model, Athena-Brain-8B achieves comparable performance on general language and reasoning benchmarks while generating substantially shorter responses. On in-domain embodied benchmarks, Athena-Brain-8B consistently outperforms models of similar scale and surpasses several substantially larger frontier models evaluated zero-shot, demonstrating that compact language models can effectively integrate strong general intelligence with embodied capabilities.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-21T11:19:21Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Jialian Li</name>
+    </author>
+    <author>
+      <name>Junhong Liu</name>
+    </author>
+    <author>
+      <name>Yuchen Cao</name>
+    </author>
+    <author>
+      <name>Weiran Guo</name>
+    </author>
+    <author>
+      <name>Jiaming Song</name>
+    </author>
+    <author>
+      <name>Xutao Wang</name>
+    </author>
+    <author>
+      <name>Yi Zhao</name>
+    </author>
+    <author>
+      <name>Jiangpin Liu</name>
+    </author>
+    <author>
+      <name>Jie Chen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.15752v1</id>
+    <title>Personalized Image Aesthetic Assessment via Preference-rich Sample Mining and Cohort Merging</title>
+    <updated>2026-07-17T08:40:18Z</updated>
+    <link href="https://arxiv.org/abs/2607.15752v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.15752v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Personalized Image Aesthetic Assessment (PIAA) aims to predict aesthetic ratings of images that vary across individuals. The aesthetic preferences manifest to different extents across distinct visual stimuli and exhibit cohort-specific patterns. Motivated by the above fact, this paper presents a Multimodal Large Language Model (MLLM)-based approach, which models individual aesthetic preferences by Preference-Rich sample mining and Aesthetically-resonant Cohort merging (PRAC). Specifically, PRAC first identifies preference-rich samples by analyzing both Collective Controversy and Personalized Deviation of images, maximizing the utility of limited user data. Based upon the preference-rich samples, cross-user preference similarities are measured by comparing preference embeddings. Then, a cohort-based model merging strategy, is proposed by aggregating preference patterns from aesthetically-resonant users, which further enhances the personalization for the target individual. Extensive experiments and comparisons on four benchmark PIAA databases demonstrate the superiority of the proposed PRAC model over the state-of-the-arts. The code and model will be public at https://github.com/yzc-ippl/PRAC.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-17T08:40:18Z</published>
+    <arxiv:comment>The paper has been accepted by ACM MM 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Zhichao Yang</name>
+    </author>
+    <author>
+      <name>Tianjiao Gu</name>
+    </author>
+    <author>
+      <name>Zhixianhe Zhang</name>
+    </author>
+    <author>
+      <name>Xiangfei Sheng</name>
+    </author>
+    <author>
+      <name>Pengfei Chen</name>
+    </author>
+    <author>
+      <name>Leida Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.07127v1</id>
+    <title>Weight-Space Physics: Interpretable Hypernetworks for Lattice Quantum Field Theories</title>
+    <updated>2026-07-08T08:14:21Z</updated>
+    <link href="https://arxiv.org/abs/2607.07127v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.07127v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Lattice field theory is the workhorse of non-perturbative physics, used to simulate phenomena from the strong nuclear force to critical phenomena in materials. Its Boltzmann distributions are parametrized analytically by coupling constants, but these bare parameters are weak predictors of observables -- extracting physics typically requires extensive simulation. While normalizing flows have emerged as effective samplers at fixed couplings, it remains difficult to interpret what these networks have learned. This raises a natural question: can the physics be read off directly from the flow network parameters themselves, and can those parameters be generated for unseen theories? We propose lattice field theory as a testbed for neural network interpretability: because the target physics is qualitatively well-understood and smoothly varying, it provides ideal synthetic data with known ground truth. To this end, we introduce JEPAWG, a Joint-Embedding Predictive Architecture-based Weight Generator that maps couplings directly to flow weights via a learned latent space. On a scalar theory at lattices of size $6^2$ to $11^2$, the JEPAWG latent space recovers the correct intrinsic dimension of the underlying manifold, locates the phase transition, and encodes a finite-size shift aligned with the 2D Ising exponent $ν\approx 1$, allowing us to uncover physical structure by studying the network weights alone. This suggests the fascinating idea of treating the network weights as a new type of physical observable. As a generator, JEPAWG also interpolates and extrapolates to unseen couplings effectively and remains robust to weight-space discontinuities introduced by multi-seed training data, outperforming PCA, AE, and VAE baselines.</summary>
+    <category term="hep-lat" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-08T08:14:21Z</published>
+    <arxiv:comment>9 + 13 pages, 4 + 8 figures, 3 + 5 tables</arxiv:comment>
+    <arxiv:primary_category term="hep-lat"/>
+    <author>
+      <name>Tobias Göbel</name>
+    </author>
+    <author>
+      <name>Julian R. Ebelt</name>
+    </author>
+    <author>
+      <name>Zier Mensch</name>
+    </author>
+    <author>
+      <name>Mathis Gerdes</name>
+    </author>
+    <author>
+      <name>Miranda C. N. Cheng</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.24805v1</id>
+    <title>Forgetting Is Not a Fix: Path Dependence in Sequential Engram Editing</title>
+    <updated>2026-07-06T23:45:06Z</updated>
+    <link href="https://arxiv.org/abs/2607.24805v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.24805v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>AI Engram (Kwon et al., 2026) formalizes the four engram criteria of neuroscience as a constrained inverse problem in weight space and solves it closed-form: concept-specific memory traces become linear objects that can be extracted once and combined arithmetically. Appendix F states the Compositional Memory States Hypothesis: edited models live on "a commutative manifold where the integration of A and B reaches a consistent equilibrium regardless of the learning sequence." The evidence base is single and paired edits -- in materials terms, single-cycle tests, in which fatigue accumulation is structurally invisible. Whether the hypothesis holds under sequential load is exactly the "temporal dynamics" question the paper defers to future work. We run that test on the authors' own reference implementation, at their reported best edit strength (TOFU alpha=0.6, a choice favoring the linearity hypothesis), with pre-registered predictions, across three model charges (two vendors, two architecture families). Four findings replicate across all three: (1) zero-shot composition and sequential re-calibrated editing diverge by 61-71% of the edit magnitude; (2) cut order is not interchangeable, and the effect scales with concept overlap -- in one charge the order of cutting two Paris landmarks decides whether an uninvolved third concept survives; (3) the survivors' layer-input covariances -- the method's own sufficient statistics, read as strain gauges -- drift monotonically with every further cut, in every surviving concept, in every charge; (4) erased knowledge partially returns under subsequent unrelated cuts. Appendix F's commutative-manifold hypothesis is thereby falsified for sequential editing; the single-edit results of the original paper are untouched. For unlearning-as-compliance: erasure certified today does not certify the artifact after its next edit.</summary>
+    <category term="q-bio.NC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-06T23:45:06Z</published>
+    <arxiv:comment>8 pages, 3 figures. Companion code and data: https://github.com/FerdinandSchessl/engram-seq-note-companion</arxiv:comment>
+    <arxiv:primary_category term="q-bio.NC"/>
+    <author>
+      <name>Ferdinand M. Schessl</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.02212v3</id>
+    <title>An Additive MLP-GNN Framework for Characterizing Chemical and Structural Contributions to Aqueous Solubility</title>
+    <updated>2026-09-06T01:17:24Z</updated>
+    <link href="https://arxiv.org/abs/2607.02212v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.02212v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Aqueous solubility is a key property in early-stage drug discovery, but most predictive models merge physicochemical descriptors and molecular graph information into a single representation, obscuring whether a prediction is driven by global chemistry, molecular structure, or both. We present an additive deep-learning framework that keeps these two sources of information separate throughout training: physicochemical descriptors are encoded by a multilayer perceptron (the chemical branch) and molecular graph topology by a graph neural network (the structural branch), with the two outputs combined only at the prediction stage through an additive model with an optional multiplicative interaction. This design provides a direct decomposition of chemical and structural components that can be examined separately after training. Furthermore, pretraining on the larger AqSolDB dataset and fine-tuning on the smaller BigSolDB2 dataset substantially improve accuracy and reduce run-to-run variations, indicating generalizability of the learned features from the data-rich settings. We further interpret the fitted model using best linear projections of the branch outputs, molecule-level embedding summaries across solubility classes, and atom-level GNNExplainer masks aggregated over functional groups. These analyses show that the chemical branch aligns with familiar physicochemical descriptors, while the structural branch captures graph-topological and functional-group patterns associated with solubility. Across both datasets, the framework attains competitive predictive performance while making the distinct roles of chemical and structural information more transparent.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-02T14:21:44Z</published>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Sampreeti Bhattacharya</name>
+    </author>
+    <author>
+      <name>Arkaprava Roy</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.01433v1</id>
+    <title>CreativityNeuro: Steering Language Model Weights to Improve Divergent Thinking and Reduce Mode Collapse</title>
+    <updated>2026-07-01T19:54:39Z</updated>
+    <link href="https://arxiv.org/abs/2607.01433v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.01433v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Divergent thinking is a crucial aspect of creativity, yet large language models (LLMs) tend to consistently generate similar responses to open-ended questions, in what has been termed the artificial hivemind effect. Here, we introduce CreativityNeuro, a data-free method for enhancing divergent thinking in LLMs via contrastive weight steering. We evaluate our method across multiple creativity assessments and report several main findings. On the Divergent Association Task (DAT), a vocabulary-space creativity test, CreativityNeuro improves performance by up to 14 human percentile points. Next, in a large-scale human evaluation (N=720) on the Alternative Uses Test (AUT) and the Task Task, CreativityNeuro achieves significant improvements in originality, surprise, and creativity, transferring to longer-form and more open-ended tasks. Importantly, we find that across all three tasks, CreativityNeuro demonstrably reduces measures of mode collapse. Moreover, activation steering achieves comparable performance to CreativityNeuro on the DAT, but it does not transfer to the AUT and Task Task, demonstrating the effectiveness of weight-space steering in generalizing to unseen tasks. In conclusion, CreativityNeuro improves divergent thinking and reduces mode collapse without requiring behavioral data, re-training, or gradient-based fine-tuning, providing a straightforward way to enhance LLM performance in creative domains.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-01T19:54:39Z</published>
+    <arxiv:comment>Accepted at ICML 2026 Workshop on Creativity &amp; Generative AI</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Samuel Schapiro</name>
+    </author>
+    <author>
+      <name>Core Francisco Park</name>
+    </author>
+    <author>
+      <name>Felix Sosa</name>
+    </author>
+    <author>
+      <name>Lav R. Varshney</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.30899v1</id>
+    <title>Curvature-Guided Module Localization for Low-Rank Detoxification of Backdoored Large Language Models</title>
+    <updated>2026-06-29T20:40:21Z</updated>
+    <link href="https://arxiv.org/abs/2606.30899v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.30899v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Backdoor attacks pose a serious threat to large language models (LLMs) by causing otherwise benign systems to produce attacker-specified malicious behavior when a hidden trigger is present. In this work, we study post hoc detoxification of backdoored LLMs in a practical setting where the defender has access to the poisoned model but does not wish to retrain the full network from scratch. We propose a mechanistically guided weight-space repair framework that first localizes modules involved in propagating trigger-induced behavior using activation patching and Fisher/K-FAC curvature analysis, and then applies targeted low-rank repair to only the most influential modules. We evaluate the method on poisoned variants of \texttt{Llama-3.2-1B-Instruct} with triggers inserted at the beginning, middle, and end of otherwise benign prompts. Results show that the proposed approach substantially suppresses trigger-conditioned malicious responses while preserving benign model behavior. These findings suggest that backdoor removal in LLMs can be formulated as a localized structural repair problem rather than only a broad behavioral alignment problem.</summary>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-29T20:40:21Z</published>
+    <arxiv:primary_category term="cs.CR"/>
+    <author>
+      <name>Arash Raftari</name>
+    </author>
+    <author>
+      <name>Mehrdad Mahdavi</name>
+    </author>
+    <author>
+      <name>Nathan Blackthorn</name>
+    </author>
+    <author>
+      <name>Andrew Arash Mahyari</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.30512v1</id>
+    <title>Informational Frustration in Neural Manifolds: Shannon Bottlenecks and the Limits of Learnability</title>
+    <updated>2026-06-29T16:20:02Z</updated>
+    <link href="https://arxiv.org/abs/2606.30512v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.30512v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Why overparameterised deep networks generalise so remarkably well remains one of the most stubborn open questions in machine learning theory. Classical frameworks like VC dimension and Rademacher complexity predict catastrophic overfitting in modern models, leaving a massive theoretical gap between theory and reality. In this paper, we bridge this divide by introducing a unified framework that links information theory, topology, and statistical mechanics to map the hard limits of deep learning. Central to our approach is the Entropic Learnability Horizon (ELH): a fundamental law stating that a network can only truly learn a target function if the Shannon entropy of the data manifold outpaces the topological entropy of the function's decision boundary, balanced by the von Neumann entropy of the network's weight space. We establish the Shannon-Topological Bottleneck Theorem, proving that when a target boundary's geometric complexity exceeds this informational horizon, the system undergoes a sudden entropic phase transition. It falls into a state of Informational Frustration - a glassy, rigid memorization phase where generalization becomes thermodynamically impossible. Using this lens, we show that the enigmatic phenomenon of "grokking" is actually an Entropic Release, where weights abruptly reorganise to unlock the bottleneck. Finally, we translate this theory into practice with Entropic Gradient Descent (EGD), an optimization algorithm that dynamically manages weight entropy to keep learning on track. Ultimately, this work repositions entropy not just as a tool for tracking uncertainty but as the fundamental physical currency that dictates whether a machine can learn.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-29T16:20:02Z</published>
+    <arxiv:comment>8</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Srinivasa Rao P.</name>
+    </author>
+    <author>
+      <name>Vangmayi P Reddy</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.26902v2</id>
+    <title>Learning to Recover Task Experts from a Multi-Task Merged Model</title>
+    <updated>2026-08-13T02:17:24Z</updated>
+    <link href="https://arxiv.org/abs/2606.26902v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.26902v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multi-task model merging aims to consolidate several task-specific experts into a unified model, yet static merging consistently suffers from parameter interference. While dynamic merging models aim to bridge this gap, many works rely on the costly storage and loading of redundant expert components at inference. In this work, from the perspective of task expert, we view parameter interference as parameter perturbation introduced to each expert during merging process. We show that such parameter perturbations can be modeled as affine transformation, which can be approximated as additive offsets. Motivated by these, we propose Recover Task eXpert (ReTeX), a framework that predicts those offsets, in order to undo parameter interference and recover task-expert performance from a single merged checkpoint. To recover the appropriate expert when task identity is unknown, we introduce a router-free task identifier based on SVD subspace signatures computed offline before inference. At inference, the identifier selects the task whose subspace yields the smallest projection residual for a given input. As a result, ReTeX recovers over 95% of individual-expert performance in both vision and NLP domains, while significantly improving generalization to unseen tasks. Crucially, we also show that the parameter offset prediction leads to emergent adaptive interpolation of expert knowledge for out-of-distribution (OOD) tasks. ReTeX adaptively interpolates seen expert knowledge to handle unseen tasks. Our code is available at https://github.com/BAIKLAB/ReTeX</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-25T11:34:33Z</published>
+    <arxiv:comment>ECCV 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Jinwook Jung</name>
+    </author>
+    <author>
+      <name>Taegyu Kim</name>
+    </author>
+    <author>
+      <name>Kumju Jo</name>
+    </author>
+    <author>
+      <name>Sungyong Baik</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.24219v1</id>
+    <title>Decoherence as Defence and the Magnitude of Noise Regularisation: A Rigorous N -Qubit Theory of Stochastic Quantum Neural Networks for Adversarially Robust Network Intrusion Detection</title>
+    <updated>2026-06-23T07:06:56Z</updated>
+    <link href="https://arxiv.org/abs/2606.24219v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.24219v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Stochastic quantum neural networks (SQNNs) encode neuronal activations as qubits, synaptic topology as entanglement, and neural noise through a Lindblad master equation. A recent conference study applied a ring-entangled SQNN to collaborative intrusion detection and reached three conclusions: ring entanglement is \emph{essential} for non-local anomaly detection; an adversarial-resilience bound holds but is \emph{conservative}; and the depolarising channel \emph{fails} to act as a dropout-style regulariser, behaving instead as output noise. It left open whether a per-gate stochastic deactivation (``true quantum dropout'') could regularise where the depolarising channel could not, and whether the loose robustness bound could be replaced by a predictive theory. This paper resolves both and extends the framework to real data and to neutral-atom hardware. We give an $N$-qubit formulation through the stochastic master equation and its vectorised Liouvillian, and prove a \emph{decoherence-contraction theorem}: a depolarising channel of strength $γ$ over $L$ entangling layers contracts every weight-$w$ Pauli read-out by a factor $(1-4γ/3)^{wL}$ (for the weight-$1$ read-out used here, $(1-4γ/3)^{L}$); building on the general noise-as-defence result of Du et al., we make this quantitative and operational for intrusion detection. On the real NSL-KDD dataset under white-box FGSM and PGD attacks, a depolarising SQNN trained with the channel is, over seven seeds under strong $\ell_\infty$/$\ell_2$ attacks, significantly more robust than the noiseless circuit ($\ell_\infty$ PGD-$20$, $p=0.04$, large effect) and, critically, never suffers the catastrophic robustness collapse that the noiseless model and gradient-trained classical detectors (which fall from $95\%$ to $47\%$) do, cutting robustness variance roughly twofold; we show this robustness arises from a noise-reshaped training boundary rather than from attack-time gradient contraction. For generalisation, we derive an adaptive-penalty formula showing that per-gate dropout implements a curvature-weighted $L_2$ penalty $\tfrac{p(1-p)}{2}\sumθ^2\partial^2_θL$ in weight space, maximised at $p=1/2$, whereas depolarising noise implements an output-space penalty. A $30$-seed study confirms the formula's quantitative prediction: both mechanisms reduce the train-test gap by a small but statistically significant margin ($\approx\!0.01$; $p&lt;10^{-4}$ and $p=0.004$), are statistically indistinguishable from each other, and the effect is concentrated where overfitting is largest; increasing the dropout rate past $1/2$ does not help, as the formula predicts. The single-seed dichotomy of prior work does not survive replication. We close with a neutral-atom realisation and a feasibility-by-$N$ analysis.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-23T07:06:56Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Gautier-Edouard Edouard Filardo</name>
+      <arxiv:affiliation>CREOGN</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.15036v1</id>
+    <title>Transformers Learn the Mestre-Nagao Heuristic</title>
+    <updated>2026-06-13T00:41:32Z</updated>
+    <link href="https://arxiv.org/abs/2606.15036v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.15036v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We train a two-layer transformer encoder to classify rational elliptic curves $E/\mathbb{Q}$ of conductor $\leq 10000$ as either rank 0 or rank 1 from the first 128 normalized Frobenius traces. We achieve &gt;99% accuracy on both classes, and accuracy is essentially unchanged on test curves with no isogeny or quadratic-twist relative in the training set. We then apply techniques from mechanistic interpretability such as attention analysis, linear probing, activation patching, logit attribution, and neuron-level circuit analysis to reverse-engineer the algorithm the (centroid in function space) model learned. We find that a sparse circuit of 20 out of 512 layer-1 MLP neurons is sufficient for rank prediction under a linear probe with an AUROC of 0.992 at plateau, implementing a push-pull detector architecture of rank-0 and rank-1 detectors with a one-sided readout. However, we notice that the model has sub-optimal readout problems indicating a mismatch in rank-order between the readout pathway and the discriminative circuit. Critically, the learned input weights of the top discriminating neuron match the Mestre-Nagao sum heuristic weights $\log(p)/(p\cdot \log{B})$ with a Spearman coefficient $r = 0.997$ and Pearson coefficient $r = 0.952$: the model has learnt a result from analytic number theory from the Frobenius trace data alone. We additionally find that all 50 independently trained models concentrate CLS attention on prime positions at 2-50$\times$ the rate of composite positions. The CLS embedding encodes $\log{L(E,1)}$ with $R^2 = 0.962\pm 0.011$ across the 50 models (after controlling for the conductor). Activation patching analysis reveals that attention weights are dissociated from causal information flow. Additionally, the 50 solutions from training are near-identical in function space (with pairwise agreement $&gt;$98.8%) despite large weight space barriers.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.NT" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-13T00:41:32Z</published>
+    <arxiv:comment>15 pages, 10 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Pranav Venkata Konda</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.10078v1</id>
+    <title>Mult-DPO: Multinomial Direct Preference Optimization for Recommender Systems</title>
+    <updated>2026-06-08T18:53:45Z</updated>
+    <link href="https://arxiv.org/abs/2606.10078v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.10078v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Direct preference optimization (DPO) is a simple and effective alignment strategy for large language models (LLMs) based on pairwise preferences. In recommender systems, however, user feedback is rarely pairwise. For a given context, e.g., a user, a session, or a conversation, we typically observe set-wise preferences with multiple positive items, where every positive item should outrank every unobserved or explicitly negative item, with no prescribed order among the positives or the negatives themselves. A natural generalization is to use the Plackett-Luce (PL) reward model, which extends the Bradley-Terry reward model underlying vanilla DPO from pairwise preferences to full rankings of candidates. However, we show that adapting the PL model to set-wise preferences requires marginalizing over all positive orderings, where the resulting expression is combinatorial in complexity. To address this fundamental challenge, we propose Mult-DPO, a novel DPO objective with a tractable multinomial surrogate likelihood over set-wise preference events for the user-preference alignment of LLM-based recommender systems. The multinomial construction is not itself a ranking distribution, but it is defined on the same reward-induced weight space and admits a closed-form DPO-style objective, enabling direct alignment of LLMs with multiple candidates through a classification-style objective. In addition, we prove that the multinomial DPO loss is a tractable upper bound on the marginalized PL DPO loss when optimizing against the set-wise preference data. We further characterize the tightness of this bound in terms of the relative total weight of positives versus negatives, which provides insights into tightening the bound with richer or harder negatives. Finally, we extend Mult-DPO to the alignment of LLMs with multiple preference levels. Code is available at https://github.com/yaochenzhu/Mult_DPO</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-08T18:53:45Z</published>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Yaochen Zhu</name>
+    </author>
+    <author>
+      <name>Harald Steck</name>
+    </author>
+    <author>
+      <name>James McInerney</name>
+    </author>
+    <author>
+      <name>Aditya Sinha</name>
+    </author>
+    <author>
+      <name>Yinhan He</name>
+    </author>
+    <author>
+      <name>Nathan Kallus</name>
+    </author>
+    <author>
+      <name>Jundong Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.07217v1</id>
+    <title>Robotic Policy Adaptation via Weight-Space Meta-Learning</title>
+    <updated>2026-06-05T12:29:28Z</updated>
+    <link href="https://arxiv.org/abs/2606.07217v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.07217v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Vision-Language-Action (VLA) models are emerging as a promising paradigm for robotic manipulation, enabling general-purpose policies trained from large corpora of demonstrations and action labels. However, adapting these models to new tasks still typically requires task-specific demonstrations, action annotations, and additional fine-tuning, making deployment costly and difficult to scale.
+  We propose WIZARD, a weight-space meta-learning framework that sidesteps task-specific fine-tuning by generating task-specific LoRA parameters for a frozen VLA policy. Given only a language instruction and a short demonstration video, WIZARD predicts the corresponding adaptation weights in a single forward pass, without target-task action labels or test-time optimization. During meta-training, WIZARD learns to map task evidence directly to expert LoRA updates, capturing relationships between tasks in weight space.
+  Experiments on LIBERO show that WIZARD improves performance by up to ~2x on unseen dataset collections and up to ~14x on unseen tasks. On a Franka Emika Panda, WIZARD consistently improves over a real-domain adapted baseline, showing that generated adapters provide task-level specialization beyond simulation.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-05T12:29:28Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Christian Bianchi</name>
+    </author>
+    <author>
+      <name>Siamak Yousefi</name>
+    </author>
+    <author>
+      <name>Alessio Sampieri</name>
+    </author>
+    <author>
+      <name>Andrea Roberti</name>
+    </author>
+    <author>
+      <name>Luca Rigazio</name>
+    </author>
+    <author>
+      <name>Fabio Galasso</name>
+    </author>
+    <author>
+      <name>Luca Franco</name>
+    </author>
+  </entry>
+</feed>

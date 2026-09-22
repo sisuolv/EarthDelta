@@ -1,0 +1,45 @@
+{
+  "status": "PASS",
+  "scope": "DELIVERY_TOOLS_ON_SYNTHETIC_TEMP_GIT_ONLY",
+  "checks": [
+    {
+      "name": "preflight_missing_repo_returns_blocked",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "preflight_refuses_overwrite",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "preflight_synthetic_identity_is_read_only",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "preflight_dirty_fixture_requires_review",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "validator_rejects_unauthorized_next_task",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "validator_rejects_cyclic_or_forward_dependency",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "validator_requires_all_15_audit_mappings",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "check_count": 7,
+  "real_repository_tests": "NOT_RUN",
+  "weather_experiments": "NOT_RUN",
+  "real_repository_mutations": "NONE"
+}

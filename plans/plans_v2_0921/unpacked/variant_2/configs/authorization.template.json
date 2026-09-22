@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "package_id": "EarthDelta-R2-NextIteration-20260921",
+  "approval_source": "Current user request: deliver a package with only the first task unlocked.",
+  "approved_task_ids": [
+    "R2-P0-01"
+  ],
+  "approved_operations": {
+    "repo_readonly": true,
+    "minimal_code_patch": true,
+    "synthetic_cpu_tests": true,
+    "gpu_execution": false,
+    "checkpoint_deserialization": false,
+    "real_weather_data_read": false,
+    "bank_training": false,
+    "policy_training": false,
+    "candidate_simulation": false,
+    "confirm_access": false,
+    "network_download": false,
+    "dependency_installation": false,
+    "git_push": false
+  },
+  "scope_note": "本文件是交付时的初始授权边界，不是未来GPU预算许可。Codex不得自我批准；新权限需保存新的reviewer/user授权引用。",
+  "real_execution_approval_reference": null,
+  "resource_cap_config_hash": null,
+  "approved_config_hash": null,
+  "approved_run_ids": [],
+  "automatic_unlock": false
+}

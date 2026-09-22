@@ -1,0 +1,126 @@
+{
+  "s0": {
+    "source": "artifacts/round2_cci/ed-r3-j1-s0gate-0921200335-0180dc/s0_gate_output/s0-gate-20260921t200508599573z/s0_gate_result.json",
+    "sha256": "28da6748ec0d62ed0ff41a113b54325a72b34e255c87788fe38053a6eba0e21b",
+    "pass": [
+      "identity_config_bound",
+      "ckpt_sha256_bound",
+      "normalization_parity"
+    ],
+    "fail": [
+      "source_identity_match",
+      "variable_coordinate_identity_match",
+      "manifest_identity_match",
+      "raw_input_binding",
+      "multistep_reference_present"
+    ],
+    "skipped": [
+      "strict_load_zero_diff",
+      "version_identity_match",
+      "input_norm_binding",
+      "upstream_parity",
+      "multistep_parity",
+      "zero_edit_equals_official",
+      "no_state_leak",
+      "outputs_finite"
+    ],
+    "s0_gate_pass": false,
+    "status": "gate_failed",
+    "verdict_committed": false
+  },
+  "latest_formal_expert_files": {
+    "expert0": [
+      "bank_training_expert0.json",
+      "capacity_profile.json",
+      "fs_adapter.pt",
+      "fs_fit_record.json",
+      "fs_merged_backbone.pt",
+      "fs_post_freeze.json",
+      "horizon_feasibility.json",
+      "run_record.json",
+      "stdout.log"
+    ],
+    "expert1": [
+      "bank_training_expert1.json",
+      "capacity_profile.json",
+      "fs_adapter.pt",
+      "fs_fit_record.json",
+      "fs_merged_backbone.pt",
+      "fs_post_freeze.json",
+      "horizon_feasibility.json",
+      "run_record.json",
+      "stdout.log"
+    ],
+    "expert2": [
+      "bank_training_expert2.json",
+      "capacity_profile.json",
+      "fs_adapter.pt",
+      "fs_fit_record.json",
+      "fs_merged_backbone.pt",
+      "fs_post_freeze.json",
+      "horizon_feasibility.json",
+      "run_record.json",
+      "stdout.log"
+    ],
+    "expert3": [
+      "bank_training_expert3.json",
+      "capacity_profile.json",
+      "fs_adapter.pt",
+      "fs_fit_record.json",
+      "fs_merged_backbone.pt",
+      "fs_post_freeze.json",
+      "horizon_feasibility.json",
+      "run_record.json",
+      "stdout.log"
+    ]
+  },
+  "admission": {
+    "source": "artifacts/round2_next/20260921T170142Z_r3p001_10h/j3_fs_bank/admission_record.json",
+    "sha256": "de511f095fa81cdfd9ff5ce72275b60f6982a5e68fb9ffa6d05c0310fd13ca43",
+    "formal": true,
+    "passed": true,
+    "n_rows": 8,
+    "n_content_certificates": 2,
+    "lead_hours": [
+      6.0
+    ],
+    "content_certificate_in_row": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "actual_train_hours": 24
+  },
+  "distinct_fs_digests": {
+    "pt-2r6tbwu7": 4,
+    "pt-3x63g0c6": 4,
+    "pt-cdj1s2le": 4
+  },
+  "test_suites": {
+    "targeted_tests": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "307",
+      "time": "17.189",
+      "timestamp": "2026-09-22T02:09:59.385732",
+      "hostname": "app-d9e128442cf74fbdb23e94ebb8b4aa61-8c8bcf6db-8kkxd"
+    },
+    "additional_tests": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "127",
+      "time": "11.265",
+      "timestamp": "2026-09-22T02:17:38.715850",
+      "hostname": "app-d9e128442cf74fbdb23e94ebb8b4aa61-8c8bcf6db-8kkxd"
+    }
+  }
+}

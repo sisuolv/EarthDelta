@@ -1,0 +1,8 @@
+[
+  "env",
+  "PYTHONPATH=@SNAPSHOT@:@ASSETS@/.pydeps",
+  "python3",
+  "-u",
+  "cci/gpu_bank_check.py",
+  "@OUTPUT@/gpu_bank_result.json"
+]

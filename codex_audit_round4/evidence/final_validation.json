@@ -1,0 +1,109 @@
+{
+  "verified_at_utc": "2026-09-22T02:47:45.037108+00:00",
+  "head": "d749a1c62521226df857587e08f7d067b0f15355",
+  "source_files_checked": 48,
+  "source_files_changed": [],
+  "tracked_diff_unchanged": true,
+  "tracked_diff_sha256": "0db5900cf89eb7d53a7c66af9dc071b1ee82f26ea67fc874be3731944bad8cd2",
+  "findings_schema_valid": true,
+  "findings_count": 11,
+  "finding_source_references_checked": 54,
+  "summary_assessment_consistent": true,
+  "report_links_checked": 20,
+  "repository_cpu_test_counts": {
+    "targeted_tests": {
+      "tests": 307,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    },
+    "additional_tests": {
+      "tests": 127,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    }
+  },
+  "gpu_record_integrity": [
+    {
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-gradchk4x-v4-0922004201-4a710a/expert0/run_record.json",
+      "sha256": "9e28543877479bc6fbfd71bc7450bcf82de6238d38aa7e16b9b69c73ee2ba69a",
+      "paired_improved": 8,
+      "unchanged": true
+    },
+    {
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-gradchk4x-v4-0922004201-4a710a/expert1/run_record.json",
+      "sha256": "ebe99acb99c8d2f5affaa86e9d1b4c347676a1976a931d2af90398557419dd8f",
+      "paired_improved": 8,
+      "unchanged": true
+    },
+    {
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-gradchk4x-v4-0922004201-4a710a/expert2/run_record.json",
+      "sha256": "56cb8ac97d8987de51b451167aab13ff658a1476ca3b48d84a7bf2eb67e49eab",
+      "paired_improved": 8,
+      "unchanged": true
+    },
+    {
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-gradchk4x-v4-0922004201-4a710a/expert3/run_record.json",
+      "sha256": "2963da870e024625a7a9cccaf48b51a4c406219edbc9ceb8eee5029e6fc26b15",
+      "paired_improved": 8,
+      "unchanged": true
+    },
+    {
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-formal500-0922004700-0a3c68/expert0/run_record.json",
+      "sha256": "71ee09c119cf8ab0217581548712530ed8ecb9843c8225c4baf6ddf287751bec",
+      "paired_improved": 8,
+      "unchanged": true
+    },
+    {
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-formal500-0922004700-0a3c68/expert1/run_record.json",
+      "sha256": "2227ab826ec93df016ca91cd5936c8e68c0e64655af80338275a015f67ae5f17",
+      "paired_improved": 0,
+      "unchanged": true
+    },
+    {
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-formal500-0922004700-0a3c68/expert2/run_record.json",
+      "sha256": "f3cd65022cbc9238890bffb7ed157c25b0e9cb9e4638cf33e2d32d9d6f069991",
+      "paired_improved": 8,
+      "unchanged": true
+    },
+    {
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-formal500-0922004700-0a3c68/expert3/run_record.json",
+      "sha256": "d5118dc95883cc262a5f9be42ece782ed171304d8abf7ec5dd0c43f841c4bb57",
+      "paired_improved": 0,
+      "unchanged": true
+    },
+    {
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12/expert0/run_record.json",
+      "sha256": "9da3ba8cb15257e987a9048deaf55d80634f124055cfaefe8b5724d289b3a4c2",
+      "paired_improved": 8,
+      "unchanged": true
+    },
+    {
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12/expert1/run_record.json",
+      "sha256": "26b3950747cfe5742e85483886435a1a6cd2ef0cfe1495ad0e650498201a1ab1",
+      "paired_improved": 8,
+      "unchanged": true
+    },
+    {
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12/expert2/run_record.json",
+      "sha256": "47f2eaaed246097c3791ad46b0ddb0446ecb483ec021275be077b7b459e9e6a5",
+      "paired_improved": 0,
+      "unchanged": true
+    },
+    {
+      "record": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12/expert3/run_record.json",
+      "sha256": "4d8ea61dd96321121194a05a433f08fb5b1930bcf999b2163300451bcb56ac6f",
+      "paired_improved": 0,
+      "unchanged": true
+    }
+  ],
+  "fit_function_ast_sha256_by_job": {
+    "pt-2r6tbwu7": "ac3414a8ce2cd67ad24f2e95813b1834c010f32596609e12f15e597c246599dd",
+    "pt-3x63g0c6": "ac3414a8ce2cd67ad24f2e95813b1834c010f32596609e12f15e597c246599dd",
+    "pt-cdj1s2le": "ac3414a8ce2cd67ad24f2e95813b1834c010f32596609e12f15e597c246599dd"
+  },
+  "s0_and_admission_evidence_unchanged": true,
+  "gpu_executions_in_this_audit": 0,
+  "scope": "Checksums cover the captured source snapshot and named raw JSON evidence; large model checkpoint binaries were not rehashed by this audit."
+}

@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/m56KWc9tkITcX3iaQsXfdO8mhQw</id>
+  <title>arXiv Query: search_query=&amp;id_list=2603.15990,2606.19549,2606.08365,2604.15557,2506.06105,2608.11499,2604.20313&amp;start=0&amp;max_results=7</title>
+  <updated>2026-09-22T03:01:37Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=&amp;start=0&amp;max_results=7&amp;id_list=2603.15990,2606.19549,2606.08365,2604.15557,2506.06105,2608.11499,2604.20313" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>7</opensearch:itemsPerPage>
+  <opensearch:totalResults>7</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2603.15990v1</id>
+    <title>W2T: LoRA Weights Already Know What They Can Do</title>
+    <updated>2026-03-16T23:01:00Z</updated>
+    <link href="https://arxiv.org/abs/2603.15990v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.15990v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Each LoRA checkpoint compactly stores task-specific updates in low-rank weight matrices, offering an efficient way to adapt large language models to new tasks and domains. In principle, these weights already encode what the adapter does and how well it performs. In this paper, we ask whether this information can be read directly from the weights, without running the base model or accessing training data. A key obstacle is that a single LoRA update can be factorized in infinitely many ways. Without resolving this ambiguity, models trained on the factors may fit the particular factorization rather than the underlying update. To this end, we propose \methodfull, which maps each LoRA update to a provably canonical form via QR decomposition followed by SVD, so that all equivalent factorizations share the same representation. The resulting components are then tokenized and processed by a Transformer to produce a weight-space embedding. Across language and vision LoRA collections, W2T achieves strong results on attribute classification, performance prediction, and adapter retrieval, demonstrating that LoRA weights reliably indicate model behavior once factorization ambiguity is removed. Code is available at https://github.com/xiaolonghan2000/Weight2Token.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-16T23:01:00Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Xiaolong Han</name>
+    </author>
+    <author>
+      <name>Ferrante Neri</name>
+    </author>
+    <author>
+      <name>Zijian Jiang</name>
+    </author>
+    <author>
+      <name>Fang Wu</name>
+    </author>
+    <author>
+      <name>Yanfang Ye</name>
+    </author>
+    <author>
+      <name>Lu Yin</name>
+    </author>
+    <author>
+      <name>Zehong Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.19549v1</id>
+    <title>Predicting Mergeability of Parameter-Efficient Fine-Tuning Updates</title>
+    <updated>2026-06-17T19:40:51Z</updated>
+    <link href="https://arxiv.org/abs/2606.19549v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.19549v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Low-rank adaptation (LoRA) makes it cheap to train many domain- and task-specific language model adapters, but whether two adapters can be merged is usually discovered only after both have been fully trained and evaluated. This late feedback is costly: adapters that are strong in isolation can interfere destructively once their updates are combined. We ask whether this outcome can be anticipated. We formalize adapter mergeability as the degree to which an adapter preserves its single-task utility after merging, and show that it can be forecast from signals measured in the first few percent of training -- chiefly how the low-rank updates and their gradients align across tasks and how much they disturb shared representations. We package these signals into MergeProbe, a lightweight predictor that estimates pairwise and set-level retention and turns the estimate into a concrete decision: merge directly, reweight, prune, or route. On MERGE-PEFT, a five-domain benchmark spanning math, code, science, instruction following, and safety, MergeProbe attains the best average and worst-case retention among strong interference-aware merge baselines while adding far less deployment overhead than full task routing. This turns LoRA merging from a post-hoc engineering step into an anticipatory measurement problem.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-17T19:40:51Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Lin Tang</name>
+    </author>
+    <author>
+      <name>Wei Zhang</name>
+    </author>
+    <author>
+      <name>Jing Li</name>
+    </author>
+    <author>
+      <name>Hongyu Chen</name>
+    </author>
+    <author>
+      <name>Ming Zhao</name>
+    </author>
+    <author>
+      <name>Yuxuan Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.11499v1</id>
+    <title>HyperFix: Combinatorial Nonlinear Correction for Task Vector Merging</title>
+    <updated>2026-08-11T23:27:33Z</updated>
+    <link href="https://arxiv.org/abs/2608.11499v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.11499v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Task vectors enable model merging without joint retraining. In practice, the subset of task vectors to be merged may vary, but many existing methods use scalar tuning for a particular subset, requiring repeated tuning across subsets and restricting task vector merging to linear rescaling. We therefore formulate merging across varying task subsets as a combinatorial correction problem and introduce HyperFix, a lightweight hypernetwork that predicts subset-conditioned nonlinear corrections in weight space. Trained once on singleton, pair, and triple subsets from a task bank, HyperFix generalizes to larger subsets without per-subset optimization. Our local perturbation analysis bounds the residual correction beyond linear merging and motivates learning it from small task updates. Experiments across diverse benchmarks show that HyperFix outperforms existing task vector merging methods while reducing tuning cost.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-11T23:27:33Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Hyo Seo Kim</name>
+    </author>
+    <author>
+      <name>Ren Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.08365v1</id>
+    <title>Pre-Intervention Prediction of Sparse Autoencoder Steering Side Effects</title>
+    <updated>2026-06-06T22:57:30Z</updated>
+    <link href="https://arxiv.org/abs/2606.08365v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.08365v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Sparse autoencoder (SAE) features are increasingly used to steer language models, but feature steering is rarely clean: the same intervention can behave inconsistently across contexts and perturb unrelated features. We introduce a pre-intervention screening framework for forecasting SAE steering side effects from feature statistics computed before steering. We operationalize side effects along two axes of steering modularity, effect stability and collateral spread, and evaluate GPT-2-small, Pythia-70M-deduped, Gemma-2-2B, and Llama-3.1-8B across ReLU, JumpReLU, and TopK SAE dictionaries. Across these settings, decoder geometry, activation statistics, co-activation structure, and direct-logit footprint predict steering modularity better than frequency-only and activation-magnitude baselines. The signal is strongest in GPT-2-small, Pythia-70M, and Llama-3.1-8B, where it survives residualization against magnitude-related confounds, and weaker in Gemma-2-2B. Held-out screening shows that ranking unseen features by predicted cleanliness can select features that steer more cleanly on fresh contexts, but the successful axis varies by setting: GPT-2 improves most cleanly, Pythia improves mainly on stability, Llama mainly on collateral, and Gemma only partially. A controlled Llama Scope width comparison shows that the predictive signal persists under a 32K-to-128K dictionary-width change, although the screening payoff becomes less stable. Overall, SAE steering side effects are predictable in advance, but the useful predictor signature and transferred modularity axis are model- and dictionary-setting dependent.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-06T22:57:30Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Evan Duan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.20313v1</id>
+    <title>Formalising the Logit Shift Induced by LoRA: A Technical Note</title>
+    <updated>2026-04-22T08:12:02Z</updated>
+    <link href="https://arxiv.org/abs/2604.20313v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.20313v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This technical note provides a first-order formalisation of the logit shift and fact-margin change induced by Low-Rank Adaptation (LoRA). Using a first-order Fréchet approximation around the base model trajectory, we show that the multi-layer LoRA effect can be decomposed into a linear summation of layerwise contributions and a higher-order remainder term representing inter-layer coupling.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-22T08:12:02Z</published>
+    <arxiv:comment>7 pages, technical note</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Xiang Shi</name>
+    </author>
+    <author>
+      <name>Shuaizhi Cheng</name>
+    </author>
+    <author>
+      <name>Mingwei Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.06105v2</id>
+    <title>Text-to-LoRA: Instant Transformer Adaption</title>
+    <updated>2025-06-09T14:19:59Z</updated>
+    <link href="https://arxiv.org/abs/2506.06105v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.06105v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>While Foundation Models provide a general tool for rapid content creation, they regularly require task-specific adaptation. Traditionally, this exercise involves careful curation of datasets and repeated fine-tuning of the underlying model. Fine-tuning techniques enable practitioners to adapt foundation models for many new applications but require expensive and lengthy training while being notably sensitive to hyperparameter choices. To overcome these limitations, we introduce Text-to-LoRA (T2L), a model capable of adapting large language models (LLMs) on the fly solely based on a natural language description of the target task. T2L is a hypernetwork trained to construct LoRAs in a single inexpensive forward pass. After training T2L on a suite of 9 pre-trained LoRA adapters (GSM8K, Arc, etc.), we show that the ad-hoc reconstructed LoRA instances match the performance of task-specific adapters across the corresponding test sets. Furthermore, T2L can compress hundreds of LoRA instances and zero-shot generalize to entirely unseen tasks. This approach provides a significant step towards democratizing the specialization of foundation models and enables language-based adaptation with minimal compute requirements.
+  Our code is available at https://github.com/SakanaAI/text-to-lora</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-06T14:11:27Z</published>
+    <arxiv:comment>Accepted at ICML 2025</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Rujikorn Charakorn</name>
+    </author>
+    <author>
+      <name>Edoardo Cetin</name>
+    </author>
+    <author>
+      <name>Yujin Tang</name>
+    </author>
+    <author>
+      <name>Robert Tjarko Lange</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.15557v1</id>
+    <title>Predicting Where Steering Vectors Succeed</title>
+    <updated>2026-04-16T22:18:59Z</updated>
+    <link href="https://arxiv.org/abs/2604.15557v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.15557v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Steering vectors work for some concepts and layers but fail for others, and practitioners have no way to predict which setting applies before running an intervention. We introduce the Linear Accessibility Profile (LAP), a per-layer diagnostic that repurposes the logit lens as a predictor of steering vector effectiveness. The key measure, $A_{\mathrm{lin}}$, applies the model's unembedding matrix to intermediate hidden states, requiring no training. Across 24 controlled binary concept families on five models (Pythia-2.8B to Llama-8B), peak $A_{\mathrm{lin}}$ predicts steering effectiveness at $ρ= +0.86$ to $+0.91$ and layer selection at $ρ= +0.63$ to $+0.92$. A three-regime framework explains when difference-of-means steering works, when nonlinear methods are needed, and when no method can work. An entity-steering demo confirms the prediction end-to-end: steering at the LAP-recommended layer redirects completions on Gemma-2-2B and OLMo-2-1B-Instruct, while the middle layer (the standard heuristic) has no effect on either model.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-16T22:18:59Z</published>
+    <arxiv:comment>19 pages, incl. 10 appendix pages, 4 figures, 20 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Jayadev Billa</name>
+    </author>
+  </entry>
+</feed>

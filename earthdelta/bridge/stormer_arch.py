@@ -1,8 +1,10 @@
-"""Faithful re-implementation of Stormer architecture using PyTorch SDPA.
+"""Faithful re-implementation of Stormer architecture with a checked backend.
 
 Adapted from tung-nd/stormer (commit 58dfee5a6037399a40fefd492bc00421e0c885a8, MIT license).
-The only structural change: MemEffAttention uses F.scaled_dot_product_attention
-instead of xformers.ops.memory_efficient_attention, with equivalent reshaping.
+The default CPU-safe backend is PyTorch SDPA. When the official xformers CUDA
+operator is available, the same tensor layout is used so the S0 bridge path can
+be compared at the official numerical precision rather than accepting an
+unbounded accumulated SDPA difference.
 
 xformers expects q/k/v shaped (B, N, num_heads, head_dim) and returns same.
 F.scaled_dot_product_attention expects (B, num_heads, N, head_dim) and returns same.
@@ -100,7 +102,7 @@ class TimestepEmbedder(nn.Module):
 # =============================================================================
 
 class MemEffAttention(nn.Module):
-    """Memory-efficient attention using PyTorch SDPA.
+    """Memory-efficient attention using xformers when available, else SDPA.
 
     Structurally equivalent to the xformers version in the original Stormer.
     The only difference is the attention implementation:
@@ -143,17 +145,26 @@ class MemEffAttention(nn.Module):
         B, N, C = x.shape
         qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, self.head_dim)
 
-        # Reshape from (B, N, 3, H, D) to (3, B, H, N, D) for SDPA
-        qkv = qkv.permute(2, 0, 3, 1, 4)
-        q, k, v = qkv[0], qkv[1], qkv[2]  # Each is (B, H, N, D)
-
-        # Use SDPA - it applies 1/sqrt(head_dim) scaling by default
-        # dropout_p should be 0 during eval, passed through for training
-        dropout_p = self.attn_drop.p if self.training else 0.0
-        x = F.scaled_dot_product_attention(q, k, v, dropout_p=dropout_p)
-
-        # Reshape back: (B, H, N, D) -> (B, N, C)
-        x = x.transpose(1, 2).reshape(B, N, C)
+        # xformers is the official Stormer operator and expects [B,N,H,D].
+        # Import lazily so the bridge remains usable on CPU-only development
+        # machines; the S0 gate records which backend actually ran.
+        use_xformers = x.device.type == "cuda"
+        if use_xformers:
+            try:
+                from xformers.ops import memory_efficient_attention, unbind
+                q, k, v = unbind(qkv, 2)
+                x = memory_efficient_attention(q, k, v, attn_bias=attn_bias)
+                x = x.reshape(B, N, C)
+            except (ImportError, ModuleNotFoundError):
+                use_xformers = False
+        if not use_xformers:
+            # Reshape from (B,N,3,H,D) to (B,H,N,D) for SDPA. Dropout is
+            # disabled in eval mode, matching the official module.
+            qkv_sdpa = qkv.permute(2, 0, 3, 1, 4)
+            q, k, v = qkv_sdpa[0], qkv_sdpa[1], qkv_sdpa[2]
+            dropout_p = self.attn_drop.p if self.training else 0.0
+            x = F.scaled_dot_product_attention(q, k, v, dropout_p=dropout_p)
+            x = x.transpose(1, 2).reshape(B, N, C)
 
         x = self.proj(x)
         x = self.proj_drop(x)

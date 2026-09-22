@@ -1,0 +1,3926 @@
+Not All Ranks Are Equal: Budget-Aware LoRA Merging Across Tasks
+Avinash Amballa
+Yashas Malur Saidutta
+Wenbo Li
+Lazar Valkov
+Srinivas Chappidi
+Abstract
+Merging low-rank adapters (LoRAs) promises to eliminate the overhead of swapping task-specific weights at inference time. However, existing merging methods assume every layer needs the same rank budget. Further, some methods assume that rank budget needs to be split equally among the tasks too. We show this uniform-budget assumption is a major source of the performance gap between merged and per-task LoRAs. However, rank selection is an NP hard problem. To this end, we introduce
+Net Utility
+, a data free metric that first decomposes every task LoRA by its Singular Value Decomposition (SVD) and scores each of those singular directions by its task utility and its interference with other tasks’ directions. Next, we globally pool these scores to select singular directions with the highest values with a constraint on the total number of directions selected. The proposed Net Utility metric is applied on top of five different merging methods across three different merging spaces. The merging is done over two sets of tasks, vision and language tasks. Net utility based rank allocation outperforms its counterparts without that allocation. On average, over vision tasks it achieves +2.1% improvement in performance, and +2.2% improvement over the language tasks.
+Samsung Research America
+{a.amballa, ym.saidutta, wenbo.li1, lazar.valkov, vasu.c}@samsung.com
+Introduction
+To overcome the inefficiencies of full-tuning of foundation models, parameter efficient fine-tuning has become a well adopted alternative. Low Rank Adaptation (LoRA)
+(
+Hu et al. 2022
+)
+writes the weight update as a product of low-rank factors,
+Δ
+​
+W
+=
+B
+​
+A
+\Delta W=BA
+, yielding a simpler deployment pattern, one frozen backbone plus a library of task-specific adapters. Serving
+n
+n
+tasks then means keeping
+n
+n
+adapters and swapping the active one based on the task. However this results in issues especially on on-device applications, where hot-swapping needs to be performed. LoRA Merging collapses them into a single low-rank adapter that serves every task with no routing or swapping.
+Figure 1:
+Ranks allocated to each task at different layers on a ViT-B/32 over seven vision tasks. We observe that different layers have different ranks indicating that certain layers are more important for LoRA updates than the others. We also observe that some tasks have less allocation at the lower layers and more at the later layers. The merging method is Task Arithmetic performed over the full space. Our non-uniform allocation improves accuracy by +3.4%
+However, serving cost scales directly with adapter rank rather than adapter count:
+decoding latency grows linearly in the ranks present in a batch, and mixed-rank
+adapters force low-rank requests to pay the cost of the highest rank in the
+batch
+(
+Li et al. 2025
+;
+Jaiswal et al. 2025
+)
+. Deployment often fixes a rank,
+independent of what training would have chosen
+(
+Vulić et al. 2026
+)
+. This is especially more crucial on on-device or edge applications. While many works have looked into the problem of merging
+(
+Yadav et al. 2023
+;
+Yu et al. 2024
+;
+Gargiulo et al. 2025
+;
+Marczak et al. 2025
+;
+Panariello et al. 2026
+)
+, but nearly all spread the rank budget uniformly across layers, i.e., every layer gets the same rank and some like
+(
+Gargiulo et al. 2025
+)
+explicitly assign every task an equal share. LoRA updates do not behave this way spectral energy can be distributed very unevenly across layers, and tasks can differ in which layers are important to them. So a uniform budget leads to under representation in some layers and over representation in others. In Figure
+1
+we show that relaxing this assumption leads to almost +3.4% increase in average performance when tested across seven vision datasets with task arithmetic merging. This indicates that a rank allocation that takes layers and tasks into account during merging leads to superior merged adapters.
+However, finding this optimal budget allocation is an NP hard problem. Hence, we introduce
+Net Utility
+, a criterion that helps us decide
+where
+rank should be spent in a greedy manner. The SVD of each task’s update yields candidate singular directions spanning every layer, and task; we score each by its contribution to reconstructing its own task’s update, minus its conflict with the directions of other tasks, which gives a metric to score every singular direction. The score depends only on the adapter weights, is hence
+data-free
+. We pool all singular direction’s net utility into a global pool and this allows us to design a method where the top-scoring directions are retained.
+Our contributions are:
+•
+We identify uniform rank allocation, rather than the merging operation itself, as a major source of the gap between merged and per-task LoRAs.
+•
+We propose Net Utility, a data-free score trading a singular direction’s usefulness to its own task against its interference with other tasks, recasting merging as globally budget-constrained selection.
+•
+At matched budgets, on 7 vision and 6 language tasks, our Net Utility based allocation improves multiple prior merging methods over various merging spaces by an average of +2.1% absolute, with some method-space combinations achieving as much as +3.8% absolute.
+Related Work
+Task-vector merging:
+Task Arithmetic
+(
+Ilharco et al. 2022
+)
+sums the differences between fine-tuned and pretrained weights to obtain a multi-task model. Because independently trained vectors overlap, later work sparsifies before summing: by magnitude with a consensus sign (TIES
+(
+Yadav et al. 2023
+)
+), by random dropping with rescaling (DARE
+(
+Yu et al. 2024
+)
+), by discarding outliers as well as negligible weights (Breadcrumbs
+(
+Davari and Belilovsky 2024
+)
+), or by within-task importance weighted by its agreement across tasks (PCB-Merging
+(
+Du et al. 2024
+)
+). We share PCB’s logic to a degree: value to one’s own task. However, PCB looks at inter-balancing, which is the benefit of a parameter to another task. Additionally, we score individual directions rather than parameters and use the scores to assign ranks rather than set a fixed sparsity ratio.
+Spectral and subspace merging:
+A second line merges in spectral bases: under a shared left singular basis (KnOTS
+(
+Stoica et al. 2024
+)
+), by orthogonalizing truncated singular vectors across tasks (TSV-Merging
+(
+Gargiulo et al. 2025
+)
+), by flattening the singular spectrum (Iso-Merging
+(
+Marczak et al. 2025
+)
+), or by splitting an ultra-low-rank principal component from a residual injected through its orthogonal complement (PRIME
+(
+Lee et al. 2026b
+)
+). These establish the singular basis as the right level at which to reason about interference, but fix the retained rank a priori and share it across layers—
+d
+/
+n
+d/n
+for TSV-Merging, roughly
+1
+%
+1\%
+of the layer dimension for PRIME. Separately, ACE-Merging
+(
+Xu et al. 2026
+)
+shows that each task’s input covariance can be estimated from its fine-tuning update alone. Like TSV and Iso-C, it is a merge operator rather than a rank criterion and is orthogonal to the allocation question we study, i.e., our utility could be applied on top of it.
+LoRA Merging:
+Adapters require different treatment from full fine-tuning. DO-Merging
+(
+Zheng et al. 2025
+)
+attributes this to LoRA’s much larger parameter-magnitude variance and merges magnitude and direction separately; LoRA-LEGO
+(
+Zhao et al. 2024
+)
+clusters rank-one components pooled across adapters into
+k
+k
+groups to assemble a rank-
+k
+k
+adapter; and Core Space
+(
+Panariello et al. 2026
+)
+merges within a common alignment basis, provably without information loss, which we use as one of the two spaces in which we allocate. Here too the retained rank is a single global constant.
+Rank selection and allocation.
+Closest to our work are methods that treat rank as something to be chosen. AdaRank
+(
+Lee et al. 2026a
+)
+observes, as we do, that dominant singular components are not necessarily the useful ones and that uniform truncation degrades performance, but prunes by learning a mask at test time through entropy minimization, requiring unlabelled calibration data and gradient descent. PRIME
+(
+Lee et al. 2026b
+)
+minimizes an interference–retention objective yet resolves it to one rank shared across all layers, and concurrently CtM
+(
+He et al. 2026
+)
+imposes the rank-
+r
+r
+bottleneck before rather than after merging. Net Utility is instead closed-form in the adapter weights, needing no data and no optimization loop, and selects no rank at all: because the scores are comparable across the entire pool, the rank profile falls out of a single top-
+K
+K
+over all modules, layers, and tasks.
+Misc.:
+Adjacent work targets merge-friendly training
+(
+Zhang et al. 2025
+)
+, on-device continual merging under a budget on retained adapters
+(
+Shenaj et al. 2026
+)
+, and sequential merging for continual learning
+(
+Qiao and Mahdavi 2025
+)
+, whereas we merge a fixed set of adapters offline under a total rank budget.
+Methodology: Net Utility and Rank Selection
+Figure 2:
+Net Utility based rank selection for Task Arithmetic Merging. (a): Obtain the per-task LoRAs. (b): Decompose all the LoRAs into their SVDs. Compute the Net Utility metric for each of the directions. (c): Pool all the directions and select the top-R directions. (d): Compose the merged LoRA using the selected directions. We naturally end up with variable number of directions being selected across tasks and layers.
+In this section we introduce Net Utility based rank selection (see Fig.
+2
+). Net Utility decomposes each task adapter into rank-one singular components. At each adapted layer, it assigns every component a data-free score that balances source-task preservation against cross-task interference, then allocates a shared component budget across tasks before merging the retained components.
+Preservation Objective
+At merge time, only the
+M
+M
+task-specific LoRA updates
+{
+Δ
+​
+W
+i
+}
+i
+=
+1
+M
+\{\Delta W_{i}\}_{i=1}^{M}
+and the base model are available; no task data, validation set, or forward pass is used.
+Let
+f
+Δ
+​
+W
+f_{\Delta W}
+denote the base model equipped with update
+Δ
+​
+W
+\Delta W
+, and let
+p
+i
+p_{i}
+be the input distribution of task
+i
+i
+. We seek a merged update
+Δ
+​
+W
+m
+\Delta W_{\mathrm{m}}
+whose model outputs match those of each individual adapter on its own inputs:
+ℒ
+pres
+=
+∑
+i
+=
+1
+M
+𝔼
+x
+∼
+p
+i
+​
+[
+‖
+f
+Δ
+​
+W
+i
+​
+(
+x
+)
+−
+f
+Δ
+​
+W
+m
+​
+(
+x
+)
+‖
+2
+2
+]
+.
+\mathcal{L}_{\mathrm{pres}}=\sum_{i=1}^{M}\mathbb{E}_{x\sim p_{i}}\left[\left\lVert f_{\Delta W_{i}}(x)-f_{\Delta W_{\mathrm{m}}}(x)\right\rVert_{2}^{2}\right].
+(1)
+For
+L
+L
+adapted layers, let
+h
+l
+​
+(
+x
+)
+h^{l}(x)
+be the input to layer
+l
+l
+under a shared reference model. Linearizing around this reference and assuming comparable sensitivity across layers results in the following surrogate (derived in Appendix A.1):
+ℒ
+~
+pres
+\displaystyle\widetilde{\mathcal{L}}_{\mathrm{pres}}
+:
+=
+∑
+l
+=
+1
+L
+∑
+i
+=
+1
+M
+𝔼
+x
+∼
+p
+i
+​
+[
+‖
+(
+Δ
+​
+W
+i
+l
+−
+Δ
+​
+W
+m
+l
+)
+​
+h
+l
+​
+(
+x
+)
+‖
+2
+2
+]
+\displaystyle:=\sum_{l=1}^{L}\sum_{i=1}^{M}\mathbb{E}_{x\sim p_{i}}\left[\left\lVert\bigl(\Delta W_{i}^{l}-\Delta W_{\mathrm{m}}^{l}\bigr)h^{l}(x)\right\rVert_{2}^{2}\right]
+(2)
+=
+∑
+l
+=
+1
+L
+∑
+i
+=
+1
+M
+‖
+Δ
+​
+W
+i
+l
+−
+Δ
+​
+W
+m
+l
+‖
+G
+i
+l
+2
+,
+\displaystyle=\sum_{l=1}^{L}\sum_{i=1}^{M}\left\lVert\Delta W_{i}^{l}-\Delta W_{\mathrm{m}}^{l}\right\rVert_{G_{i}^{l}}^{2},
+where
+G
+i
+l
+:=
+𝔼
+x
+∼
+p
+i
+​
+[
+h
+l
+​
+(
+x
+)
+​
+h
+l
+​
+(
+x
+)
+⊤
+]
+G_{i}^{l}:=\mathbb{E}_{x\sim p_{i}}[h^{l}(x)h^{l}(x)^{\top}]
+and
+∥
+X
+∥
+G
+2
+:=
+tr
+⁡
+(
+X
+​
+G
+​
+X
+⊤
+)
+\lVert X\rVert_{G}^{2}:=\operatorname{tr}(XGX^{\top})
+is the associated squared weighted seminorm. The algorithm does not evaluate these activations, instead in the next section we approximate
+G
+i
+l
+G_{i}^{l}
+from the adapter weights.
+Data-Free Input Geometry
+The matrix
+G
+i
+G_{i}
+captures the second-order input statistics of task
+i
+i
+, but it cannot be estimated without task data. Following
+Xu et al. (2026)
+, we replace this unavailable geometry with a scaled input-side Gram proxy. For a compact SVD
+Δ
+​
+W
+i
+=
+U
+i
+​
+Σ
+i
+​
+V
+i
+⊤
+\Delta W_{i}=U_{i}\Sigma_{i}V_{i}^{\top}
+, the approximation is
+G
+i
+≈
+κ
+i
+​
+Δ
+​
+W
+i
+⊤
+​
+Δ
+​
+W
+i
+=
+κ
+i
+​
+V
+i
+​
+Σ
+i
+2
+​
+V
+i
+⊤
+,
+κ
+i
+>
+0
+.
+G_{i}\approx\kappa_{i}\Delta W_{i}^{\top}\Delta W_{i}=\kappa_{i}V_{i}\Sigma_{i}^{2}V_{i}^{\top},\qquad\kappa_{i}>0.
+(3)
+The scale
+κ
+i
+\kappa_{i}
+need not be estimated because it cancels under the task-layer normalization introduced below. This Gram geometry satisfies
+x
+⊤
+​
+G
+i
+​
+x
+≈
+κ
+i
+​
+∥
+Δ
+​
+W
+i
+​
+x
+∥
+2
+2
+x^{\top}G_{i}x\approx\kappa_{i}\lVert\Delta W_{i}x\rVert_{2}^{2}
+, so it gives greater weight to directions on which the adapter acts strongly. We use this geometry below and analyze one adapted layer, suppressing
+l
+l
+until the per-layer allocation rule.
+Heuristic row-space geometry.
+As an alternative, we consider
+G
+^
+i
+:=
+κ
+i
+​
+V
+i
+​
+V
+i
+⊤
+\widehat{G}_{i}:=\kappa_{i}V_{i}V_{i}^{\top}
+, which sets the singular-value weights to one on the adapter’s row space and therefore weights all active right-singular directions equally. This construction is a heuristic rather than a consequence of the Gram approximation in Equation (
+3
+).
+Net-Utility Allocation
+Let
+r
+i
+=
+rank
+⁡
+(
+Δ
+​
+W
+i
+)
+r_{i}=\operatorname{rank}(\Delta W_{i})
+. Its SVD expresses the update as
+r
+i
+r_{i}
+rank-one singular components:
+D
+i
+,
+k
+:=
+σ
+i
+,
+k
+​
+u
+i
+,
+k
+​
+v
+i
+,
+k
+⊤
+,
+Δ
+​
+W
+i
+=
+∑
+k
+=
+1
+r
+i
+D
+i
+,
+k
+.
+D_{i,k}:=\sigma_{i,k}u_{i,k}v_{i,k}^{\top},\qquad\Delta W_{i}=\sum_{k=1}^{r_{i}}D_{i,k}.
+(4)
+The allocation retains or discards each component without rescaling it. With a binary selection variable
+z
+i
+,
+k
+z_{i,k}
+, the retained task update and additive merge are
+K
+i
+\displaystyle K_{i}
+:
+=
+∑
+k
+=
+1
+r
+i
+z
+i
+,
+k
+​
+D
+i
+,
+k
+,
+\displaystyle:=\sum_{k=1}^{r_{i}}z_{i,k}D_{i,k},
+Δ
+​
+W
+m
+\displaystyle\Delta W_{\mathrm{m}}
+:
+=
+∑
+i
+=
+1
+M
+K
+i
+,
+\displaystyle:=\sum_{i=1}^{M}K_{i},
+(5)
+z
+i
+,
+k
+\displaystyle z_{i,k}
+∈
+{
+0
+,
+1
+}
+.
+\displaystyle\in\{0,1\}.
+At each layer, the number of selected components upper-bounds the rank of the additive merged update; its realized rank may be lower.
+Retaining a component reduces the missing source-task update, but it may also introduce error on other tasks. The contribution of task
+i
+i
+to the layer-wise objective can be written as
+ℓ
+i
+\displaystyle\ell_{i}
+:
+=
+‖
+Δ
+​
+W
+i
+−
+Δ
+​
+W
+m
+‖
+G
+i
+2
+\displaystyle:=\left\lVert\Delta W_{i}-\Delta W_{\mathrm{m}}\right\rVert_{G_{i}}^{2}
+(6)
+=
+‖
+(
+Δ
+​
+W
+i
+−
+K
+i
+)
+−
+∑
+j
+≠
+i
+K
+j
+‖
+G
+i
+2
+.
+\displaystyle=\left\lVert\bigl(\Delta W_{i}-K_{i}\bigr)-\sum_{j\neq i}K_{j}\right\rVert_{G_{i}}^{2}.
+The first term inside the seminorm is the missing source-task update, while the second collects components retained from other tasks. Squaring their difference introduces a signed cross-term, so the effect of any component depends on the complete selection.
+Relative task-layer weighting.
+The absolute loss
+ℓ
+i
+\ell_{i}
+can be dominated by high-energy adapters
+(
+Marczak et al. 2025
+)
+. We therefore use the relative loss
+ℓ
+^
+i
+:=
+ℓ
+i
+/
+∥
+Δ
+​
+W
+i
+∥
+G
+i
+2
+\widehat{\ell}_{i}:=\ell_{i}/\lVert\Delta W_{i}\rVert_{G_{i}}^{2}
+for every task-layer update with nonzero energy. Restoring the layer index, we minimize
+∑
+l
+∑
+i
+ℓ
+^
+i
+l
+\sum_{l}\sum_{i}\widehat{\ell}_{i}^{l}
+. This normalization removes task-layer scale from the eventual utilities.
+Separable upper bound.
+Equation (
+6
+) couples the selected components, so they cannot be scored independently. Proposition
+1
+in Appendix A.2 shows that, for any
+λ
+>
+0
+\lambda>0
+,
+ℓ
+^
+i
+≤
+(
+1
++
+M
+−
+1
+λ
+)
+​
+‖
+Δ
+​
+W
+i
+−
+K
+i
+‖
+G
+i
+2
++
+λ
+​
+∑
+j
+≠
+i
+‖
+K
+j
+‖
+G
+i
+2
+‖
+Δ
+​
+W
+i
+‖
+G
+i
+2
+.
+\widehat{\ell}_{i}\leq\left(1+\frac{M-1}{\lambda}\right)\frac{\left\lVert\Delta W_{i}-K_{i}\right\rVert_{G_{i}}^{2}+\lambda\sum_{j\neq i}\left\lVert K_{j}\right\rVert_{G_{i}}^{2}}{\left\lVert\Delta W_{i}\right\rVert_{G_{i}}^{2}}.
+(7)
+The first numerator term penalizes source-task components that are omitted, while the second penalizes components retained from other tasks. The bound removes the signed cross-term and separates the interference contributed by different tasks. The coefficient
+λ
+\lambda
+controls the interference penalty. For fixed
+λ
+\lambda
+, the leading factor is positive and allocation-independent, so it can be omitted from the allocation objective.
+For the Gram geometry, define the task scale
+w
+i
+:=
+∑
+n
+=
+1
+r
+i
+σ
+i
+,
+n
+4
+w_{i}:=\sum_{n=1}^{r_{i}}\sigma_{i,n}^{4}
+, so that
+∥
+Δ
+​
+W
+i
+∥
+G
+i
+2
+=
+κ
+i
+​
+w
+i
+\lVert\Delta W_{i}\rVert_{G_{i}}^{2}=\kappa_{i}w_{i}
+. Proposition
+2
+in Appendix A.3 rewrites the resulting objective as a constant
+M
+M
+minus the total utility of the selected components. The utility of component
+D
+j
+,
+k
+D_{j,k}
+is
+g
+j
+,
+k
+:=
+σ
+j
+,
+k
+4
+w
+j
+⏟
+source-task benefit
+π
+~
+−
+λ
+​
+σ
+j
+,
+k
+2
+​
+∑
+i
+≠
+j
+∑
+n
+=
+1
+r
+i
+σ
+i
+,
+n
+2
+w
+i
+​
+(
+v
+j
+,
+k
+⊤
+​
+v
+i
+,
+n
+)
+2
+⏟
+cross-task interference
+C
+~
+.
+g_{j,k}:=\underbrace{\frac{\sigma_{j,k}^{4}}{w_{j}}}_{\text{source-task benefit $\tilde{\pi}$}}-\lambda\sigma_{j,k}^{2}\underbrace{\sum_{i\neq j}\sum_{n=1}^{r_{i}}\frac{\sigma_{i,n}^{2}}{w_{i}}\left(v_{j,k}^{\top}v_{i,n}\right)^{2}}_{\text{cross-task interference $\tilde{C}$}}.
+(8)
+The first term is the normalized source-task benefit, the second is cross-task interference and vanishes for directions orthogonal to every other task’s row space. The resulting utility is dimensionless, allowing scores to be compared across tasks within the layer.
+Global budget.
+Restoring the layer index, we pool the components from all tasks and all adapted layers under a total budget
+R
+G
+=
+L
+⋅
+R
+R_{G}=L\cdot R
+, i.e. an average of
+R
+R
+per layer, which allows budget to move between layers
+L
+L
+maximize
+z
+1
+,
+…
+,
+z
+L
+\displaystyle\underset{z^{1},...,z^{L}}{\operatorname{maximize}}
+∑
+l
+=
+1
+L
+∑
+j
+=
+1
+M
+∑
+k
+=
+1
+r
+j
+l
+z
+j
+,
+k
+l
+​
+g
+j
+,
+k
+l
+\displaystyle\sum_{l=1}^{L}\sum_{j=1}^{M}\sum_{k=1}^{r_{j}^{l}}z_{j,k}^{l}g_{j,k}^{l}
+(9)
+subject to
+\displaystyle\text{subject to}
+z
+j
+,
+k
+l
+∈
+{
+0
+,
+1
+}
+,
+\displaystyle z_{j,k}^{l}\in\{0,1\},
+∑
+l
+=
+1
+L
+∑
+j
+=
+1
+M
+∑
+k
+=
+1
+r
+j
+l
+z
+j
+,
+k
+l
+≤
+R
+G
+\displaystyle\sum_{l=1}^{L}\sum_{j=1}^{M}\sum_{k=1}^{r_{j}^{l}}z_{j,k}^{l}\leq R_{G}
+Because every component has a fixed score, Equation (
+9
+) is maximized by retaining the largest positive scores across tasks, up to
+R
+G
+R_{G}
+. Capacity remains unused if fewer scores are positive. This selection is exact for the separable surrogate, not for the original model-level objective.
+The derivation applies to the additive merge in Equation (
+5
+). Applying the selected components through a nonlinear merge operator is an empirical extension without the same surrogate guarantee.
+Algorithm
+Algorithm
+1
+summarizes the method for the Gram geometry
+G
+i
+G_{i}
+, using the global allocation in Equation (
+9
+). The corresponding variant for
+G
+^
+i
+\widehat{G}_{i}
+follows analogously by using the utility derived in Appendix A.4.
+Algorithm 1
+Net-utility rank allocation for LoRA merging
+1:
+Task updates
+{
+Δ
+​
+W
+i
+l
+}
+\{\Delta W_{i}^{l}\}
+, interference coefficient
+λ
+\lambda
+2:
+Global component budget
+R
+G
+=
+L
+⋅
+R
+R_{G}=L\cdot R
+, merge operator
+Merge
+\operatorname{Merge}
+3:
+for
+each adapted layer
+l
+l
+do
+4:
+Compute the SVD of every
+Δ
+​
+W
+i
+l
+\Delta W_{i}^{l}
+using QR decomposition
+5:
+Compute
+w
+i
+l
+=
+∑
+n
+(
+σ
+i
+,
+n
+l
+)
+4
+w_{i}^{l}=\sum_{n}(\sigma_{i,n}^{l})^{4}
+6:
+Form
+V
+j
+l
+⊤
+​
+V
+i
+l
+V_{j}^{l\top}V_{i}^{l}
+and compute utilities using Equation (
+8
+)
+7:
+end
+for
+8:
+Select the top positive
+R
+G
+R_{G}
+scores across all tasks and layers.
+9:
+Reconstruct each
+K
+i
+l
+K_{i}^{l}
+from its selected components
+10:
+return
+Merge
+⁡
+(
+{
+K
+i
+l
+}
+i
+,
+l
+)
+\operatorname{Merge}(\{K_{i}^{l}\}_{i,l})
+The SVDs can be computed directly from the LoRA factors, and neither the dense updates nor
+G
+i
+l
+G_{i}^{l}
+need to be materialized. Appendix A.5 gives the computational complexity.
+R
+=
+64
+R=64
+R
+=
+32
+R=32
+R
+=
+16
+R=16
+Space
+Iso
+Method
+Unif.
+Ours
+Δ
+\Delta
+Unif.
+Ours
+Δ
+\Delta
+Unif.
+Ours
+Δ
+\Delta
+Full
+–
+TA
+63.5
+66.9
++
+3.4
+\mathbf{+3.4}
+63.1
+65.9
++
+2.7
+\mathbf{+2.7}
+62.5
+64.9
++
+2.3
+\mathbf{+2.3}
+Full
+–
+TSV
+66.4
+66.9
++
+0.4
+\mathbf{+0.4}
+65.4
+65.7
++
+0.3
+\mathbf{+0.3}
+63.9
+64.7
++
+0.8
+\mathbf{+0.8}
+DARE
+63.5
+67.3
++
+3.8
+\mathbf{+3.8}
+63.1
+66.1
++
+3.0
+\mathbf{+3.0}
+62.6
+65.8
++
+3.2
+\mathbf{+3.2}
+TIES
+62.5
+65.0
++
+2.5
+\mathbf{+2.5}
+62.3
+64.8
++
+2.4
+\mathbf{+2.4}
+61.8
+64.8
++
+3.0
+\mathbf{+3.0}
+Core
+–
+TSV
+66.4
+66.8
++
+0.4
+\mathbf{+0.4}
+65.4
+65.7
++
+0.3
+\mathbf{+0.3}
+63.9
+64.6
++
+0.7
+\mathbf{+0.7}
+DARE
+63.8
+67.0
++
+3.2
+\mathbf{+3.2}
+63.4
+66.4
++
+3.0
+\mathbf{+3.0}
+62.8
+65.7
++
+2.9
+\mathbf{+2.9}
+TIES
+62.8
+65.1
++
+2.3
+\mathbf{+2.3}
+62.4
+64.7
++
+2.3
+\mathbf{+2.3}
+62.2
+64.2
++
+2.0
+\mathbf{+2.0}
+KnOTS
+–
+TSV
+66.4
+66.9
++
+0.5
+\mathbf{+0.5}
+65.4
+65.8
++
+0.4
+\mathbf{+0.4}
+63.9
+64.6
++
+0.8
+\mathbf{+0.8}
+DARE
+63.6
+66.9
++
+3.3
+\mathbf{+3.3}
+63.2
+66.3
++
+3.0
+\mathbf{+3.0}
+62.6
+64.9
++
+2.3
+\mathbf{+2.3}
+TIES
+62.9
+65.3
++
+2.4
+\mathbf{+2.4}
+62.6
+65.0
++
+2.4
+\mathbf{+2.4}
+62.2
+64.3
++
+2.1
+\mathbf{+2.1}
+Table 1:
+Vision tasks, ViT-B/32, 7 tasks. Normalized accuracy averaged over all 7 tasks.
+Experiments
+R
+=
+64
+R=64
+R
+=
+32
+R=32
+R
+=
+16
+R=16
+Space
+Iso
+Method
+Unif.
+Ours
+Δ
+\Delta
+Unif.
+Ours
+Δ
+\Delta
+Unif.
+Ours
+Δ
+\Delta
+-
+–
+TA
+72.8
+75.1
++
+2.3
+\mathbf{+2.3}
+72.8
+75.0
++
+2.3
+\mathbf{+2.3}
+72.6
+74.8
++
+2.2
+\mathbf{+2.2}
+Full
+–
+TSV
+78.3
+81.4
++
+3.1
+\mathbf{+3.1}
+77.5
+80.6
++
+3.1
+\mathbf{+3.1}
+76.8
+80.3
++
+3.5
+\mathbf{+3.5}
+DARE
+72.3
+73.7
++
+1.4
+\mathbf{+1.4}
+72.5
+73.3
++
+0.9
+\mathbf{+0.9}
+72.0
+73.4
++
+1.3
+\mathbf{+1.3}
+TIES
+71.9
+73.6
++
+1.7
+\mathbf{+1.7}
+71.3
+73.6
++
+2.3
+\mathbf{+2.3}
+70.2
+73.5
++
+3.4
+\mathbf{+3.4}
+Core
+–
+TSV
+78.3
+81.4
++
+3.1
+\mathbf{+3.1}
+77.5
+80.6
++
+3.1
+\mathbf{+3.1}
+76.8
+80.3
++
+3.5
+\mathbf{+3.5}
+DARE
+68.2
+68.1
+−
+0.1
+-0.1
+68.2
+68.1
+−
+0.1
+-0.1
+66.0
+67.0
++
+1.1
+\mathbf{+1.1}
+TIES
+74.4
+77.5
++
+3.1
+\mathbf{+3.1}
+74.3
+77.5
++
+3.2
+\mathbf{+3.2}
+74.6
+77.5
++
+2.9
+\mathbf{+2.9}
+KnOTS
+–
+TSV
+78.3
+81.4
++
+3.1
+\mathbf{+3.1}
+77.5
+80.6
++
+3.1
+\mathbf{+3.1}
+76.8
+80.3
++
+3.5
+\mathbf{+3.5}
+DARE
+71.1
+71.1
++
+0.1
+\mathbf{+0.1}
+70.9
+70.5
+−
+0.4
+-0.4
+72.8
+72.5
+−
+0.3
+-0.3
+TIES
+73.3
+75.7
++
+2.4
+\mathbf{+2.4}
+72.9
+75.7
++
+2.8
+\mathbf{+2.8}
+72.4
+75.7
++
+3.2
+\mathbf{+3.2}
+Table 2:
+Language (NLI) tasks, Qwen3-4B, 6 tasks. Normalized accuracy averaged over
+6 tasks.
+Vision (ViT-B/32, 7 tasks)
+Language (Qwen3-4B, 6 tasks)
+Space
+Method
+Unif.
+Ours
+Δ
+\Delta
+Unif.
+Ours
+Δ
+\Delta
+Full
+Iso-C + TA
+66.0
+67.3
++
+1.3
+\mathbf{+1.3}
+81.6
+82.6
++
+1.0
+\mathbf{+1.0}
+Full
+Iso-C + TSV
+66.0
+67.2
++
+1.2
+\mathbf{+1.2}
+81.8
+82.3
++
+0.5
+\mathbf{+0.5}
+Table 3:
+Isotropization (Iso-C) at
+R
+=
+16
+R{=}16
+, full space for both Vision and Language tasks.
+Experimental details
+We use the experimental setup of KnOTS
+(
+Stoica et al. 2024
+)
+and use the LoRA checkpoints for vision tasks provided
+1
+1
+1
+https://huggingface.co/collections/hoffman-lab/knots-model-merging-with-svd
+. For the language tasks, we train LoRAs corresponding to the datasets below on the QWEN3-4B model (training details in Appendix B). All LoRAs have rank 16 applied on the matrices of key projection, query projection, value projection, and output projection, across all attention layers. Following prior work like
+(
+Stoica et al. 2024
+;
+Panariello et al. 2026
+)
+, we report normalized accuracy as a ratio of the accuracy of the merged LoRA on a given task to the accuracy of the original LoRA on this task. We implement on top of the codebase from
+(
+Panariello et al. 2026
+)
+2
+2
+2
+https://github.com/apanariello4/core-space-merging
+. All experiments are run on NVIDIA H100 GPUs.
+1.
+Vision tasks
+: For the vision experiments, we use CLIP ViT-B/32
+(
+Dosovitskiy et al. 2021
+)
+as vision encoders fine-tuned on a standard set of 7 tasks DTD, EuroSAT, GTSRB, MNIST, RESISC, SUN397, SVHN.
+2.
+Language tasks
+: For language experiments, we use Qwen 3-4B
+(
+Yang et al. 2025
+)
+fine-tuned on 6 NLI tasks SNLI, MNLI, SICK, QNLI, RTE, SCITAIL.
+Baselines
+We use multiple merging methods as baselines.
+1.
+Task Arithmetic (TA)
+(
+Ilharco et al. 2022
+)
+performs a scaled summation of each task matrix.
+2.
+TIES
+(
+Yadav et al. 2023
+)
+trims low-magnitude parameters and averages parameters with majority sign.
+3.
+DARE
+(
+Yu et al. 2024
+)
+preprocesses task vectors by randomly dropping a fraction of parameters and rescaling to the mean.
+4.
+TSV
+(
+Gargiulo et al. 2025
+)
+concatenates low-rank approximations of task matrices and orthogonalizes them across tasks.
+5.
+Iso-C
+(
+Marczak et al. 2025
+)
+flattens the spectrum of singular values for a model merged with task arithmetic.
+We apply Net Utility on all the methods discussed above. However, for TIES and DARE, the budgeting is done locally, i.e., each layer gets an equal budget. This is because TIES and DARE apply sample specific operations. DARE drops elements randomly for each sample and TIES performs the sign-resolution at merge time and depends on the searched pruning rate or
+top
+​
+K
+\mathrm{top}K
+.
+We also apply our net utility allocation on the methods discuss above in three merge spaces: the full weight space, core space
+(
+Panariello et al. 2026
+)
+, and KnOTS space
+(
+Stoica et al. 2024
+)
+. Each method is run at three budgets
+R
+∈
+{
+64
+,
+32
+,
+16
+}
+R\in\{64,32,16\}
+, where
+R
+R
+is the number of singular directions retained per layer across all tasks. Full capacity is
+T
+⋅
+r
+T\!\cdot\!r
+where
+T
+T
+is the number of tasks, i.e.
+112
+112
+for vision and
+96
+96
+for language, so all three budgets we evaluate are less than the full budget.
+Hyperparameters
+In (
+3
+), we have a choice of
+G
+^
+i
+:=
+κ
+i
+​
+V
+i
+​
+V
+i
+⊤
+\widehat{G}_{i}:=\kappa_{i}V_{i}V_{i}^{\top}
+and
+G
+^
+i
+:=
+κ
+i
+​
+V
+i
+​
+Σ
+i
+2
+​
+V
+i
+⊤
+\widehat{G}_{i}:=\kappa_{i}V_{i}\Sigma^{2}_{i}V_{i}^{\top}
+. We can write this as
+G
+^
+i
+:=
+κ
+i
+​
+V
+i
+​
+Σ
+i
+(
+2
+​
+α
+)
+​
+V
+i
+⊤
+\widehat{G}_{i}:=\kappa_{i}V_{i}\Sigma^{(2\alpha)}_{i}V_{i}^{\top}
+, where
+α
+∈
+{
+0
+,
+1
+}
+\alpha\in\{0,1\}
+. The exponent
+α
+\alpha
+amplifies the magnitude of the task update. When the task update magnitudes are roughly similar, this is not an issue. But when the task energies are very different it can end up focusing on only the tasks with the highest. To test this, we use variance of logarithms, a measure for heterogeneity
+(
+Foster and Ok 1999
+)
+.
+h
+:=
+Var
+i
+⁡
+[
+log
+⁡
+∥
+Δ
+​
+W
+i
+∥
+F
+2
+]
+,
+h\;:=\;\operatorname{Var}_{i}\!\big[\log\lVert\Delta W_{i}\rVert_{F}^{2}\big],
+(10)
+We find
+h
+=
+1.83
+h=1.83
+across the seven vision adapters and
+h
+=
+0.63
+h=0.63
+across the six NLI adapters. The vision tasks are more heterogenous and we set
+α
+=
+0
+\alpha=0
+to ensure that tasks with large magnitudes do not dominate the merged LoRA.
+We use a data free approach to assigning
+λ
+=
+𝐌
+⁡
+(
+π
+~
+)
+/
+𝐌
+⁡
+(
+σ
+2
+​
+C
+~
+)
+\lambda=\mathbf{M}(\tilde{\pi})/\mathbf{M}(\sigma^{2}\tilde{C})
+in (
+8
+) and
+𝐌
+\mathbf{M}
+is the median.
+spend the whole budget
+admit only
+g
+j
+,
+l
+>
+0
+g_{j,l}>0
+R
+R
+Uniform
+Ours
+Δ
+\Delta
+Ours
+used (avg)
+unspent
+Δ
+\Delta
+112
+112
+(full budget)
+63.75
+63.75
+63.75
+63.75
++
+0.00
++0.00
+66.94
+\mathbf{66.94}
+61.5
+61.5
+45.0
+%
+\mathbf{45.0\%}
++
+3.19
+\mathbf{+3.19}
+64
+64
+63.54
+63.54
+66.94
+\mathbf{66.94}
++
+3.40
+\mathbf{+3.40}
+66.94
+66.94
+61.5
+61.5
+3.9
+%
+3.9\%
++
+3.40
++3.40
+32
+32
+63.15
+63.15
+65.87
+\mathbf{65.87}
++
+2.72
+\mathbf{+2.72}
+65.87
+65.87
+32.0
+32.0
+0
+%
+0\%
++
+2.72
++2.72
+16
+16
+62.52
+62.52
+64.86
+\mathbf{64.86}
++
+2.34
+\mathbf{+2.34}
+64.86
+64.86
+16.0
+16.0
+0
+%
+0\%
++
+2.34
++2.34
+Table 4:
+The budget need not be spent. Net-utility allocation on task arithmetic on vision tasks.
+used
+is directions retained per module. At full rank
+R
+=
+112
+R=112
+only
+55
+%
+55\%
+carry positive net utility, discarding the rest raises accuracy by
+3.19
+3.19
+while leaving over half the budget unspent. At lower ranks, we observe that entire budget is spent.
+Figure 3:
+Fraction of sets that retain the
+l
+l
+-th singular direction. A prefix rule keeps every direction above a cut and none below it, i.e. the dashed step. On the other hand the net utility produces nothing of the sort.
+Results
+Vision.
+From Table
+1
+, we observe that our rank allocation outperforms uniform
+allocation across all three spaces and all four
+merging methods. We achieve a maximum gain of
++
+3.8
+\mathbf{+3.8}
+over DARE in the full space with a budget of rank
+64
+64
+. The gains are largest for DARE that improves by
++
+2.3
++2.3
+to
++
+3.8
++3.8
+and TA by
++
+2.3
++2.3
+to
++
+3.4
++3.4
+, while TSV
+improves to a lesser extent by
++
+0.3
++0.3
+to
++
+0.8
++0.8
+across the rank budgets. This could be because TSV whitens and re-ranks the spectrum, hence uniform allocation is a strong baseline there.
+Language.
+We observe similar trends in Table
+2
+. Our allocation improves over uniform in most of the methods across all the spaces, with a maximum gain of
++
+3.5
+\mathbf{+3.5}
+on TSV at budget
+16
+16
+.
+Our method’s gains over TSV range from
++
+3.1
++3.1
+to
++
+3.5
++3.5
+in all three spaces, TIES range from
++
+1.7
++1.7
+to
++
+3.4
++3.4
+, and gains over TA range from
++
+2.2
++2.2
+to
++
+2.3
++2.3
+. The exception is DARE in core and KnOTS space, where we are within
+0.4
+0.4
+of uniform and slightly below it at budgets
+64
+64
+and
+32
+32
+. Unlike vision, TSV is the method that benefits most here. We also observe that the gain tends to grow as the budget shrinks i.e., TSV improves from
++
+3.1
++3.1
+at
+R
+=
+64
+R{=}64
+to
++
+3.5
++3.5
+at
+R
+=
+16
+R{=}16
+, and TIES in full space from
++
+1.7
++1.7
+to
++
+3.4
++3.4
+, which is the expected behaviour, since at a tight budget the choice of which directions to keep matters more. The reason why TSV excels here could be attributed to the relative homogeneity of the language tasks indicating that rank allocation is more important in that regime.
+We also ran experiments with the Iso-C
+(
+Marczak et al. 2025
+)
+, which
+replaces the retained singular values by their mean. Table
+3
+reports
+these at budget
+16
+16
+for both domains. Our allocation improves over uniform in all
+four settings:
++
+1.3
++1.3
+and
++
+1.2
++1.2
+on vision,
++
+1.0
++1.0
+and
++
+0.5
++0.5
+on language.
+Our net utility metrics although derived based task arithmetic, i.e.
+∑
+i
+Δ
+​
+W
+i
+​
+(
+𝒮
+i
+)
+\sum_{i}\Delta W_{i}(\mathcal{S}_{i})
+of the retained parts transfer well to others. Note, TSV, DARE and TIES are not linear in the task updates i.e., they apply truncation, random masking, and trimming with sign election respectively so the decomposition is not exact for them. However, using the net utility derived for task arithmetic on these methods improve their performances as shown in the Tables
+1
+and
+2
+. This shows that net utility is transferable across different merge methods and different spaces.
+Analysis
+The budget need not be spent
+Because
+g
+j
+,
+l
+g_{j,l}
+can be negative, admitting a direction whose interference exceeds its relative self-gain is strictly worse than an empty slot. In this experiment, we show that our method drops singular directions whose
+g
+j
+,
+l
+<
+0
+g_{j,l}<0
+on task arithmetic merging on vision tasks at higher budgets. Classical rank allocation always use the entire
+R
+R
+. In Table
+4
+we show that at budget of 112, our algorithm retains only
+61.5
+61.5
+directions on average per layer, even though the budget allows 112 per layer. That is only 48
+%
+\%
+of the budget is spent, resulting in 3.19
+%
+\%
+more accuracy than using all the budget. At budget of
+64
+64
+, the number of ranks used is similar and again it does not use the entire budget. At lower budgets, it uses all available budget as the number of directions with
+g
+j
+,
+l
+>
+0
+g_{j,l}>0
+exceeds the number of available slots.
+The optimal set need not be a prefix
+We observe that net-utility
+g
+j
+,
+l
+g_{j,l}
+need not be monotone in
+l
+l
+i.e., although
+π
+~
+j
+,
+l
+\tilde{\pi}_{j,l}
+decreases with
+l
+l
+, the interference
+σ
+j
+,
+l
+2
+​
+C
+~
+j
+,
+l
+\sigma_{j,l}^{2}\tilde{C}_{j,l}
+is governed by
+cross-task geometry, so a low-
+σ
+\sigma
+direction orthogonal to the other tasks can outrank a dominant but heavily shared singular value. Hence the optimal set
+𝒮
+j
+⋆
+\mathcal{S}_{j}^{\star}
+is in general a subset, and hence a prefix truncation used by all existing SVD-based merging methods is suboptimal. On vision,
+88
+%
+88\%
+of the choosen sets are not prefixes at every budget. On language,
+64.5
+%
+64.5\%
+of the sets are non-prefix at
+R
+=
+64
+R{=}64
+. Figure
+3
+shows that on vision tasks, the relation is close to inverted i.e., at
+R
+=
+64
+R{=}64
+the strongest direction of a task is retained only
+12.8
+%
+12.8\%
+of the time while the weakest is retained
+75.8
+%
+75.8\%
+of the time. On language the curve decreases with
+l
+l
+but still retains
+59
+%
+59\%
+of the directions at
+l
+=
+15
+l=15
+, where a prefix rule at the same budget retains none.
+Figure 4:
+Total Budget allocation across all 7 vision tasks v/s layers. We observe that later layers require more budget than early layers. We also observe that modules v-proj and out-proj occupy more budget in the later layers.
+Not all Layers/Modules are equally important
+In Fig.
+4
+we show the allocated ranks to each module & layer combination for the ViT-B/32 model on the seven vision tasks with a budget of
+64
+64
+. We find that different modules and layers deviate pretty heavily from the uniform rank. Specifically, in the later layers the value projection and output projection layers require more ranks. These modules also appear to be the most important matrices where the budget allocation plays a major role. The figure corresponds to Task Arithmetic used as the merging method over full space.
+Analyzing the net utility
+In the previous sections we show that the allocation induced by
+g
+j
+,
+l
+g_{j,l}
+improves merging, but not what
+g
+j
+,
+l
+g_{j,l}
+measures about a task. In this section we conduct an experiment to interpret what the net utility measures.
+This requires a more controlled experiment and therefore we use
+Hendrycks MATH
+(
+Hendrycks et al. 2021
+)
+, which splits a single MATH task into seven topics (algebra, counting and probability, geometry, intermediate algebra, number theory, prealgebra, precalculus) and we train one LoRA adapter per topic on Qwen3 with identical training setup (rank
+32
+32
+), so the seven adapters differ only in the topic they were trained on.
+We measure the
+relative
+accuracy, i.e. the adapter’s accuracy minus the base model’s accuracy on the same topic, which controls for what the base model already knew. A higher relative accuracy means an easier
+topic. We can also observe similar trends in the Figure
+5
+where intermediate algebra has lower relative accuracy than prealgebra and algebra. Similarly precalculus is one of the harder subjects.
+We also observe in Figure
+5
+that the relative accuracy is inversely correlated with the mean net utility, with a correlation of
+−
+0.78
+-0.78
+. Since a higher relative accuracy means an easier
+topic, this says that harder topics have
+higher
+net utility. This is consistent with how
+g
+j
+,
+l
+g_{j,l}
+is defined. Harder topics appear to require directions that the other topics do not use, while easier topics are largely covered by what the rest of the set already provides. Thus we interpret that net-utility could be associated to the task difficulty.
+Figure 5:
+Net-utility vs performance on Hendrycks Math dataset. We observe that there is a negative correlation to the relative task performance and net utility
+Conclusion
+In this work, we show that uniform rank allocation across tasks and layers is not optimal and we introduce a novel metric called
+Net Utility
+metrics to solve this budget allocation greedily. For each task LoRA’s singular direction the metric scores the singular direction’s task benefit against the cross task interference. Using this metric we globally pool the singular directions across layers and tasks, and assign directions which have positive net utility. The chosen directions are then merged to form the merged LoRA. We apply this method over five merging methods across three merging spaces. The merging is done over two sets, one of seven vision tasks and another over six language tasks. That on average across all merging methods and spaces, vision tasks see an average improvement of +2.1% and language tasks see a +2.2% improvement. We also show interesting insight that net utility is correlated with task difficulty and could be interpreted as such.
+Limitations
+Our work is not without its limitations. At first, we restrict the net utility derivation to a linear merging, however one can derive the net utility to a specific merging algorithm that could further boost its performance. Secondly, we do not tune the hyperparameter
+λ
+\lambda
+, however, if given access to a validation set, tuning
+λ
+\lambda
+would improve the performance.
+References
+Davari and Belilovsky (2024)
+M. Davari and E. Belilovsky
+Model breadcrumbs: scaling multi-task model merging with sparse masks
+.
+In
+European Conference on Computer Vision
+,
+pp. 270–287
+.
+Cited by:
+Related Work
+.
+Dosovitskiy
+et al.
+(2021)
+A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, T. Unterthiner, M. Dehghani, M. Minderer, G. Heigold, S. Gelly, J. Uszkoreit, and N. Houlsby
+An image is worth 16x16 words: transformers for image recognition at scale
+.
+External Links:
+2010.11929
+,
+Link
+Cited by:
+item 1
+.
+Du
+et al.
+(2024)
+G. Du, J. Lee, J. Li, R. Jiang, Y. Guo, S. Yu, H. Liu, S. K. Goh, H. Tang, D. He, and M. Zhang
+Parameter competition balancing for model merging
+.
+External Links:
+2410.02396
+,
+Link
+Cited by:
+Related Work
+.
+Foster and Ok (1999)
+J. E. Foster and E. A. Ok
+Lorenz dominance and the variance of logarithms
+.
+Econometrica
+67
+(
+4
+),
+pp. 901–907
+.
+Cited by:
+Hyperparameters
+.
+Gargiulo
+et al.
+(2025)
+A. A. Gargiulo, D. Crisostomi, M. S. Bucarelli, S. Scardapane, F. Silvestri, and E. Rodolà
+Task singular vectors: reducing task interference in model merging
+.
+External Links:
+2412.00081
+,
+Link
+Cited by:
+Introduction
+,
+Related Work
+,
+item 4
+.
+He
+et al.
+(2026)
+Z. He, R. Ding, Z. Huang, R. Yang, T. Li, and X. Huang
+Compress then merge: from multiple loras into one low-rank adapter
+.
+External Links:
+2606.03723
+,
+Link
+Cited by:
+Related Work
+.
+Hendrycks
+et al.
+(2021)
+D. Hendrycks, C. Burns, S. Kadavath, A. Arora, S. Basart, E. Tang, D. Song, and J. Steinhardt
+Measuring mathematical problem solving with the math dataset
+.
+External Links:
+2103.03874
+,
+Link
+Cited by:
+Analyzing the net utility
+.
+Hu
+et al.
+(2022)
+E. J. Hu, Y. Shen, P. Wallis, Z. Allen-Zhu, Y. Li, S. Wang, L. Wang, W. Chen,
+et al.
+Lora: low-rank adaptation of large language models.
+.
+Iclr
+1
+(
+2
+),
+pp. 3
+.
+Cited by:
+Introduction
+.
+Ilharco
+et al.
+(2022)
+G. Ilharco, M. T. Ribeiro, M. Wortsman, S. Gururangan, L. Schmidt, H. Hajishirzi, and A. Farhadi
+Editing models with task arithmetic
+.
+arXiv preprint arXiv:2212.04089
+.
+Cited by:
+Related Work
+,
+item 1
+.
+Jaiswal
+et al.
+(2025)
+S. Jaiswal, S. Arun, A. Parayil, A. Mallick, S. Mastorakis, A. Khare, C. Alverti, R. S. Amant, C. Bansal, V. Rühle, and J. Torrellas
+Serving heterogeneous lora adapters in distributed llm inference systems
+.
+arXiv preprint arXiv:2511.22880
+.
+Cited by:
+Introduction
+.
+Lee
+et al.
+(2026a)
+C. Lee, J. Choi, C. Lee, D. Kim, and S. Hong
+AdaRank: adaptive rank pruning for enhanced model merging
+.
+External Links:
+2503.22178
+,
+Link
+Cited by:
+Related Work
+.
+Lee
+et al.
+(2026b)
+S. Lee, K. Lee, B. Zuchi, J. Ahn, I. Seo, D. Jeon, I. Kang, and S. Na
+PRIME: ultra-low-rank principal–residual model merging
+.
+In
+Findings of the Association for Computational Linguistics: ACL 2026
+,
+pp. 3415–3436
+.
+Cited by:
+Related Work
+,
+Related Work
+.
+Li
+et al.
+(2025)
+S. Li, H. Lu, T. Wu, M. Yu, Q. Weng, X. Chen, Y. Shan, B. Yuan, and W. Wang
+Toppings:
+{
+\{
+cpu-assisted
+}
+\}
+,
+{
+\{
+rank-aware
+}
+\}
+adapter serving for
+{
+\{
+llm
+}
+\}
+inference
+.
+In
+2025 USENIX Annual Technical Conference (USENIX ATC 25)
+,
+pp. 613–629
+.
+Cited by:
+Introduction
+.
+Marczak
+et al.
+(2025)
+D. Marczak, S. Magistri, S. Cygert, B. Twardowski, A. D. Bagdanov, and J. van de Weijer
+No task left behind: isotropic model merging with common and task-specific subspaces
+.
+External Links:
+2502.04959
+,
+Link
+Cited by:
+Introduction
+,
+Related Work
+,
+Relative task-layer weighting.
+,
+item 5
+,
+Language.
+.
+Panariello
+et al.
+(2026)
+A. Panariello, D. Marczak, S. Magistri, A. Porrello, B. Twardowski, A. Bagdanov, S. Calderara, and J. van de Weijer
+Accurate and efficient low-rank model merging in core space
+.
+Advances in Neural Information Processing Systems
+38
+,
+pp. 61793–61825
+.
+Cited by:
+Introduction
+,
+Related Work
+,
+Experimental details
+,
+Baselines
+.
+Qiao and Mahdavi (2025)
+F. Qiao and M. Mahdavi
+Merge before forget: a single lora continual learning via continual merging
+.
+External Links:
+2512.23017
+,
+Link
+Cited by:
+Related Work
+.
+Shenaj
+et al.
+(2026)
+D. Shenaj, O. Bohdal, T. Ceritli, M. Ozay, P. Zanuttigh, and U. Michieli
+K-merge: online continual merging of adapters for on-device large language models
+.
+In
+Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)
+,
+pp. 3013–3029
+.
+Cited by:
+Related Work
+.
+Stoica
+et al.
+(2024)
+G. Stoica, P. Ramesh, B. Ecsedi, L. Choshen, and J. Hoffman
+Model merging with svd to tie the knots
+.
+External Links:
+2410.19735
+,
+Link
+Cited by:
+Related Work
+,
+Experimental details
+,
+Baselines
+.
+Vulić
+et al.
+(2026)
+I. Vulić, A. Grycner, Q. de Laroussilhe, and J. Pfeiffer
+LoRA-squeeze: simple and effective post-tuning and in-tuning compression of lora modules
+.
+arXiv preprint arXiv:2602.10993
+.
+Cited by:
+Introduction
+.
+Xu
+et al.
+(2026)
+B. Xu, H. Wu, H. Lin, W. Huang, B. Zhu, Y. Shu, and C. Qin
+ACE-merging: data-free model merging with adaptive covariance estimation
+.
+External Links:
+2603.02945
+,
+Link
+Cited by:
+Related Work
+,
+Data-Free Input Geometry
+.
+Yadav
+et al.
+(2023)
+P. Yadav, D. Tam, L. Choshen, C. Raffel, and M. Bansal
+TIES-merging: resolving interference when merging models
+.
+External Links:
+2306.01708
+,
+Link
+Cited by:
+Introduction
+,
+Related Work
+,
+item 2
+.
+Yang
+et al.
+(2025)
+A. Yang, A. Li, B. Yang, B. Zhang, B. Hui, B. Zheng, B. Yu, C. Gao, C. Huang, C. Lv, C. Zheng, D. Liu, F. Zhou, F. Huang, F. Hu, H. Ge, H. Wei, H. Lin, J. Tang, J. Yang, J. Tu, J. Zhang, J. Yang, J. Yang, J. Zhou, J. Zhou, J. Lin, K. Dang, K. Bao, K. Yang, L. Yu, L. Deng, M. Li, M. Xue, M. Li, P. Zhang, P. Wang, Q. Zhu, R. Men, R. Gao, S. Liu, S. Luo, T. Li, T. Tang, W. Yin, X. Ren, X. Wang, X. Zhang, X. Ren, Y. Fan, Y. Su, Y. Zhang, Y. Zhang, Y. Wan, Y. Liu, Z. Wang, Z. Cui, Z. Zhang, Z. Zhou, and Z. Qiu
+Qwen3 technical report
+.
+External Links:
+2505.09388
+,
+Link
+Cited by:
+item 2
+.
+Yu
+et al.
+(2024)
+L. Yu, B. Yu, H. Yu, F. Huang, and Y. Li
+Language models are super mario: absorbing abilities from homologous models as a free lunch
+.
+External Links:
+2311.03099
+,
+Link
+Cited by:
+Introduction
+,
+Related Work
+,
+item 3
+.
+Zhang
+et al.
+(2025)
+J. Zhang, J. You, A. Panda, and T. Goldstein
+Lori: reducing cross-task interference in multi-task low-rank adaptation
+.
+arXiv preprint arXiv:2504.07448
+.
+Cited by:
+Related Work
+.
+Zhao
+et al.
+(2024)
+Z. Zhao, T. Shen, D. Zhu, Z. Li, J. Su, X. Wang, K. Kuang, and F. Wu
+Merging loras like playing lego: pushing the modularity of lora to extremes through rank-wise clustering
+.
+External Links:
+2409.16167
+,
+Link
+Cited by:
+Related Work
+.
+Zheng
+et al.
+(2025)
+S. Zheng, H. Wang, C. Huang, X. Wang, T. Chen, J. Fan, S. Hu, and P. Ye
+Decouple and orthogonalize: a data-free framework for lora merging
+.
+External Links:
+2505.15875
+,
+Link
+Cited by:
+Related Work
+.
+Appendix A
+Appendix
+A.1 Layer-Wise Preservation Surrogate
+Let
+J
+l
+​
+(
+x
+)
+J^{l}(x)
+be the output Jacobian with respect to layer
+l
+l
+’s pre-activation under the shared reference model. A first-order expansion gives
+f
+Δ
+​
+W
+i
+​
+(
+x
+)
+−
+f
+Δ
+​
+W
+m
+​
+(
+x
+)
+≈
+∑
+l
+=
+1
+L
+J
+l
+​
+(
+x
+)
+​
+(
+Δ
+​
+W
+i
+l
+−
+Δ
+​
+W
+m
+l
+)
+​
+h
+l
+​
+(
+x
+)
+.
+f_{\Delta W_{i}}(x)-f_{\Delta W_{\mathrm{m}}}(x)\approx\sum_{l=1}^{L}J^{l}(x)\bigl(\Delta W_{i}^{l}-\Delta W_{\mathrm{m}}^{l}\bigr)h^{l}(x).
+(A.1)
+The sum contains cross-layer interactions. Cauchy–Schwarz and submultiplicativity give
+‖
+∑
+l
+=
+1
+L
+J
+l
+​
+(
+x
+)
+​
+(
+Δ
+​
+W
+i
+l
+−
+Δ
+​
+W
+m
+l
+)
+​
+h
+l
+​
+(
+x
+)
+‖
+2
+2
+\displaystyle\left\lVert\sum_{l=1}^{L}J^{l}(x)\bigl(\Delta W_{i}^{l}-\Delta W_{\mathrm{m}}^{l}\bigr)h^{l}(x)\right\rVert_{2}^{2}
+(A.2)
+≤
+L
+​
+∑
+l
+=
+1
+L
+‖
+J
+l
+​
+(
+x
+)
+‖
+op
+2
+​
+‖
+(
+Δ
+​
+W
+i
+l
+−
+Δ
+​
+W
+m
+l
+)
+​
+h
+l
+​
+(
+x
+)
+‖
+2
+2
+.
+\displaystyle\leq L\sum_{l=1}^{L}\left\lVert J^{l}(x)\right\rVert_{\mathrm{op}}^{2}\left\lVert\bigl(\Delta W_{i}^{l}-\Delta W_{\mathrm{m}}^{l}\bigr)h^{l}(x)\right\rVert_{2}^{2}.
+Summing over tasks and taking expectations preserves the bound. If the Jacobian norms are approximately constant over the adapted layers and inputs of interest, their common scale does not affect the minimizer, motivating the surrogate in Equation (
+2
+).
+A.2 Separable Upper Bound
+Proposition 1
+(Separable upper bound)
+.
+If either
+G
+i
+G_{i}
+or
+G
+^
+i
+\widehat{G}_{i}
+is used consistently and the corresponding normalization energy is nonzero, Equation (
+7
+) holds for every
+λ
+>
+0
+\lambda>0
+.
+Proof.
+Write
+G
+i
+G_{i}
+for the chosen geometry. For
+M
+≥
+2
+M\geq 2
+, Young’s inequality in the
+G
+i
+G_{i}
+-weighted seminorm gives, for any
+a
+>
+0
+a>0
+,
+‖
+(
+Δ
+​
+W
+i
+−
+K
+i
+)
+−
+∑
+j
+≠
+i
+K
+j
+‖
+G
+i
+2
+\displaystyle\left\lVert\bigl(\Delta W_{i}-K_{i}\bigr)-\sum_{j\neq i}K_{j}\right\rVert_{G_{i}}^{2}
+(A.3)
+≤
+(
+1
++
+a
+)
+​
+‖
+Δ
+​
+W
+i
+−
+K
+i
+‖
+G
+i
+2
+\displaystyle\leq(1+a)\left\lVert\Delta W_{i}-K_{i}\right\rVert_{G_{i}}^{2}
++
+(
+1
++
+a
+−
+1
+)
+​
+‖
+∑
+j
+≠
+i
+K
+j
+‖
+G
+i
+2
+.
+\displaystyle+(1+a^{-1})\left\lVert\sum_{j\neq i}K_{j}\right\rVert_{G_{i}}^{2}.
+Cauchy–Schwarz gives
+‖
+∑
+j
+≠
+i
+K
+j
+‖
+G
+i
+2
+≤
+(
+M
+−
+1
+)
+​
+∑
+j
+≠
+i
+‖
+K
+j
+‖
+G
+i
+2
+.
+\left\lVert\sum_{j\neq i}K_{j}\right\rVert_{G_{i}}^{2}\leq(M-1)\sum_{j\neq i}\left\lVert K_{j}\right\rVert_{G_{i}}^{2}.
+Setting
+a
+=
+(
+M
+−
+1
+)
+/
+λ
+a=(M-1)/\lambda
+and normalizing by
+∥
+Δ
+​
+W
+i
+∥
+G
+i
+2
+\lVert\Delta W_{i}\rVert_{G_{i}}^{2}
+gives Equation (
+7
+). For
+M
+=
+1
+M=1
+, Equation (
+7
+) holds with equality.
+∎
+A.3 Net-Utility Decomposition
+Proposition 2
+(Net-utility decomposition)
+.
+Assume
+w
+i
+>
+0
+w_{i}>0
+for every indexed task; zero-energy updates contain no candidates and are omitted. Under the Gram geometry in Equation (
+3
+), each selected component has the fixed utility
+g
+j
+,
+k
+g_{j,k}
+defined in Equation (
+8
+). Moreover, the summed normalized source-task residual and cross-task interference terms inside the right-hand side of Equation (
+7
+) equal
+M
+−
+∑
+j
+,
+k
+z
+j
+,
+k
+​
+g
+j
+,
+k
+M-\sum_{j,k}z_{j,k}g_{j,k}
+.
+Proof.
+Define the
+G
+G
+-weighted bilinear form as
+⟨
+X
+,
+Y
+⟩
+G
+:=
+tr
+⁡
+(
+X
+​
+G
+​
+Y
+⊤
+)
+\langle X,Y\rangle_{G}:=\operatorname{tr}(XGY^{\top})
+. Components from the same source task are orthogonal under this form:
+⟨
+D
+j
+,
+k
+,
+D
+j
+,
+m
+⟩
+G
+i
+\displaystyle\left\langle D_{j,k},D_{j,m}\right\rangle_{G_{i}}
+=
+σ
+j
+,
+k
+​
+σ
+j
+,
+m
+​
+(
+u
+j
+,
+k
+⊤
+​
+u
+j
+,
+m
+)
+\displaystyle=\sigma_{j,k}\sigma_{j,m}\left(u_{j,k}^{\top}u_{j,m}\right)
+(A.4)
+⋅
+(
+v
+j
+,
+k
+⊤
+G
+i
+v
+j
+,
+m
+)
+=
+0
+,
+k
+≠
+m
+.
+\displaystyle}{\displaystyle\cdot\left(v_{j,k}^{\top}G_{i}v_{j,m}\right)=0,\qquad k\neq m.
+Consequently, their weighted energies add. Equation (
+3
+) gives
+‖
+D
+i
+,
+k
+‖
+G
+i
+2
+\displaystyle\left\lVert D_{i,k}\right\rVert_{G_{i}}^{2}
+=
+κ
+i
+​
+σ
+i
+,
+k
+4
+,
+\displaystyle=\kappa_{i}\sigma_{i,k}^{4},
+(A.5)
+‖
+D
+j
+,
+k
+‖
+G
+i
+2
+\displaystyle\left\lVert D_{j,k}\right\rVert_{G_{i}}^{2}
+=
+κ
+i
+σ
+j
+,
+k
+2
+∑
+n
+σ
+i
+,
+n
+2
+(
+v
+j
+,
+k
+⊤
+v
+i
+,
+n
+)
+2
+,
+j
+≠
+i
+,
+\displaystyle=\kappa_{i}\sigma_{j,k}^{2}\sum_{n}\sigma_{i,n}^{2}\left(v_{j,k}^{\top}v_{i,n}\right)^{2},\qquad j\neq i,
+‖
+Δ
+​
+W
+i
+‖
+G
+i
+2
+\displaystyle\left\lVert\Delta W_{i}\right\rVert_{G_{i}}^{2}
+=
+κ
+i
+​
+∑
+n
+σ
+i
+,
+n
+4
+=
+κ
+i
+​
+w
+i
+.
+\displaystyle=\kappa_{i}\sum_{n}\sigma_{i,n}^{4}=\kappa_{i}w_{i}.
+The normalization therefore cancels
+κ
+i
+\kappa_{i}
+. Summing the normalized source-task residual and cross-task interference terms in Equation (
+7
+) gives
+∑
+i
+=
+1
+M
+‖
+Δ
+​
+W
+i
+−
+K
+i
+‖
+G
+i
+2
++
+λ
+​
+∑
+j
+≠
+i
+‖
+K
+j
+‖
+G
+i
+2
+‖
+Δ
+​
+W
+i
+‖
+G
+i
+2
+\displaystyle\sum_{i=1}^{M}\frac{\left\lVert\Delta W_{i}-K_{i}\right\rVert_{G_{i}}^{2}+\lambda\sum_{j\neq i}\left\lVert K_{j}\right\rVert_{G_{i}}^{2}}{\left\lVert\Delta W_{i}\right\rVert_{G_{i}}^{2}}
+(A.6)
+=
+∑
+i
+=
+1
+M
+∑
+k
+=
+1
+r
+i
+(
+1
+−
+z
+i
+,
+k
+)
+​
+σ
+i
+,
+k
+4
+∑
+n
+σ
+i
+,
+n
+4
+\displaystyle=\sum_{i=1}^{M}\sum_{k=1}^{r_{i}}(1-z_{i,k})\frac{\sigma_{i,k}^{4}}{\sum_{n}\sigma_{i,n}^{4}}
++
+λ
+∑
+j
+=
+1
+M
+∑
+k
+=
+1
+r
+j
+z
+j
+,
+k
+σ
+j
+,
+k
+2
+∑
+i
+≠
+j
+∑
+n
+=
+1
+r
+i
+σ
+i
+,
+n
+2
+∑
+m
+σ
+i
+,
+m
+4
+(
+v
+j
+,
+k
+⊤
+v
+i
+,
+n
+)
+2
+\displaystyle+\lambda\sum_{j=1}^{M}\sum_{k=1}^{r_{j}}z_{j,k}\sigma_{j,k}^{2}\sum_{i\neq j}\sum_{n=1}^{r_{i}}\frac{\sigma_{i,n}^{2}}{\sum_{m}\sigma_{i,m}^{4}}\left(v_{j,k}^{\top}v_{i,n}\right)^{2}
+=
+M
+−
+∑
+j
+=
+1
+M
+∑
+k
+=
+1
+r
+j
+z
+j
+,
+k
+​
+g
+j
+,
+k
+.
+\displaystyle=M-\sum_{j=1}^{M}\sum_{k=1}^{r_{j}}z_{j,k}g_{j,k}.
+This proves the claimed decomposition.
+∎
+A.4 Heuristic Row-Space Utility
+The utility for
+G
+^
+i
+=
+κ
+i
+​
+V
+i
+​
+V
+i
+⊤
+\widehat{G}_{i}=\kappa_{i}V_{i}V_{i}^{\top}
+follows from the same bilinear-form orthogonality argument as Proposition
+2
+. In particular,
+‖
+D
+i
+,
+k
+‖
+G
+^
+i
+2
+\displaystyle\left\lVert D_{i,k}\right\rVert_{\widehat{G}_{i}}^{2}
+=
+κ
+i
+​
+σ
+i
+,
+k
+2
+,
+\displaystyle=\kappa_{i}\sigma_{i,k}^{2},
+(A.7)
+‖
+D
+j
+,
+k
+‖
+G
+^
+i
+2
+\displaystyle\left\lVert D_{j,k}\right\rVert_{\widehat{G}_{i}}^{2}
+=
+κ
+i
+σ
+j
+,
+k
+2
+∑
+n
+(
+v
+j
+,
+k
+⊤
+v
+i
+,
+n
+)
+2
+,
+j
+≠
+i
+,
+\displaystyle=\kappa_{i}\sigma_{j,k}^{2}\sum_{n}\left(v_{j,k}^{\top}v_{i,n}\right)^{2},\qquad j\neq i,
+‖
+Δ
+​
+W
+i
+‖
+G
+^
+i
+2
+\displaystyle\left\lVert\Delta W_{i}\right\rVert_{\widehat{G}_{i}}^{2}
+=
+κ
+i
+​
+∑
+n
+σ
+i
+,
+n
+2
+=
+κ
+i
+​
+w
+^
+i
+.
+\displaystyle=\kappa_{i}\sum_{n}\sigma_{i,n}^{2}=\kappa_{i}\widehat{w}_{i}.
+Thus, define the heuristic task scale and utility as
+w
+^
+i
+\displaystyle\widehat{w}_{i}
+:
+=
+∑
+n
+=
+1
+r
+i
+σ
+i
+,
+n
+2
+,
+\displaystyle:=\sum_{n=1}^{r_{i}}\sigma_{i,n}^{2},
+(A.8)
+g
+^
+j
+,
+k
+\displaystyle\widehat{g}_{j,k}
+:
+=
+σ
+j
+,
+k
+2
+w
+^
+j
+⏟
+source-task benefit
+π
+~
+−
+λ
+​
+σ
+j
+,
+k
+2
+​
+∑
+i
+≠
+j
+∑
+n
+=
+1
+r
+i
+(
+v
+j
+,
+k
+⊤
+​
+v
+i
+,
+n
+)
+2
+w
+^
+i
+⏟
+cross-task interference
+C
+~
+.
+\displaystyle:=\underbrace{\frac{\sigma_{j,k}^{2}}{\widehat{w}_{j}}}_{\text{source-task benefit $\tilde{\pi}$}}-\lambda\sigma_{j,k}^{2}\underbrace{\sum_{i\neq j}\sum_{n=1}^{r_{i}}\frac{\left(v_{j,k}^{\top}v_{i,n}\right)^{2}}{\widehat{w}_{i}}}_{\text{cross-task interference $\tilde{C}$ }}.
+Substituting Equation (
+A.7
+) into the summed normalized terms inside the right-hand side of Equation (
+7
+) cancels
+κ
+i
+\kappa_{i}
+and gives
+M
+−
+∑
+j
+=
+1
+M
+∑
+k
+=
+1
+r
+j
+z
+j
+,
+k
+​
+g
+^
+j
+,
+k
+.
+M-\sum_{j=1}^{M}\sum_{k=1}^{r_{j}}z_{j,k}\widehat{g}_{j,k}.
+(A.9)
+The heuristic variant replaces
+w
+i
+l
+w_{i}^{l}
+and
+g
+j
+,
+k
+l
+g_{j,k}^{l}
+in Algorithm
+1
+with
+w
+^
+i
+l
+\widehat{w}_{i}^{l}
+and
+g
+^
+j
+,
+k
+l
+\widehat{g}_{j,k}^{l}
+, respectively; all other steps are unchanged.
+Table 5:
+Hyperparameters for LoRA adapter training on Qwen3-4B.
+Hyperparameter
+Value
+Base model
+Qwen3-4B-Instruct
+Task type
+Sequence classification (3 classes)
+LoRA rank
+r
+r
+16
+LoRA scaling
+α
+\alpha
+16
+LoRA dropout
+0.1
+Target modules
+W
+q
+W_{q}
+,
+W
+k
+W_{k}
+,
+W
+v
+W_{v}
+,
+W
+o
+W_{o}
+Optimizer
+AdamW
+Learning rate
+3
+×
+10
+−
+5
+3\times 10^{-5}
+LR schedule
+Linear, 6% warmup
+Batch size
+1
+Max. epochs
+10
+Max. sequence length
+2,000
+Evaluation interval
+4,000 steps
+Early-stopping patience
+3 evaluations
+A.5 Computational Complexity
+For a rank-
+r
+r
+LoRA update
+Δ
+​
+W
+i
+=
+B
+i
+​
+A
+i
+\Delta W_{i}=B_{i}A_{i}
+, its thin SVD can be computed from QR factorizations of
+B
+i
+B_{i}
+and
+A
+i
+⊤
+A_{i}^{\top}
+, followed by an
+r
+×
+r
+r\times r
+SVD. This costs
+O
+⁡
+(
+r
+2
+​
+(
+d
+in
++
+d
+out
+)
+)
+O(r^{2}(d_{\mathrm{in}}+d_{\mathrm{out}}))
+per adapter without materializing the dense update, where
+d
+in
+d_{\mathrm{in}}
+and
+d
+out
+d_{\mathrm{out}}
+are the layer input and output widths.
+At each layer, forming all
+V
+j
+⊤
+​
+V
+i
+V_{j}^{\top}V_{i}
+costs
+O
+⁡
+(
+M
+2
+​
+r
+2
+​
+d
+in
+)
+O(M^{2}r^{2}d_{\mathrm{in}})
+time and
+O
+⁡
+(
+M
+2
+​
+r
+2
+)
+O(M^{2}r^{2})
+memory. If
+C
+C
+components are pooled, selecting them costs
+O
+⁡
+(
+C
+​
+log
+⁡
+C
+)
+O(C\log C)
+B LoRA Training Details for QWEN3-4B adapters
+We train one LoRA adapter per NLI task on Qwen3-4B-Instruct as the base
+model, using the sequence-classification formulation with a three-way
+classification head. Adapters are trained with the PEFT
+library; the base model weights remain frozen throughout,
+and only the LoRA matrices and the classification head are updated.
+LoRA configuration.
+LoRA modules are attached to all four attention projection matrices
+(
+W
+q
+W_{q}
+,
+W
+k
+W_{k}
+,
+W
+v
+W_{v}
+,
+W
+o
+W_{o}
+) in every transformer layer, with rank
+r
+=
+16
+r=16
+, scaling factor
+α
+=
+16
+\alpha=16
+(i.e.,
+α
+/
+r
+=
+1
+\alpha/r=1
+), and dropout of
+0.1
+0.1
+. The feed-forward (MLP) layers are left unmodified.
+Tasks and label space.
+We train adapters on six NLI datasets: SNLI, MNLI, SICK, QNLI, RTE, and
+SciTail. All tasks share a unified three-class output space
+(0:
+entailment
+, 1:
+neutral
+, 2:
+contradiction
+) so
+that all adapters and classification heads remain shape-compatible for
+merging. Binary datasets are mapped into this space: for RTE and QNLI,
+not-entailment
+is assigned to the contradiction class, and for
+SciTail the
+neutral
+label retains class 1. For each binary task,
+the unused class is masked by setting its logit to
+−
+10
+10
+-10^{10}
+before
+computing the loss and during evaluation.
+Optimization.
+All adapters are trained with AdamW at a learning rate of
+3
+×
+10
+−
+5
+3\times 10^{-5}
+under a cross-entropy objective, with a linear
+learning-rate schedule and 6% warmup, for at most 10 epochs.
+Validation accuracy is evaluated every 4,000 steps; we retain the
+checkpoint with the highest validation accuracy and apply early
+stopping after three consecutive evaluations without improvement. The
+best checkpoint is then evaluated once on the held-out test set. The
+full hyperparameter configuration is summarized in
+Table
+5
+.

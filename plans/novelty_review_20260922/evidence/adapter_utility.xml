@@ -1,0 +1,992 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/ChmckKDNpFmJVl1pjuU5TIrhCEg</id>
+  <title>arXiv Query: search_query=(all:LoRA OR all:adapter) AND (all:"predicted utility" OR all:"response prediction" OR all:"budget-aware" OR all:"test-time fusion" OR all:counterfactual) AND submittedDate:"202501010000 TO 202609222359"&amp;id_list=&amp;start=0&amp;max_results=35</title>
+  <updated>2026-09-22T02:56:21Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(all:LoRA+OR+all:adapter)+AND+((all:%22predicted+utility%22+OR+(all:%22response+prediction%22+OR+(all:%22budget-aware%22+OR+(all:%22test-time+fusion%22+OR+all:counterfactual))))+AND+submittedDate:%22202501010000+TO+202609222359%22)&amp;start=0&amp;max_results=35&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>35</opensearch:itemsPerPage>
+  <opensearch:totalResults>484</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2609.24098v1</id>
+    <title>A$^2$Safe: Counterfactual Evidence-Aligned Adaptive Agent Collaboration for Safe and Effective Visual Question Answering</title>
+    <updated>2026-09-21T04:34:58Z</updated>
+    <link href="https://arxiv.org/abs/2609.24098v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.24098v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Visual Question Answering (VQA) with Multimodal Large Language Models (MLLMs) requires not only producing safe and effective responses, but also grounding safety decisions in the multimodal evidence that determines risk. Recent safety-alignment methods improve refusal behavior and contextual risk awareness, yet correct safety outcomes may still rely on superficial textual or visual correlations, particularly when risk emerges from interactions between individually benign image and question content. To address this issue, we propose A$^2$Safe, a counterfactual evidence-aligned adaptive agent collaboration framework for safe and effective VQA. A$^2$Safe organizes localized visual observations, textual intent, and cross-modal risk relations through a Grounded Safety Evidence Board, making the basis of safety decisions explicit. Counterfactual safety evidence alignment enforces invariance to safety-irrelevant changes while requiring appropriate safety-state and response-mode transitions when risk-critical evidence is minimally altered. The resulting evidence state further supports adaptive collaboration, enabling direct answering when grounded evidence is sufficient and invoking policy critique and response revision when evidence is risky, uncertain, or conflicting. Under complementary safety-critical and general VQA protocols, A$^2$Safe achieves a 95.72 SIUO safety score, reduces the benign refusal rate on MOSSBench to 14.67%, and maintains an average general VQA score of 78.34 with 27.8% token overhead. These results support counterfactual evidence-aligned adaptive collaboration for safe and effective multimodal question answering.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-21T04:34:58Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Quanxing Xu</name>
+    </author>
+    <author>
+      <name>Ling Zhou</name>
+    </author>
+    <author>
+      <name>Xian Zhong</name>
+    </author>
+    <author>
+      <name>Jinyu Tian</name>
+    </author>
+    <author>
+      <name>Xiaohua Huang</name>
+    </author>
+    <author>
+      <name>Rubing Huang</name>
+    </author>
+    <author>
+      <name>Chia-Wen Lin</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.23753v1</id>
+    <title>OnlineWM: Causality-Aware Active Online Learning for Effective World Modeling</title>
+    <updated>2026-09-20T17:05:37Z</updated>
+    <link href="https://arxiv.org/abs/2609.23753v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.23753v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Generative world models aim to predict future states conditioned on actions, where action controllability is fundamental for reliable dynamics modeling. While recent efforts leverage simulator-generated data to enhance this capability, existing training pipelines face two fundamental limitations. First, static offline data collection leads to a distribution misalignment between training sets and the model's evolving error patterns, failing to resolve critical long-tail scenarios where dynamics predictions remain unreliable. Second, the standard objective of minimizing observational discrepancy often encourages the model to exploit spurious correlations instead of capturing the underlying action-effect causality. To address these limitations, we propose OnlineWM, an online training framework that continuously improves world modeling through active simulator interaction and causality-aware optimization. OnlineWM introduces two key innovations: (1) Active Online Learning: Instead of using fixed datasets, OnlineWM adaptively queries the simulator for new interaction sequences that target the model's current predictive weaknesses, ensuring high-utility data acquisition. (2) Causality-Aware Fine-Tuning: We propose a counterfactual learning strategy that contrasts the outcomes of different actions from identical states, forcing the model to attribute state transitions to specific actions rather than ambient environmental evolution, thereby grounding its predictions in reliable causal mechanisms. By integrating active data acquisition with causal optimization, OnlineWM establishes a closed-loop refinement process that ensures the model is both robust to diverse scenarios and precise in its causal attribution. Extensive experiments demonstrate that OnlineWM significantly enhances action controllability and generalizes effectively to unseen domains.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-20T17:05:37Z</published>
+    <arxiv:comment>23 pages, 9 figures. Project page: https://onlinewm.github.io/</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Yikun Miao</name>
+    </author>
+    <author>
+      <name>Fangqi Zhu</name>
+    </author>
+    <author>
+      <name>Quanxin Shou</name>
+    </author>
+    <author>
+      <name>Xiaoyi Pang</name>
+    </author>
+    <author>
+      <name>Zhengyang Yan</name>
+    </author>
+    <author>
+      <name>Junhao Li</name>
+    </author>
+    <author>
+      <name>Haodong Wang</name>
+    </author>
+    <author>
+      <name>Zicong Hong</name>
+    </author>
+    <author>
+      <name>Song Guo</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.23512v1</id>
+    <title>AgentBetta: Verification-Driven Adaptive Configuration of an AI Nano-Agent through Selective Expansion and Verified Contraction</title>
+    <updated>2026-09-20T09:56:10Z</updated>
+    <link href="https://arxiv.org/abs/2609.23512v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.23512v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language model agents are typically deployed with predefined configurations, although the required model capability, context, tools, permissions, memory, and computational resources can vary substantially across tasks. This study develops and evaluates AgentBetta, an adaptive AI Nano-Agent framework that represents these factors as an executable configuration and updates them through verification-driven diagnosis, selective expansion, and verification-based counterfactual contraction. The evaluation distinguishes controlled mechanism validation from external agent comparisons. On the AB-ConfigBench benchmark, AgentBetta achieved 91.38% verified success while reducing median context allocation from 64,000 to 8,000 context characters and median tool exposure from five tools to zero compared with the fully provisioned configuration. The configuration-deficiency diagnosis achieved a macro-F1 score of 0.819 with precision of 1.000 across the evaluated dimensions, and selective expansion avoided unnecessary changes to unrelated configuration dimensions. Post-success contraction preserved verification outcomes in 56.41% of evaluated one-dimension contraction probes, indicating that some successful configurations contained removable capability under the tested conditions. External evaluations indicate that adaptive configuration can improve the balance between verified task completion and capability exposure; however, the results vary across benchmarks and agent families. In particular, the cross-family replication did not reproduce the primary-backbone accuracy ordering, and specialized systems remained advantageous for certain task domains. These results support interpreting AgentBetta as a configuration-adaptation mechanism that regulates capability allocation and inference expenditure rather than as a universal replacement for specialized agent architectures.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-20T09:56:10Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Md. Ashraful Babu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.21303v1</id>
+    <title>Identifying Security Platform Product Abuse with Machine Learning</title>
+    <updated>2026-09-18T04:23:58Z</updated>
+    <link href="https://arxiv.org/abs/2609.21303v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.21303v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Product abuse is an individually rare, but growing, problem across the SaaS industry. Highly sophisticated threat actors can misuse security platforms within customer environments or conduct bypass experiments on the product itself. Threat actors can leverage living-off-the-land (LOTL) attacks to avoid using cumbersome, frequently detected malware. Remediating this threat requires collecting multiple data modalities across different types of databases, addressing a cold-start problem in the intrinsic rarity of such sophisticated but dangerous events, and designing within the constraints of real-world deployment (e.g., cost, user behavior, performance, etc). To wit, we provide the first study of such a whole-system defense, especially with respect to a deployed and operational capability. Our results show an increase in product abuse coverage by 35\%, a 30\% reduction in monthly alerts, and adaptability to changes in malicious actors' behavior. We review both the constraints we considered in designing the system to meet operational requirements and a retrospective evaluation of the value of explainable features and counterfactual performance on previously identified attacks.</summary>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-18T04:23:58Z</published>
+    <arxiv:comment>To appear in The 13th IEEE International Conference on Data Science and Advanced Analytics (DSAA 2026)</arxiv:comment>
+    <arxiv:primary_category term="cs.CR"/>
+    <author>
+      <name>Shaefer Drew</name>
+    </author>
+    <author>
+      <name>Michael Brautbar</name>
+    </author>
+    <author>
+      <name>Paul Knight</name>
+    </author>
+    <author>
+      <name>Edward Raff</name>
+    </author>
+    <author>
+      <name>Lana Peric-McDermott</name>
+    </author>
+    <author>
+      <name>Simran Sarin</name>
+    </author>
+    <author>
+      <name>Nickolas Machado</name>
+    </author>
+    <author>
+      <name>Hanna Albright</name>
+    </author>
+    <author>
+      <name>Vitaly Zaytsev</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.21214v1</id>
+    <title>Ability-Residual Decoupled Modeling for Affective Cognitive Diagnosis</title>
+    <updated>2026-09-18T01:54:49Z</updated>
+    <link href="https://arxiv.org/abs/2609.21214v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.21214v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Cognitive diagnosis infers students' concept mastery from response logs. However, students' responses are not determined by mastery alone: non-cognitive factors such as emotion, engagement, and fatigue can also affect performance. Affective cognitive diagnosis therefore extends conventional cognitive diagnosis by incorporating affective states. Existing methods often assume that the cognitive diagnosis backbone has already explained ability, item, and concept effects, so the remaining errors can be attributed mainly to affect. We argue that this assumption can be insufficient in real educational data: item calibration bias, systematic concept bias, personalized student-concept deviations, and latent student-item matching can form stable cognitive residuals. Without an explicit modeling pathway, these residuals may leak into affective representations, producing affect contamination. To address this problem, we propose an ability-residual decoupled framework for affective cognitive diagnosis. The model first captures unmodeled cognitive residuals through student, item, concept, student-concept, and low-rank student-item components, and then uses an affective module to modulate guess/slip effects. A Q-matrix-constrained concept residual attention mechanism adaptively aggregates only item-relevant concept residuals. Experiments on ASSIST2017, ASSIST2012, ASSIST2009, and Junyi with six cognitive diagnosis backbones show response-prediction gains across the reported comparisons and generally improved affect alignment when affect labels are available. Ablation studies, leakage probes, principal component analysis visualization, long-tail analysis, and case studies further indicate that ability residuals absorb stable cognitive bias, reduce cognitive contamination in the affective branch, and enhance the robustness and predictive accuracy of cognitive diagnosis models.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-18T01:54:49Z</published>
+    <arxiv:comment>33pages</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Boyuan Zhao</name>
+    </author>
+    <author>
+      <name>Meng Ye</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.19610v1</id>
+    <title>SIMLIFE: Pattern Understanding for Long-Horizon Human-Agent Partnership</title>
+    <updated>2026-09-17T02:43:54Z</updated>
+    <link href="https://arxiv.org/abs/2609.19610v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.19610v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Understanding humans over long horizons requires agents to infer not only what people need in the moment, but also how routines form, why they repeat, and when they change. We introduce SimLife, a scalable platform for simulating long-term household life with rich visual observations, ground-truth action logs, and synthetic dialogues with audio. Built on SimLife, SimLife-BP evaluates long-context pattern understanding: the ability to infer latent behavioral rules from weeks or months of everyday observations. The benchmark contains 106 episodes averaging 15.49 hours and 38.57 in-game days, and 1,439 question-answer pairs. Each task probes direct, counterfactual, noisy, and inverse reasoning under different levels of rule hints. Evaluating frontier models and architectures, we find that current models often achieve surface-level prediction without comprehensive rule understanding, rely on frequency-based heuristics rather than if-then reasoning over evidence, and struggle to adapt when behavioral patterns change. These findings suggest that long-context pattern understanding remains a major bottleneck for future embodied agents, while SimLife opens a broader space for studying memory, personalization, adaptation, and long-horizon planning in everyday human-AI interaction.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-17T02:43:54Z</published>
+    <arxiv:comment>COLM 2026 Learning from Situated and Embodied Interaction Workshop</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Run Peng</name>
+    </author>
+    <author>
+      <name>Zinnia Nie</name>
+    </author>
+    <author>
+      <name>Jing Ding</name>
+    </author>
+    <author>
+      <name>Yinpei Dai</name>
+    </author>
+    <author>
+      <name>Yichi Zhang</name>
+    </author>
+    <author>
+      <name>Zengqing Wu</name>
+    </author>
+    <author>
+      <name>Yao Fu</name>
+    </author>
+    <author>
+      <name>Ziqiao Ma</name>
+    </author>
+    <author>
+      <name>Jiayuan Mao</name>
+    </author>
+    <author>
+      <name>Joyce Chai</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.18776v1</id>
+    <title>TRACER: Adaptive Multi-Robot Social Navigation via Joint Human-Response Prediction and Interaction-Aware Replanning</title>
+    <updated>2026-09-16T14:59:12Z</updated>
+    <link href="https://arxiv.org/abs/2609.18776v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.18776v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multi-robot navigation in human-shared spaces is inherently interactive: coordinated robot motions influence how nearby entities respond, while those responses provide valuable information for subsequent robot decisions. However, existing methods typically address action-conditioned prediction, multi-robot planning, or online adaptation separately, and therefore lack a unified mechanism for modeling joint robot-entity interactions and adapting future decisions from executed interaction outcomes. To address this gap, we propose TRACER, a bi-directional receding-horizon framework that closes the loop between prediction and adaptation. TRACER evaluates candidate (i.e., alternative feasible future motion plans for the robot team) trajectories using a per-entity probabilistic response model that separates individual-robot effects from non-additive pairwise interactions; after executing the selected trajectory prefix, it updates persistent identity-bound beliefs over latent response modes using the synchronized observed responses. These updated beliefs then guide subsequent candidate evaluation under probabilistic safety and response-aware cost criteria. Experiments show that (i) TRACER more accurately captures non-additive multi-robot interaction effects than a capacity-matched additive predictor, (ii) persistent identity-consistent evidence improves response prediction and downstream replanning, and (iii) the complete TRACER framework improves collision-free completion over an independent-robot baseline on the SocialGym2 multi-robot social-navigation benchmark.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-16T14:59:12Z</published>
+    <arxiv:comment>9 pages, 5 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Lan Hu</name>
+    </author>
+    <author>
+      <name>Minghui Liwang</name>
+    </author>
+    <author>
+      <name>Wenbo Zhu</name>
+    </author>
+    <author>
+      <name>Xinlei Yi</name>
+    </author>
+    <author>
+      <name>Wei Gong</name>
+    </author>
+    <author>
+      <name>Yiguang Hong</name>
+    </author>
+    <author>
+      <name>Seyyedali Hosseinalipour</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.15647v1</id>
+    <title>MedDiME: Efficient Latent Diffusion with Adaptive Masking for Medical Counterfactual Generation</title>
+    <updated>2026-09-14T14:32:17Z</updated>
+    <link href="https://arxiv.org/abs/2609.15647v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.15647v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Medical counterfactual generation modifies images to change model predictions for interpretability. However, existing diffusion-based approaches are often prohibitively slow and memory-intensive, making them difficult to apply in high-resolution settings. Moreover, existing masking strategies are tightly coupled with pixel-space representations, making them incompatible with latent-space diffusion editing. To address these challenges, we propose MedDiME, a latent-space classifier-guided diffusion framework that reduces computational and memory overhead while introducing a latent-compatible, gradient-driven adaptive masking mechanism for spatially precise medical counterfactual generation. Extensive experiments demonstrate that MedDiME achieves high-quality counterfactual generation with significant efficiency gains compared to prior classifier-guided diffusion baselines, achieving up to 40 times faster inference and 13 times lower peak GPU memory usage.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-14T14:32:17Z</published>
+    <arxiv:comment>10 pages, 4 figures, 4 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Yan Zeng</name>
+    </author>
+    <author>
+      <name>Changlu Guo</name>
+    </author>
+    <author>
+      <name>Anders Nymark Christensen</name>
+    </author>
+    <author>
+      <name>Morten Rieger Hannemose</name>
+    </author>
+    <author>
+      <name>Anders Bjorholm Dahl</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.15458v1</id>
+    <title>Mobility- and Feedback-Aware Multi-Level Conflict-Triggered Hybrid Beamforming for Multi-User mmWave UAV Systems</title>
+    <updated>2026-09-14T12:23:29Z</updated>
+    <link href="https://arxiv.org/abs/2609.15458v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.15458v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper investigates hybrid beamforming for multi-user large multiple-input multiple-output millimeter-wave unmanned aerial vehicle (UAV) downlink systems under mobility-induced channel aging and delayed beam-training feedback. Analog beam selection from compact delayed reports is a partial-observation decision, while additional candidate evaluations consume processing time and reduce the useful payload interval. We propose a mobility- and feedback-aware multi-level refinement strategy, termed MLR-TG, to improve robustness without always-on candidate search. Candidate subsets are ranked by a predicted net utility constructed from quantized complex coefficients of the reported codewords and the UAV mobility state, while the transmission regularized zero-forcing precoder is computed once from pilot-estimated effective channel state information (CSI) after analog selection. The refinement level is adaptively selected according to conflict severity and aging sensitivity. The selection rule is a two-statistic approximation of predicted-utility maximization, employs a system-size-invariant conflict score, and is calibrated offline on training data disjoint from evaluation. Simulations on a three-dimensional air-to-ground model with UAV attitude dynamics and common channel trajectories show that MLR-TG reduces system outage probability by 26.7% and improves the 5th-percentile user rate by 53.9% relative to greedy sector beamforming, while net spectral efficiency remains within 0.96%. Compared with always-on global top-3 refinement, MLR-TG improves net spectral efficiency by 5.5% while evaluating 77.9% fewer candidates, and remains within 3.4% of a noncausal-CSI level oracle in net spectral efficiency while requiring 86.9% fewer feedback bits than full-CSI reporting.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-14T12:23:29Z</published>
+    <arxiv:comment>This work has been submitted to the IEEE for possible publication. Copyright may be transferred without notice, after which this version may no longer be accessible</arxiv:comment>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Thuan Van Le</name>
+    </author>
+    <author>
+      <name>Nguyen Cong Luong</name>
+    </author>
+    <author>
+      <name>Xingwang Li</name>
+    </author>
+    <author>
+      <name>Vo Nguyen Quoc Bao</name>
+    </author>
+    <author>
+      <name>Ngo Hoang Tu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.13940v1</id>
+    <title>Optimal Transport for Efficient, Unsupervised Anomaly Detection on Industrial Data</title>
+    <updated>2026-09-12T13:34:49Z</updated>
+    <link href="https://arxiv.org/abs/2609.13940v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.13940v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Effective anomaly detection frameworks are a central pillar of the Industry 4.0 paradigm. In this paper, we introduce an Optimal Transport (OT)-based framework for anomaly detection, designed to detect deviations from normal behaviour in time-series sensor data. The OT-based method requires minimal user input and adapts to real-time data without the need for labelled training data. Our method effectively addresses existing limitations related to data labelling, generalisability, and scalability, demonstrating resilience against short-term fluctuations, noise, and data gaps - common challenges in industrial environments. Additionally, our method provides counterfactual explanations improving the auditability of the approach when deployed in industrial settings. The proposed method learns the mapping between normal and observed operating conditions through a sliding reference window that adapts to the dynamicity of the data. We evaluate our approach on three industrial datasets, from shipping, industrial HVAC systems, and publicly available benchmark data. The method was highly effective in identifying anomalies and reducing false positives, outperforming traditional methods, while maintaining computational efficiency and ease of configuration.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-12T13:34:49Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <arxiv:journal_ref>Langbridge, Abigail, et al. "Optimal transport for efficient, unsupervised anomaly detection on industrial data." 2024 IEEE International Conference on Big Data (BigData). IEEE, 2024</arxiv:journal_ref>
+    <author>
+      <name>Abigail Langbridge</name>
+    </author>
+    <author>
+      <name>Fearghal O'Donncha</name>
+    </author>
+    <author>
+      <name>James T Rayfield</name>
+    </author>
+    <author>
+      <name>Bradley Eck</name>
+    </author>
+    <arxiv:doi>10.1109/BigData62323.2024.10825081</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/BigData62323.2024.10825081" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.12731v1</id>
+    <title>GRACE: Adaptive Concept Erasure with Geometry-Guided Retention in Diffusion Models</title>
+    <updated>2026-09-11T11:29:37Z</updated>
+    <link href="https://arxiv.org/abs/2609.12731v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.12731v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Text-to-image (T2I) diffusion models inevitably internalize sensitive or non-compliant concepts from large-scale pretraining data, necessitating post-hoc concept erasure. However, existing erasure methods often lack explicit constraints on parameter updates, leading to over-intervention and unintended semantic drift. In addition, many methods rely on manually crafted counterfactual supervision, such as surrogate prompts, which incurs substantial data construction costs that limit scalability to new concepts. To address these limitations, we propose GRACE, a structured concept erasure framework designed to enable localized and selective intervention. Specifically, we introduce a semantically weighted sensitive subspace estimation to precisely lock intervention directions, and employ lightweight subspace-constrained adapters to prevent global semantic disturbance. To eliminate the dependency on manual prompt engineering, we design an automatically decoupled safe-anchor mechanism. To mitigate semantic drift induced by excessive intervention, we introduce an energy-driven dynamic gating mechanism that adaptively controls the timing and strength of intervention at inference. Extensive experiments demonstrate that our method achieves a superior balance between erasure effectiveness and generation fidelity. Compared with the average performance of five state-of-the-art (SOTA) concept erasure methods, our method improves the fine-grained NSFW reduction rate by $17.86\%$, while reducing the macro-averaged target CLIP Score and preservation-oriented Fréchet Inception Distance (FID) by $4.75\%$ and $50.58\%$, respectively, indicating stronger concept suppression with substantially improved preservation of the original model's generative utility.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-11T11:29:37Z</published>
+    <arxiv:comment>14 pages,12 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Qinghui Gong</name>
+    </author>
+    <author>
+      <name>Yihuai Liang</name>
+    </author>
+    <author>
+      <name>Yuanlun Xie</name>
+    </author>
+    <author>
+      <name>Deepak Kumar Jain</name>
+    </author>
+    <author>
+      <name>Vitomir Štruc</name>
+    </author>
+    <author>
+      <name>Zhengchun Zhou</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.10954v1</id>
+    <title>Measuring the Value of World-Model Updates: A Counterfactual Utility Protocol for Continual Adaptation</title>
+    <updated>2026-09-10T01:22:57Z</updated>
+    <link href="https://arxiv.org/abs/2609.10954v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.10954v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Continual world models must decide whether new data justify changing the model. Fixed replay schedules and prediction-error triggers specify when to update, but neither reveals the value of an individual update: one deployment run cannot show how the same model would have performed at that moment had it held its parameters. We introduce the fork ledger, which branches a deployment stream at pre-registered decision points into matched update and hold continuations under common random numbers. It evaluates both continuations on the same episodes and records $ΔR = R_{\mathrm{update}} - R_{\mathrm{hold}}$. Always applying one fixed update mechanism lowers return on all three simulated control tasks: CartPole ($-144.0$; checkpoint-bootstrap $95\%$ CI $[-185.4,-116.1]$, against a converged return near $650$), Walker ($-82.8$; $[-101.1,-61.7]$) and Cheetah ($-18.6$; $[-29.0,-6.6]$). Divergence is an outcome of applying the update, so the estimand counts every attempted fork; restricted to the $693$ of $720$ that did not collapse, CartPole and Walker are unchanged in sign ($-113.4$ and $-82.1$) and Cheetah becomes unresolved ($-3.9$; $[-17.5,+13.0]$). The task is the unit of inference: each contributes $240$ attempted forks over five pretrained checkpoints crossed with two drift directions. The ledger makes counterfactual utility observable for a fixed mechanism, allowing triggers to be judged by the updates they select rather than by surprise detection alone.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-10T01:22:57Z</published>
+    <arxiv:comment>13 pages, 2 figures, under review at the CWM workshop</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Anqi Peter Li</name>
+    </author>
+    <author>
+      <name>Kaden Kim</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.08180v1</id>
+    <title>Less Is Personal: Learning Minimal Sufficient User Profiles for Personalized Language Models</title>
+    <updated>2026-09-08T03:09:19Z</updated>
+    <link href="https://arxiv.org/abs/2609.08180v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.08180v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Retrieval-augmented personalization enables large language models to produce more accurate and preference-aligned outputs using relevant records retrieved from user histories. Personalized language models typically prepend a fixed number of retrieved user records, even when additional history is redundant, harmful, or unrelated to a user's distinctive behavior. We study minimal sufficient personalization: constructing the least costly ordered profile for each input while preserving the utility achievable from a retrieved candidate pool. We introduce ENOUGH, a method that iteratively appends behavioral records or emits STOP to construct profiles with adaptive lengths. Offline, bounded counterfactual search evaluates profile prefixes by jointly considering downstream gains, user specificity, and token costs. The resulting long-horizon targets are distilled into a multi-head value controller with explicit ranking and stopping supervision. At inference, the controller selects and orders records through lightweight decisions, and the frozen generator is invoked once after stopping. Extensive experiments on six personalized tasks demonstrate that ENOUGH consistently outperforms strong heuristic and retrieval-augmented baselines in both effectiveness and efficiency, achieving minimal sufficient profiles that preserve personalization utility while reducing unnecessary context costs.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-08T03:09:19Z</published>
+    <arxiv:comment>21 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Minghang Liu</name>
+    </author>
+    <author>
+      <name>Qiang Qiu</name>
+    </author>
+    <author>
+      <name>Yuanzhuo Wang</name>
+    </author>
+    <author>
+      <name>Huawei Shen</name>
+    </author>
+    <author>
+      <name>Xueqi Cheng</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.07255v1</id>
+    <title>SkillAlign: Aligning Skill Interfaces for LLM-based Agents</title>
+    <updated>2026-09-07T09:11:03Z</updated>
+    <link href="https://arxiv.org/abs/2609.07255v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.07255v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Language-model agents increasingly rely on skills: reusable procedural knowledge for reasoning, tool use, and interaction. Existing work studies how skills are acquired, retrieved, compressed, or composed, but often assumes that once a skill is selected, its interface to the agent is fixed. We argue that this overlooks a key source of skill utility: the same skill can help, distract, or mislead depending on how it is exposed. We propose SkillAlign, a provider-agnostic framework that represents candidate skills as multi-view procedural cards and renders them through alternative exposure interfaces, including full instructions, hints, compressed summaries, workflows, or no exposure. This enables counterfactual evaluation where the task, agent, and candidate skills are fixed while only the exposure interface varies. Across ALFWorld and SkillsBench, we show that exposure form substantially affects task success and rendered context cost, and that compact top-k exposure can outperform full-library injection. We further conduct a replay-based policy-learning analysis on ALFWorld, showing that adaptive exposure contains learnable signal but remains far from oracle selection. Our results suggest that skill-augmented agents should optimize not only which skills to use, but also how those skills are presented.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-07T09:11:03Z</published>
+    <arxiv:comment>EMNLP2026 main conference</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Shuo Ren</name>
+    </author>
+    <author>
+      <name>Xiaomian Kang</name>
+    </author>
+    <author>
+      <name>Jiajun Zhang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.06786v1</id>
+    <title>When Retain Constraints Conflict: Mitigating Forget-Retain Interference in Tabular Data</title>
+    <updated>2026-09-06T19:08:32Z</updated>
+    <link href="https://arxiv.org/abs/2609.06786v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.06786v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Machine unlearning aims to remove the influence of designated training data while preserving model utility, but its behavior on tabular data remains underexplored. This gap is important because tabular prediction is widely used in high-stakes domains and is increasingly adapted to language models through record serialization and schema-aware prompting. We identify a key challenge that distinguishes tabular unlearning from unlearning in free-form text or other modalities: schema-induced forget-retain overlap. In serialized tabular data, records share fixed column-name/value slots, similar attribute ranges, and common output spaces. Consequently, a forget row may have nearby retain rows that rely on the same high-signal attributes, causing retain preservation to oppose the update required for forgetting. Motivated by this failure mode, we propose Conflict-Aware Unlearning (CAU), a schema-aware approach that reduces forget-retain interference by relaxing preservation constraints on retained rows that most conflict with the forget set. Across sample-level and feature-level unlearning on clinical and non-medical tabular tasks, CAU more closely matches a retraining oracle while maintaining predictive utility and retain-region behavior. Our results show that reliable tabular LLM unlearning depends not only on the forgetting objective, but also on how retain constraints are constructed.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-06T19:08:32Z</published>
+    <arxiv:comment>EMNLP 2026 Finding Paper</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Zijie Liu</name>
+    </author>
+    <author>
+      <name>Jinhao Duan</name>
+    </author>
+    <author>
+      <name>Bingqi Shang</name>
+    </author>
+    <author>
+      <name>Xinming An</name>
+    </author>
+    <author>
+      <name>Sijia Liu</name>
+    </author>
+    <author>
+      <name>Tianlong Chen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.06704v1</id>
+    <title>Counterfactual Tests for Measuring Chain-of-Thought Faithfulness in Visual Language Models</title>
+    <updated>2026-09-06T16:21:14Z</updated>
+    <link href="https://arxiv.org/abs/2609.06704v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.06704v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Chain-of-thought (CoT) may often look plausible, yet it may not faithfully reflect the model's decision-making process. While methods for measuring the faithfulness of CoTs for textual inputs have been increasingly introduced, using these methods for visual inputs is not straightforward. In this work, we adapt the family of counterfactual methods for measuring CoT faithfulness, namely the Counterfactual Test (CT) and Correlational Counterfactual Test (CCT), to visual inputs, and call them vCT and vCCT, respectively. Using vCT and vCCT, we benchmark eight recent open-source Vision Language Models (VLMs) on two datasets. Our analysis shows that CoTs do not reliably track visual evidence that influences model predictions: they may omit the removed object even when its removal causes a large prediction shift, yet mention it when the shift is small. We further find that Predict-then-Explain explanations align more strongly with perturbation-induced probability shifts than pre-answer CoTs, while binary vCT scores are often nearly saturated. We also include a reconstruction control, in which images pass through the same editing pipeline without object removal, and find that the main object-removal intervention induces larger shifts than reconstruction alone. We construct and release Counter-SNLI-VE and Counter-A-OKVQA, two datasets of image pairs that differ by a single object.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-06T16:21:14Z</published>
+    <arxiv:comment>Accepted to Findings of the Association for Computational Linguistics: EMNLP 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Bayar Menzat</name>
+    </author>
+    <author>
+      <name>Maximilian Süss</name>
+    </author>
+    <author>
+      <name>Ruizhi Wang</name>
+    </author>
+    <author>
+      <name>Benno Steinegger</name>
+    </author>
+    <author>
+      <name>Thomas Lukasiewicz</name>
+    </author>
+    <author>
+      <name>Oana-Maria Camburu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.06615v1</id>
+    <title>MemCorr-DP: Counterfactual Correspondence Conditioning for a Diffusion Policy Guided by a Reference</title>
+    <updated>2026-09-06T14:03:20Z</updated>
+    <link href="https://arxiv.org/abs/2609.06615v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.06615v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Behavior-cloned visuomotor policies can remain accurate near their training distribution yet fail when object position and camera viewpoint change together. A successful reference trajectory contains the geometry needed to transfer the same interaction, but the policy must align that geometry with the current scene and remain sensitive to it during denoising. To address these challenges, we present MemCorr-DP, a diffusion policy that lifts frozen RoMa v2 matches into explicit 3D relations between the current scene and the reference trajectory. A counterfactual paired objective assigns opposite behaviors the same physical state and noisy action while retaining reference-specific denoising targets. Mixed-condition fine-tuning then adapts the policy from ground-truth geometry to measured correspondence errors. Our strongest evaluation places the Door in the outermost position bands beyond the training support and changes the query camera by $\pm15^\circ$. Under this combined shift, MemCorr-DP achieves 96.67% closed-loop success, compared with 88.00% for a visual Transformer with the same action architecture. Objective ablations and reference interventions show that behavior responds to the selected reference, while matched controls favor the complete relation set over future motion or centroid geometry alone. These results support explicit 3D reference relations as a robust conditioning interface when spatial and viewpoint changes are compounded in the evaluated task.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-06T14:03:20Z</published>
+    <arxiv:comment>12 pages, 6 figures. Tan Su, Haoxiang Yang, and Ruxin Wang contributed equally. Corresponding author: Binghui Xie</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Tan Su</name>
+    </author>
+    <author>
+      <name>Haoxiang Yang</name>
+    </author>
+    <author>
+      <name>Ruxin Wang</name>
+    </author>
+    <author>
+      <name>Binghui Xie</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.06581v1</id>
+    <title>Reading Decoder Trajectories: Training-Free Counterfactual Query-Trajectory Reliability for Small-Object Detection</title>
+    <updated>2026-09-06T12:59:20Z</updated>
+    <link href="https://arxiv.org/abs/2609.06581v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.06581v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Small-object detection remains challenging because limited pixels cause information loss and suppress the scale knowledge encoded in pretrained detectors. Existing approaches mainly improve representations through multiscale training, architecture redesign, or parameter adaptation, implicitly assuming that frozen models lack the required capability. We challenge this assumption and hypothesize that small-object knowledge already exists in frozen detectors but remains underactivated and unstable during query evolution. To test this hypothesis, we propose Counterfactual Query-Trajectory Reliability (CQTR), a training-free framework that elicits latent responses through counterfactual scale interventions and interprets candidate reliability from decoder-internal spatial convergence, semantic persistence, and cross-scale conflicts. A small unlabeled training subset selects the appropriate correction mechanism for each model-data stream, without parameter updates or target-domain annotations. Across 27 combinations of nine frozen detectors and three datasets, CQTR consistently improves average precision (AP) and average precision for small objects (APs). Closed-loop analyses further show that scale intervention activates latent responses, trajectory evidence predicts ground-truth support, and unlabeled routing selects the more effective branch. CQTR therefore reframes small-object detection from external scale augmentation to the activation and reliability assessment of latent scale knowledge.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-06T12:59:20Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Zhaoning Shi</name>
+    </author>
+    <author>
+      <name>Bo Ma</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.04738v1</id>
+    <title>Aplaud: Adaptive Personalized Low-Rank Decomposition for User-Specific LLM</title>
+    <updated>2026-09-04T05:09:17Z</updated>
+    <link href="https://arxiv.org/abs/2609.04738v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.04738v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper, we study the problem of personalized survey response prediction using fine-tuned large language models (LLMs). This task poses unique challenges: limited per-user training data, scalability of model storage, and the need to exploit shared structure across survey questions. To address these issues, we propose Aplaud (Adaptive Personalized Low-rank and User-specific Nested Decomposition), a lightweight and scalable framework for LLM personalization. Aplaud extends the LoRA paradigm by separating adaptation into a frozen, shared low-rank basis and a compact user-specific correction, augmented with a rank-one residual for finer personalization. To further reduce per-user parameter cost and mitigate overfitting, the correction matrix can be factorized into an even lower-rank form. Empirical results demonstrate that Aplaud achieves efficient, scalable personalization across users while outperforming state-of-the-art LoRA-based personalized LLM approaches in both generalization and inference efficiency.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-04T05:09:17Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Xinyu Li</name>
+    </author>
+    <author>
+      <name>Ruoming Jin</name>
+    </author>
+    <author>
+      <name>Jianfeng Zhu</name>
+    </author>
+    <author>
+      <name>Ruixin Guo</name>
+    </author>
+    <author>
+      <name>Zhi Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.04678v1</id>
+    <title>Train What You Deploy:Token-Faithful Post-Training of a Production Coding</title>
+    <updated>2026-09-04T03:11:09Z</updated>
+    <link href="https://arxiv.org/abs/2609.04678v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.04678v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Existing post-training pipelines for coding and terminal agents suffer severe token and control fidelity errors: simplified training environments mismatch production deployments, and offline token reconstruction from agent logs distorts original prompts and conflates policy calls with background model operations. We present a fidelity-aware training coupling framework that retains trainer-side sampling over original prompts, eliminates spurious model calls via a negotiated training protocol, and restricts loss computation to verifiable token spans with closed-failure guarantees. We further propose Certified Divergence Proximal Policy Optimization (C-DPPO), which establishes tight two-sided TV certification bounds, adaptive-K rules, budget-aware sequence guarantees, and error-robust policy masking atop standard DPPO. Evaluated on matched Baize5B and Baize10B models with identical training and test protocols on TMax-100, C-DPPO yields a consistent +3.0-point performance gain over standard DPPO across model scales. Certificate audits validate the reliability and full operational coverage of our certified training pipeline.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-04T03:11:09Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Cheng Li</name>
+    </author>
+    <author>
+      <name>Jiexiong Liu</name>
+    </author>
+    <author>
+      <name>Yixuan Chen</name>
+    </author>
+    <author>
+      <name>Chi Hong</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.22237v1</id>
+    <title>Not All Ranks Are Equal: Budget-Aware LoRA Merging Across Tasks</title>
+    <updated>2026-09-03T21:10:28Z</updated>
+    <link href="https://arxiv.org/abs/2609.22237v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.22237v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Merging low-rank adapters (LoRAs) promises to eliminate the overhead of swapping task-specific weights at inference time. However, existing merging methods assume every layer needs the same rank budget. Further, some methods assume that rank budget needs to be split equally among the tasks too. We show this uniform-budget assumption is a major source of the performance gap between merged and per-task LoRAs. However, rank selection is an NP hard problem. To this end, we introduce Net Utility, a data free metric that first decomposes every task LoRA by its Singular Value Decomposition (SVD) and scores each of those singular directions by its task utility and its interference with other tasks directions. Next, we globally pool these scores to select singular directions with the highest values with a constraint on the total number of directions selected. The proposed Net Utility metric is applied on top of five different merging methods across three different merging spaces. The merging is done over two sets of tasks, vision and language tasks. Net utility based rank allocation outperforms its counterparts without that allocation. On average, over vision tasks it achieves +2.1% improvement in performance, and +2.2% improvement over the language tasks.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-03T21:10:28Z</published>
+    <arxiv:comment>7 pages, AAAI submission</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Avinash Amballa</name>
+    </author>
+    <author>
+      <name>Yashas Malur Saidutta</name>
+    </author>
+    <author>
+      <name>Wenbo Li</name>
+    </author>
+    <author>
+      <name>Lazar Valkov</name>
+    </author>
+    <author>
+      <name>Srinivas Chappidi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.03851v1</id>
+    <title>Pushing the (Decision) Boundaries: Dynamically Calibrating Differentially Private Noise to Explainability in Federated Learning</title>
+    <updated>2026-09-03T13:43:32Z</updated>
+    <link href="https://arxiv.org/abs/2609.03851v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.03851v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Federated Learning (FL) with Differential Privacy (DP) is increasingly adopted to preserve data confidentiality in distributed machine learning. However, DP noise distorts learned representations and degrades explanation fidelity, limiting differentially private FL where trustworthy explanations are required, such as assistive clinical diagnosis. Prior work adapted DP noise with static feature-importance signals, restricting explainability to post hoc analysis and precluding noise calibration to explanation quality during training. We propose XCal-FL, a closed-loop, explainability-driven local training algorithm for image classification in cross-silo FL that dynamically calibrates DP noise from three complementary signals: (1) prediction logit variations, measuring causal influence on model confidence, (2) counterfactual margins, capturing decision-boundary sensitivity, and (3) saliency concentration, quantifying spatial coherence of model attention, while enforcing formal DP guarantees via adaptive privacy accounting. Experiments on three medical imaging datasets across varying FL configurations show that XCal-FL yields more accurate and interpretable global models, improving predictive performance by over 10\% and explanation fidelity by up to 5$\times$ over static-noise FL, and outperforming state-of-the-art adaptive DP methods in fidelity. XCal-FL also achieves higher privacy-budget efficiency, turning each unit of cumulative privacy loss into larger gains in both accuracy and explanation fidelity. Our analysis further reveals that, unlike predictive performance, which scales roughly linearly with privacy loss, explanation fidelity exhibits non-linear dynamics. These findings suggest explainability is a distinct dimension of the privacy trade-off that cannot be inferred from utility alone, with implications for training and privacy-budget allocation in decision-critical applications.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-03T13:43:32Z</published>
+    <arxiv:comment>21 pages, 9 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Michael Khavkin</name>
+    </author>
+    <author>
+      <name>Kichang Lee</name>
+    </author>
+    <author>
+      <name>Jaeho Jin</name>
+    </author>
+    <author>
+      <name>JeongGil Ko</name>
+    </author>
+    <author>
+      <name>Eran Toch</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.03727v1</id>
+    <title>Proactive Service Agents: A Unified Decision Framework, Methods, and Evaluation</title>
+    <updated>2026-09-03T12:00:34Z</updated>
+    <link href="https://arxiv.org/abs/2609.03727v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.03727v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language model agents can plan, invoke tools, and modify external states, yet most systems still take an explicit user instruction as a fixed starting point. Proactive service moves the decision upstream: an agent must infer service opportunities from incomplete environmental and user signals, choose among remaining silent, asking, assisting, and acting, and account for interruption, misunderstanding, overreach, and privacy costs. This survey gives an operational definition centered on initiative and formulates the problem as a partially observable sequential decision process constrained by authorization and risk. The formulation represents timing, content, and delivery within one structured action, while making explicit the option value of waiting, the decision value of questions, and feedback-induced state changes. On this basis, we organize existing methods along one decision pipeline (state and need estimation, intervention gating, action construction, and feedback adaptation) and describe prescribed, predictive, model based, and return optimizing mechanisms as nonexclusive policy-construction components. We further normalize decision units and three-axis evidence descriptors across streaming dialogue, screen, video, software-engineering, and human-agent collaboration resources, and formalize metrics for triggering, timing, calibration, user burden, safety, and policy value. The synthesis shows why offline classification performance alone does not predict deployment benefit and why long-term memory is not a defining condition of proactivity. Reliable proactive service instead requires calibrated incremental intervention value, verifiable authorization, recoverable execution, and counterfactual evidence.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-03T12:00:34Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Yan Tang</name>
+    </author>
+    <author>
+      <name>Tingyu Cao</name>
+    </author>
+    <author>
+      <name>Yuanbo Tang</name>
+    </author>
+    <author>
+      <name>Huaze Tang</name>
+    </author>
+    <author>
+      <name>Keer Hu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.03442v1</id>
+    <title>Guide, Not Bind: Why Defeasible Priors Fail in Augmented Lagrangian Causal Discovery</title>
+    <updated>2026-09-03T06:53:34Z</updated>
+    <link href="https://arxiv.org/abs/2609.03442v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.03442v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Differentiable causal discovery methods increasingly encode expert priors as forbidden-edge constraints enforced by an Augmented Lagrangian (ALM) penalty, on the assumption that a data-adaptive relaxation mechanism will discount and eventually override a rule the data consistently contradicts. We show this design, which we call \emph{guide, not bind}, fails for two independent, precisely characterized reasons, and that directly repairing both restores it only partially. First, sequential penalty-ramping ALM suppresses a wrongly-forbidden true edge before any counterfactual check can detect it: we give three necessary conditions any adaptive relaxation must satisfy to avoid this (Proposition~\ref{prop:conditions}), prove that DADU---the natural relaxation rule this paper introduces as the object of study---violates all three (Corollary~\ref{cor:dadu_failure}), and confirm the failure across 3{,}072 training runs spanning graphs from 4 to 32 nodes, where a single wrong prior suppresses a true edge in 87--97\% of trials under DADU. Second, and independent of any fix to the mechanism, we prove in closed form that the standard correlation-matching objective ties a true edge and its reverse to an identical cost of exactly $2r^2$ (Lemma~\ref{lem:tie}), not because the underlying equal-variance model is unidentifiable, but because normalizing to correlation discards exactly the variance information that would make it identifiable; covariance matching instead separates the two directions by a provable margin of at least $w_0^4$ (Lemma~\ref{lem:separation}).</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-03T06:53:34Z</published>
+    <arxiv:comment>29 pages, 6 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Sairam Sundararaman</name>
+    </author>
+    <author>
+      <name>Sara Girdhar</name>
+    </author>
+    <author>
+      <name>Manit Narasimha Murthy</name>
+    </author>
+    <author>
+      <name>Samrudh N</name>
+    </author>
+    <author>
+      <name>Bhaskarjyoti Das</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.02265v1</id>
+    <title>CAPTURE: Disentangling Preference Drift from Memory Poisoning in Personalized LLM Agents</title>
+    <updated>2026-09-02T08:10:26Z</updated>
+    <link href="https://arxiv.org/abs/2609.02265v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.02265v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Personalized language agents use persistent memory to adapt to users over time, but the same mechanism creates an attack surface. When new information conflicts with stored preferences, an agent must distinguish genuine preference drift from temporary context shifts, ambiguity, or adversarial memory poisoning. We formulate this problem as a continuous-time partially observable decision process over a latent user state and show why rules based only on recency and provenance are insufficient. CAPTURE addresses this ambiguity with a neural differential-equation belief tracker, a multi-timescale memory ledger, uncertainty-triggered clarification, and counterfactual auditing of cited memories. On 480 held-out episodes from 96 users, CAPTURE achieves a 71.5% win rate, compared with 69.3% for an identically supervised baseline and 66.1% for the strongest heuristic baseline. It limits fixed-policy poisoning success to 11.5% while accepting 83.5% of genuine preference updates. Under an adaptive attacker with access to the released weights, attack success rises to 24.7%, exposing a real adaptation-security tradeoff. We further evaluate the frozen system zero-shot on an independently constructed benchmark and replay longitudinal interaction histories from 40 users collected over two to three weeks. These results suggest that modeling preference authenticity explicitly can improve both personalization and robustness in memory-augmented LLM agents.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-02T08:10:26Z</published>
+    <arxiv:comment>Under review at ICLR 2027</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>S M Asif Hossain</name>
+    </author>
+    <author>
+      <name>Ruksat Khan Shayoni</name>
+    </author>
+    <author>
+      <name>Md Kishor Morol</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.01839v1</id>
+    <title>Import What You Need: Learning When and How to Augment EHR Graphs with External Knowledge</title>
+    <updated>2026-09-01T20:16:55Z</updated>
+    <link href="https://arxiv.org/abs/2609.01839v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.01839v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Longitudinal prediction from electronic health records (EHRs) is limited by the sparsity and irregularity in patient trajectories, and knowledge augmentation with external knowledge graphs (KGs) offers a promising way to alleviate these issues. However, most existing methods perform fixed, context-agnostic topology augmentation by adding the same KG nodes and edges regardless of a patient's evolving state. We propose ReTA, a Reinforcement learning-based dynamic Topology Augmentation framework that casts KG import as a per-visit, budget-aware policy. ReTA first constructs an offline refined pool of KG-grounded templates, then learns a policy to select one augment action per visit from three options: Soft Import, which enriches node features without modifying graph topology, Hard Import, which grafts a compact KG subgraph onto the visit graph to create message-passing shortcuts, and Skip, which leaves the visit unaugmented when the base encoder is already confident. To stabilize learning, ReTA employs a decoupled encoder that processes semantic and structural signals in separate channels and fuses them via adaptive gating. Experiments on MIMIC-III and MIMIC-IV across diagnosis prediction, mortality, and readmission show that ReTA consistently outperforms strong baselines while remaining efficient, transfers across datasets and knowledge graphs, and yields interpretable augmentation patterns. The robust gains under sparse supervision highlight the advantage of ReTA's dynamic decision to import knowledge, boosting accuracy while curbing costs.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-01T20:16:55Z</published>
+    <arxiv:comment>Accepted to the Main Conference of EMNLP 2026. 20 pages, 13 figures, and 18 tables. Code: https://github.com/ChenC2002/ReTA/</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Chen Chen</name>
+    </author>
+    <author>
+      <name>Mohsen Nayebi Kerdabadi</name>
+    </author>
+    <author>
+      <name>Dongjie Wang</name>
+    </author>
+    <author>
+      <name>Mei Liu</name>
+    </author>
+    <author>
+      <name>Zijun Yao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.01360v1</id>
+    <title>EDGE: Error Dependency Graph-Guided Multi-Error Attribution in Multi-Agent LLM Systems</title>
+    <updated>2026-09-01T15:00:54Z</updated>
+    <link href="https://arxiv.org/abs/2609.01360v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.01360v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language model (LLM) agent failures often contain multiple related errors rather than a single mistake. Existing attribution methods usually identify a responsible agent, step, or root cause, but do not explicitly model dependency between errors. We introduce EDGE, an Error Dependency Graph-guided multi-Error attribution framework. EDGE constructs an error dependency graph from observed error events and validates a reliable causal subset through counterfactual rollout. The inference graph guides a two-stage LLM-as-judge detector for error attribution, and the intervention-validated subgraph provides a more reliable basis for explanation and repair analysis. Experiments on TRAIL and MAST show that EDGE improves category-level multi-error attribution across most evaluated models and settings. Experiments with adapted Who&amp;When-style prompts show that the graph helps across prompting strategies. These results suggest that dependency structure is a useful diagnostic prior for agent failures beyond isolated root-cause prediction.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-01T15:00:54Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <arxiv:journal_ref>EMNLP 2026</arxiv:journal_ref>
+    <author>
+      <name>Jun Hou</name>
+    </author>
+    <author>
+      <name>Priya Pitre</name>
+    </author>
+    <author>
+      <name>Yi Fang</name>
+    </author>
+    <author>
+      <name>Xuan Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.00996v1</id>
+    <title>Does This Moment Justify the Recommendation? Counterfactual Behavior-Grounded Evidence Retrieval for Personalized Video Recommendation</title>
+    <updated>2026-09-01T09:46:27Z</updated>
+    <link href="https://arxiv.org/abs/2609.00996v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.00996v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Personalized video recommendation predicts user preference at the video level, while temporal video grounding localizes query-relevant moments. However, strong localization does not establish whether the retrieved moment constitutes valid evidence for recommending the video to a particular user. We study counterfactual behavior-grounded evidence retrieval, which separates where personalized evidence occurs from whether such evidence exists and evaluates whether model predictions respond consistently when that evidence is replaced. We introduce CBGER-10K, containing 5,000 controlled factual--counterfactual pairs for 3,026 users, where each pair replaces only the focal behavior-supported segment while preserving the user, temporal position, and hard distractors. We further propose CBGER, a compact framework that decouples segment-level localization from video-level evidence estimation and learns both through structured counterfactual supervision. CBGER achieves $0.4432$ MRR, $0.6977$ Pair Accuracy, and $0.6987$ Intervention Consistency across five adapted personalized-highlight and temporal-grounding baselines. Notably, compared with QD-DETR, its MRR improvement is not statistically significant, while Pair Accuracy improves by $11.03$ points. These results show that accurate temporal localization does not necessarily imply reliable personalized evidence existence, motivating explicit evaluation of Whether alongside Where.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-01T09:46:27Z</published>
+    <arxiv:comment>8 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Xin Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.00874v1</id>
+    <title>Beyond the Clock: Measuring the Value of Adaptive Revision</title>
+    <updated>2026-09-01T08:07:38Z</updated>
+    <link href="https://arxiv.org/abs/2609.00874v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.00874v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>As agentic systems become compound systems, increasingly important decisions move above task execution itself: when should a higher-level controller preserve the strategy guiding another process, and when should it revise it? We study this meta-level control problem in a hierarchical latent reasoner whose manager can retain or replace a commitment governing lower-level computation. Across three precommitted training seeds, learned revision timing produces qualitatively different policies, ranging from an almost deterministic early clock to substantially more state conditioned schedule distributions, yet none outperforms the best forced timing policy evaluated on the same frozen checkpoint. This separates state dependence from decision value: a controller can vary its actions with internal state without turning that variation into a reproducible task-performance benefit. A deeper intervention study on the original checkpoint shows that timing itself is consequential and order-sensitive, while exhaustive enumeration reveals that a strong fixed schedule captures most of the measurable value available from timing at this decision budget. Counterfactual PERSIST/REPLAN diagnostics further show why score-level evidence can be misleading when predictability is dominated by decision position rather than within-position discrimination. Together, these results argue that learned meta-level control should be evaluated along three separate axes: whether its score depends on state, whether that dependence changes realized behavior, and whether those changes capture outcome value beyond a strong non-adaptive policy.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-01T08:07:38Z</published>
+    <arxiv:comment>11 pages, 5 figures, Preprint</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Ayushi Chadha</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.00813v1</id>
+    <title>One Policy, Any Budget: Internalizing Budget-Aware Search via Reinforcement Learning</title>
+    <updated>2026-09-01T07:12:32Z</updated>
+    <link href="https://arxiv.org/abs/2609.00813v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.00813v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>While reinforcement learning has enabled LLM-based search agents to invoke external tools, existing methods train under fixed budgets and cannot adapt when constraints vary at deployment. We propose AnySearch, a framework that enables a single policy to perform budget-aware search under any budget constraint through a training scaffold and curriculum reinforcement learning. In the first phase, we train the agent with explicit budget state injection and structured reasoning prompts that guide efficient allocation under linearly decaying budgets. In the second phase, the scaffold is removed and the agent learns to operate autonomously under adaptively sampled budget constraints, matching inference conditions. Both phases are optimized with a composite reward that couples answer accuracy with budget efficiency through absolute and relative signals, where an adaptive weight amplifies the efficiency signal for high-accuracy queries and attenuates it for low-accuracy ones. Extensive experiments on seven general and multi-hop QA benchmarks show that our method outperforms baselines across all budget scales, generalizes to unseen constraints beyond the training range, and achieves superior tool productivity without excessive token overhead. Our code is available at https://github.com/xwsun01/AnySearch.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-01T07:12:32Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Xiaowei Sun</name>
+    </author>
+    <author>
+      <name>Jin Li</name>
+    </author>
+    <author>
+      <name>Yili Hong</name>
+    </author>
+    <author>
+      <name>Yikun Fu</name>
+    </author>
+    <author>
+      <name>Yanghua Xiao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.00242v1</id>
+    <title>CoLT-Drive: Counterfactual Long-Tail Benchmarking and Knowledge-Preserving Adaptation for Driving Affordance Prediction</title>
+    <updated>2026-08-31T18:44:30Z</updated>
+    <link href="https://arxiv.org/abs/2609.00242v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.00242v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Long-tail autonomous driving failures are often framed as rare-object recognition errors. We argue that this view is incomplete: the decision-critical question is not only whether a model recognizes an unusual object, but whether it infers how that object changes the ego vehicle's feasible high-level actions. We formalize this problem as decision-level driving affordance prediction, where a model maps a front-view image, ego-motion history, and navigation command to a structured longitudinal--lateral meta-action. To evaluate this capability, we introduce CoLT-Drive, a 3,536-sample counterfactual long-tail benchmark that inserts rare objects into otherwise fixed driving scenes and measures whether models predict acceptable action pairs. To improve deployable small VLMs, we propose KPA, a knowledge-preserving adaptation framework that combines structured perception-to-decision prompting, SLERP-based expert merging, and RegMoE, a regime-aware LoRA mixture-of-experts module. KPA preserves the pretrained model's open-world knowledge while allocating lightweight adaptation capacity to different driving decision regimes. Experiments on an in-domain driving split and CoLT-Drive show that KPA achieves 60.8\% pair accuracy on CoLT-Drive, outperforming the pretrained Qwen3-VL-2B baseline (50.3\%) and LoRA SFT (32.4\%) while maintaining competitive in-domain accuracy. Our benchmark and code are available at https://huggingface.co/datasets/tangzx2024/CoLT-Drive and https://github.com/tangzhengxu/CoLT-Drive.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-31T18:44:30Z</published>
+    <arxiv:comment>Accepted by EMNLP 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Zhengxu Tang</name>
+    </author>
+    <author>
+      <name>Guofeng Cui</name>
+    </author>
+    <author>
+      <name>Ziyu Gong</name>
+    </author>
+    <author>
+      <name>Xiaozhou Zhang</name>
+    </author>
+    <author>
+      <name>Ruifeng Deng</name>
+    </author>
+    <author>
+      <name>Chengzhi Qi</name>
+    </author>
+    <author>
+      <name>Ke Chen</name>
+    </author>
+    <author>
+      <name>Sachin Patil</name>
+    </author>
+    <author>
+      <name>Tianjun Xiao</name>
+    </author>
+    <author>
+      <name>Langechuan Liu</name>
+    </author>
+    <author>
+      <name>Pichao Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.05513v1</id>
+    <title>When and What to Teach: Budget-Aware Online Adaptation for Web Agents</title>
+    <updated>2026-08-31T08:40:34Z</updated>
+    <link href="https://arxiv.org/abs/2609.05513v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.05513v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Web agents have achieved significant success in automating complex internet tasks but deploying them in real-world environments requires continuous online adaptation. Given that deploying powerful proprietary models remains commercially cost-prohibitive, practitioners must rely on lightweight local models that evolve post-deployment via online teaching from a stronger teacher. However, standard interactive feedback imposes prohibitive costs. We show that conventional trajectory-level preference optimization wastes budget on both unresolvable episodes and redundant execution turns. To resolve these inefficiencies, we propose \textbf{Score-Guided Online Teaching with Budgeted Trajectory Trimming}, a budget-aware framework that systematically orchestrates \textbf{when} and \textbf{what} to teach. Specifically, our framework integrates a solvability-aware teacher gate to dictate \textbf{when} to query the teacher model and a score-guided turn selection mechanism to decide \textbf{what} informative turns to retain. Extensive experiments on MiniWoB and TimeWarp demonstrate that our method achieves comparable first-pass success while reducing teacher calls by 22.6\% and student training compute by 52.1\% on average. Our code is available at https://github.com/zjw131f1fc/budgeted-online-teaching.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-31T08:40:34Z</published>
+    <arxiv:comment>16 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Jianwei Zhang</name>
+    </author>
+    <author>
+      <name>Sihan Cao</name>
+    </author>
+    <author>
+      <name>Pengcheng Zheng</name>
+    </author>
+    <author>
+      <name>Ya Wen</name>
+    </author>
+    <author>
+      <name>Pei Ke</name>
+    </author>
+    <author>
+      <name>Kuien Liu</name>
+    </author>
+    <author>
+      <name>Shen Gao</name>
+    </author>
+    <author>
+      <name>Wei Dong</name>
+    </author>
+    <author>
+      <name>Yang Yang</name>
+    </author>
+    <author>
+      <name>Chaoning Zhang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.00061v2</id>
+    <title>ReNFT: Repairing Mode Collapse in Reward Post-Training via Internal Probability-Mass Recalibration</title>
+    <updated>2026-09-05T05:18:48Z</updated>
+    <link href="https://arxiv.org/abs/2609.00061v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.00061v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Reward post-training of diffusion generators inevitably concentrates probability mass on a few reward-favored modes, a mode collapse that erases within-prompt diversity. Existing methods for mitigating collapse rely on external signals or interfaces, augmenting the reward with perceptual objectives, adjusting reference regularization, or modifying the text encoder, but none repairs an adapter that has already collapsed while preserving the acquired reward. We observe that online post-training primarily reallocates probability mass over capabilities inherited from pretraining rather than learning new visual content. Collapse is therefore suppression, not deletion, and can be reversed from within the generator. We propose ReNFT, which repairs a high-reward, low-diversity adapter through internal probability-mass recalibration. Unconditional probes first prioritize "anti-hub" prompts where the prompt-independent bias is easiest to expose. Two policy-dominated mixed routes then generate matched counterfactual proposals from the same prompt and initial noise, one probing the frozen base direction for suppressed alternatives and the other exposing the post-trained unconditional tendency. Reward ranking with an adaptive flipping guard assigns pull and push roles, and a joint-and-paired NFT update realizes the repair. On PickScore and GenEval, ReNFT retains 98.9% and 99.0% of NFT's reward while improving DreamSim-Div by 58.8% and 55.0%, respectively, offering a complementary alternative to external interventions.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-30T14:13:50Z</published>
+    <arxiv:comment>17 pages, 13 figures, 4 tables. Project Page: https://yusenbao01.github.io/renft/</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Yuchen Bao</name>
+    </author>
+    <author>
+      <name>Chao Wen</name>
+    </author>
+    <author>
+      <name>Haowei Wang</name>
+    </author>
+    <author>
+      <name>Ruoxin Chen</name>
+    </author>
+    <author>
+      <name>Donghao Luo</name>
+    </author>
+    <author>
+      <name>Jiahui Zhan</name>
+    </author>
+    <author>
+      <name>Wenjian Huang</name>
+    </author>
+    <author>
+      <name>Shen Chen</name>
+    </author>
+    <author>
+      <name>Yiting Wang</name>
+    </author>
+    <author>
+      <name>Taiping Yao</name>
+    </author>
+    <author>
+      <name>Chengjie Wang</name>
+    </author>
+    <author>
+      <name>Shouhong Ding</name>
+    </author>
+    <author>
+      <name>Jianguo Zhang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.29372v2</id>
+    <title>FORESIGHT-9: Prospective and Process-Aware Evaluation of Adaptive Trading Agents</title>
+    <updated>2026-09-04T14:31:11Z</updated>
+    <link href="https://arxiv.org/abs/2608.29372v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.29372v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Retrospective backtests provide a limited test of adaptive trading agents: they cannot rule out historical contamination, expose sensitivity to a single realized market path, or reveal internal degeneration during long-horizon adaptation. We introduce FORESIGHT-9, a prospective and process-aware benchmark built from nine auditable counterfactual stress worldlines branching from a common July 2026 information boundary. Each worldline specifies staged macro-financial events and joint multi-asset anchors; a deterministic generator realizes the trajectories, while observations are disclosed according to in-world time. A common contract standardizes observations and execution while preserving each agent's native adaptation loop. We evaluate two adaptive trading-agent frameworks with two foundation-model backbones across 36 long-horizon runs. Agent rankings vary substantially across worldlines and backbones, and a fixed equal-weight policy outperforms 31 of 36 runs. Process telemetry exposes failures that terminal returns conceal: in one high-return run, the live factor library collapsed while executed holdings converged to the equal-weight fallback, even though decision records continued to report an active factor ensemble. FORESIGHT-9 therefore evaluates not only portfolio outcomes, but whether adaptive agent state and execution remain coherent across alternative futures. We release the worldlines, trajectories, audit traces, and regeneration scripts.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-29T17:12:49Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Xiangxin Luo</name>
+    </author>
+    <author>
+      <name>Chengtian Hong</name>
+    </author>
+    <author>
+      <name>Haohua Li</name>
+    </author>
+    <author>
+      <name>Yongyi Xie</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.28364v1</id>
+    <title>Where Does Balance Break? Boundary Discovery for Game Balance Testing under a Finite Simulation Budget</title>
+    <updated>2026-08-28T14:17:27Z</updated>
+    <link href="https://arxiv.org/abs/2608.28364v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.28364v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Software testing often relies on assumptions such as reproducible executions and stable correctness criteria. However, many modern software systems exhibit non-deterministic executions and large behavior spaces, making exhaustive exploration impractical and single-run judgments unreliable. These characteristics make it difficult to identify where acceptable behavior ends and problematic behavior begins. Competitive multiplayer games represent a challenging instance of such systems, where balance must be maintained so that no single strategy dominates. Even small parameter changes can trigger abrupt balance disruption, yet detecting such failures requires repeated simulations under non-deterministic outcomes and high-dimensional parameter spaces. In this paper, we formulate game balance regression testing as a boundary-discovery problem under a finite simulation budget. The objective is to efficiently identify inputs near the boundary that separates balanced and unbalanced regions. To address this problem, we propose BBExplorer, which combines multi-directional candidate generation, budget-aware two-stage screening, and adaptive step-size shrinkage for boundary refinement. Experimental results on two games with different levels of complexity show that the approach is strong in low-dimensional settings and remains effective in higher-dimensional ones. It also exhibits stable boundary behavior across unseen random seeds and threshold settings. These results indicate that BBExplorer is effective for practical balance regression testing and, more broadly, for boundary-oriented testing in non-deterministic, budget-constrained systems.</summary>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-28T14:17:27Z</published>
+    <arxiv:comment>Accepted to ASE 2026 Research Track</arxiv:comment>
+    <arxiv:primary_category term="cs.SE"/>
+    <author>
+      <name>Hiroki Mukai</name>
+    </author>
+    <author>
+      <name>Yusaku Kato</name>
+    </author>
+    <author>
+      <name>Norihiro Yoshida</name>
+    </author>
+    <author>
+      <name>Erina Makihara</name>
+    </author>
+    <author>
+      <name>Katsuro Inoue</name>
+    </author>
+  </entry>
+</feed>

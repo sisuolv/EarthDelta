@@ -1,0 +1,54 @@
+Using device: cpu
+Patch size: 4
+Running identity binding criteria...
+  - identity_config_bound: PASS
+Loading inputs...
+  - variable_coordinate_identity_match: PASS
+  - source_identity_match: PASS
+  - normalization_parity: PASS
+  - ckpt_sha256_bound: PASS
+  - manifest_identity_match: PASS
+  - raw_input_binding: PASS
+  - multistep_reference_present: PASS
+Loading checkpoint (detailed) for ps4...
+Running runtime criteria...
+  - strict_load_zero_diff: PASS
+  - version_identity_match: PASS
+  - input_norm_binding: PASS
+  - upstream_parity: PASS
+  - multistep_parity: PASS
+  - zero_edit_equals_official: PASS
+  - no_state_leak: PASS
+  - outputs_finite: PASS
+Computing RMSE sanity check (informational)...
+====================================================================
+R2 Stage-4: Fs fit/freeze + dynamic expert-bank training
+====================================================================
+  stage=all mode=gradient_check device=cpu
+  K=4 rank=4 a0=0.25 rho=0.25 max_active=1 hold=1
+  synthetic=True submits_jobs=False
+  samples=2 blocks=[0, 1] objective_leads=(6,)h
+
+[fs_fit]
+
+[fs_freeze]
+
+[bank_train]
+
+[profile]
+
+[horizon_check]
+
+  - fs_fit: FAIL
+  - fs_freeze: PASS
+  - bank_train: PASS
+  - profile: PASS
+  - horizon_check: PASS
+
+RESULT: FAIL
+SCOPE: SYNTHETIC_CODE_PATH_CHECK_ONLY -- no weather skill, no capacity finding, no S0.
+{
+  "status": "blocked",
+  "reason": "xformers not available. This script requires xformers to execute the official Stormer code path. Install xformers and re-run, or run this script in a GPU container with xformers pre-installed. IMPORTANT: This script will NOT fall back to SDPA - that would defeat the purpose of generating an independent reference.",
+  "timestamp_utc": "2026-09-22T02:21:11.968398+00:00"
+}

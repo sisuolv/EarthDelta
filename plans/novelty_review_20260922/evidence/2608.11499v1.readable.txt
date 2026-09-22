@@ -1,0 +1,378 @@
+HyperFix: Combinatorial Nonlinear Correction for Task Vector Merging
+
+Task vectors enable model merging without joint retraining. In practice, the subset of task vectors to be merged may vary, but many existing methods use scalar tuning for a particular subset, requiring repeated tuning across subsets and restricting task vector merging to linear rescaling. We therefore formulate merging across varying task subsets as a combinatorial correction problem and introduce HyperFix, a lightweight hypernetwork that predicts subset-conditioned nonlinear corrections in weight space. Trained once on singleton, pair, and triple subsets from a task bank, HyperFix generalizes to larger subsets without per-subset optimization. Our local perturbation analysis bounds the residual correction beyond linear merging and motivates learning it from small task updates. Experiments across diverse benchmarks show that HyperFix outperforms existing task vector merging methods while reducing tuning cost.
+
+Illinois Institute of Technology
+
+hkim155@hawk.illinoistech.edu, rwang74@illinoistech.edu
+
+Introduction
+
+Task vectors represent the parameter differences between pretrained and task-specific fine-tuned weights. Task arithmetic ( Ilharco et al. 2023 ) linearly combines these task vectors to integrate task-specific capabilities without expensive joint retraining. This approach has demonstrated strong performance across vision ( Ortiz-Jimenez, Favero, and Frossard 2023 ) , language ( Zhang et al. 2025 ; Zeng et al. 2025 ) , and multimodal domains ( Huang et al. 2024 ) .
+
+Despite these advances, many existing task vector merging methods are developed and evaluated for a single fixed task subset, with scalar tuning for that subset. However, different downstream needs may require different subsets of task-specific capabilities, highlighting the need for merging methods that can accommodate varying target subsets. In particular, the tuned scalar cannot be reliably reused because it is specific to a particular subset, as illustrated in Fig. 1 (a). As diverse subsets need to be considered, repeated per-subset tuning is required, resulting in a combinatorial tuning cost. Moreover, these merging methods are restricted to linear scaling of the merged task vector, limiting their ability to capture nonlinear interactions among tasks.
+
+We therefore view task vector merging as a combinatorial correction problem, where the goal is to develop a shared mechanism that constructs a subset-conditioned merged model for any selected subset of task vectors, rather than optimizing a model for a single fixed subset. To address this problem, we introduce HyperFix, a framework that predicts subset-conditioned nonlinear corrections, as illustrated in Fig. 1 (b). Specifically, HyperFix uses a lightweight hypernetwork, trained on small subsets and applied to larger subsets, to generate the corrections.
+
+Our theoretical analysis explains why corrections learned from small subsets can generalize to larger ones. Under mild local smoothness conditions, nonlinear interaction effects can be approximated using low-order subsets. Consistent with this analysis, our experimental results demonstrate that HyperFix consistently outperforms merging baselines across all subset sizes on eight image classification benchmarks and three CLIP ( Radford et al. 2021 ) architectures. By avoiding repeated per-subset scalar tuning, HyperFix reduces tuning cost by up to 82.6%.
+
+Our main contributions are as follows:
+
+We view task vector merging across varying subsets as a combinatorial correction problem and introduce HyperFix, a hypernetwork-based framework that learns a shared mapping from task-subset embeddings to weight corrections that capture nonlinear task interactions.
+
+We theoretically show that nonlinear interactions can be approximated using low-order subsets, explaining generalization from small to larger subsets.
+
+Across diverse benchmarks, HyperFix outperforms merging baselines across all subset sizes while reducing tuning cost dramatically.
+
+Related Work
+
+Model Merging
+
+Model merging aims to combine multiple models fine-tuned from a shared foundation model into a single model that preserves their task-specific capabilities. A fundamental approach is Task Arithmetic ( Ilharco et al. 2023 ) , which represents task-specific adaptations as task vectors and merges them through linear addition. Subsequent methods improve task vector merging through masking and magnitude-based selection ( Yadav et al. 2023 ; Yu et al. 2024 ; Kim, Han, and Choe 2025 ) , geometry-aware constraints ( Sun et al. 2025 ; Porrello et al. 2026 ) , variational formulations ( Zhang et al. 2025 ) , and low-rank decomposition of task matrices ( Gargiulo et al. 2025 ) . Adaptive coefficient-based methods such as AdaMerging ( Yang et al. 2024 ) optimize linear merging coefficients for a given set of target tasks. In PEFT settings, alignment-based merging of LoRA adapters has also been explored ( Panariello et al. 2025 ) . Despite these advances, most existing methods construct a merged model separately for each target task subset and do not learn a shared merging function across subsets. In contrast, HyperFix learns a shared merging function that predicts subset-conditioned nonlinear corrections.
+
+Hypernetwork-based Model Editing
+
+Hypernetworks ( Ha, Dai, and Le 2017 ; Krueger et al. 2017 ; Ratzlaff and Fuxin 2019 ) are secondary neural networks that generate or modulate the parameters of a target network. In model editing, hypernetworks produce parameter updates conditioned on editing requests. MeG ( Wan et al. 2025 ) uses a diffusion-based hypernetwork to generate dynamic weight neurons, enabling large-scale knowledge updates without directly modifying internal model weights, unlike approaches such as MEMIT ( Meng et al. 2023 ) and MALMEN ( Tan, Zhang, and Fu 2024 ) . LoRA.rar ( Shenaj et al. 2025 ) uses a hypernetwork to predict merging coefficients for combining subject and style LoRAs in real time, reducing computation compared with optimization-based methods. Unlike these hypernetwork-based approaches, HyperFix neither generates full model weights nor predicts scalar merging coefficients. Instead, it predicts a structured low-rank nonlinear correction on top of the linearly merged task vector, conditioned on a permutation-invariant representation of the selected task subset.
+
+Method
+
+In this section, we present HyperFix, a hypernetwork-based correction framework for task vector merging (Figure 2 ). We view merging across varying task subsets as a combinatorial correction problem, where the goal is to learn a shared correction function. HyperFix
+augments linear merging with a subset-conditioned correction generated by a nonlinear hypernetwork. Learned from small task subsets, the shared correction function is applied without additional optimization to larger subsets from the
+same task bank. We first motivate the need for subset-conditioned corrections and then describe the subset embedding, hypernetwork parameterization, training objective, and inference procedure.
+
+Motivation
+
+Linear merging assumes that linearly combining task-specific parameter updates in weight space is sufficient to retain the capabilities of the selected tasks in a single model. Let \theta_{0} denote the pretrained model parameters and \theta_{i} the fine-tuned parameters for task i , and define the task vector as \tau_{i}=\theta_{i}-\theta_{0} . For a subset of tasks S , linear merging produces a merged task vector \tau_{S}
+
+\tau_{S}=\frac{1}{|S|}\sum_{i\in S}\tau_{i}. (1)
+
+This yields the merged parameters \theta_{0}+\tau_{S} .
+HyperFix operates on top of this merged task vector and can
+also be applied to other merging rules, such as TIES ( Yadav et al. 2023 ) .
+
+However, this additive assumption ignores potential nonlinear interactions between task vectors. In practice, merging multiple task vectors can introduce non-additive interference, leading to performance degradation as the subset size increases. To capture interactions beyond linear merging, we introduce a subset-conditioned correction term
+
+\theta_{S}=\theta_{0}+\tau_{S}+\Delta_{S}, (2)
+
+where \Delta_{S} captures structured interaction effects that depend on the specific combination of tasks in S . Importantly, these effects are not universal offsets but vary with the alignment and conflict structure among task vectors in the subset. The construction of \Delta_{S} is detailed in the following subsection.
+
+HyperFix: Combinatorial Nonlinear Correction
+
+To model interaction effects beyond linear merging, we require a compact representation of a task subset. Conditioning directly on raw task vectors would entail operating in the full encoder parameter space, which contains tens of millions of dimensions (e.g., CLIP ViT-B/32), making learning computationally expensive and difficult to optimize. Instead, we construct a low-dimensional task-level representation that captures relationships between task vectors.
+
+Subset embedding. We summarize pairwise relationships between task vectors using a task-level Gram matrix
+
+G_{ij}=\langle\tau_{i},\tau_{j}\rangle, (3)
+
+where the inner product is taken over all encoder parameters. The Gram matrix is computed once from the task vectors, mean-centered across tasks, and kept fixed during HyperFix training.
+
+Let N be the number of tasks and G\in\mathbb{R}^{N\times N} the corresponding Gram matrix. We define the task embedding z_{i}\in\mathbb{R}^{N} as the i -th row of G
+
+z_{i}=G_{i:}. (4)
+
+For a subset S , we define the subset embedding
+
+z_{S}=\frac{1}{|S|}\sum_{i\in S}z_{i}. (5)
+
+The Gram matrix provides pairwise relationship features among task vectors in weight space. Averaging the corresponding task-level embeddings yields a permutation-invariant representation of the interaction structure within a subset. This embedding, therefore, encodes interaction statistics rather than raw parameters, allowing the hypernetwork to focus on modeling residual nonlinear effects.
+
+Structured low-rank correction via hypernetwork. Given the subset embedding z_{S} , HyperFix uses a hypernetwork h_{\phi} to predict a structured low-rank correction
+
+\Delta_{S}=h_{\phi}(z_{S}). (6)
+
+For each encoder weight matrix W_{\ell}\in\mathbb{R}^{d_{\ell}\times m_{\ell}} , HyperFix predicts low-rank factors U_{\ell}\in\mathbb{R}^{d_{\ell}\times r} and V_{\ell}\in\mathbb{R}^{m_{\ell}\times r} , forming a LoRA-style update \Delta W_{\ell}=U_{\ell}V_{\ell}^{\top} , where the rank is set to r=4 in all experiments. The low-rank parameterization improves structural efficiency while allowing expressive corrections distributed across layers. The hypernetwork is implemented as a two-layer MLP with a hidden dimension of 512 and GELU activation. The MLP outputs a single concatenated vector that is partitioned and reshaped into the per-layer factors (U_{\ell},V_{\ell}) , thereby producing all encoder updates in a single forward pass. The resulting correction augments the linear merge in Eq. ( 2 ).
+
+Training objective. Our primary training objective is to optimize the hypernetwork parameters by aligning the predictive distributions of the merged model \theta_{S} with those of the corresponding single-task models. Specifically, we employ KL-based knowledge distillation. During training, the image encoder and all task-specific classification heads are frozen, and only the HyperFix parameters are optimized. We train HyperFix on subsets of size one to three (singleton, pair, and triple) to learn correction patterns while keeping training computationally tractable.
+
+For each task i\in S , we use the corresponding single-task model \theta_{i} as a reference and compare its predictions with those of the merged model \theta_{S} .
+Let p_{i}(\cdot\mid x) and q_{i}(\cdot\mid x) denote the predictive distributions induced by \theta_{i} and \theta_{S} , respectively, for task i and input x .
+We minimize the average KL divergence
+
+L_{S}=\frac{1}{|S|}\sum_{i\in S}\mathrm{KL}\!\left(p_{i}(\cdot\mid x)\;\|\;q_{i}(\cdot\mid x)\right). (7)
+
+For each i\in S , the KL divergence is computed on mini-batches sampled from task i ’s dataset, and the loss is averaged across tasks in S .
+
+Inference. At inference time, no additional optimization is required. Given a subset S , we compute z_{S} , predict \Delta_{S} via Eq. ( 6 ), and construct \theta_{S} using Eq. ( 2 ). The merged model is then directly evaluated.
+
+Theoretical Analysis
+
+In this section, we provide a theoretical analysis of HyperFix, explaining why training on task subsets of size at most three is sufficient for generalization to larger subsets not used during training. 1 1 1 Our theoretical results are local and perturbative in nature. We analyze behavior in a neighborhood of the pretrained model \theta_{0} under small task updates, where empirical loss landscapes are often locally smooth and well-conditioned in practice. The assumptions below are not intended to globally characterize deep networks, but to isolate the mechanisms governing nonlinear interaction effects near \theta_{0} . Detailed proofs are provided in the Supplementary.
+
+Preliminaries and Notation
+
+We adopt the notation introduced in the Method section. Recall that linear merging produces parameters \theta_{0}+\tau_{S} (Eq. 1 ), and HyperFix augments this with a correction term
+as in Eq. 2 . For analysis, define the subset-averaged loss
+
+L_{S}(\theta):=\frac{1}{|S|}\sum_{i\in S}L_{i}(\theta). (8)
+
+Let \theta_{S}^{\star} denote a local stationary point of L_{S} near \theta_{0} (i.e., \nabla L_{S}(\theta_{S}^{\star})=0 ). The ideal residual correction beyond linear merging is
+
+\Delta^{\star}_{S}:=\theta_{S}^{\star}-(\theta_{0}+\tau_{S}). (9)
+
+Finally, let
+
+\bar{z}:=\frac{1}{N}\sum_{i=1}^{N}z_{i},\qquad\sigma_{z}^{2}:=\frac{1}{N}\sum_{i=1}^{N}|z_{i}-\bar{z}|^{2} (10)
+
+denote the mean and variance of the task embeddings, respectively.
+
+Assumptions
+
+We introduce the assumptions used in our analysis.
+
+A1 (Local smoothness). Each task loss L_{i}(\theta) is three-times continuously differentiable in a neighborhood \mathcal{N} of \theta_{0} , and
+
+\|\nabla^{2}L_{i}(\theta)\|_{\mathrm{op}}\leq H,\quad\|\nabla^{3}L_{i}(\theta)\|_{\mathrm{op}}\leq M, (11)
+
+for all \theta\in\mathcal{N} .
+
+A2 (Local conditioning). For any subset S , we assume that L_{S} admits a locally well-conditioned Hessian in a neighborhood of \theta_{0} , i.e.,
+
+\nabla^{2}L_{S}(\theta)\succeq\mu I, (12)
+
+for some \mu>0 in \mathcal{N} .
+
+A3 (Small task updates). Task vectors satisfy \|\tau_{i}\|\leq\rho for all i , where \rho is sufficiently small so that \theta_{0}+\tau_{S}\in\mathcal{N} .
+
+A4 (Low-order representability). The dominant component of the ideal correction \Delta^{\star}_{S} admits a smooth representation in a permutation-invariant subset embedding space
+
+\Delta^{\star}_{S}=g(z_{S})+\eta(S),\quad\|\eta(S)\|\leq\varepsilon, (13)
+
+where g is L_{g} -Lipschitz.
+
+Low-Order Interaction Generalization
+
+Under Assumptions A1–A3,
+
+\|\Delta^{\star}_{S}\|\leq\frac{1}{\mu}\bigl(\|\nabla L_{S}(\theta_{0})\|+H\rho\bigr), (14)
+
+and the nonlinearity beyond the first-order Hessian term satisfies
+
+\nabla L_{S}(\theta_{0}+\tau_{S})=\nabla L_{S}(\theta_{0})+\nabla^{2}L_{S}(\theta_{0})\tau_{S}+R_{S}, (15)
+
+where \|R_{S}\|\leq\frac{M}{2}\rho^{2} . Hence the parameter effect induced by this nonlinear remainder is bounded by
+
+\bigl\|\big(\int_{0}^{1}\nabla^{2}L_{S}(\theta_{0}+\tau_{S}+t\Delta^{\star}_{S})\,dt\big)^{-1}R_{S}\bigr\|\leq\frac{M}{2\mu}\rho^{2}. (16)
+
+Interpretation.
+
+The first inequality bounds the overall correction needed beyond linear merging. It is controlled by (i) local conditioning ( 1/\mu ), (ii) the task-update scale \rho , and (iii) the gradient bias at \theta_{0} . The gradient term represents baseline mismatch between the pretrained model and the task mixture. It does not scale with task-update magnitude nor reflect higher-order interactions.
+The second inequality isolates the nonlinear interaction component: under bounded third derivatives,
+the part not captured by the first-order Hessian term (instead captured by the curvature-driven remainder) shrinks quadratically with \rho ( O(\rho^{2}) ). Thus, when task vectors are small, the curvature-induced component of the correction remains controlled. This result motivates learning a compact residual correction.
+
+Theorem 1 establishes that the residual correction beyond linear merging is controlled in magnitude and dominated by low-order interaction terms under small task updates. In particular, the nonlinear remainder scales quadratically with the update size. This suggests that the dominant interaction structure is smooth and locally well-behaved in the subset embedding space. We now formalize how learning such low-order interactions from small task subsets supports generalization to larger subsets not used during training.
+
+Let h_{\phi} be a hypernetwork trained on task subsets with |S|\leq 3 to minimize \mathbb{E}_{|S|\leq 3}\|h_{\phi}(z_{S})-\Delta^{\star}_{S}\|^{2} . Then for any subset size m\geq 2 ,
+
+\mathbb{E}_{|S|=m}\|h_{\phi}(z_{S})-\Delta^{\star}_{S}\|\leq\varepsilon+\frac{L_{g}\sigma_{z}}{\sqrt{m}}, (17)
+
+where \sigma_{z}^{2} bounds the variance of the task embeddings z_{i} across tasks. The \frac{1}{\sqrt{m}} term arises from the concentration of the empirical subset embedding z_{S} around its expectation as the subset size increases.
+
+Interpretation.
+
+HyperFix generalizes from small task subsets because task interactions are locally smooth and dominated by low-order effects. If each task update \tau_{i} is small, and the loss landscape around the pretrained model \theta_{0} is smooth, then the deviation from linear merging arises primarily from pairwise and triple interactions. Higher-order interactions decay rapidly with the magnitude of task updates. Furthermore, the subset embedding z_{S} is an empirical average of task interaction statistics. As the subset size increases, this average becomes more stable due to the concentration of measure. Since HyperFix learns a smooth mapping from z_{S} to correction parameters, it can extrapolate from small task subsets ( |S|\leq 3 ) to larger task subsets. This explains why training up to triples is sufficient.
+
+Experiments
+
+In this section, we evaluate HyperFix under the combinatorial correction setting through three key questions. First, can a correction function trained only on small task subsets generalize to larger subsets while maintaining performance? Second, do the predicted corrections meaningfully adapt to the selected task subset, rather than acting as a fixed global adjustment? Third, can HyperFix replace repeated per-subset tuning with a shared training procedure, thereby reducing computational cost while maintaining competitive or superior performance?
+
+Setup
+
+Combinatorial correction setting.
+
+We evaluate the combinatorial correction problem on eight image classification benchmarks: Cars ( Krause et al. 2013 ) , DTD ( Cimpoi et al. 2014 ) , EuroSAT ( Helber et al. 2019 ) , GTSRB ( Stallkamp et al. 2011 ) , MNIST ( LeCun 1998 ) , RESISC45 ( Cheng, Han, and Lu 2017 ) , SUN397 ( Xiao et al. 2016 ) , and SVHN ( Netzer et al. 2011 ) . Given task vectors \{\tau_{i}\}_{i=1}^{N} , the goal is to learn a shared correction function such that, for any subset S\subseteq\{1,\dots,N\} , the merged model performs well on all tasks in S . HyperFix is trained only on subsets with |S|\leq 3 (singleton, pair, and triple) and evaluated on both subset sizes used during training ( |S|=2,3 ) and larger subset sizes not used during training ( |S|=4,\dots,8 ). For each subset size |S| , we evaluate all \binom{8}{|S|} possible subsets and report their average performance.
+
+Baselines.
+
+We evaluate both weight-space ( Ilharco et al. 2023 ) and tangent-space ( Ortiz-Jimenez, Favero, and Frossard 2023 ) task vectors with the same merging strategies. Mean ( Wortsman et al. 2022 ) performs uniform averaging of task vectors without additional scaling. Sum + Scalar ( Ilharco et al. 2023 ) sums task vectors and selects a scalar coefficient separately for each subset from 21 evenly spaced values in [0,1] to maximize the average normalized validation accuracy. TIES + Scalar ( Yadav et al. 2023 ) first resolves sign conflicts using TIES merging and then applies the same scalar search. In contrast, HyperFix augments linear merging with a subset-conditioned nonlinear correction and requires no per-subset tuning. We evaluate Mean + HyperFix and TIES + HyperFix , where the learned correction is applied on top of the corresponding linear merge rule.
+
+Training details.
+
+We conduct experiments using pretrained CLIP models with ViT-B/32, ViT-B/16, and ViT-L/14 backbones ( Radford et al. 2021 ) . Main results are reported on ViT-B/32, with additional results for ViT-B/16 and ViT-L/14 provided in the Supplementary. During training, all encoder and task-specific classification head parameters are frozen, and only the hypernetwork parameters are optimized. Training is performed for 10 epochs over all singleton, pair, and triple task subsets ( |S|\in\{1,2,3\} ), with random shuffling at each epoch and a batch size of 128 for each task. For each subset, the hypernetwork is optimized by averaging the logit-level KL distillation losses from the corresponding single-task models, using temperature T=2.0 . We optimize the hypernetwork using AdamW with learning rate 1\times 10^{-4} and weight decay 0.1 . Gradients are clipped to 1.0. The hypernetwork is a two-layer MLP with hidden dimension 512 and predicts low-rank updates with rank r=4 for each encoder weight matrix. Task vectors are computed from independently fine-tuned models on the training split. HyperFix is trained on the validation split, which is also used to tune the scalar coefficients for the scalar-based baselines, and all reported results are evaluated on the held-out test split. All experiments are conducted on a single NVIDIA GH200 GPU.
+
+Metrics.
+
+We report normalized accuracy following prior work ( Ilharco et al. 2023 ) , defined as the task accuracy divided by the accuracy of the corresponding single-task fine-tuned model. For each subset, normalized accuracy is averaged over all tasks in the subset, and we report the mean and standard deviation across all subsets of the same size. We additionally report absolute accuracies in the Supplementary, where we observe consistent method rankings and performance trends across subset sizes.
+
+Generalization Across Task Subsets
+
+Method |S|=2 |S|=3 |S|=4 |S|=5 |S|=6 |S|=7 |S|=8 Avg. Standard Fine-Tuning Mean 95.7 \pm 1.4 89.6 \pm 2.2 84.3 \pm 2.6 80.1 \pm 2.5 77.0 \pm 2.1 74.6 \pm 1.6 72.9 \pm 0.0 82.0 Sum + Scalar 96.4 \pm 1.1 92.1 \pm 1.4 88.2 \pm 1.7 84.7 \pm 1.7 81.7 \pm 1.4 79.2 \pm 1.3 77.0 \pm 0.0 85.6 TIES + Scalar 97.6 \pm 1.1 94.4 \pm 1.3 91.0 \pm 1.6 87.8 \pm 1.6 85.0 \pm 1.6 82.6 \pm 1.3 80.9 \pm 0.0 88.5 Mean + HyperFix 97.7 \pm 1.7 96.3 \pm 1.8 95.1 \pm 1.6 94.0 \pm 1.4 93.2 \pm 1.1 92.6 \pm 0.8 92.0 \pm 0.0 94.4 TIES + HyperFix 98.6 \pm 1.3 97.9 \pm 1.2 97.0 \pm 1.2 96.0 \pm 1.1 94.9 \pm 1.0 93.9 \pm 0.7 92.9 \pm 0.0 95.9 Tangent-Space Fine-Tuning Mean 96.8 \pm 1.4 92.5 \pm 1.9 88.8 \pm 2.1 85.8 \pm 2.0 83.4 \pm 1.7 81.4 \pm 1.3 79.8 \pm 0.0 86.9 Sum + Scalar 97.8 \pm 1.3 95.4 \pm 1.5 92.9 \pm 1.5 90.8 \pm 1.3 88.8 \pm 1.1 87.2 \pm 0.9 85.7 \pm 0.0 91.2 TIES + Scalar 97.5 \pm 1.4 94.5 \pm 1.5 91.9 \pm 1.5 89.7 \pm 1.3 88.0 \pm 1.1 86.4 \pm 0.9 85.0 \pm 0.0 90.4 Mean + HyperFix 99.1 \pm 1.1 98.1 \pm 1.0 97.0 \pm 0.9 96.0 \pm 0.8 95.0 \pm 0.7 94.1 \pm 0.6 93.2 \pm 0.0 96.1 TIES + HyperFix 98.9 \pm 1.3 98.3 \pm 1.2 97.4 \pm 1.1 96.6 \pm 1.0 95.7 \pm 0.8 94.9 \pm 0.6 94.1 \pm 0.0 96.5
+
+Training on small task subsets enables generalization to larger subsets.
+
+Table 1 reports normalized accuracy across all subset sizes. While Mean performs competitively for small task subsets ( |S|=2 ), its performance degrades sharply as more tasks are merged, dropping from 95.7 % to 72.9 % under standard fine-tuning. Although Scalar tuning mitigates this degradation, it still exhibits a substantial performance drop as |S| increases. In contrast, trained only on task subsets of size at most three, HyperFix maintains high performance on |S|=4,\dots,8 without additional tuning. Under standard fine-tuning, Mean + HyperFix improves the |S|=8 performance from 72.9 % (Mean) to 92.0 %, surpassing both Sum + Scalar (77.0 %) and TIES + Scalar (80.9 %), despite these methods performing per-subset scalar tuning (with TIES additionally resolving sign conflicts). TIES + HyperFix further reaches 92.9 %. Notably, the performance gap between linear merging baselines and HyperFix widens as |S| increases, suggesting that non-additive task interactions become increasingly important for larger task subsets. The same trend holds under tangent-space fine-tuning. Mean + HyperFix consistently outperforms all linear merging baselines across every subset size. This consistency across both fine-tuning regimes indicates that the gains of HyperFix arise from modeling structured task interactions rather than from a specific task-vector construction. We confirm that the performance gains persist across backbone scales, including ViT-B/16 and ViT-L/14 (see Supplementary). The reported standard deviations reflect variation across all \binom{8}{|S|} task subsets. When |S|=8 , there is only a single subset, resulting in zero standard deviation by definition.
+
+Objective |S|=2 |S|=3 |S|=4 |S|=5 |S|=6 |S|=7 |S|=8 Avg. CE 95.0 \pm 3.6 93.6 \pm 2.9 92.1 \pm 2.5 90.8 \pm 2.1 89.6 \pm 1.7 88.7 \pm 1.2 87.8 \pm 0.0 91.1 KL (ours) 97.7 \pm 1.7 96.3 \pm 1.8 95.1 \pm 1.6 94.0 \pm 1.4 93.2 \pm 1.1 92.6 \pm 0.8 92.0 \pm 0.0 94.4
+
+KL distillation improves generalization across task subsets.
+
+We compare two training objectives for Mean + HyperFix under identical data usage and optimization settings: (i) KL distillation from the corresponding single-task fine-tuned models, and (ii) supervised CE on ground-truth labels from the same training task subsets. Table 2 shows that KL consistently yields stronger performance across all subset sizes, with increasingly larger gains as |S| grows. For example, at |S|=8 , KL achieves 92.0% compared to 87.8% for CE (+4.2 percentage points). Overall, KL improves the average normalized accuracy from 91.1% to 94.4% (+3.3 percentage points). These results indicate that distillation provides a smoother and more structured learning signal for predicting parameter corrections than direct supervision with ground-truth labels alone.
+
+|S|_{\max} 1 2 3 4 5 6 7 8 Acc. 82.0 90.4 94.4 95.3 95.7 95.9 95.9 95.9 Gain – +8.4 +4.0 +0.9 +0.4 +0.2 +0.0 +0.0
+
+Ablation on maximum training subset size.
+
+Table 3 analyzes how the maximum subset size |S|_{\max} (i.e., the largest subset size included during HyperFix training) affects merging performance for Mean + HyperFix. Training only on single-task subsets ( |S|_{\max}=1 ) yields 82.0%. Including pairwise subsets ( |S|_{\max}=2 ) improves performance to 90.4% (+8.4 points), indicating that including pair subsets provides substantial additional supervision. Extending training to triple subsets ( |S|_{\max}=3 ) further increases performance to 94.4% (+4.0 points), already achieving strong generalization to unseen larger subsets up to |S|=8 . Beyond this point, additional exposure to higher-order subsets yields only marginal gains, increasing from 94.4% to at most 95.9% (+1.5 points overall). This saturation suggests that training on low-order subsets captures most of the correction patterns needed for larger-subset generalization. These empirical findings are consistent with Theorem 1 and Theorem 2 , which together indicate that nonlinear remainders are controlled in magnitude and that once dominant low-order interactions are learned, higher-order effects contribute diminishing additional benefit.
+
+Subset-Specificity of Corrections
+
+Method Acc. (%) Mean 95.7 \pm 1.4 Sign-flipped 93.3 \pm 4.6 Shuffled 95.4 \pm 3.2 HyperFix (Ours) 97.7 \pm 1.7
+
+Magnitude of corrections.
+
+To better understand the behavior of the hypernetwork, we analyze the \ell_{2} norm of the predicted correction \Delta_{S} across subset sizes |S| for Mean + HyperFix. For each |S|\in\{2,\dots,8\} , we compute \|\Delta_{S}\|_{2} over all \binom{8}{|S|} task combinations and examine its distribution. As shown in Figure 3 , the distribution of \|\Delta_{S}\|_{2} remains well-controlled across subset sizes. The median remains at a comparable scale across subset sizes. This empirical behavior is consistent with the residual bound discussed in the Theoretical Analysis section, which predicts that the magnitude of the nonlinear correction is controlled by the local update scale under smoothness assumptions.
+
+Dependence on the subset embedding.
+
+We analyze how the predicted correction depends on the subset embedding z_{S} under the Mean + HyperFix setting in Table 4 . Given the subset embedding z_{S} for a subset S , we consider two perturbations while keeping the base merge \tau_{S} fixed: (i) shuffled : replace z_{S} with z_{\tilde{S}} from a randomly sampled \tilde{S}\neq S , and (ii) sign-flipped : replace z_{S} with -z_{S} . Using the correct embedding yields the highest accuracy (97.7%), improving over the Mean (95.7%) by +2.0 points. In contrast, perturbing the input embedding degrades performance, sign-flipping reduces accuracy to 93.3%, and shuffling yields 95.4%, both close to or below the Mean. These results indicate that the predicted correction meaningfully depends on the subset embedding rather than acting as a fixed offset independent of the selected task subset.
+
+Training Cost and Computational Efficiency
+
+Although scalar-based merging requires no additional training, it relies on validation time optimization. For each task subset S , scalar tuning evaluates K candidate coefficients, each requiring evaluation over all tasks in S . Aggregated over all task subsets up to a maximum size |S|_{\max} , the cumulative validation cost becomes \sum_{j=2}^{|S|_{\max}}\binom{N}{j}jK . In our eight task setting with K=21 , this results in 21{,}336 validation model evaluations before testing. In contrast, HyperFix shifts this optimization to a single amortized training phase. We train the hypernetwork once, using only task subsets with |S|\leq 3 , corresponding to \sum_{j=1}^{3}\binom{N}{j} training subsets, after which the learned correction function is fixed and applied to all subsets without any per-subset optimization. For a fair comparison, HyperFix is trained on the validation split, using the same data employed for scalar coefficient search. As the number of tasks increases, the number of possible task subsets grows combinatorially, whereas the training cost of HyperFix scales only with subsets up to size three. To quantify the efficiency gain, we measure the wall-clock time required to construct and evaluate the merged model under identical hardware and data settings. All experiments are conducted on a single NVIDIA GH200 (120GB HBM3) GPU with CUDA 12.4. For the full task subset with |S|=8 , scalar tuning requires 1634.26 seconds due to validation search over K=21 candidate coefficients. In contrast, HyperFix requires only 284.16 seconds without any per-subset search, reducing the total execution time by 82.6% . This empirical gap directly reflects the elimination of repeated validation-time optimization in HyperFix.
+
+Conclusion
+
+We introduced combinatorial correction as the problem of learning a shared correction function over the combinatorial space of task subsets. We showed that linear task vector merging faces both representational and scalability limitations as the subset size increases. Although trained only on small task subsets, HyperFix generalizes to larger subsets not used during training without per-subset optimization, consistently improving performance across diverse benchmarks. These results demonstrate the importance of modeling nonlinear task interactions for scalable and generalizable task vector merging, opening a path toward more principled and general model merging frameworks.
+
+References
+
+Supplementary Material
+
+This supplementary material provides further experimental results and theoretical proof details.
+
+Further Experimental Results
+
+Results on Additional Backbones.
+
+To verify that the benefits of HyperFix are not specific to a single backbone scale, we additionally evaluate on CLIP ViT-B/16 and ViT-L/14. Table 5 shows that the overall trend observed on ViT-B/32 remains consistent across larger backbones. Linear merging methods degrade as the subset size increases, whereas Mean + HyperFix maintains much stronger and more stable performance across all subset sizes. For example, on ViT-B/16, the performance of Mean drops from 96.4% at |S|=2 to 77.5% at |S|=8 , while Mean + HyperFix retains 92.7% at |S|=8 and improves the overall average from 85.0% to 95.1%. Similar behavior is observed on ViT-L/14, where HyperFix again achieves the best average performance and remains stable as more tasks are merged. Each configuration is trained once. Reported means and standard deviations are computed across all \binom{8}{|S|} task subsets.
+
+Backbone Method |S|=2 |S|=3 |S|=4 |S|=5 |S|=6 |S|=7 |S|=8 Avg. ViT-B/16 Mean 96.4 \pm 1.6 91.2 \pm 2.5 86.7 \pm 2.8 83.3 \pm 2.6 80.9 \pm 2.1 79.0 \pm 1.5 77.5 \pm 0.0 85.0 Sum + Scalar 97.4 \pm 1.1 94.0 \pm 1.5 90.7 \pm 1.6 87.7 \pm 1.6 85.1 \pm 1.5 83.0 \pm 1.2 81.2 \pm 0.0 88.4 Mean + HyperFix 98.3 \pm 1.1 97.0 \pm 1.4 95.8 \pm 1.4 94.8 \pm 1.3 94.0 \pm 1.1 93.3 \pm 0.8 92.7 \pm 0.0 95.1 ViT-L/14 Mean 98.0 \pm 1.0 94.7 \pm 1.8 91.7 \pm 1.9 89.2 \pm 1.8 87.2 \pm 1.5 85.6 \pm 1.2 84.4 \pm 0.0 90.1 Sum + Scalar 98.8 \pm 0.8 97.3 \pm 1.0 95.6 \pm 1.0 94.0 \pm 1.1 92.3 \pm 0.9 90.8 \pm 0.7 89.7 \pm 0.0 94.1 Mean + HyperFix 98.9 \pm 0.7 97.9 \pm 0.8 97.0 \pm 0.9 96.1 \pm 0.8 95.4 \pm 0.6 94.8 \pm 0.5 94.3 \pm 0.0 96.4
+
+Backbone Method |S|=2 |S|=3 |S|=4 |S|=5 |S|=6 |S|=7 |S|=8 Avg. Standard Fine-Tuning ViT-B/32 Mean 86.6 \pm 7.1 81.1 \pm 5.0 76.2 \pm 3.9 72.3 \pm 3.0 69.3 \pm 2.3 67.1 \pm 1.6 65.4 \pm 0.0 74.0 Sum + Scalar 87.3 \pm 7.1 83.5 \pm 4.8 80.0 \pm 3.4 76.8 \pm 2.6 74.1 \pm 2.0 71.7 \pm 1.4 69.8 \pm 0.0 77.6 TIES + Scalar 88.2 \pm 6.9 85.4 \pm 4.9 82.4 \pm 3.6 79.5 \pm 2.8 77.0 \pm 2.2 74.8 \pm 1.7 73.1 \pm 0.0 80.1 Mean + HyperFix 88.4 \pm 7.7 87.2 \pm 6.0 86.2 \pm 4.8 85.3 \pm 3.8 84.6 \pm 2.9 84.0 \pm 2.0 83.5 \pm 0.0 85.6 TIES + HyperFix 89.1 \pm 7.3 88.6 \pm 5.6 87.8 \pm 4.5 86.9 \pm 3.6 86.0 \pm 2.8 85.2 \pm 1.9 84.3 \pm 0.0 86.8 Tangent-Space Fine-Tuning Mean 84.5 \pm 6.6 80.9 \pm 5.4 77.7 \pm 4.5 75.1 \pm 3.6 72.9 \pm 2.8 71.2 \pm 2.0 69.7 \pm 0.0 76.0 Sum + Scalar 85.3 \pm 6.4 83.3 \pm 4.9 81.3 \pm 4.0 79.4 \pm 3.2 77.8 \pm 2.5 76.4 \pm 1.8 75.1 \pm 0.0 79.8 TIES + Scalar 85.1 \pm 6.4 82.6 \pm 4.9 80.4 \pm 3.9 78.5 \pm 3.1 77.0 \pm 2.4 76.0 \pm 1.7 74.5 \pm 0.0 79.1 Mean + HyperFix 86.5 \pm 6.7 85.6 \pm 5.1 84.7 \pm 4.0 83.9 \pm 3.2 83.0 \pm 2.5 82.2 \pm 1.7 81.5 \pm 0.0 83.9 TIES + HyperFix 86.3 \pm 6.8 85.8 \pm 5.2 85.1 \pm 4.1 84.4 \pm 3.2 83.7 \pm 2.4 83.0 \pm 1.6 82.3 \pm 0.0 84.4 ViT-B/16 Mean 89.3 \pm 6.1 84.6 \pm 5.0 80.4 \pm 4.2 77.3 \pm 3.4 74.9 \pm 2.6 73.1 \pm 1.8 71.7 \pm 0.0 78.8 Sum + Scalar 90.2 \pm 5.9 87.2 \pm 4.3 84.2 \pm 3.4 81.4 \pm 2.7 79.1 \pm 2.2 77.1 \pm 1.5 75.5 \pm 0.0 82.1 Mean + HyperFix 91.0 \pm 5.9 89.8 \pm 4.8 88.8 \pm 3.9 87.9 \pm 3.2 87.1 \pm 2.5 86.5 \pm 1.7 86.0 \pm 0.0 88.2 ViT-L/14 Mean 92.4 \pm 4.8 89.3 \pm 4.2 86.5 \pm 3.4 84.1 \pm 2.8 82.2 \pm 2.2 80.7 \pm 1.6 79.6 \pm 0.0 85.0 Sum + Scalar 93.1 \pm 4.6 91.8 \pm 3.4 90.2 \pm 2.6 88.6 \pm 2.1 87.1 \pm 1.6 85.7 \pm 1.1 84.6 \pm 0.0 88.7 Mean + HyperFix 93.2 \pm 4.8 92.3 \pm 3.7 91.4 \pm 3.0 90.7 \pm 2.4 90.0 \pm 1.9 89.4 \pm 1.3 89.0 \pm 0.0 90.9
+
+Absolute Accuracy on Task Subsets.
+
+While the main paper reports normalized accuracy, we additionally report absolute accuracy. Table 6 summarizes the results across all task subsets. The overall trends are consistent with the normalized accuracy results. Linear merging methods degrade substantially as the subset size increases, whereas HyperFix maintains much stronger performance across all subset sizes. For example, under standard fine-tuning on ViT-B/32, Mean decreases from 86.6% at |S|=2 to 65.4% at |S|=8 , while Mean + HyperFix retains 83.5%. TIES + HyperFix further improves this to 84.3%, consistently outperforming scalar-based baselines. A similar pattern holds under tangent-space fine-tuning, where HyperFix variants achieve the strongest performance across all subset sizes. The larger standard deviations in absolute accuracy mainly arise from differences in the performance of the single-task fine-tuned models across datasets. Since normalized accuracy is divided by the corresponding single-task performance, it reduces this cross-dataset variation and exhibits smaller variance. Overall, these results confirm that the improvements of HyperFix persist when evaluated using absolute accuracy.
+
+|S|_{\max} |S|=2 |S|=3 |S|=4 |S|=5 |S|=6 |S|=7 |S|=8 Avg. 1 95.7 \pm 1.4 89.6 \pm 2.2 84.3 \pm 2.6 80.1 \pm 2.5 77.0 \pm 2.1 74.6 \pm 1.5 72.8 \pm 0.0 82.0 2 98.0 \pm 0.7 95.3 \pm 1.2 92.4 \pm 1.4 89.8 \pm 1.4 87.5 \pm 1.2 85.6 \pm 0.9 84.0 \pm 0.0 90.4 3 97.7 \pm 1.7 96.3 \pm 1.8 95.1 \pm 1.6 94.0 \pm 1.4 93.2 \pm 1.1 92.6 \pm 0.8 92.0 \pm 0.0 94.4 4 97.6 \pm 1.7 96.5 \pm 1.8 95.7 \pm 1.7 95.0 \pm 1.4 94.5 \pm 1.2 94.2 \pm 0.8 93.8 \pm 0.0 95.3 5 98.1 \pm 1.3 96.9 \pm 1.5 96.0 \pm 1.5 95.3 \pm 1.3 94.9 \pm 2.2 94.6 \pm 0.8 94.3 \pm 0.0 95.7 6 97.6 \pm 2.2 97.6 \pm 2.2 96.0 \pm 1.7 95.5 \pm 1.4 95.1 \pm 1.1 94.8 \pm 0.8 94.6 \pm 0.0 95.9 7 97.9 \pm 1.5 96.9 \pm 1.6 96.1 \pm 1.5 95.6 \pm 1.3 95.2 \pm 1.1 94.9 \pm 0.8 94.7 \pm 0.0 95.9 8 97.8 \pm 1.8 96.8 \pm 1.7 96.1 \pm 1.6 95.6 \pm 1.3 95.2 \pm 1.9 94.9 \pm 0.8 94.7 \pm 0.0 95.9
+
+Full Results for the Training Subset Size Ablation.
+
+In the main paper, we report the average normalized accuracy across all subset sizes to analyze the effect of the maximum training subset size |S|_{\max} . For completeness, Table 7 provides the full performance across subset sizes. Consistent with the trends in the main paper, increasing the training subset size from |S|_{\max}=1 to |S|_{\max}=3 leads to substantial improvements across most subset sizes. For example, the average accuracy increases from 82.0% to 94.4%. This suggests that learning pairwise and triple task interactions plays an important role in modeling nonlinear task vector merging. Beyond |S|_{\max}\geq 4 , additional gains become relatively small. This saturation indicates that a large part of the interaction effects can already be captured by pairwise and triple task interactions.
+
+Theory Proof Details
+
+Proof of Theorem 1: A bound on the residual correction magnitude
+
+Under the assumptions in the main paper, the ideal correction \Delta^{\star}_{S} satisfies
+
+\|\Delta^{\star}_{S}\|\;\leq\;\frac{1}{\mu}\,\|\nabla L_{S}(\theta_{0}+\tau_{S})\|. (18)
+
+Moreover, local smoothness gives
+
+\|\nabla L_{S}(\theta_{0}+\tau_{S})\|\leq\|\nabla L_{S}(\theta_{0})\|+H\|\tau_{S}\|. (19)
+
+Since \|\tau_{S}\|\leq\rho , we further have
+
+\|\nabla L_{S}(\theta_{0})\|+H\|\tau_{S}\|\leq\|\nabla L_{S}(\theta_{0})\|+H\rho. (20)
+
+In the common case where \|\nabla L_{S}(\theta_{0})\| is small (e.g., \theta_{0} is a good shared initializer),
+this yields \|\Delta^{\star}_{S}\|=O(\rho) .
+
+By definition, \nabla L_{S}(\theta_{S}^{\star})=0 and \theta_{S}^{\star}=\theta_{0}+\tau_{S}+\Delta_{S}^{\star} .
+Define the averaged Hessian along the segment from \theta_{0}+\tau_{S} to \theta_{S}^{\star} by
+
+A_{S}:=\int_{0}^{1}\nabla^{2}L_{S}\bigl(\theta_{0}+\tau_{S}+t\Delta_{S}^{\star}\bigr)\,dt. (21)
+
+The mean-value form of Taylor’s theorem then gives
+
+\nabla L_{S}(\theta_{S}^{\star})=\nabla L_{S}(\theta_{0}+\tau_{S})+A_{S}\Delta_{S}^{\star}. (22)
+
+Since \nabla L_{S}(\theta_{S}^{\star})=0 , it follows that
+
+A_{S}\Delta_{S}^{\star}=-\nabla L_{S}(\theta_{0}+\tau_{S}). (23)
+
+By local stability, each Hessian inside the integral has a minimum eigenvalue at least \mu ,
+hence the averaged Hessian is also \succeq\mu I and is invertible with operator norm
+at most 1/\mu . Therefore,
+
+\|\Delta^{\star}_{S}\|\leq\frac{1}{\mu}\|\nabla L_{S}(\theta_{0}+\tau_{S})\|. (24)
+
+For the second inequality, apply Taylor’s theorem to \nabla L_{S} at \theta_{0} :
+
+\displaystyle\nabla L_{S}(\theta_{0}+\tau_{S}) \displaystyle=\nabla L_{S}(\theta_{0}) (25) \displaystyle+\left(\int_{0}^{1}\nabla^{2}L_{S}(\theta_{0}+t\tau_{S})\,dt\right)\tau_{S}.
+
+Taking norms and using \|\nabla^{2}L_{S}(\cdot)\|_{\mathrm{op}}\leq H (since it averages task Hessians bounded by H ),
+
+\|\nabla L_{S}(\theta_{0}+\tau_{S})\|\leq\|\nabla L_{S}(\theta_{0})\|+H\|\tau_{S}\|. (26)
+
+Finally, \|\tau_{S}\|\leq\frac{1}{|S|}\sum_{i\in S}\|\tau_{i}\|\leq\rho .
+∎
+
+Proof of Theorem 1: Why higher-order interactions decay as O(\rho^{2})
+
+Under the smoothness assumptions, for any u with \|u\|\leq 2\rho ,
+
+\nabla L_{S}(\theta_{0}+u)=\nabla L_{S}(\theta_{0})+\nabla^{2}L_{S}(\theta_{0})\,u+R_{S}(u), (27)
+
+where the remainder satisfies
+
+\|R_{S}(u)\|\leq\frac{M}{2}\|u\|^{2}. (28)
+
+This is the standard integral remainder form for the gradient:
+
+\displaystyle\nabla L_{S}(\theta_{0}+u) \displaystyle=\nabla L_{S}(\theta_{0})+\nabla^{2}L_{S}(\theta_{0})u (29) \displaystyle+\int_{0}^{1}\Bigl[\nabla^{2}L_{S}(\theta_{0}+tu)-\nabla^{2}L_{S}(\theta_{0})\Bigr]u\,dt.
+
+Using the mean value form for Hessians with bounded third derivative, \|\nabla^{2}L_{S}(\theta_{0}+tu)-\nabla^{2}L_{S}(\theta_{0})\|_{\mathrm{op}}\leq M\,t\|u\| ,
+we obtain
+
+\|R_{S}(u)\|\leq\int_{0}^{1}M\,t\|u\|\cdot\|u\|\,dt=\frac{M}{2}\|u\|^{2}. (30)
+
+∎
+
+Assume additionally that \|\nabla L_{S}(\theta_{0})\| is small (or treat it as a constant bias term).
+Let u=\tau_{S} .
+Then
+
+\begin{gathered}\|\nabla L_{S}(\theta_{0}+u)\|\\
+\leq\|\nabla L_{S}(\theta_{0})\|+\|\nabla^{2}L_{S}(\theta_{0})\|_{\mathrm{op}}\|u\|+\frac{M}{2}\|u\|^{2}\\
+\leq\|\nabla L_{S}(\theta_{0})\|+H\rho+\frac{M}{2}\rho^{2}.\end{gathered} (31)
+
+Consequently, by Lemma 1 ,
+
+\bigl\|\big(\int_{0}^{1}\nabla^{2}L_{S}(\theta_{0}+\tau_{S}+t\Delta^{\star}_{S})\,dt\big)^{-1}R_{S}\bigr\|\leq\frac{M}{2\mu}\rho^{2}. (32)
+
+Apply Lemma 2 with u=\tau_{S} and \|u\|\leq\rho .
+Then combine with Lemma 1 .
+∎
+
+Interpretation.
+
+The above shows (conservatively) that when task vectors are small, and the loss is smooth, the needed correction is dominated by low-order Taylor terms .
+Any interaction effects that require higher-order derivatives become rapidly smaller with \rho .
+
+Proof of Theorem 2: Why a hypernetwork conditioned on z_{S} can generalize
+
+HyperFix predicts \Delta^{\mathrm{hyper}}_{S}=h_{\phi}(z_{S}) with z_{S}=\frac{1}{|S|}\sum_{i\in S}z_{i} .
+The key property is that z_{S} is size-invariant and averages per-task interaction descriptors.
+
+Assume the vectors z_{i} have bounded second moment under the (empirical) task distribution: \mathbb{E}\|z_{i}-\mathbb{E}z\|^{2}\leq\sigma_{z}^{2} .
+If a subset S of size m is sampled by drawing tasks approximately i.i.d. from this distribution, then
+
+\mathbb{E}\|z_{S}-\mathbb{E}z\|\leq\frac{\sigma_{z}}{\sqrt{m}}. (33)
+
+Since z_{S} is the average of m samples, its variance scales as 1/m : \mathbb{E}\|z_{S}-\mathbb{E}z\|^{2}\leq\sigma_{z}^{2}/m .
+Jensen’s inequality gives \mathbb{E}\|z_{S}-\mathbb{E}z\|\leq\sqrt{\mathbb{E}\|z_{S}-\mathbb{E}z\|^{2}}\leq\sigma_{z}/\sqrt{m} .
+∎
+
+Under Assumption A4, if g is L_{g} -Lipschitz, then
+
+\mathbb{E}\|\Delta^{\star}_{S}-g(\mathbb{E}z)\|\leq\varepsilon+\frac{L_{g}\sigma_{z}}{\sqrt{m}}. (34)
+
+By the triangle inequality and Assumption A4,
+
+\begin{gathered}\|\Delta^{\star}_{S}-g(\mathbb{E}z)\|\\[1.0pt]
+{}\leq\|g(z_{S})-g(\mathbb{E}z)\|+\|\eta(S)\|\\[1.0pt]
+{}\leq L_{g}\|z_{S}-\mathbb{E}z\|+\varepsilon.\end{gathered} (35)
+
+Taking expectations and applying Lemma 4 yields the result.
+∎

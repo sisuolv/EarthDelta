@@ -1,0 +1,3108 @@
+Proxy Policy Steering
+Chuanruo Ning
+*
+Tianrui Wang
+*
+Wei-Chiu Ma
+†
+Kuan Fang
+†
+Affiliation:
+Cornell University
+Affiliation:
+https://ppsteering.github.io
+Abstract
+Generalist robot policies carry broad manipulation priors from large-scale data, but specializing them to a new task remains the deployment bottleneck. This requires eliciting task-specific behavior from limited demonstrations without degrading their broad capabilities. We introduce Proxy Policy Steering (PPS), an inference-time adaptation method that resolves this challenge by training two lightweight proxy policies whose calibrated velocity-space difference steers the frozen base sampler. A
+reference proxy
+models the frozen base’s behavior on target-task observations, and a
+task proxy
+, initialized from the reference, captures how this behavior changes under task supervision. Their difference forms a calibrated velocity-space residual that steers the frozen base sampler at every denoising step. We identify the conditions under which this residual isolates the change induced by task supervision, and validate them empirically. Because the base is never directly modified, its broad capabilities remain available at inference, including behaviors such as recovery from failure that the demonstrations themselves do not exercise. Adaptation requires only forward velocity predictions from the base, making PPS lightweight to train and applicable even without access to the base’s parameters. On 8 real-world and 4 simulation manipulation tasks, PPS lifts the state-of-the-art
+π
+0.5
+\pi_{0.5}
+base policy by 55% absolute success rate on average, with zero-to-one gains on tasks the base never solves, while preserving the base’s broad capabilities. PPS outperforms LoRA fine-tuning, from-scratch specialists, residual policies, and prior inference-time steering methods.
+†
+†
+footnotetext:
+∗
+Equal contribution.
+†
+Equal advising.
+Keywords:
+Policy Steering, VLA Models, Flow-Matching Policy
+1
+Introduction
+Figure 1:
+Proxy Policy Steering (PPS).
+We distill the frozen
+base policy
+π
+base
+\pi_{\mathrm{base}}
+into a lightweight
+reference proxy
+π
+ref
+\pi_{\mathrm{ref}}
+on target-task observations, then fine-tune
+π
+ref
+\pi_{\mathrm{ref}}
+into a
+task proxy
+π
+task
+\pi_{\mathrm{task}}
+on demonstrations. Their
+velocity-space residual
+steers the frozen base at every denoising step, yielding the
+PPS
+action that injects task-specific behavior while preserving the base’s general priors.
+The bottom panels show three representative cases: a state where the base needs task guidance (residual steers toward the task behavior), a state not covered by task demonstrations (residual cancels, base prior recovers), and a state where the proxies agree with the base (residual vanishes).
+Generalist robot policies trained on large-scale data, particularly Vision-Language-Action (VLA) models
+[
+2
+,
+1
+,
+9
+,
+42
+]
+, bring broad manipulation competence into a single policy that generalizes across diverse embodiments, scenes, and instructions. Yet specializing them to a particular downstream task remains a bottleneck in real-world deployment
+[
+30
+,
+45
+]
+, since the deployment distribution rarely matches the pretraining data, and task adaptation typically operates on only a handful of demonstrations. This presents a fundamental tension between acquiring task-specific behavior from limited data and preserving the broad capabilities these generalist policies were trained to provide.
+Existing adaptation methods either modify the base model’s parameters or steer its sampling process, and both paths have notable limitations. Modifying the base through
+fine-tuning
+[
+17
+,
+5
+]
+is effective when demonstrations are abundant but compromises the base’s broad capabilities in the limited-demonstration regime
+[
+4
+,
+41
+,
+32
+]
+, degrading behaviors such as recovery from failure that the demonstrations do not exercise. Fine-tuning is also computationally and memory intensive at VLA scale, even with low-rank adapters
+[
+12
+]
+, and requires access to model weights, ruling out closed-source or API-only base policies.
+Steering
+-based methods
+[
+37
+,
+39
+,
+38
+]
+keep the base intact and adjust the action sampling process instead, whether by reshaping the noise distribution that drives the sampler
+[
+35
+]
+or by guiding the denoising trajectory with auxiliary models
+[
+6
+]
+. But each reweights behaviors the base already produces on its own, and cannot reach task-specific behaviors that the base assigns negligible probability to. How to steer a frozen base toward behaviors outside what it samples on its own while preserving the breadth of priors it carries remains an open question.
+We introduce Proxy Policy Steering (PPS), an inference-time adaptation method for frozen flow-matching VLAs that resolves the open question above by combining the strengths of both paradigms. Our key insight is that effective adaptation should neither steer only within the base’s existing distribution nor replace the base with a narrowly trained specialist. Instead, it should
+estimate the direction in which task supervision would shift the base’s action distribution
+, and apply that direction to the base sampler without modifying any weights, so that the base’s broad priors remain intact.
+To estimate this direction in practice, PPS trains two lightweight
+proxy policies
+and combines them in velocity space, as illustrated in
+Figure
+1
+. A
+reference proxy
+is distilled from the frozen base on target-task observations, capturing the base’s behavior on the states the sampler will visit at inference. A
+task proxy
+is initialized from the reference and fine-tuned on demonstrations, capturing how the base’s behavior would change under task supervision. How the proxies are constructed determines whether their difference is meaningful. A small proxy trained on limited demonstrations does not faithfully reproduce the base, and its approximation error is comparable in magnitude to the task-induced change we want to extract, so any residual built from a single proxy, or from a proxy and the base, retains this error. Because the reference is distilled on the same states and the task proxy is initialized from it, the two proxies share the error, and their difference isolates the change induced by task supervision. At inference, the difference between the two proxies forms a velocity-space residual that we add to the base velocity field at every denoising step. When demonstrations reveal new task-relevant actions, the residual steers the base toward the task proxy. When the proxies agree, it cancels and the frozen base retains control, preserving broadly useful priors such as failure recovery.
+We evaluate PPS across 8 real-world and 4 simulation manipulation tasks spanning both in-distribution and out-of-distribution settings. PPS lifts the average success rate of the state-of-the-art
+π
+0.5
+\pi_{0.5}
+base policy by 55% absolute, with zero-to-one gains on 4 real-world tasks the base never solves. The same procedure applied to
+π
+0
+\pi_{0}
+raises its real-world success rate from 5% to 55%, suggesting that the velocity-space residual is a property of flow-matching steering rather than a
+π
+0.5
+\pi_{0.5}
+-specific trick. PPS also outperforms LoRA fine-tuning, from-scratch specialists, residual policies, and existing inference-time steering methods, while preserving the base’s recovery behavior throughout deployment.
+2
+Related Work
+Pretrained generalist robot policies are typically adapted to downstream tasks by fine-tuning the base weights, through full fine-tuning, LoRA
+[
+12
+]
+, parameter merging
+[
+41
+]
+, or RL fine-tuning
+[
+44
+,
+28
+,
+3
+,
+27
+]
+. Fine-tuning reshapes the base’s action distribution toward the demonstrations, which is expensive at VLA scale and overwrites manipulation priors the demonstrations do not exercise
+[
+4
+,
+32
+]
+, including robust grasping, contact-rich interaction, and recovery from failure.
+A second family leaves the base unmodified and intervenes during sampling, at the input noise, the sampled output, or the denoising trajectory. DSRL
+[
+35
+]
+optimizes the initial noise with RL, which requires non-zero base success or a large offline dataset and gains little on tasks the base can hardly solve. Residual policy learning
+[
+43
+,
+22
+,
+14
+,
+40
+]
+and candidate selection
+[
+26
+,
+39
+,
+19
+]
+act on the sampled output, after the base has committed to an action mode. RFS
+[
+34
+]
+combines noise optimization with a post-hoc residual. DynaGuide
+[
+6
+]
+guides the trajectory with a learned dynamics model, assuming in-distribution dynamics. PPS instead applies a density-ratio correction in velocity space at every denoising step, tilting the base toward task-relevant modes before the sampler commits.
+PPS adapts the proxy tuning principle from language models, where small expert and anti-expert models steer a frozen base at decoding time
+[
+21
+,
+20
+,
+18
+,
+25
+]
+. Proxy tuning combines categorical logits, and its direct continuous-control analog corrects only the final clean action. We show that under the linear flow-matching path, the density-ratio composition takes an additive velocity-space form at every noise level, which lets PPS reshape the mode the sampler enters. This places PPS within score-space steering for diffusion and energy-based samplers. Classifier-free guidance
+[
+11
+,
+15
+]
+amplifies a conditioning signal learned during pretraining by residualizing one model’s conditional and unconditional outputs. Compositional methods
+[
+8
+,
+23
+,
+36
+]
+add the scores of independently trained models, where naive composition can sample from the wrong distribution
+[
+7
+]
+. PPS inherits the additive form from this lineage. What it adds is the construction of the guidance pair: a reference proxy distilled from the base on the states the sampler will visit, and a task proxy fine-tuned from it, so that the residual isolates the change induced by task supervision rather than an arbitrary difference between two networks.
+3
+Preliminaries
+Generalist robot policies are trained on large-scale, diverse data to produce actions across many tasks, scenes, and embodiments. We focus on Vision-Language-Action (VLA) models, a family of such policies that map observations, proprioceptive states, and language instructions to robot actions.
+The conditional action distribution induced by these policies is typically denoted as
+π
+base
+​
+(
+a
+∣
+o
+,
+l
+)
+\pi_{\mathrm{base}}(a\mid o,l)
+, where
+o
+o
+denotes the observation, including states, and
+l
+l
+is the language instruction.
+Rather than directly predicting a single action, state-of-the-art VLAs often use flow-matching action heads
+[
+1
+,
+30
+,
+29
+]
+, which generate actions by transforming Gaussian noise into clean actions through a learned velocity field.
+Concretely, the action head predicts a velocity field
+v
+base
+​
+(
+x
+k
+,
+k
+,
+o
+,
+l
+)
+v_{\mathrm{base}}(x_{k},k,o,l)
+over intermediate action states
+x
+k
+x_{k}
+along the flow path:
+x
+k
+=
+k
+​
+ϵ
++
+(
+1
+−
+k
+)
+​
+a
+,
+ϵ
+∼
+𝒩
+⁡
+(
+0
+,
+I
+)
+,
+k
+∈
+[
+0
+,
+1
+]
+,
+x_{k}=k\epsilon+(1-k)a,\quad\epsilon\sim\mathcal{N}(0,I),\quad k\in[0,1],
+(1)
+where
+k
+=
+1
+k=1
+corresponds to noise and
+k
+=
+0
+k=0
+to a clean action.
+At inference time, the model starts from
+x
+1
+∼
+𝒩
+⁡
+(
+0
+,
+I
+)
+x_{1}\sim\mathcal{N}(0,I)
+and integrates the predicted velocity field to obtain the final action.
+Given a small target-task demonstration set
+𝒟
+𝒯
+=
+{
+(
+o
+,
+a
+,
+l
+)
+}
+\mathcal{D}_{\mathcal{T}}=\{(o,a,l)\}
+, our goal is to adapt the base VLA’s action distribution on this task while preserving its broad pretraining priors, without modifying base parameters. We treat the base VLA as a query-only model whose parameters and gradients are unavailable, providing only forward velocity predictions.
+4
+Proxy Policy Steering
+We present PPS, an adaptation method that steers a frozen generalist robot policy toward task-successful actions without modifying its weights, developed here for VLAs with flow-matching action heads.
+Section
+4.1
+formulates the adaptation as a relative density correction to the base policy.
+Section
+4.2
+shows that this correction admits an equivalent velocity-space implementation for flow-matching VLAs, which is what the inference-time interface allows.
+Section
+4.3
+describes the two-stage proxy training that makes the velocity residual a meaningful task-specific signal.
+4.1
+Adapting Generalist Policies by Proxy
+We frame adaptation as a relative density correction to the base policy. Inspired by product-of-experts (PoE) models
+[
+10
+]
+, we define the adapted policy as a product between the base and a relative task correction:
+π
+~
+​
+(
+a
+∣
+o
+,
+l
+)
+∝
+π
+base
+​
+(
+a
+∣
+o
+,
+l
+)
+​
+[
+π
+task
+​
+(
+a
+∣
+o
+,
+l
+)
+π
+ref
+​
+(
+a
+∣
+o
+,
+l
+)
+]
+γ
+,
+γ
+≥
+0
+.
+\tilde{\pi}(a\mid o,l)\propto\pi_{\mathrm{base}}(a\mid o,l)\left[\frac{\pi_{\mathrm{task}}(a\mid o,l)}{\pi_{\mathrm{ref}}(a\mid o,l)}\right]^{\gamma},\quad\gamma\geq 0.
+(2)
+Here,
+π
+ref
+\pi_{\mathrm{ref}}
+represents the behavior before task supervision,
+π
+task
+\pi_{\mathrm{task}}
+represents the behavior after task supervision, and
+γ
+\gamma
+controls the strength of the correction.
+The formulation can be understood as approximating the adaptation direction that would be induced by fine-tuning.
+Specifically, if model weight access, computation, and data were unconstrained, one could directly fine-tune the full base VLA on
+𝒟
+𝒯
+\mathcal{D}_{\mathcal{T}}
+to obtain a task-adapted policy
+π
+task
+\pi_{\mathrm{task}}
+.
+If
+π
+ref
+\pi_{\mathrm{ref}}
+exactly matched
+π
+base
+\pi_{\mathrm{base}}
+, then Eq. (
+2
+) would reduce to
+π
+~
+​
+(
+a
+∣
+o
+,
+l
+)
+∝
+π
+base
+​
+(
+a
+∣
+o
+,
+l
+)
+1
+−
+γ
+​
+π
+task
+​
+(
+a
+∣
+o
+,
+l
+)
+γ
+,
+\tilde{\pi}(a\mid o,l)\propto\pi_{\mathrm{base}}(a\mid o,l)^{1-\gamma}\pi_{\mathrm{task}}(a\mid o,l)^{\gamma},
+(3)
+which interpolates between the frozen base policy and the task-adapted policy.
+When
+γ
+=
+1
+\gamma=1
+, the base and reference terms cancel, and the adapted policy follows the task policy; when
+γ
+=
+0
+\gamma=0
+, the adapted policy falls back to the base policy.
+In practice, however, directly fine-tuning the full VLA is often infeasible or undesirable.
+PPS thus approximates this relative correction using lightweight proxy policies.
+The
+reference proxy
+π
+ref
+\pi_{\mathrm{ref}}
+is trained to capture the frozen base policy’s behavior on target-task observations, while the
+task proxy
+π
+task
+\pi_{\mathrm{task}}
+is trained from demonstrations to capture how this behavior changes under task supervision.
+Their ratio provides a task-induced correction: actions made more likely by task supervision are amplified, while actions already explained by the base policy are preserved.
+This allows PPS to inject task-specific expertise while retaining useful priors of the frozen VLA, such as recovery from failures.
+4.2
+Flow-Matching Proxy Guidance
+The relative-correction view in Sec.
+4.1
+provides a distribution-level formulation of proxy-based VLA adaptation.
+The remaining question is how to implement this correction for flow-matching VLAs, whose inference-time interface is a velocity field rather than a normalized action density.
+To instantiate the relative correction in Eq. (
+2
+), we need to express the task-induced change in the same space as the base sampler.
+Since the sampler is governed by a velocity field, PPS represents this change as the difference between the task and reference proxy velocities.
+Intuitively,
+v
+task
+−
+v
+ref
+v_{\mathrm{task}}-v_{\mathrm{ref}}
+captures how task supervision changes the generation dynamics beyond what is already explained by the base behavior.
+We therefore steer the base velocity field by adding this residual:
+v
+PPS
+​
+(
+x
+,
+k
+,
+o
+,
+l
+)
+=
+v
+base
+​
+(
+x
+,
+k
+,
+o
+,
+l
+)
++
+γ
+⁡
+[
+v
+task
+​
+(
+x
+,
+k
+,
+o
+)
+−
+v
+ref
+​
+(
+x
+,
+k
+,
+o
+)
+]
+,
+v_{\mathrm{PPS{}}}(x,k,o,l)=v_{\mathrm{base}}(x,k,o,l)+\gamma\left[v_{\mathrm{task}}(x,k,o)-v_{\mathrm{ref}}(x,k,o)\right],
+(4)
+where
+γ
+\gamma
+controls the steering strength. We drop the language input for the proxy policies since we assume a single-task setting throughout.
+This velocity residual is not an ad hoc choice. Under a shared flow-matching schedule, applying the correction in (
+2
+) to the noised marginals at each noise level, as in classifier-free guidance, is
+equivalent
+to the additive residual in (
+4
+). We provide the assumptions and derivation in
+Appendix
+D
+.
+This guidance rule mirrors the cancellation property of the distribution-level correction. When task supervision changes the proxy velocity, the residual
+v
+task
+−
+v
+ref
+v_{\mathrm{task}}-v_{\mathrm{ref}}
+steers the sampler toward the task proxy. When the task and reference proxies agree, the residual cancels out and the frozen base policy remains in control.
+At inference time, as shown in
+Algorithm
+2
+, PPS samples
+x
+1
+∼
+𝒩
+⁡
+(
+0
+,
+I
+)
+x_{1}\sim\mathcal{N}(0,I)
+and integrates the guided velocity field
+v
+PPS
+v_{\mathrm{PPS{}}}
+from
+k
+=
+1
+k=1
+to
+k
+=
+0
+k=0
+using the same scheduler as the base policy. When
+γ
+=
+0
+\gamma=0
+, this exactly recovers the frozen base sampler; larger values increasingly trust the proxy residual and impose stronger task-specific steering.
+Importantly, because the proxy residual is added in the shared velocity space, the proxies may condition on modalities the base does not, such as point clouds alongside RGB. The only requirement is that the base and proxies share the same action representation
+x
+k
+x_{k}
+and flow-matching schedule.
+Algorithm 1
+PPS Training
+1:
+Train
+v
+ref
+v_{\mathrm{ref}}
+by distilling base denoising trajectories
+on
+(
+o
+,
+l
+)
+∼
+𝒟
+𝒯
+(o,l)\sim\mathcal{D}_{\mathcal{T}}
+with
+ℒ
+ref
+\mathcal{L}_{\mathrm{ref}}
+in (
+5
+).
+2:
+Initialize
+v
+task
+←
+v
+ref
+v_{\mathrm{task}}\leftarrow v_{\mathrm{ref}}
+.
+3:
+Train
+v
+task
+v_{\mathrm{task}}
+on demonstrations
+(
+o
+,
+a
+)
+∼
+𝒟
+𝒯
+(o,a)\sim\mathcal{D}_{\mathcal{T}}
+with
+ℒ
+task
+\mathcal{L}_{\mathrm{task}}
+in (
+6
+).
+4:
+return
+v
+ref
+,
+v
+task
+v_{\mathrm{ref}},v_{\mathrm{task}}
+Algorithm 2
+PPS Inference
+1:
+Sample
+x
+k
+1
+∼
+𝒩
+⁡
+(
+0
+,
+I
+)
+x_{k_{1}}\sim\mathcal{N}(0,I)
+.
+2:
+for
+i
+=
+1
+,
+…
+,
+K
+−
+1
+i=1,\ldots,K-1
+do
+3:
+Compute
+v
+~
+i
+=
+v
+PPS
+​
+(
+x
+k
+i
+,
+k
+i
+,
+o
+,
+l
+)
+\tilde{v}_{i}=v_{\mathrm{PPS{}}}(x_{k_{i}},k_{i},o,l)
+by (
+4
+).
+4:
+Update
+x
+k
+i
++
+1
+←
+x
+k
+i
++
+(
+k
+i
++
+1
+−
+k
+i
+)
+​
+v
+~
+i
+x_{k_{i+1}}\leftarrow x_{k_{i}}+(k_{i+1}-k_{i})\tilde{v}_{i}
+.
+5:
+end
+for
+6:
+return
+a
+=
+x
+k
+K
+a=x_{k_{K}}
+4.3
+Learning Proxy Policies
+The guidance rule in Eq. (
+4
+) is meaningful only if the residual
+v
+task
+−
+v
+ref
+v_{\mathrm{task}}-v_{\mathrm{ref}}
+captures the change induced by task supervision, rather than arbitrary differences between two independently trained models. PPS therefore trains the proxies in two stages: first, an on-policy reference distillation stage that aligns the reference proxy with the frozen base sampler; second, a task specialization stage that adapts the proxy to demonstrations, as shown in
+Algorithm
+1
+.
+On-policy reference distillation.
+We first train the reference proxy to mimic the frozen base model on the states where inference-time guidance will be applied. For each target-task observation and instruction
+(
+o
+,
+l
+)
+(o,l)
+, we roll out the frozen base sampler from noise and collect intermediate action states
+x
+k
+i
+x_{k_{i}}
+along its generation trajectory. The reference proxy is then trained by velocity distillation:
+ℒ
+ref
+=
+𝔼
+(
+o
+,
+l
+)
+∼
+𝒟
+𝒯
+,
+ϵ
+∼
+𝒩
+⁡
+(
+0
+,
+I
+)
+​
+∑
+i
+=
+1
+K
+‖
+v
+ref
+​
+(
+x
+k
+i
+,
+k
+i
+,
+o
+)
+−
+v
+base
+​
+(
+x
+k
+i
+,
+k
+i
+,
+o
+,
+l
+)
+‖
+2
+.
+\mathcal{L}_{\mathrm{ref}}=\mathbb{E}_{(o,l)\sim\mathcal{D}_{\mathcal{T}},\,\epsilon\sim\mathcal{N}(0,I)}\sum_{i=1}^{K}\left\|v_{\mathrm{ref}}(x_{k_{i}},k_{i},o)-v_{\mathrm{base}}(x_{k_{i}},k_{i},o,l)\right\|^{2}.
+(5)
+This on-policy distillation ensures that the reference proxy matches the base behavior in the region where the proxy residual will later be applied.
+Task specialization.
+We then initialize the task proxy from the reference proxy and train it on task demonstrations with the standard flow-matching objective:
+ℒ
+task
+=
+𝔼
+(
+o
+,
+a
+)
+∼
+𝒟
+𝒯
+,
+ϵ
+∼
+𝒩
+⁡
+(
+0
+,
+I
+)
+,
+k
+∼
+Beta
+⁡
+(
+1.5
+,
+1
+)
+​
+‖
+v
+task
+​
+(
+x
+k
+,
+k
+,
+o
+)
+−
+(
+ϵ
+−
+a
+)
+‖
+2
+,
+x
+k
+=
+k
+​
+ϵ
++
+(
+1
+−
+k
+)
+​
+a
+.
+\mathcal{L}_{\mathrm{task}}=\mathbb{E}_{(o,a)\sim\mathcal{D}_{\mathcal{T}},\,\epsilon\sim\mathcal{N}(0,I),\,k\sim\mathrm{Beta}(1.5,1)}\left\|v_{\mathrm{task}}(x_{k},k,o)-(\epsilon-a)\right\|^{2},\quad x_{k}=k\epsilon+(1-k)a.
+(6)
+Because the task proxy is initialized from the reference proxy, the two proxies share architecture, initialization, and approximation errors before task supervision. Their difference therefore cleanly isolates the task-induced change, rather than artifacts from independently trained networks. A small proxy trained on limited demonstrations carries approximation error comparable to the task-induced change itself, and training the proxies independently, or replacing the reference with the base, leaves this error in the residual. Fine-tuning from the reference keeps the two errors close, since limited demonstrations move the network only along the directions they support, which is why proxy tuning pairs an expert with a matched anti-expert rather than with the base
+[
+20
+]
+.
+5
+Experiments
+To evaluate and better understand PPS, we design our experiments around three questions: (1) Does PPS improve VLA performance on downstream tasks? (2) Does PPS preserve the general manipulation priors of VLAs while eliciting task-specific behaviors? (3) What drives the effectiveness of PPS, and which design choices are necessary?
+5.1
+Experimental Setup
+Tasks.
+We evaluate PPS on 8 real-world tasks and 4 simulation tasks, as shown in
+Figure
+2
+. These tasks include both settings that resemble the VLA’s training distribution, such as tissue wiping and lever pressing, and challenging (out-of-distribution) tasks where the VLA rarely succeeds, such as coffee brewing, jeans folding, and flower arrangement.
+We collect 50 demonstrations for each task.
+We further evaluate PPS on cross-modality steering tasks, where the proxy policies are trained with additional modality inputs such as point clouds or audio to steer an RGB-only base policy. Please see
+Section
+C.6
+for cross-modality steering results.
+Baselines.
+𝝅
+0.5
+\bm{\pi_{0.5}}
+[
+31
+]
+is a state-of-the-art VLA pretrained on diverse robotics data and fine-tuned on the DROID dataset
+[
+16
+]
+. We use it as our frozen base model.
+Specialist
+is a flow-matching policy trained from scratch on the task demonstrations, with the same architecture as our proxy models.
+Residual
+uses the same architecture as the Specialist policy, but additionally takes the base policy’s predicted action as input and learns a correction on top of it.
+DSRL
+[
+35
+]
+adapts the base model by training a policy over its initial noise distribution via offline or online RL. We compare with its offline Noise-Aliased variant.
+LoRA
+[
+12
+]
+fine-tunes the base model with low-rank adapters, using the same trainable-parameter budget as PPS. It represents the standard weight-fine-tuning approach.
+Metrics.
+We report task success rates with an action step budget of 1200. We run 10 rollouts per task per method in the real world and 100 in simulation, both with randomized initial configurations.
+Implementation details.
+Each proxy policy has 32M parameters (
+i.e.
+,
+1
+%
+1\%
+of the base model size), using DINOv3
+[
+33
+]
+as the visual encoder and an action expert modified from
+π
+0.5
+\pi_{0.5}
+[
+31
+]
+. We train the reference and task proxies for 20,000 steps each, with a batch size of 64; same for baselines.
+Figure 2:
+Tasks and results.
+Left:
+the manipulation tasks used in our evaluation: 8 real-world tasks (top two rows) and 4 simulation tasks (bottom row), covering both in-distribution (e.g., Tissue, Fruit) and out-of-distribution (e.g., Jeans, Capsule) settings for the base VLA.
+Right:
+success rates averaged over tasks in the simulation and real world. Per-task numbers are reported in
+Section
+C.1
+.
+5.2
+Comparative Results
+As shown in
+Figure
+2
+(right), PPS substantially improves the success rate of
+𝝅
+0.5
+\bm{\pi_{0.5}}
+on downstream tasks, achieving a 55% absolute gain averaged across all 12 tasks (see
+Section
+C.1
+for the per-task breakdown). By steering the denoising trajectory with a velocity residual learned from demonstrations, PPS enables the base VLA to solve tasks that it could not complete on its own.
+In comparison,
+DSRL
+improves over the base where it already has non-zero success (tissue wiping) but not where it has none (coffee brewing), since RL-based adaptation needs either a large offline dataset or non-zero base success to bootstrap. PPS also significantly outperforms
+Specialist
+, a from-scratch policy trained on the same demonstrations. A lightweight model trained on 50 demonstrations cannot form a robust policy on its own, yet the same architecture and data suffice as guidance that steers the VLA toward the demonstrated modes (
+Equation
+2
+) and elicits its broad priors.
+Residual
+learning underperforms even Specialist, likely because the residual is applied only after the base has sampled a clean action not well aligned with the task. Most importantly, PPS outperforms
+LoRA
+under the same trainable-parameter budget. LoRA reshapes the action distribution to fit the demonstrations and overwrites pretrained priors, whereas PPS injects the task signal through velocity steering and preserves them.
+Figure
+3
+makes this concrete: PPS recovers from failures absent from the demonstrations, whereas LoRA overfits to them. Under mid-rollout disturbances, PPS loses only
+7.8
+7.8
+points of success rate, against
+15.8
+15.8
+for LoRA and
+26.1
+26.1
+without the reference proxy (
+Section
+C.7
+).
+PPS is also efficient and transfers across base policies. It trains
+5
+×
+5\times
+faster than LoRA (2.9h vs. 16.3h on a single A6000) and adds only 6 ms of inference latency per action chunk, since the two 32M proxies run in parallel with the frozen base (
+Section
+C.3
+). Applying the same procedure to
+π
+0
+\pi_{0}
+raises its real-world success rate from 5% to 55%, with zero-to-one gains on all six tasks
+π
+0
+\pi_{0}
+never solves (
+Section
+C.4
+), indicating that the velocity-space residual is not specific to
+π
+0.5
+\pi_{0.5}
+.
+Figure 3:
+Recovery behaviors.
+PPS recovers from failures even though no recovery trajectories appear in the demonstrations, whereas LoRA fails the task due to overfitting to the demonstrations. See
+Section
+C.7
+for quantitative results under perturbations.
+5.3
+Analysis on PPS
+We analyze PPS along two axes: the steering strength
+γ
+\gamma
+that controls how strongly the base sampler is tilted toward the proxy ratio, and the calibration of the residual itself.
+Steering strength.
+Figure
+4(a)
+sweeps
+γ
+\gamma
+on the simulated tasks. Setting
+γ
+=
+0
+\gamma=0
+recovers the unsteered base sampler, and larger values impose stronger task-specific steering—matching the trade-off characterized in
+Section
+4.2
+. The optimal
+γ
+\gamma
+in the 50-demonstration regime lies inside
+(
+0.4
+,
+0.6
+)
+(0.4,0.6)
+, balancing the base’s general priors against the task-specific modes amplified by the proxy ratio. We fix
+γ
+=
+0.4
+\gamma=0.4
+for every task in our experiments, without per-task tuning.
+Proxy training recipe.
+The velocity residual is useful only if it isolates the change induced by task supervision. Specifically, Eq. (
+4
+) requires two conditions:
+(C1) the reference proxy matches the base velocity on task-relevant observations, and (C2) the task and reference proxies share approximation errors and randomness.
+Figure
+4(b)
+ablates the design choices that enforce these conditions.
+w/o ref
+replaces
+v
+ref
+v_{\mathrm{ref}}
+with the frozen base
+v
+base
+v_{\mathrm{base}}
+. In this case, C1 holds trivially, but C2 is broken. The small task proxy carries architecture-specific approximation errors
+[
+20
+]
+, but the base does not share those errors. The residual mixes task signal with proxy-specific bias, and the success rate drops from 64% to 55%.
+Section
+C.8
+quantifies this bias: the task–reference residual tracks a genuine fine-tuning shift far more closely than task–base.
+w/o vel
+supervises the reference proxy on the base’s clean predicted actions. Thus, the reference fits the base only at the clean endpoint, not along the denoising trajectory, violating C1. The residual then carries leftover base behavior that the guided sampler cannot cancel; success rate drops to 50%.
+w/o tune
+trains the task proxy from scratch instead of initializing it from the reference proxy. The two proxies then differ not only in task supervision but also in random initialization and optimization trajectory, so C2 fails and the residual no longer points cleanly along task-relevant directions; the success rate drops to 48%.
+Each ablation isolates one of the three design choices and confirms that the residual encodes a genuine task-relevant direction only when all three are in place.
+Failure analysis.
+We categorize failures into four root causes:
+incorrect mode
+such as trying to place the toy in the drawer before opening it,
+imprecise execution
+error due to imprecise low-level object interactions,
+out-of-distribution (OOD) states
+where the state drifts to configurations unseen at training time, and
+other
+failures such as hardware glitches and randomness. As shown in
+Figure
+4(c)
+, compared to the frozen base
+π
+0.5
+\pi_{0.5}
+, PPS cuts incorrect-mode failures by 93%, reflecting the task-specific direction provided by the proxy residual. Compared to Specialist, PPS cuts OOD-state failures by 87%, reflecting the base prior that keeps the sampler inside well-supported state regions.
+(a)
+Sensitivity to
+γ
+\gamma
+(b)
+Ablation on proxy training
+(c)
+Failure analysis
+Figure 4:
+Analysis.
+Sensitivity to steering strength, training ablations, and failure-mode breakdown.
+6
+Limitations
+While PPS offers an effective path to adapting frozen VLAs, the current study is limited in three respects. First, we study the single-task regime; the pipeline extends to multi-task setups by supplying the task identity as input, but how a shared proxy transfers manipulation primitives across tasks, environments, and embodiments remains open. Second, we validate only on flow-matching VLAs, although the principle extends to diffusion policies through the score-to-velocity correspondence and to Gaussian or categorical action heads through density-ratio or logit-space combinations. Third, PPS relies on the base and the proxies playing complementary roles: the residual elicits task-specific behaviors the frozen base rarely samples on its own, while the base supplies broad manipulation priors, robustness, and recovery. Our results therefore depend on a strong base, and when the base is substantially weaker than the proxy, PPS may offer less benefit than training a specialist from scratch.
+7
+Conclusions
+We introduce Proxy Policy Steering (PPS), an inference-time adaptation method that specializes a frozen flow-matching VLA from a small demonstration set through a calibrated velocity-space residual between two lightweight proxy policies. We show that under the linear flow-matching path this residual implements a density-ratio correction to the base at each noise level, and we identify the conditions under which it isolates the change induced by task supervision. Across 12 manipulation tasks, PPS lifts the state-of-the-art
+π
+0.5
+\pi_{0.5}
+base policy by 55% absolute success rate on average and delivers zero-to-one gains on tasks the base never solves, while retaining recovery behaviors that LoRA fine-tuning degrades. The same recipe transfers across VLA families, lifting
+π
+0
+\pi_{0}
+from 5% to 55%, and requires only forward velocity predictions from the base, making the method applicable even to closed-source or API-only base policies. More broadly, our results suggest that proxy-based inference-time adaptation, originally developed for discrete-token language models, admits a principled and calibrated analog for continuous-action generative policies, opening a general path for specializing large generalist policies without accessing or modifying their weights.
+References
+[1]
+K. Black, N. Brown, D. Driess, A. Esmail, M. Equi, C. Finn, N. Fusai, L. Groom, K. Hausman, B. Ichter,
+et al.
+(2024)
+π
+0
+{\pi}_{0}
+: A vision-language-action flow model for general robot control
+.
+arXiv:2410.24164
+.
+Cited by:
+§A.2
+,
+§A.3
+,
+§C.4
+,
+§1
+,
+§3
+.
+[2]
+A. Brohan, N. Brown, J. Carbajal, Y. Chebotar, J. Dabis, C. Finn, K. Gopalakrishnan, K. Hausman, A. Herzog, J. Hsu,
+et al.
+(2022)
+RT-1: robotics transformer for real-world control at scale
+.
+arXiv:2212.06817
+.
+Cited by:
+§1
+.
+[3]
+Y. Chen, S. Tian, S. Liu, Y. Zhou, H. Li, and D. Zhao
+(2025)
+ConRFT: a reinforced fine-tuning method for VLA models via consistency policy
+.
+arXiv:2502.05450
+.
+Cited by:
+§2
+.
+[4]
+S. Dey, J. Zaech, N. Nikolov, L. Van Gool, and D. P. Paudel
+(2025)
+ReVLA: reverting visual domain limitation of robotic foundation models
+.
+In
+IEEE International Conference on Robotics and Automation
+,
+Cited by:
+§1
+,
+§2
+.
+[5]
+D. Driess, J. T. Springenberg, B. Ichter, L. Yu, A. Li-Bell, K. Pertsch, A. Z. Ren, H. Walke, Q. Vuong, L. X. Shi,
+et al.
+(2025)
+Knowledge insulating vision-language-action models: train fast, run fast, generalize better
+.
+arXiv:2505.23705
+.
+Cited by:
+§1
+.
+[6]
+M. Du and S. Song
+(2025)
+DynaGuide: steering diffusion polices with active dynamic guidance
+.
+arXiv:2506.13922
+.
+Cited by:
+§1
+,
+§2
+.
+[7]
+Y. Du, C. Durkan, R. Strudel, J. B. Tenenbaum, S. Dieleman, R. Fergus, J. Sohl-Dickstein, A. Doucet, and W. S. Grathwohl
+(2023)
+Reduce, reuse, recycle: compositional generation with energy-based diffusion models and MCMC
+.
+In
+International Conference on Machine Learning
+,
+Cited by:
+§2
+.
+[8]
+Y. Du, S. Li, and I. Mordatch
+(2020)
+Compositional visual generation with energy based models
+.
+In
+Advances in Neural Information Processing Systems
+,
+Cited by:
+§2
+.
+[9]
+Gemini Robotics Team, A. Abdolmaleki, S. Abeyruwan, J. Ainslie, J. Alayrac, M. G. Arenas, A. Balakrishna, N. Batchelor, A. Bewley, J. Bingham,
+et al.
+(2025)
+Gemini robotics 1.5: pushing the frontier of generalist robots with advanced embodied reasoning, thinking, and motion transfer
+.
+arXiv:2510.03342
+.
+Cited by:
+§1
+.
+[10]
+G. E. Hinton
+(2002)
+Training products of experts by minimizing contrastive divergence
+.
+Neural Computation
+14
+(
+8
+),
+pp. 1771–1800
+.
+Cited by:
+§4.1
+.
+[11]
+J. Ho and T. Salimans
+(2022)
+Classifier-free diffusion guidance
+.
+arXiv:2207.12598
+.
+Cited by:
+§2
+.
+[12]
+E. J. Hu, Y. Shen, P. Wallis, Z. Allen-Zhu, Y. Li, S. Wang, L. Wang, W. Chen,
+et al.
+(2022)
+LoRA: low-rank adaptation of large language models.
+.
+In
+International Conference on Learning Representations
+,
+Cited by:
+§A.1
+,
+§1
+,
+§2
+,
+§5.1
+.
+[13]
+Z. Jin, Z. Che, T. Li, Z. Zhao, K. Wu, Y. Zhang, Y. Zhao, Z. Liu, Q. Zhang, X. Ju,
+et al.
+(2025)
+ArtVIP: articulated digital assets of visual realism, modular interaction, and physical fidelity for robot learning
+.
+arXiv:2506.04941
+.
+Cited by:
+§B.1
+.
+[14]
+T. Jülg, W. Burgard, and F. Walter
+(2025)
+Refined policy distillation: from VLA generalists to RL experts
+.
+In
+IEEE/RSJ International Conference on Intelligent Robots and Systems
+,
+Cited by:
+§2
+.
+[15]
+T. Karras, M. Aittala, T. Kynkäänniemi, J. Lehtinen, T. Aila, and S. Laine
+(2024)
+Guiding a diffusion model with a bad version of itself
+.
+arXiv:2406.02507
+.
+Cited by:
+§2
+.
+[16]
+A. Khazatsky, K. Pertsch, S. Nair, A. Balakrishna, S. Dasari, S. Karamcheti, S. Nasiriany, M. K. Srirama, L. Y. Chen, K. Ellis,
+et al.
+(2024)
+DROID: a large-scale in-the-wild robot manipulation dataset
+.
+arXiv:2403.12945
+.
+Cited by:
+§A.2
+,
+§B.1
+,
+§5.1
+.
+[17]
+M. J. Kim, C. Finn, and P. Liang
+(2025)
+Fine-tuning vision-language-action models: optimizing speed and success
+.
+arXiv:2502.19645
+.
+Cited by:
+§1
+.
+[18]
+X. L. Li, A. Holtzman, D. Fried, P. Liang, J. Eisner, T. B. Hashimoto, L. Zettlemoyer, and M. Lewis
+(2023)
+Contrastive decoding: open-ended text generation as optimization
+.
+In
+Annual Meeting of the Association for Computational Linguistics
+,
+Cited by:
+§2
+.
+[19]
+Z. Li, J. Liu, Z. Dong, T. Teng, Q. Rouxel, D. Caldwell, and F. Chen
+(2026)
+Towards deploying VLA without fine-tuning: plug-and-play inference-time VLA policy steering via embodied evolutionary diffusion
+.
+IEEE Robotics and Automation Letters
+11
+(
+5
+),
+pp. 6234–6241
+.
+Cited by:
+§2
+.
+[20]
+A. Liu, X. Han, Y. Wang, Y. Tsvetkov, Y. Choi, and N. A. Smith
+(2024)
+Tuning language models by proxy
+.
+arXiv:2401.08565
+.
+Cited by:
+§2
+,
+§4.3
+,
+§5.3
+.
+[21]
+A. Liu, M. Sap, X. Lu, S. Swayamdipta, C. Bhagavatula, N. A. Smith, and Y. Choi
+(2021)
+DExperts: decoding-time controlled text generation with experts and anti-experts
+.
+arXiv:2105.03023
+.
+Cited by:
+§2
+.
+[22]
+C. Liu, W. Tan, L. Zhu, F. Li, J. Li, G. Yang, and H. T. Shen
+(2026)
+Self-correcting VLA: online action refinement via sparse world imagination
+.
+arXiv:2602.21633
+.
+Cited by:
+§2
+.
+[23]
+N. Liu, S. Li, Y. Du, A. Torralba, and J. B. Tenenbaum
+(2022)
+Compositional visual generation with composable diffusion models
+.
+In
+European Conference on Computer Vision
+,
+Cited by:
+§2
+.
+[24]
+A. Mandlekar, S. Nasiriany, B. Wen, I. Akinola, Y. Narang, L. Fan, Y. Zhu, and D. Fox
+(2023)
+MimicGen: a data generation system for scalable robot learning using human demonstrations
+.
+arXiv:2310.17596
+.
+Cited by:
+§B.1
+.
+[25]
+E. Mitchell, R. Rafailov, A. Sharma, C. Finn, and C. D. Manning
+(2023)
+An emulator for fine-tuning large language models using small language models
+.
+arXiv:2310.12962
+.
+Cited by:
+§2
+.
+[26]
+M. Nakamoto, O. Mees, A. Kumar, and S. Levine
+(2024)
+Steering your generalists: improving robotic foundation models via value guidance
+.
+arXiv:2410.13816
+.
+Cited by:
+§2
+.
+[27]
+Y. Peng, J. Fu, C. Zhang, L. Zhao, J. Bian, M. Liu, L. Zhang, J. Zhang, and R. Wang
+(2026)
+What to ignore, what to react: visually robust RL fine-tuning of VLA models
+.
+arXiv:2605.13105
+.
+Cited by:
+§2
+.
+[28]
+S. Pfrommer, Y. Huang, and S. Sojoudi
+(2025)
+Reinforcement learning for flow-matching policies
+.
+arXiv:2507.15073
+.
+Cited by:
+§2
+.
+[29]
+Physical Intelligence, B. Ai, A. Amin, R. Aniceto, A. Balakrishna, G. Balke, K. Black, G. Bokinsky, S. Cao, T. Charbonnier,
+et al.
+(2026)
+π
+0.7
+\pi_{0.7}
+: a steerable generalist robotic foundation model with emergent capabilities
+.
+arXiv:2604.15483
+.
+Cited by:
+§3
+.
+[30]
+Physical Intelligence, A. Amin, R. Aniceto, A. Balakrishna, K. Black, K. Conley, G. Connors, J. Darpinian, K. Dhabalia, J. DiCarlo,
+et al.
+(2025)
+π
+0.6
+∗
+\pi^{*}_{0.6}
+: A VLA that learns from experience
+.
+arXiv:2511.14759
+.
+Cited by:
+§1
+,
+§3
+.
+[31]
+Physical Intelligence, K. Black, N. Brown, J. Darpinian, K. Dhabalia, D. Driess, A. Esmail, M. Equi, C. Finn, N. Fusai,
+et al.
+(2025)
+π
+0.5
+\pi_{0.5}
+: a vision-language-action model with open-world generalization
+.
+arXiv:2504.16054
+.
+Cited by:
+§A.1
+,
+§A.2
+,
+§5.1
+,
+§5.1
+.
+[32]
+R. Shuttleworth, J. Andreas, A. Torralba, and P. Sharma
+(2025)
+LoRA vs full fine-tuning: an illusion of equivalence
+.
+In
+Advances in Neural Information Processing Systems
+,
+Cited by:
+§1
+,
+§2
+.
+[33]
+O. Siméoni, H. V. Vo, M. Seitzer, F. Baldassarre, M. Oquab, C. Jose, V. Khalidov, M. Szafraniec, S. Yi, M. Ramamonjisoa,
+et al.
+(2025)
+DINOv3
+.
+arXiv:2508.10104
+.
+Cited by:
+§A.1
+,
+§5.1
+.
+[34]
+E. Su, T. Westenbroek, A. Nagabandi, and A. Gupta
+(2026)
+RFS: reinforcement learning with residual flow steering for dexterous manipulation
+.
+In
+International Conference on Learning Representations
+,
+Cited by:
+§2
+.
+[35]
+A. Wagenmaker, M. Nakamoto, Y. Zhang, S. Park, W. Yagoub, A. Nagabandi, A. Gupta, and S. Levine
+(2025)
+Steering your diffusion policy with latent space reinforcement learning
+.
+arXiv:2506.15799
+.
+Cited by:
+§A.1
+,
+§C.5
+,
+§1
+,
+§2
+,
+§5.1
+.
+[36]
+L. Wang, J. Zhao, Y. Du, E. H. Adelson, and R. Tedrake
+(2024)
+PoCo: policy composition from and for heterogeneous robot learning
+.
+arXiv:2402.02511
+.
+Cited by:
+§2
+.
+[37]
+Y. Wang, L. Wang, Y. Du, B. Sundaralingam, X. Yang, Y. Chao, C. Pérez-D’Arpino, D. Fox, and J. Shah
+(2025)
+Inference-time policy steering through human interactions
+.
+In
+IEEE International Conference on Robotics and Automation
+,
+Cited by:
+§1
+.
+[38]
+Y. Wang, M. Verghese, and J. Schneider
+(2025)
+Latent policy steering with embodiment-agnostic pretrained world models
+.
+arXiv:2507.13340
+.
+Cited by:
+§1
+.
+[39]
+Y. Wu, R. Tian, G. Swamy, and A. Bajcsy
+(2025)
+From foresight to forethought: vlm-in-the-loop policy steering via latent alignment
+.
+arXiv:2502.01828
+.
+Cited by:
+§1
+,
+§2
+.
+[40]
+W. Xiao, H. Lin, A. Peng, H. Xue, T. He, Y. Xie, F. Hu, J. Wu, Z. Luo, L. Fan,
+et al.
+(2025)
+Self-improving vision-language-action models with data generation via residual rl
+.
+arXiv:2511.00091
+.
+Cited by:
+§2
+.
+[41]
+Y. Yadav, Z. Zhou, A. Wagenmaker, K. Pertsch, and S. Levine
+(2025)
+Robust finetuning of vision-language-action robot policies via parameter merging
+.
+arXiv:2512.08333
+.
+Cited by:
+§1
+,
+§2
+.
+[42]
+S. Ye, Y. Ge, K. Zheng, S. Gao, S. Yu, G. Kurian, S. Indupuru, Y. L. Tan, C. Zhu, J. Xiang,
+et al.
+(2026)
+World action models are zero-shot policies
+.
+arXiv:2602.15922
+.
+Cited by:
+§1
+.
+[43]
+X. Yuan, T. Mu, S. Tao, Y. Fang, Z. Zhang, and H. Su
+(2025)
+Policy decorator: model-agnostic online refinement for large policy model
+.
+In
+International Conference on Learning Representations
+,
+Cited by:
+§2
+.
+[44]
+T. Zhang, C. Yu, S. Su, and Y. Wang
+(2025)
+ReinFlow: fine-tuning flow matching policy with online reinforcement learning
+.
+arXiv:2505.22094
+.
+Cited by:
+§2
+.
+[45]
+R. Zhao, T. Ingebrand, S. Chinchali, and U. Topcu
+(2025)
+MoS-VLA: a vision-language-action model with one-shot skill adaptation
+.
+arXiv:2510.16617
+.
+Cited by:
+§1
+.
+Appendix A
+Implementation Details
+This section provides the implementation details of PPS and the baselines.
+Section
+A.1
+describes the network architectures of our proxy and baseline models,
+Section
+A.2
+the control and sampling configuration, and
+Section
+A.3
+the training hyperparameters shared among all methods.
+A.1
+Network Details
+Both proxy policies (reference and task) share the same lightweight architecture: a DINOv3
+[
+33
+]
+ViT-S/16 visual encoder followed by a small (
+∼
+\sim
+12M) Gemma transformer action expert. Following the
+π
+0
+\pi_{0}
+convention, the action expert fuses the noised action with a sinusoidal time embedding (concatenation followed by an MLP) and regresses the flow-matching velocity. The visual encoder is trained jointly with the expert (not frozen), giving each proxy about 32M trainable parameters in total, roughly
+1
+%
+1\%
+of the frozen base VLA
+π
+0.5
+\pi_{0.5}
+[
+31
+]
+(
+∼
+\sim
+3B parameters). The
+Specialist
+baseline uses this same architecture trained from scratch. The
+Residual
+baseline uses the same architecture and additionally encodes the base policy’s predicted action through an extra action encoder, predicting a correction on top of it.
+LoRA
+[
+12
+]
+inserts low-rank adapter matrices into both the VLM backbone and the action expert of the base model, leaving the remaining base weights frozen.
+DSRL
+[
+35
+]
+follows the implementation of its original paper, training a policy over the base model’s initial noise distribution; we use the offline Noise-Aliased variant.
+A.2
+Control and Sampling Setup
+All methods share the control and sampling configuration of the base policy, following the DROID setup
+[
+16
+]
+and the
+π
+\pi
+model configuration
+[
+1
+,
+31
+]
+. Policies run at a control frequency of 15 Hz. Each forward pass uses 10 Euler denoising steps and predicts an action horizon of 15 steps, of which the first 8 are executed before replanning. PPS applies the guided velocity in (
+4
+) at every one of the 10 denoising steps, and the proxies use the same schedule and action representation as the base, as required by the assumptions in
+Appendix
+D
+. Unless stated otherwise, we use a fixed steering strength
+γ
+=
+0.4
+\gamma=0.4
+for every task, without per-task tuning.
+A.3
+Training Hyperparameters
+We train all proxy policies and baselines for 20,000 gradient steps with a batch size of 64, by which point every method has converged. Following the
+π
+0
+\pi_{0}
+convention
+[
+1
+]
+, the flow-matching noise level
+k
+k
+in (
+6
+) is drawn from a shifted
+Beta
+⁡
+(
+1.5
+,
+1
+)
+\mathrm{Beta}(1.5,1)
+distribution rather than uniformly over
+[
+0
+,
+1
+]
+[0,1]
+. The reference distillation loss in (
+5
+) does not sample
+k
+k
+: it is supervised at the noise levels the base sampler actually visits along its own denoising trajectory. The exception is
+DSRL
+, whose reinforcement-learning objective on a small dataset is unstable for longer training: we train it for 1,000 steps and use the last checkpoint before its RL loss diverges.
+Appendix B
+Additional Details of Experimental Setup
+This section describes the tasks and evaluation methodology used throughout our experiments.
+Section
+B.1
+lists the language instruction, success criterion, and demonstration collection for every real-world and simulation task, and
+Section
+B.2
+details the protocol used to measure success rates.
+B.1
+Task Design
+Table
+1
+lists the language instruction and success criterion for each of the 8 real-world tasks and 4 simulation tasks used in our evaluation. The instruction column is the natural-language prompt given to the VLA at the start of every rollout. The success-criterion column describes the success condition.
+For real-world tasks, our hardware setup follows the DROID dataset
+[
+16
+]
+with one third-person camera and one wrist camera.
+We collect 50 demonstrations per task by teleoperation.
+For simulated tasks, we use assets from ArtVIP
+[
+13
+]
+and the Synthesis asset pack to build our simulation environments. The 50 demonstrations are generated with MimicGen
+[
+24
+]
+from 5 teleoperated source demonstrations.
+Table 1:
+Task design.
+Language instruction and success criterion for each task. The top block lists the 8 real-world tasks; the bottom block lists the 4 simulation tasks.
+Task
+Prompt
+Success criterion
+Tissue
+“draw a tissue from the tissue box and wipe the pot”
+The tissue contacts the inside of the pot in a wiping motion.
+Utensil
+“put the utensils in the utensil holder”
+The utensils end up placed inside the holder.
+Lever
+“push down the toaster lever”
+The lever is pushed all the way to the bottom.
+Shoes
+“remove the lid of the box and take the shoes out of the box”
+The shoes are placed outside the box.
+Coffee
+“open the coffee maker lid, put the pod inside the coffee maker, close the lid”
+The coffee pod is inside the coffee maker with the lid closed.
+Jeans
+“fold the jeans and put them on the cloth pile”
+The folded jeans rest on top of the cloth pile.
+Flower
+“insert the flower into the vase”
+The stem of the flower is inside the vase.
+Drawer
+“open the drawer, put the toy cars in the drawer, close the drawer”
+The toy cars are inside the drawer and the drawer is closed.
+Fruit
+“put the pear and apple on the electronic scale”
+Both the pear and the apple rest on the scale.
+Egg
+“open the pot by the lid and put the egg in it”
+The egg is inside the pot after the lid has been removed.
+Tea
+“pour the tea from the teapot into the cup”
+The teapot spout is tilted over the cup at a pouring angle.
+Capsule
+“open the coffee maker lid and put the pod in it”
+The pod is inside the coffee maker.
+B.2
+Evaluation Protocol
+Real-world.
+For each real-world task, we randomize the initial layout of the objects while keeping the robot’s initial pose fixed, and run 10 rollouts per method per task.
+Simulation.
+For each simulation task, we run 100 rollouts per method per task using the same set of seeds across methods, so that every method is evaluated from identical initial configurations.
+Appendix C
+Additional Results
+This section presents additional results that complement the main paper. We break the aggregate numbers down into per-task success rates (
+Section
+C.1
+), analyze how PPS scales with trainable parameters and demonstrations (
+Section
+C.2
+), and report training, inference, and parameter cost (
+Section
+C.3
+). We then show that PPS transfers to other base policies (
+Section
+C.4
+) and compare against DSRL on a standard benchmark (
+Section
+C.5
+). Finally, we study cross-modality steering (
+Section
+C.6
+), PPS’s robustness to mid-rollout perturbations (
+Section
+C.7
+), the alignment of the learned velocity fields (
+Section
+C.8
+), and the steering behavior itself (
+Section
+C.9
+).
+C.1
+Per-Task Success Rates
+Figures
+5
+and
+6
+break down the averaged numbers reported in the main paper into per-task success rates. Each bar group is a single task; the rightmost group repeats the macro-average from the main figure for reference. The per-task view shows that PPS can deliver zero-to-one improvements on the out-of-distribution real-world tasks (Coffee, Jeans, Flower, Drawer), where DSRL fails to gain any improvement. In simulation, PPS similarly leads on every task.
+Figure 5:
+Per-task real-world results.
+Success rate of each method on the 8 real-world tasks.
+Figure 6:
+Per-task simulation results.
+Success rate of each method on the 4 simulation tasks.
+(a)
+Parameter scaling on four tasks.
+(b)
+Data scaling on Tea and Capsule.
+(c)
+π
+0
+\pi_{0}
+real-world results.
+Figure 7:
+Additional results.
+(a) Average simulated success rate of PPS against
+Specialist
+and
+LoRA
+as the trainable-parameter budget grows from 32M to 256M.
+(b) Average simulated success rate on the two lowest-success tasks (Tea and Capsule) as the number of demonstrations grows from 50 to 200.
+(c) Average real-world success rate across the 8 real-world tasks on the
+π
+0
+\pi_{0}
+family. PPS lifts
+π
+0
+\pi_{0}
+from 5% to 55%, indicating that the steering recipe transfers across flow-matching VLAs.
+C.2
+Scaling up Parameters and Data
+Figure
+7(a)
+compares PPS,
+LoRA
+, and
+Specialist
+across trainable-parameter budgets from
+2
+5
+2^{5}
+M to
+2
+8
+2^{8}
+M on the 4 simulation tasks. PPS is remarkably parameter-efficient: it reaches 64% success with just 32M trainable parameters, already within 10 points of the best performance either method achieves at any budget, while LoRA requires
+8
+×
+8\times
+more parameters to reach the same performance.
+Specialist
+, which does not access the base prior, plateaus around 54% even at 256M parameters, confirming that access to the pretrained VLA’s prior rather than simply model capacity drives the performance advantage.
+Figure
+7(b)
+complements this with a data-scaling sweep on the two lowest-success simulation tasks (Tea and Capsule), growing the number of demonstrations from 50 to 200. PPS leads at every data budget, with its largest margin in the low-data regime; the from-scratch
+Specialist
+improves steadily with more data and catches up near the 200-demonstration budget.
+C.3
+Training, Inference, and Parameter Efficiency
+Because PPS never backpropagates through the frozen base model, its adaptation cost is substantially lower than weight fine-tuning. Under an identical training configuration on a single A6000 GPU, the complete distill-then-fine-tune pipeline (both proxies) takes
+2.9 hours
+against
+16.3 hours
+for
+LoRA
+, roughly a
+5
+×
+5\times
+reduction.
+At inference, PPS evaluates two additional 32M proxies per denoising step. Since the proxies do not depend on the base model’s intermediate activations, they run in parallel with the base policy on a single 4090 GPU, so the added cost is small:
+6 ms
+of extra latency per action chunk and
+0.13 GB
+of additional GPU memory.
+In terms of trainable parameters, the scaling study in
+Section
+C.2
+shows that LoRA requires roughly
+8
+×
+8\times
+more trainable parameters to match the success rate PPS reaches at 32M.
+C.4
+Other Base Policies
+We further apply the PPS recipe to
+π
+0
+\pi_{0}
+[
+1
+]
+to test whether the steering procedure depends on the specific base policy.
+Figure
+7(c)
+reports the average success rate across the 8 real-world tasks. Unsteered
+π
+0
+\pi_{0}
+succeeds on 5% of trials on average, largely due to 0% scores on six of the eight tasks (Lever, Shoes, Coffee, Jeans, Flower, Drawer). PPS lifts the average to 55%, including zero-to-1 improvements on those six tasks. This confirms that the velocity-space residual targets a property of flow-matching action sampling rather than being
+π
+0.5
+\pi_{0.5}
+-specific, and that PPS remains compatible with other base policies in the same family.
+C.5
+Comparison on a Standard Benchmark
+Our main evaluation deliberately targets tasks the base VLA rarely solves, since that is the regime where adaptation matters. For completeness, we also compare PPS against
+DSRL
+[
+35
+]
+on the LIBERO task used in the DSRL paper, under the same base policy
+π
+0
+\pi_{0}
+. Both methods lift
+π
+0
+\pi_{0}
+from
+17
+%
+17\%
+to
+100
+%
+100\%
+success. Performance saturates on this benchmark, so it does not discriminate between the two approaches; the per-task results in
+Section
+C.1
+show that the methods separate sharply once the base policy no longer succeeds on its own.
+C.6
+Cross-modality Steering
+PPS also enables injecting new sensing modalities into base models since the standalone proxy policies can accept different inputs than the base model.
+Figure
+8
+shows the two simulated tasks
+Marble
+, which takes a point cloud as input to locate the target objects whose visual texture blends in the background, and
+Phone
+, which uses sound spectrograms to distinguish the ringing phone from two visually identical phones. PPS outperforms all baselines, including
+Specialist
+and
+DSRL
+, which also take the additional modality, and
+LoRA-MM
+, which wires the new modality directly into the VLA backbone through end-to-end fine-tuning.
+Figure 8:
+Cross-modality steering.
+PPS injects new modalities into the RGB-only base policy.
+C.7
+Robustness Under Mid-Rollout Perturbations
+Figure
+9
+compares PPS and
+LoRA
+on the Jeans task under human interventions during execution. After the human unfolds the partially folded jeans, LoRA cannot recover, and the policy overfits to demonstration-like motions that no longer suit the state.
+PPS instead adapts to the interventions, repairs the fold, and even survives a second “drag” perturbation later in the rollout, eventually completing the task. This supports the claim in
+Section
+5.2
+that leaving the base VLA frozen preserves the recovery and out-of-distribution behavior the pretrained policy already exhibits, while LoRA’s weight-level adaptation overwrites them.
+Figure
+10(a)
+quantifies this effect. We report
+Δ
+\Delta
+SR, the change in success rate when mid-rollout disturbances are applied relative to the undisturbed evaluation, so a value closer to zero indicates a policy that better retains its ability to recover.
+LoRA
+loses
+15.8
+15.8
+points and degrades roughly twice as much as PPS, which loses only
+7.8
+7.8
+. Removing the reference proxy is more damaging still:
+PPS w/o ref
+loses
+26.1
+26.1
+points. This is consistent with the role of the reference proxy described in
+Section
+C.8
+: without it, the residual carries proxy-specific error in addition to the task-induced change, and the extra noise erodes precisely the base priors that recovery depends on.
+Figure 9:
+Robustness under mid-rollout perturbations.
+Top (LoRA):
+after the first human “unfold” intervention LoRA fails to recover and overfits to the demonstration distribution.
+Bottom (PPS):
+the same rollout under two consecutive interventions (“unfold”, “drag”) — PPS recovers from each and still completes the task on the last frame. Red banners mark perturbation events; green banners mark recovery and the final success.
+(a)
+Disturbance robustness
+(b)
+Velocity alignment
+Figure 10:
+Evidence that PPS preserves the base priors.
+(a) Change in success rate (
+Δ
+\Delta
+SR) when disturbances are applied mid-rollout, relative to the undisturbed evaluation; bars closer to zero are better.
+(b) Average cosine similarity between velocity fields along the steered denoising trajectory. Tuned denotes the base policy after fine-tuning on the task demonstrations, whose shift relative to the base calibrates the size of a genuine task-induced change.
+Figure 11:
+Steering visualization.
+Velocity vectors and sampled actions during flow-matching denoising. At each denoising step, all policies take the noisy action
+(
+noisy
+)
+​
+a
+t
+PPS
+(\mathrm{noisy})~a_{t}^{\mathrm{PPS}}
+as input. The base velocity
+v
+base
+v_{\mathrm{base}}
+(purple) points toward an action mode that does not solve the task, while the task proxy velocity
+v
+task
+v_{\mathrm{task}}
+(blue) points toward the success mode and the reference proxy velocity
+v
+ref
+v_{\mathrm{ref}}
+(orange) tracks the base behavior.
+a
+t
+PPS
+a_{t}^{\mathrm{PPS}}
+(green) is updated using the guided velocity
+v
+base
++
+γ
+⁡
+(
+v
+task
+−
+v
+ref
+)
+v_{\mathrm{base}}+\gamma(v_{\mathrm{task}}-v_{\mathrm{ref}})
+throughout the denoising trajectory and converges to the task-success region. The dotted purple action
+a
+t
+=
+0
+base
+a_{t=0}^{\mathrm{base}}
+shown in the final column denotes the action obtained by denoising the same initial sample using only the base model, which converges to the incorrect mode.
+C.8
+Velocity Alignment Analysis
+The ablation in the main paper shows that replacing
+v
+ref
+v_{\mathrm{ref}}
+with the frozen base velocity degrades performance. Here we examine why directly.
+Figure
+10(b)
+reports the average cosine similarity between pairs of velocity fields, measured along the steered denoising trajectory on the simulation tasks.
+Two observations support the design. First, the reference proxy is an accurate stand-in for the base:
+v
+ref
+v_{\mathrm{ref}}
+and
+v
+base
+v_{\mathrm{base}}
+agree to
+0.946
+0.946
+on the steered path (and
+0.935
+0.935
+on the base model’s own path), confirming that on-policy distillation aligns the reference with the base in the region where guidance is applied.
+Second, and more importantly, the comparison calibrates how large a genuine task-induced shift should be. Fine-tuning the base itself yields a Tuned–Base similarity of
+0.890
+0.890
+: this is the magnitude of the behavioral change that task supervision actually induces. The proxy pair diverges by a comparable amount (Task–Ref,
+0.865
+0.865
+). Task–Base, however, falls considerably further, to
+0.767
+0.767
+. The additional drop is not task signal. It reflects the architecture and capacity gap between the 32M proxy and the 3B base policy, which the reference proxy shares and therefore cancels, but the base does not. Using
+v
+task
+−
+v
+base
+v_{\mathrm{task}}-v_{\mathrm{base}}
+as the residual thus mixes the task-induced change with proxy-specific approximation error, which is what the
+w/o ref
+ablation measures and what the disturbance results in
+Section
+C.7
+show to be costly.
+C.9
+Steering Visualization
+Figure
+11
+visualizes how the velocity residual reshapes the denoising trajectory step by step. We pick two inference snapshots from the
+Utensil
+and
+Capsule
+tasks and overlay the velocity vector predictions of the base, reference proxy, and task proxy on the last action horizon, together with the shared noisy action chunks.
+v
+task
+v_{\mathrm{task}}
+separates from
+v
+base
+v_{\mathrm{base}}
+and points toward the task-success mode, while
+v
+ref
+v_{\mathrm{ref}}
+mimics the base-like vector, which points toward an incorrect action mode.
+The task-reference residual
+v
+task
+−
+v
+ref
+v_{\mathrm{task}}-v_{\mathrm{ref}}
+adds this difference to the base sampler at every flow-matching step, bending the steered trajectory toward the success mode. The final action
+a
+t
+=
+0
+PPS
+a_{t=0}^{\mathrm{PPS}}
+differs visibly from the would-be base action
+a
+t
+=
+0
+base
+a_{t=0}^{\mathrm{base}}
+.
+Appendix D
+Velocity Derivation
+PPS defines the steered policy as a product-of-experts correction to the frozen base,
+π
+PPS
+​
+(
+a
+∣
+o
+,
+l
+)
+∝
+π
+base
+​
+(
+a
+∣
+o
+,
+l
+)
+​
+[
+π
+task
+​
+(
+a
+∣
+o
+)
+/
+π
+ref
+​
+(
+a
+∣
+o
+)
+]
+γ
+.
+\pi_{\mathrm{PPS}}(a\mid o,l)\;\propto\;\pi_{\mathrm{base}}(a\mid o,l)\,\left[\pi_{\mathrm{task}}(a\mid o)\big/\pi_{\mathrm{ref}}(a\mid o)\right]^{\gamma}.
+(7)
+Flow-matching policies do not expose normalized densities. They return only velocity predictions along the linear interpolation path
+x
+k
+=
+k
+​
+ϵ
++
+(
+1
+−
+k
+)
+​
+a
+x_{k}=k\epsilon+(1-k)a
+, with
+ϵ
+∼
+𝒩
+⁡
+(
+0
+,
+I
+)
+\epsilon\sim\mathcal{N}(0,I)
+and
+k
+=
+1
+k=1
+noise,
+k
+=
+0
+k=0
+clean. This section shows that the correction in (
+7
+), when applied at each noise level, has an
+exact
+velocity-space form.
+Assumptions.
+(A1) Shared schedule.
+The base policy and both proxies use the same action representation and the same linear interpolation path, so the score-to-velocity relation derived below carries identical coefficients for all three models. Without a shared schedule the three velocity fields are not expressed in a common frame and their difference has no distributional meaning.
+(A2) Common support and integrability.
+At every noise level,
+π
+task
+\pi_{\mathrm{task}}
+and
+π
+ref
+\pi_{\mathrm{ref}}
+share support with
+π
+base
+\pi_{\mathrm{base}}
+, and the corrected density below has a finite normalizer, so the density ratio and its logarithm are well defined.
+(A3) Per-level correction.
+We
+define
+the target at noise level
+k
+k
+by applying the same product-of-experts correction to the noised marginals. Writing
+p
+j
+,
+k
+p_{j,k}
+for the marginal density of
+x
+k
+x_{k}
+under policy
+π
+j
+\pi_{j}
+,
+j
+∈
+{
+base
+,
+task
+,
+ref
+}
+j\in\{\mathrm{base},\mathrm{task},\mathrm{ref}\}
+,
+p
+PPS
+,
+k
+​
+(
+x
+)
+∝
+p
+base
+,
+k
+​
+(
+x
+)
+​
+[
+p
+task
+,
+k
+​
+(
+x
+)
+/
+p
+ref
+,
+k
+​
+(
+x
+)
+]
+γ
+.
+p_{\mathrm{PPS},k}(x)\;\propto\;p_{\mathrm{base},k}(x)\,\left[p_{\mathrm{task},k}(x)\big/p_{\mathrm{ref},k}(x)\right]^{\gamma}.
+(8)
+Assumptions (A1) and (A2) are design choices that PPS satisfies by construction: the proxies inherit the base model’s flow-matching schedule and action representation, and the reference proxy is distilled from the base on the same observations. Assumption (A3) is different in kind, and we state its status plainly. It is a
+modeling choice
+, not a consequence of (
+7
+). Noising does not commute with taking products and ratios of densities, so the family
+{
+p
+PPS
+,
+k
+}
+k
+∈
+[
+0
+,
+1
+]
+\{p_{\mathrm{PPS},k}\}_{k\in[0,1]}
+defined by (
+8
+) is in general
+not
+the family of noise-level marginals of the clean target (
+7
+). The two coincide at
+k
+=
+0
+k=0
+, and trivially for
+γ
+=
+0
+\gamma=0
+, but not in between. Everything below is exact given (A1)–(A3).
+Score form of the correction.
+Taking
+∇
+x
+​
+log
+\nabla_{x}\log
+of both sides of (
+8
+), the normalizer is independent of
+x
+x
+and drops out, leaving an additive score correction
+∇
+x
+​
+log
+​
+p
+PPS
+,
+k
+=
+∇
+x
+​
+log
+​
+p
+base
+,
+k
++
+γ
+⁡
+(
+∇
+x
+​
+log
+​
+p
+task
+,
+k
+−
+∇
+x
+​
+log
+​
+p
+ref
+,
+k
+)
+.
+\nabla_{x}\log p_{\mathrm{PPS},k}=\nabla_{x}\log p_{\mathrm{base},k}+\gamma\big(\nabla_{x}\log p_{\mathrm{task},k}-\nabla_{x}\log p_{\mathrm{ref},k}\big).
+(9)
+From scores to velocities.
+It remains to turn this score identity into one between velocities. For the linear path, the marginal velocity
+v
+⁡
+(
+x
+,
+k
+)
+=
+𝔼
+⁡
+[
+ϵ
+−
+a
+∣
+x
+k
+=
+x
+]
+v(x,k)=\mathbb{E}[\epsilon-a\mid x_{k}=x]
+of any policy is an affine function of the noised variable and its marginal score
+s
+k
+=
+∇
+x
+​
+log
+​
+p
+k
+s_{k}=\nabla_{x}\log p_{k}
+. Indeed, with
+a
+^
+=
+𝔼
+⁡
+[
+a
+∣
+x
+k
+=
+x
+]
+\hat{a}=\mathbb{E}[a\mid x_{k}=x]
+and
+ϵ
+^
+=
+𝔼
+⁡
+[
+ϵ
+∣
+x
+k
+=
+x
+]
+\hat{\epsilon}=\mathbb{E}[\epsilon\mid x_{k}=x]
+, linearity gives
+x
+=
+(
+1
+−
+k
+)
+​
+a
+^
++
+k
+​
+ϵ
+^
+x=(1-k)\hat{a}+k\hat{\epsilon}
+and
+v
+=
+ϵ
+^
+−
+a
+^
+v=\hat{\epsilon}-\hat{a}
+, while
+x
+k
+|
+a
+∼
+𝒩
+⁡
+(
+(
+1
+−
+k
+)
+​
+a
+,
+k
+2
+​
+I
+)
+x_{k}\mid a\sim\mathcal{N}((1-k)a,k^{2}I)
+yields
+ϵ
+^
+=
+−
+k
+​
+s
+k
+\hat{\epsilon}=-k\,s_{k}
+; eliminating
+a
+^
+\hat{a}
+and
+ϵ
+^
+\hat{\epsilon}
+gives
+v
+⁡
+(
+x
+,
+k
+)
+=
+A
+⁡
+(
+k
+)
+​
+x
++
+B
+⁡
+(
+k
+)
+​
+s
+k
+​
+(
+x
+)
+,
+A
+⁡
+(
+k
+)
+=
+−
+1
+1
+−
+k
+,
+B
+⁡
+(
+k
+)
+=
+−
+k
+1
+−
+k
+.
+v(x,k)=A(k)\,x+B(k)\,s_{k}(x),\qquad A(k)=-\tfrac{1}{1-k},\quad B(k)=-\tfrac{k}{1-k}.
+(10)
+The coefficients depend only on the schedule, so by (A1) the same relation holds for
+v
+base
+v_{\mathrm{base}}
+,
+v
+task
+v_{\mathrm{task}}
+,
+v
+ref
+v_{\mathrm{ref}}
+, and the steered field
+v
+PPS
+v_{\mathrm{PPS}}
+with their respective scores. Note that (
+10
+) is stated for
+k
+∈
+[
+0
+,
+1
+)
+k\in[0,1)
+: the coefficients diverge at the pure-noise endpoint
+k
+=
+1
+k=1
+, and at
+k
+=
+0
+k=0
+we have
+B
+⁡
+(
+0
+)
+=
+0
+B(0)=0
+, so the relation cannot be inverted for the score there.
+Proposition 1
+.
+Assume
+(A1)–(A3)
+. For every
+k
+∈
+(
+0
+,
+1
+)
+k\in(0,1)
+, the marginal velocity field of the level-
+k
+k
+target (
+8
+) satisfies
+v
+PPS
+​
+(
+x
+,
+k
+,
+o
+,
+l
+)
+=
+v
+base
+​
+(
+x
+,
+k
+,
+o
+,
+l
+)
++
+γ
+⁡
+[
+v
+task
+​
+(
+x
+,
+k
+,
+o
+)
+−
+v
+ref
+​
+(
+x
+,
+k
+,
+o
+)
+]
+.
+v_{\mathrm{PPS}}(x,k,o,l)=v_{\mathrm{base}}(x,k,o,l)+\gamma\big[v_{\mathrm{task}}(x,k,o)-v_{\mathrm{ref}}(x,k,o)\big].
+(11)
+Proof.
+Fix
+k
+∈
+(
+0
+,
+1
+)
+k\in(0,1)
+, so
+B
+⁡
+(
+k
+)
+≠
+0
+B(k)\neq 0
+. By (
+10
+), each policy satisfies
+B
+⁡
+(
+k
+)
+​
+s
+j
+,
+k
+=
+v
+j
+−
+A
+⁡
+(
+k
+)
+​
+x
+B(k)\,s_{j,k}=v_{j}-A(k)\,x
+. Multiplying the score identity (
+9
+) through by
+B
+⁡
+(
+k
+)
+B(k)
+and substituting this relation for each of the four fields gives
+v
+PPS
+−
+A
+⁡
+(
+k
+)
+​
+x
+=
+(
+v
+base
+−
+A
+⁡
+(
+k
+)
+​
+x
+)
++
+γ
+⁡
+[
+(
+v
+task
+−
+A
+⁡
+(
+k
+)
+​
+x
+)
+−
+(
+v
+ref
+−
+A
+⁡
+(
+k
+)
+​
+x
+)
+]
+.
+v_{\mathrm{PPS}}-A(k)x=\big(v_{\mathrm{base}}-A(k)x\big)+\gamma\Big[\big(v_{\mathrm{task}}-A(k)x\big)-\big(v_{\mathrm{ref}}-A(k)x\big)\Big].
+The
+A
+⁡
+(
+k
+)
+​
+x
+A(k)x
+terms cancel inside the task–reference difference, and the remaining pair cancels across the equation, which yields (
+11
+). At
+k
+=
+0
+k=0
+the identity holds trivially, since
+B
+⁡
+(
+0
+)
+=
+0
+B(0)=0
+makes
+v
+j
+​
+(
+x
+,
+0
+)
+=
+−
+x
+v_{j}(x,0)=-x
+for every policy and both sides reduce to
+−
+x
+-x
+.
+∎
+Equation
+11
+is the velocity-space form of the steering rule used at inference. It inherits a natural consistency property from the distribution-level correction: when the task and reference proxies agree, the residual vanishes and
+v
+PPS
+=
+v
+base
+v_{\mathrm{PPS}}=v_{\mathrm{base}}
+, so the base policy is left undisturbed. The scalar
+γ
+\gamma
+controls how strongly the base velocity is tilted toward the task proxy.

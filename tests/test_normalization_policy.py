@@ -195,7 +195,14 @@ def test_legacy_denormalize_diff_unchanged(npz_dir_with_nonzero_diff_mean, small
 # =============================================================================
 
 def test_policy_changes_digest(npz_dir_with_nonzero_diff_mean, small_variables):
-    """Test that different policies produce different digests."""
+    """Test that different policies produce different digests.
+
+    NOTE: this case changes TWO things at once - the policy label and (because
+    the official policy zeroes diff_mean) the stored tensors. It therefore
+    cannot show that the policy label alone is part of the identity. The
+    isolated version of that claim is
+    `test_policy_label_alone_changes_digest_with_identical_tensors` below.
+    """
     norm_official = NormalizationContract.from_npz_dir(
         str(npz_dir_with_nonzero_diff_mean),
         variables=small_variables,
@@ -213,6 +220,123 @@ def test_policy_changes_digest(npz_dir_with_nonzero_diff_mean, small_variables):
     assert norm_official.digest != norm_legacy.digest, (
         "Official and legacy policies should produce different digests"
     )
+
+
+def test_policy_label_alone_changes_digest_with_identical_tensors(small_variables):
+    """ONLY the declared policy differs; every tensor is identical.
+
+    This isolates the claim the contaminated test above cannot make: the policy
+    is part of the identity, not metadata riding alongside it. Both contracts
+    hold byte-identical constants (diff_mean is zeros in both, so the official
+    policy changes nothing numerically) and differ only in their label.
+    """
+    n = len(small_variables)
+    shared = dict(
+        inp_mean=torch.arange(n, dtype=torch.float32),
+        inp_std=torch.ones(n) + 0.25,
+        diff_mean={6: torch.zeros(n), 24: torch.zeros(n)},
+        diff_std={6: torch.ones(n) * 0.5, 24: torch.ones(n) * 0.75},
+        variables=small_variables,
+    )
+
+    norm_legacy = NormalizationContract(**shared, policy=POLICY_LEGACY)
+    norm_official = NormalizationContract(**shared, policy=POLICY_OFFICIAL_ZERO_DIFF_MEAN)
+
+    # Prove the tensors really are identical.
+    assert torch.equal(norm_legacy.inp_mean, norm_official.inp_mean)
+    assert torch.equal(norm_legacy.inp_std, norm_official.inp_std)
+    for interval in (6, 24):
+        assert torch.equal(norm_legacy.diff_mean[interval], norm_official.diff_mean[interval])
+        assert torch.equal(norm_legacy.diff_std[interval], norm_official.diff_std[interval])
+
+    assert norm_legacy.digest != norm_official.digest, (
+        "The policy label alone must change the identity digest"
+    )
+    assert norm_legacy.identity_digest != norm_official.identity_digest
+
+
+def test_official_label_with_nonzero_diff_mean_is_rejected(small_variables):
+    """A contract cannot declare zero diff_mean while holding nonzero values."""
+    n = len(small_variables)
+    with pytest.raises(ValueError, match="declares zero diff_mean"):
+        NormalizationContract(
+            inp_mean=torch.zeros(n),
+            inp_std=torch.ones(n),
+            diff_mean={6: torch.full((n,), 0.3)},
+            diff_std={6: torch.ones(n)},
+            variables=small_variables,
+            policy=POLICY_OFFICIAL_ZERO_DIFF_MEAN,
+        )
+
+
+def test_mislabelled_policy_identity_reflects_real_content(small_variables):
+    """Relabelling a contract after construction does not launder its identity.
+
+    The object is LABELLED official_zero_diff_mean but actually holds a nonzero
+    diff_mean. Its identity must differ from an honestly-zero official contract,
+    and the inconsistency must be detectable, so nothing downstream can trust
+    the label over the contents.
+    """
+    n = len(small_variables)
+    honest = NormalizationContract(
+        inp_mean=torch.zeros(n),
+        inp_std=torch.ones(n),
+        diff_mean={6: torch.zeros(n)},
+        diff_std={6: torch.ones(n)},
+        variables=small_variables,
+        policy=POLICY_OFFICIAL_ZERO_DIFF_MEAN,
+    )
+
+    # Build a legitimate legacy contract, then relabel it (frozen dataclass, so
+    # this bypasses __post_init__ exactly as a stale/tampered object would).
+    mislabelled = NormalizationContract(
+        inp_mean=torch.zeros(n),
+        inp_std=torch.ones(n),
+        diff_mean={6: torch.full((n,), 0.3)},
+        diff_std={6: torch.ones(n)},
+        variables=small_variables,
+        policy=POLICY_LEGACY,
+    )
+    object.__setattr__(mislabelled, "policy", POLICY_OFFICIAL_ZERO_DIFF_MEAN)
+
+    assert mislabelled.policy == honest.policy, "both now carry the same label"
+    assert not torch.equal(mislabelled.diff_mean[6], honest.diff_mean[6])
+
+    # Identity follows the real content, not the label.
+    assert mislabelled.digest != honest.digest
+    assert mislabelled.identity_digest != honest.identity_digest
+
+    # And the inconsistency is explicitly detectable.
+    assert honest.policy_content_consistent is True
+    assert mislabelled.policy_content_consistent is False
+
+
+def test_gate_rejects_mislabelled_normalization_policy(small_variables, tmp_path):
+    """The S0 gate criterion rejects a contract whose label lies about content."""
+    import sys
+    repo_root = Path(__file__).resolve().parent.parent
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
+    from scripts.s0_gate import verify_normalization_parity
+
+    n = len(small_variables)
+    mislabelled = NormalizationContract(
+        inp_mean=torch.zeros(n),
+        inp_std=torch.ones(n),
+        diff_mean={6: torch.full((n,), 0.3)},
+        diff_std={6: torch.ones(n)},
+        variables=small_variables,
+        policy=POLICY_LEGACY,
+    )
+    object.__setattr__(mislabelled, "policy", POLICY_OFFICIAL_ZERO_DIFF_MEAN)
+
+    result = verify_normalization_parity(
+        mislabelled, tmp_path, expected_digest=mislabelled.identity_digest,
+    )
+
+    assert result["passed"] is False, "gate must not accept a mislabelled contract"
+    assert result["policy_content_consistent"] is False
+    assert "must match the real contents" in result["error"]
 
 
 def test_policy_in_digest_deterministic(npz_dir_with_nonzero_diff_mean, small_variables):

@@ -1,0 +1,43 @@
+{
+  "fs_fit_divergence_assessment": {
+    "diagnostic_logic_confirmed_correct": "YES",
+    "diagnostic_logic_reasoning": "static_adapter.py:842 按 issue_id 聚合，:867 用 last < first；:942 按固定 round-robin 取同一 TrainingSample，:954 计算同一个训练目标，:974-980 记录该次优化前 loss 与对应 issue_id。独立从三个作业的原始 losses/training_issue_ids 重算 12 份记录，配对结果逐项一致。限定：first/last 是每个样本首次/末次被访问时的优化前值，并非共同初始/最终 checkpoint 的逐样本复评；因此另核对 :1519-1595 计算的冻结后 Fs/F0 同八样本平均 loss，仍确认两个 formal 作业各两份 Fs 退化。",
+    "is_real_training_divergence": "YES",
+    "root_cause_hypotheses_ranked": [
+      {
+        "hypothesis": "固定 Adam 学习率 0.01、500 次重复八样本、无调度/回退，在非线性多步 LoRA 训练中引发优化失稳。代码 static_adapter.py:928,941,963,974；失败 Fs 的记录包含 101 至 1934 的裁剪前梯度范数。裁剪为 1 不等于限制 Adam 的参数步长。静态配置已确认；因果归因仍为 PLAUSIBLE_UNVERIFIED。",
+        "evidence_needed_to_confirm": "在同一冻结 Fs 初始化、相同数据/顺序和数值设置下，对照较小 LR/调度；逐步记录 loss、裁剪前后范数、参数更新与 delta 范数，定位首次跳变；保存共同 checkpoint 的固定面板复评。",
+        "evidence_status": "PLAUSIBLE_UNVERIFIED"
+      },
+      {
+        "hypothesis": "训练数值微扰被长程优化放大。实际三个作业四进程使用相同 Fs seed=20260921 和同一八样本顺序，fit_static_adapter 的 AST 相同，但产生不同 Fs。identity-check 的同分支 self_diff=0 只证明特定冻结推理的两次重算一致，不能排除训练反向的非确定性。PLAUSIBLE_UNVERIFIED。",
+        "evidence_needed_to_confirm": "比较初始化权重/输入内容 hash、前若干步梯度；固定 deterministic 设置及训练 TF32 设置，区分同设备重复与跨设备重复。不得以已记录 self_diff=0 排除全部训练数值不确定性。",
+        "evidence_status": "PLAUSIBLE_UNVERIFIED"
+      },
+      {
+        "hypothesis": "优化器矩估计和大步更新与重复小样本顺序耦合。每次 fit 新建 Adam，当前没有 optimizer 恢复或跨专家共享的证据，故旧优化器状态污染不是首选解释。PLAUSIBLE_UNVERIFIED。",
+        "evidence_needed_to_confirm": "保存首次失稳前后的 Adam 一/二阶矩及实际更新量；固定初始化比较顺序与 clip 配置，不同时改变多个因素。",
+        "evidence_status": "PLAUSIBLE_UNVERIFIED"
+      },
+      {
+        "hypothesis": "Fs 的专家专属 seed/数据分组导致 slot 固定问题，不受现有证据支持：Fs 四份 config seed 相同，数据相同；diversity grouping 在 r2_fs_bank_train.py:475 才用于后续动态 bank。其作为这些 Fs 退化的首要解释应降级。",
+        "evidence_needed_to_confirm": "若声称存在未记录差异，须提供作业 argv、初始化/输入 hash 或实际取样日志；现有记录不支持将动态专家分组套用于先行 Fs fit。",
+        "evidence_status": "PLAUSIBLE_UNVERIFIED",
+        "current_evidence_supports_hypothesis": false
+      }
+    ],
+    "undermines_stage3b_success_claim": "YES",
+    "recommended_disposition": "MUST_FIX_BEFORE_STAGE4",
+    "fs_fit_divergence_verdict": "MUST_FIX_BEFORE_STAGE4",
+    "evidence_status": "STATIC_CONFIRMED",
+    "scope": "确认有限但显著的训练退化/失稳，不声称数学意义无限发散，不据此否定研究 idea。合并数值通过与训练质量独立。",
+    "stage3b_honest_status": "执行与部分数值一致性证据成立；训练质量准入失败，当前产物不能认定为合格的共同 Fs 上 K=4 专家库。",
+    "required_before_stage4": [
+      "隔离现有退化 Fs 及其依赖专家；增加会阻止冻结发布/后继执行的训练资格门。",
+      "对同一初始/候选最终 checkpoint 在固定 bank_fit 侧面板复评；有限性与训练方向分开，事先声明允许回退/选择规则，不能按后续开发收益剔除。",
+      "只训练/选择并冻结一份合格 Fs，所有动态专家加载并核对同一 Fs 内容身份；当前四份 Fs 摘要均不同，不能只删除两个坏进程后把剩余两个当作同一库。",
+      "复验保留/重训的动态专家及其共同基线和可加载产物，再冻结新的 registry。无需等根因完全因果闭合，但必须先有有效门控和合格产物。"
+    ],
+    "evidence_file": "evidence/gpu_records_recomputed.json"
+  }
+}

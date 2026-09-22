@@ -1,0 +1,313 @@
+known_neighbors 24
+  2509.22020v2 Task-Adaptive Parameter-Efficient Fine-Tuning for Weather Foundation Models
+  2605.22222v3 ARC-STAR: Auditable Post-Hoc Correction for PDE Foundation Models
+  2609.12278v1 Amortized Low-Rank Adaptation for Model-Based Reinforcement Learning
+  1710.08005v5 Smart "Predict, then Optimize"
+  2405.13063v3 A Foundation Model for the Earth System
+  2603.15990v1 W2T: LoRA Weights Already Know What They Can Do
+  2605.17250v1 Towards Principled Test-Time Adaptation for Time Series Forecasting
+  2606.19549v1 Predicting Mergeability of Parameter-Efficient Fine-Tuning Updates
+  2608.09948v1 An adaptive and evolvable deep reinforcement learning framework for weather prediction
+  2608.22370v2 LiST: Local-Simplex Test-Time LoRA Fusion
+  2609.03937v1 RATL: Learning from Retrieved Residuals for Robust Multivariate Time-Series Forecasting
+  2606.08365v1 Pre-Intervention Prediction of Sparse Autoencoder Steering Side Effects
+  2608.02528v1 Uncertainty Is Not Enough: Value-of-Information Routing for Mixtures of LoRA Experts
+  2608.07053v1 Unsupervised Adaptation of PDE Foundation Models
+  2605.14546v1 Discovering Physical Directions in Weight Space: Composing Neural PDE Experts
+  2609.12296v1 Preemptive Ensemble Forecast Sensitivity to Observations
+  2007.00016v2 Solver-in-the-Loop: Learning from Differentiable Physics to Interact with Iterative PDE-Solvers
+  2510.09734v2 ARROW: An Adaptive Rollout and Routing Method for Global Weather Forecasting
+  2608.29998v1 The Intervention Gap in Latent World Models
+  2506.23424v1 Accurate Parameter-Efficient Test-Time Adaptation for Time Series Forecasting
+  2609.17042v1 Learning Options for Compositional Motor Control with Adapter Banks
+  2606.14222v1 Learning the Context of Errors: Black-Box Online Adaptation of Time Series Foundation Models
+  2603.19325v1 Target Concept Tuning Improves Extreme Weather Forecasting
+  2609.08412v1 Stochastically Perturbed Weights: Ensembles from Deterministic Machine-Learning Weather Models
+weather_adaptation 35
+  2609.18381v1 Every Fixed Metric Has a Blind Spot: A Learned Atmospheric Critic for Scoring Forecast Realism
+  2609.17000v1 Combining Weather Forecast Aggregation and State-Space Models for Adaptive Probabilistic Electricity Load Forecasting
+  2608.24954v1 AFDBench: A Reasoning-First AI Scientist for NationalWeather Service Forecast Discussions
+  2608.21652v1 GeoQ: Geometry-Aware Conditional Quantile Error Estimation for Scientific Surrogate Models
+  2609.22123v1 StationPDE: Station-Oriented Surface PDE Learning for Multi-Station Multivariate Weather Forecasting
+  2608.09286v1 VeinCast: Physics-Guided Dynamic Field Graphs with Graph-Conditioned Fusion for Global Medium-Range Weather Forecasting
+  2608.05054v1 MarsCast: Transfer Learning of AI Weather Foundation Models to Planetary Atmospheres
+  2608.09959v2 AIFS-TC: A simple correction competitive with the operational frontier for tropical cyclone intensity forecasting
+  2608.11222v2 Bayesian Quantile-Based Correction and Synthesis of Hydrologic Products
+  2607.20716v1 Spatial Generalization Tests for Machine Learning-based Weather Models to Assess Physical Consistency
+  2607.20557v1 Monkey King Bang: A Unified Scientific Multimodal Foundation Model
+  2608.09948v1 An adaptive and evolvable deep reinforcement learning framework for weather prediction
+  2607.05655v1 GeoXplain: On-the-Fly Visual Explanations for Weather Foundation Models
+  2607.03279v1 From Global to Local: Efficient Regional Weather Downscaling with Global Weather Foundation Model
+  2607.02829v1 Less Tokens, Better Forecasts: Sparse Residual Routing for Efficient Weather Prediction
+  2606.30414v1 Diffusion Fine-tuning with Rewarded Moment Matching Distillation
+  2606.25076v1 Machine learning is revolutionizing weather forecasting -- the next step is a change in how we work
+  2606.17659v1 Physics-Constrained Neural Networks for Improved Short-Term Weather Forecasting: A Case Study over the South Pacific
+  2606.14134v1 Source Surface Height Optimisation for Improved Solar Wind Velocity Forecasting Across Solar Cycles 23, 24 and 25
+  2606.13422v4 Practical Quantum Advantage before Fault Tolerance via Quantum-Informed Machine Learning
+  2606.02886v2 Scalable Uncertainty Quantification for Extreme Weather Forecasting via Empirical Neural Tangent Kernels
+  2606.02508v1 AI and physics-based weather forecasting: A comparative study
+  2606.02663v1 AdaWeather: Adaptively Mixing Probabilistic Weather Forecasts with Logarithmic Regret
+  2605.29976v3 Evaluating Skill and Stability of ArchesWeather and ArchesWeatherGen under Multi-Decadal Climate Simulations
+  2605.28153v1 Skillful high-resolution weather forecasting independent of physical models
+  2605.19366v1 Accurate, Efficient, and Explainable Deep Learning Approaches for Environmental Science Problems
+  2605.18333v2 QLIF-CAST: Quantum Leaky-Integrate-and-Fire for Time-Series Weather Forecasting
+  2605.15752v1 Forecasting megaelectron-volt electron flux in the Earth's outer radiation belt using supervised machine learning algorithms and a timeseries foundation model
+  2604.27313v1 PINN-Cast: Exploring the Role of Continuous-Depth NODE in Transformers and Physics Informed Loss as Soft Physical Constraints in Short-term Weather Forecasting
+  2604.24645v1 K-MetBench: A Multi-Dimensional Benchmark for Fine-Grained Evaluation of Expert Reasoning, Locality, and Multimodality in Meteorology
+  2604.22580v1 Explanation of Dynamic Physical Field Predictions using WassersteinGrad: Application to Autoregressive Weather Forecasting
+  2604.16238v3 Advancing Subseasonal Forecasting with Machine Learning
+  2603.28173v1 Skillful Kilometer-Scale Regional Weather Forecasting via Global and Regional Coupling
+  2603.21768v3 Extending Precipitation Nowcasting Horizons via Spectral Fusion of Radar Observations and Foundation Model Priors
+  2603.21131v1 Diffusion-based Probabilistic Air Quality Forecasting with Mechanistic Insight
+parameter_response 35
+  2609.23183v1 K-TRAIL: Simulator-Guided Generative Design of EM/RF Circuits
+  2609.15978v1 The CAST-framework: Measure and model social media use as a multi-level phenomenon through real-world applications
+  2609.11331v1 Estimating Inconsistency Response Surfaces under Uncertainty in Cyber-Physical System Development
+  2609.07141v1 How Well Do LLMs Simulate Survey Responses Following a Breast Cancer Screening Intervention?
+  2609.06257v1 SeaCausal-FL: Federated Fuzzy Causal Learning for Maritime IoT Fault Diagnosis and Counterfactual Reasoning
+  2608.29714v1 Neural ODE enhanced linear mixed effect models for estimating complex association patterns of time-varying covariates with the marker trajectory
+  2608.21141v1 Causal Explanations for Stratified Datalog
+  2609.02917v1 Cross-Sectional Separability versus Longitudinal Response in Short-Record Parkinsonian Gait Analysis Using FEG-Pro: Nordic Walking and Adapted Physical Activity
+  2608.13326v1 Beyond Local Accuracy: A Protocol-Level Identifiability Audit for Controlled LLM Reasoning Evaluation
+  2608.11601v1 How Can Driving World Models Do Counterfactual Prediction?
+  2608.08288v2 Causal State-Space Model for Causal Inference: Estimating Longitudinal Individual Treatment Effects
+  2607.29215v1 Conditional projection methods for large-scale Bayesian VARs
+  2607.22430v2 On the Identifiability of Controlled World Models
+  2607.21914v1 Interventional Score Geometry for Causal Inference
+  2607.20773v1 HARP: The Human--AI Research Platform
+  2607.03942v1 ThermoForce: A Physics-Structured Interventional World Model for Building HVAC Control
+  2607.02968v1 Awakening Diffusion Transformers: Eliciting Stronger Generation and Understanding via Massive Activation Modulation
+  2606.31689v1 ScratchWorld: Evaluating If World Models Compute Executable Consequences
+  2606.07760v1 scCBGM: Interpretable Single-Cell Counterfactual Editing
+  2606.05692v3 Benchmarking Counterfactual Prediction in Epidemic Time Series with Time-Varying Interventions
+  2606.05164v1 Floquet-Engineered Parity Anomaly Staircase in a Cold Atom Dirac Lattice
+  2606.04457v1 Imagine Before You Draw: Visual Prompt Engineering for Image Generation
+  2606.03371v4 See Better, Foresee Better, Act Wiser: Physically Grounded Proactive Modeling and Decision Making
+  2606.02790v1 Disaster-induced behavioral change restructures social networks toward bonding ties
+  2606.01148v1 Not All Explanations Simulate Equally: Comparing Verbalized Feature Attributions and Self-Generated Rationales
+  2605.10035v1 From Single-Step Edit Response to Multi-Step Molecular Optimization
+  2605.00925v1 Linking spatial biology and clinical histology via Haiku
+  2604.23465v1 Machine learning models for estimating counterfactuals in a single-arm inflammatory bowel disease study
+  2605.16293v2 From Prediction to Intervention: The Evolution of AI in Biomedicine
+  2604.12992v1 Causal Diffusion Models for Counterfactual Outcome Distributions in Longitudinal Data
+  2604.03772v1 Debiased Machine Learning for Conformal Prediction of Counterfactual Outcomes Under Runtime Confounding
+  2603.27320v1 Retrospective Counterfactual Prediction by Conditioning on the Factual Outcome: A Cross-World Approach
+  2604.16343v1 Elder-Sim: A Psychometrically Validated Platform for Personality-Stable Elderly Digital Twins
+  2602.16787v1 Better Think Thrice: Learning to Reason Causally with Double Counterfactual Consistency
+  2602.14871v1 interID -- An Ecosystem-agnostic Verifier-as-a-Service with OpenID Connect Bridge
+adapter_utility 35
+  2609.24098v1 A$^2$Safe: Counterfactual Evidence-Aligned Adaptive Agent Collaboration for Safe and Effective Visual Question Answering
+  2609.23753v1 OnlineWM: Causality-Aware Active Online Learning for Effective World Modeling
+  2609.23512v1 AgentBetta: Verification-Driven Adaptive Configuration of an AI Nano-Agent through Selective Expansion and Verified Contraction
+  2609.21303v1 Identifying Security Platform Product Abuse with Machine Learning
+  2609.21214v1 Ability-Residual Decoupled Modeling for Affective Cognitive Diagnosis
+  2609.19610v1 SIMLIFE: Pattern Understanding for Long-Horizon Human-Agent Partnership
+  2609.18776v1 TRACER: Adaptive Multi-Robot Social Navigation via Joint Human-Response Prediction and Interaction-Aware Replanning
+  2609.15647v1 MedDiME: Efficient Latent Diffusion with Adaptive Masking for Medical Counterfactual Generation
+  2609.15458v1 Mobility- and Feedback-Aware Multi-Level Conflict-Triggered Hybrid Beamforming for Multi-User mmWave UAV Systems
+  2609.13940v1 Optimal Transport for Efficient, Unsupervised Anomaly Detection on Industrial Data
+  2609.12731v1 GRACE: Adaptive Concept Erasure with Geometry-Guided Retention in Diffusion Models
+  2609.10954v1 Measuring the Value of World-Model Updates: A Counterfactual Utility Protocol for Continual Adaptation
+  2609.08180v1 Less Is Personal: Learning Minimal Sufficient User Profiles for Personalized Language Models
+  2609.07255v1 SkillAlign: Aligning Skill Interfaces for LLM-based Agents
+  2609.06786v1 When Retain Constraints Conflict: Mitigating Forget-Retain Interference in Tabular Data
+  2609.06704v1 Counterfactual Tests for Measuring Chain-of-Thought Faithfulness in Visual Language Models
+  2609.06615v1 MemCorr-DP: Counterfactual Correspondence Conditioning for a Diffusion Policy Guided by a Reference
+  2609.06581v1 Reading Decoder Trajectories: Training-Free Counterfactual Query-Trajectory Reliability for Small-Object Detection
+  2609.04738v1 Aplaud: Adaptive Personalized Low-Rank Decomposition for User-Specific LLM
+  2609.04678v1 Train What You Deploy:Token-Faithful Post-Training of a Production Coding
+  2609.22237v1 Not All Ranks Are Equal: Budget-Aware LoRA Merging Across Tasks
+  2609.03851v1 Pushing the (Decision) Boundaries: Dynamically Calibrating Differentially Private Noise to Explainability in Federated Learning
+  2609.03727v1 Proactive Service Agents: A Unified Decision Framework, Methods, and Evaluation
+  2609.03442v1 Guide, Not Bind: Why Defeasible Priors Fail in Augmented Lagrangian Causal Discovery
+  2609.02265v1 CAPTURE: Disentangling Preference Drift from Memory Poisoning in Personalized LLM Agents
+  2609.01839v1 Import What You Need: Learning When and How to Augment EHR Graphs with External Knowledge
+  2609.01360v1 EDGE: Error Dependency Graph-Guided Multi-Error Attribution in Multi-Agent LLM Systems
+  2609.00996v1 Does This Moment Justify the Recommendation? Counterfactual Behavior-Grounded Evidence Retrieval for Personalized Video Recommendation
+  2609.00874v1 Beyond the Clock: Measuring the Value of Adaptive Revision
+  2609.00813v1 One Policy, Any Budget: Internalizing Budget-Aware Search via Reinforcement Learning
+  2609.00242v1 CoLT-Drive: Counterfactual Long-Tail Benchmarking and Knowledge-Preserving Adaptation for Driving Affordance Prediction
+  2609.05513v1 When and What to Teach: Budget-Aware Online Adaptation for Web Agents
+  2609.00061v2 ReNFT: Repairing Mode Collapse in Reward Post-Training via Internal Probability-Mass Recalibration
+  2608.29372v2 FORESIGHT-9: Prospective and Process-Aware Evaluation of Adaptive Trading Agents
+  2608.28364v1 Where Does Balance Break? Boundary Discovery for Game Balance Testing under a Finite Simulation Budget
+dynamics_adaptation 35
+  2609.24313v1 NeuIDO: Neural Intrinsic Dynamics Operator for Physics-Informed 4D World Models
+  2609.23753v1 OnlineWM: Causality-Aware Active Online Learning for Effective World Modeling
+  2609.22055v1 Benchmarking World Models for Continual Learning on Compositional Tasks
+  2609.21906v1 Intervention Granularity Matters: Coherent Treatment Bundles in Counterfactual Simulation with Clinical World Models
+  2609.21787v1 Compact but Moving: Intervention-Relevant Geometry in Recurrent World Models
+  2609.21748v1 World Modeling in Transformers
+  2609.21740v1 Sandwich-Residuals: Parameter-Efficient Test-time Adaptation of World Models
+  2609.21712v1 ZYT-World: A Real-Time Controllable World Model for Closed-Loop Autonomous-Driving Simulation
+  2609.21482v1 Adaptive Rollout Truncation Based on Epistemic Uncertainty for Efficient Offline World Model Training
+  2609.21155v1 Same World, Different Knowledge: When Isolated Audits Misjudge World-Model Repairs
+  2609.19674v1 Conservation Buys Stability and Factoring Buys Counterfactuals in Physical World Models
+  2609.19600v1 WorldContact: A Contact-Centric World Model for Scalable Robot Learning
+  2609.18442v1 Risk-Aware World Modeling with Flow-Guided Occupancy Evolution for Selective Trajectory Planning in Automated Driving
+  2609.18193v1 WAVE-Go: World-Model Navigation with Adaptive Execution for Wheel-Legged Robots
+  2609.16697v1 World Models for Embodied Intelligence: From Plausible to Controllable to Actionable
+  2609.15781v1 When the World Lies: Backdoor Attacks on Latent World Models for Downstream Control
+  2609.15113v2 Legislating World-Model-Based Planning with Legal Reasoning
+  2609.14709v1 An immune world model for multiscale forecasting and therapeutic hypothesis generation
+  2609.14462v1 AlayaVista: Streaming World Modeling from Panoramic States to Perspective Video
+  2609.14073v1 LPA-CWM: A Learned Physical Adjudicator for Motion Reasoning with Counterfactual World Models
+  2609.12441v1 IMPLY: Physically Anchored Consistency for World-Model Rollouts
+  2609.12036v1 Pelican-Sim 1.0: A General World Model Simulator for Embodied Intelligence
+  2609.11445v1 FARM: Reading Failure Signals from the Internal Predictive States of a Frozen Robotic World Model
+  2609.10954v1 Measuring the Value of World-Model Updates: A Counterfactual Utility Protocol for Continual Adaptation
+  2609.09757v2 Arti-JEPA: Adapting Video World Model to Real-Time MRI of the Vocal Tract for Speech-Production Analysis
+  2609.08855v1 Earth System World Model for What-If Simulations: A Case Study for Terrestrial Ecosystems
+  2609.08796v2 Hi-FLoop: Hierarchical State-Feedback Loops for Multi-Timescale World Modeling
+  2609.08230v1 ActionSplice: In-Flight Action Editing for Interactive World Models
+  2609.08162v1 WorldAgen: Unified State-Action Prediction with Test-Time World Model Training
+  2609.07874v1 InfluenceField: A Differentiable Field with Interventionally Identifiable Causal Structure for Multimodal World Modeling
+  2609.07719v1 A radiographic world model for clinical reasoning and evidence generation
+  2609.07328v1 PV-WM: A Heterogeneous Micro-Macro World Model for Articulated Pedestrian-Vehicle Co-Rollout
+  2609.13257v1 Sampling headroom is not selection gain: a compute-value audit of test-time scaling for video world models
+  2609.09210v1 Identifying Habit, Physics, and Nuisance in Robot World Models
+  2609.06009v1 How to Learn from What a Human Would Avoid? Intervention-Aware World Models with Real-World RL for Dexterous Manipulation
+forecast_errors 35
+  2609.19768v1 OceanMoE: Structured Conditional Sparse Computation for Long-Horizon Multivariate Ocean Forecasting
+  2609.11206v1 CryptoL: Towards Scale Dominance and Physics Constraints Mitigation in Financial Multivariate Time Series Forecasting
+  2609.08117v1 DriveMotion: A Large-Scale Multi-Source Benchmark for Driver Motion Sequence Modeling and Forecasting
+  2609.05235v1 PRICE: A Systematic Study of LLM Adaptation Choices for Bitcoin Price Forecasting
+  2609.03937v1 RATL: Learning from Retrieved Residuals for Robust Multivariate Time-Series Forecasting
+  2609.03703v1 Fractalizing spacetime: Floquet codes with fractonic excitations that are immobile in space and time
+  2609.03048v1 Resource-adaptive distributed fault tolerance with very noisy Bell pairs
+  2608.20865v1 Parameters Overshadowed by Price Lags: Load, Climate, and Calendar Effects in ERCOT Day-Ahead Price Formation
+  2608.20164v1 Architecture and Compilation Co-Design for High-Rate Quantum Product Codes on Neutral Atom Arrays
+  2608.10087v1 Long-lived memory effects in the defect bath of superconducting qubits
+  2608.04765v3 Explicit Language Memory for Long-Horizon Planning in Vision-Language-Action Models
+  2608.01088v1 Twenty-one characterizations of reversible quantum channels
+  2607.25875v4 A2TTA: Anchored-and-Agile Test-Time Adaptation for Evolving Traffic Sensor Networks
+  2607.20268v1 PoTRE: Test-Time Reasoning inspired by Cognitive Heterogeneity
+  2607.18530v1 Censoring-Aware In-Context Learning for Generalized Supplier Lead Time Estimation in Supply Chain Planning
+  2607.16042v1 Reducing Power Consumption of Embedded Dynamic Memories with ECCs
+  2607.15705v1 A Benchmark for Electrical Load Forecasting Across Grid Levels: Time-Series Transformers Outperform Established Methods
+  2609.18978v1 Code-Visible Liouvillian Modes and Coherent Logical Errors in Quantum Codes
+  2607.13975v1 Universal Quantum Computation with Multi-Mode Schrödinger Cat States Stabilized by Non-Local Dissipation Engineering
+  2607.04691v1 From Open Loop to Closed Loop: A Test-Time Iterative Optimization Framework for Reference-Consistent Image Generation
+  2607.02804v2 Fault-tolerant quantum computation with static atomic buses
+  2607.01548v1 Evolutionary Feature Engineering for Structured Data
+  2606.19026v1 A Hybrid LSTM--Vision Transformer Architecture for Predicting HRRR Forecast Errors
+  2606.15701v1 Robust Transformer-Based One-Step Stock Index Forecasting via Shifted Data Augmentation
+  2606.14034v1 All about quantum error correction: distillation, mitigation, self-correction and beyond
+  2606.12687v1 Forecasting Is Not Attribution: Localizing Decoder Bypass in Graph-Based Neural Marketing Mix Models
+  2606.08601v1 InA-Probe: Instruction-Aware Active Probing for Time Series Forecasting with LLMs
+  2606.05664v1 Gauging the Spacetime Code
+  2606.05150v1 Multi-Column RBF Neural Network Using Adaptive and Non-Adaptive Particle Swarm Optimization
+  2605.24100v1 Bit flips, saturation, and quantum chaos in dissipative cat qubits
+  2605.21088v1 Reviving Error Correction in Modern Deep Time-Series Forecasting
+  2605.24019v1 MGVQ: Synergizing Multi-dimensional Sensitivity-Aware and Gradient-Hessian Fusion for Vector Quantization
+  2605.19748v2 Memory-Augmented Reinforcement Learning Agent for CAD Generation
+  2606.18259v1 Caring Without Feeling: Affective Dynamics as the Control Layer of Human-AI Agent Collaboration
+  2605.05978v3 Efficient event-driven retrieval in high-capacity kernel Hopfield networks
+merging_response 35
+  2609.24084v1 From Bits to Beliefs: Recoverable Semantic Fingerprints for Black-Box Verification of Large Language Models
+  2609.16229v1 Test-Time Unlearning via Sparse Autoencoder
+  2609.12954v1 Fractional porous medium equation on manifolds with nonnegative Ricci curvature: existence of solutions and smoothing effects via potential methods
+  2609.12897v1 Tracing and Coordinating Cross-Layer Influence for Multimodal Model Merging
+  2608.25429v1 Distance Is Not Enough: Forget-Retain Alignment Gap Predicts LLM Relearning Robustness
+  2608.22034v1 Align, Unify, Suppress, Route: A Coherentist View of Transformer Computation
+  2609.13197v2 Algorithmic Information Dynamics of Learning: A Certified, Differentiable Complexity Controller for Grokking
+  2608.11997v2 Subregular affine cells and the level $-1$ vertex algebra of type $D$
+  2608.11499v1 HyperFix: Combinatorial Nonlinear Correction for Task Vector Merging
+  2608.10867v1 Can Bayesian Optimization Efficiently Find a Strong Single Expert in Neural Thickets?
+  2608.10447v1 Towards Efficient Reasoning in LLM-Based Recommender Systems via Model Merging
+  2608.09490v2 When Do Task Vectors Interfere? Mapping the Validity Boundaries of Weight-Space Composition
+  2608.08542v1 When Skills Meet Safety: Benchmarking and Characterizing the Adaptive Jailbreak Robustness of Skill-Merged LLMs
+  2608.06756v1 Capek 0.5: An Execution-Centric Vision-Language Model for Embodied Intelligence
+  2608.04448v1 When does training on downscaled images yield the same gradients?
+  2608.04181v1 MergeSE: Post-Hoc Model Merging for Software Engineering Tasks Without Retraining
+  2608.03620v2 A Theory of Conditional Collapse under Low-Rank Weight-Space Ablations: I. The Single-Block Theory and Synthetic Validation
+  2608.02271v1 Z-PEFT: Zero-shot Backdoor Detection in Parameter-Efficient Fine-Tuning via Canonical Spectral Signatures
+  2607.29548v1 Generalized reflected BSDEs with irregular obstacles driven by RCLL increasing processes on general filtered space
+  2607.20887v1 TwistedMerge: Certified Higher-Order Diagnostics and Abstention for Model Merging
+  2607.20201v1 The Quadrilateral Loss: Additivity as a Measurable Behavior of Dense Neural Networks
+  2607.19971v2 Unified Prediction and Planning via Conflict-Aware Disjoint Parameter Training
+  2607.18985v2 Athena-Brain Technical Report: An Efficient Robot Brain for General Intelligence and Embodied Interaction
+  2607.15752v1 Personalized Image Aesthetic Assessment via Preference-rich Sample Mining and Cohort Merging
+  2607.07127v1 Weight-Space Physics: Interpretable Hypernetworks for Lattice Quantum Field Theories
+  2607.24805v1 Forgetting Is Not a Fix: Path Dependence in Sequential Engram Editing
+  2607.02212v3 An Additive MLP-GNN Framework for Characterizing Chemical and Structural Contributions to Aqueous Solubility
+  2607.01433v1 CreativityNeuro: Steering Language Model Weights to Improve Divergent Thinking and Reduce Mode Collapse
+  2606.30899v1 Curvature-Guided Module Localization for Low-Rank Detoxification of Backdoored Large Language Models
+  2606.30512v1 Informational Frustration in Neural Manifolds: Shannon Bottlenecks and the Limits of Learnability
+  2606.26902v2 Learning to Recover Task Experts from a Multi-Task Merged Model
+  2606.24219v1 Decoherence as Defence and the Magnitude of Noise Regularisation: A Rigorous N -Qubit Theory of Stochastic Quantum Neural Networks for Adversarially Robust Network Intrusion Detection
+  2606.15036v1 Transformers Learn the Mestre-Nagao Heuristic
+  2606.10078v1 Mult-DPO: Multinomial Direct Preference Optimization for Recommender Systems
+  2606.07217v1 Robotic Policy Adaptation via Weight-Space Meta-Learning
+forecast_sensitivity 35
+  2609.22044v1 Asteroids Impacting the Solar System Planets and the Moon. II: Comparison with Observational Impact Records
+  2609.12296v1 Preemptive Ensemble Forecast Sensitivity to Observations
+  2609.10674v1 Re-examining the sensitivity of JWST to decaying axion dark matter
+  2608.23649v1 A Survey of Timing Variability in Microservice-Based Software-Defined Vehicles
+  2608.18431v1 Process Optimization Under Uncertainty for Improving the Bond Quality of Polymer Filaments in Fused Filament Fabrication
+  2608.11395v1 Exploring the Social Life of Data: Finding Data You Can Trust
+  2608.05946v2 Why do massive stars form bow shocks? Bulk ISM motion as the main driver of bow shock formation and geometry
+  2607.29481v1 Twin Impact Lunar Telescope network: Lunar Impact Flash observations of the 2025 Geminids
+  2607.14790v1 Probing Graviton Mass with MeerKAT PTA and SKA--PTA Forecasts
+  2606.27267v1 Sparse Sensor Placement for Reducing Forecast Errors in Ensemble Kalman Filtering
+  2606.24992v1 Synergies Between Pulsar Timing Array and Astrometry
+  2606.14288v2 Characterization of Rocking Block Behaviors with Classical and Alternative Restitution Models
+  2606.04909v1 BEATS: Bootstrapping E-commerce Attribute Taxonomies for Search through Iterative Human-AI Collaboration
+  2605.07752v1 Robust and Reliable AI for Predictive Quality in Semiconductor Materials Manufacturing with MLOps and Uncertainty Quantification
+  2604.24716v2 Gate-dependent offset charge shifts and anharmonicity in gatemon qubits in the weak tunneling regime
+  2604.16733v1 Active World-Model with 4D-informed Retrieval for Exploration and Awareness
+  2604.16226v2 Post-Newtonian Constraints on Scalar-Tensor Gravity
+  2604.10599v1 Rethinking Software Engineering for Agentic AI Systems
+  2603.19459v1 Archaeology of Galactic Nuclei Activity
+  2603.17563v1 Forecasting Sensitivity to Modified Dispersion Effects in Pulsar Timing Arrays
+  2602.06536v2 Continued fraction method for high overtone quasinormal modes in effective potentials with discontinuity
+  2601.05880v1 Non Destructive Testing
+  2512.17191v1 A Near-Earth Object Model Calibrated to Earth Impactors
+  2511.15253v2 PresentCoach: Dual-Agent Presentation Coaching through Exemplars and Interactive Feedback
+  2510.27388v1 Using data assimilation tools to dissect GraphDOP
+  2509.13322v2 Axion-photon conversion in transient compact stars: Systematics, constraints, and opportunities
+  2508.18364v2 Non-Thermal Ionization of Kilonova Ejecta: Observable Impacts
+  2508.04178v1 Secure Development of a Hooking-Based Deception Framework Against Keylogging Techniques
+  2508.03615v2 Interferometric signature of higher-order images in a parametrized framework
+  2507.21764v2 Ultraviolet photon production rates of the first stars: Impact on the He II $λ$ 1640 Å emission line from primordial star clusters and the 21-cm signal from cosmic dawn
+  2506.00684v1 Forecast Constraints on Bouncing Cosmology from High Frequency Gravitational Waves Using Superconducting LC Circuits and Resonant Cavities
+  2505.19950v1 Comparative study of the strong backreaction regime in axion inflation: the effect of the potential
+  2505.14370v1 What Does Success Look Like? Catalyzing Meeting Intentionality with AI-Assisted Prospective Reflection
+  2505.07723v1 The observable impact of runaway OB stars on protoplanetary discs
+  2504.12200v2 Global $Λ$ polarization in heavy-ion collisions at high baryon density
+weather_selection 35
+  2609.02434v1 Uncertainty-Guided Adverse Weather Restoration via Gated Transformer Network
+  2609.00263v1 A JWST transiting survey of FGK stellar limb darkening: empirical evidence for quadratic laws and atmospheric model comparisons
+  2608.02088v2 An AI-Based Decision-Support Pipeline for Day-Ahead Photovoltaic Forecasting
+  2607.12954v1 Robustness of Deep Learning Models for PV Power Forecasting under NWP Forecast Errors: A Spatiotemporal and Physically Interpretable Analysis
+  2607.05045v1 On the Genealogy of Machine Learning Weather Prediction
+  2607.01772v1 LLM-Empowered Multimodal Fusion Framework for Autonomous Driving: Semantic Enhancement and Channel-Adaptive Design
+  2606.02663v1 AdaWeather: Adaptively Mixing Probabilistic Weather Forecasts with Logarithmic Regret
+  2606.01822v2 Hierarchically Decoupled Mixture-of-Experts for Robust Traffic Sign Recognition in Complex Driving Scenarios
+  2606.00572v1 Spatiotemporal Multi-Task Graph Transformer for Trip-Level Transit Prediction
+  2605.27236v1 Explainable Comparison of Feature-Based and Deep Learning Models for TROPOMI Methane Plume Screening
+  2605.24032v1 Volador 1.0: A Data-Driven Air-Sea Full-Coupling Regional Forecast Model with Submesoscale-Permitting Based on MOE-Swin-Transformer Framework
+  2604.24661v3 Agent-Centric Observation Adaptation for Robust Visual Control under Dynamic Perturbations
+  2603.25046v1 MP-MoE: Matrix Profile-Guided Mixture of Experts for Precipitation Forecasting
+  2603.19325v1 Target Concept Tuning Improves Extreme Weather Forecasting
+  2603.16261v1 AW-MoE: All-Weather Mixture of Experts for Robust Multi-Modal 3D Object Detection
+  2603.13818v1 PA-Net: Precipitation-Adaptive Mixture-of-Experts for Long-Tail Rainfall Nowcasting
+  2603.12008v1 CrossEarth-SAR: A SAR-Centric and Billion-Scale Geospatial Foundation Model for Domain Generalizable Semantic Segmentation
+  2603.07227v3 Model selection in extreme value regression for estimation of changes in return values over time applied to extreme annual regional CMIP6 desert temperatures
+  2603.04726v1 Revealing the Topology invariance of vectorial vortex beam in complex media
+  2602.05611v1 The stochastic view used in climate sciences: (some) perspectives from (some of) mathematical statistics
+  2601.10921v1 RobuMTL: Enhancing Multi-Task Learning Robustness Against Weather Conditions
+  2512.18011v1 Time-resolved X-ray spectra of Proxima Centauri as seen by XMM-Newton
+  2512.10581v1 Unleashing Degradation-Carrying Features in Symmetric U-Net: Simpler and Stronger Baselines for All-in-One Image Restoration
+  2512.06664v1 Statistic-Augmented, Decoupled MoE Routing and Aggregating in Autonomous Driving
+  2512.05400v1 Hybrid modeling approach for better identification of building thermal network model and improved prediction
+  2511.19039v2 Validity in machine learning for extreme event attribution
+  2511.17967v1 CADTrack: Learning Contextual Aggregation with Deformable Alignment for Robust RGBT Tracking
+  2511.16998v1 VLM-Augmented Degradation Modeling for Image Restoration Under Adverse Weather Conditions
+  2511.12525v1 MdaIF: Robust One-Stop Multi-Degradation-Aware Image Fusion with Language-Driven Semantics
+  2511.05095v1 Real-World Adverse Weather Image Restoration via Dual-Level Reinforcement Learning with High-Quality Cold Start
+  2511.05059v3 SurgiATM: A Physics-Guided Plug-and-Play Model for Deep Learning-Based Smoke Removal in Laparoscopic Surgery
+  2510.11276v2 Information-theoretic analysis of temporal dependence in discrete stochastic processes: Application to precipitation predictability
+  2510.09734v2 ARROW: An Adaptive Rollout and Routing Method for Global Weather Forecasting
+  2509.22279v3 Task-Aware Mixture-of-Experts for Time Series Analysis
+  2509.21802v2 ChaosNexus: A Foundation Model for ODE-based Chaotic System Forecasting with Hierarchical Multi-scale Awareness

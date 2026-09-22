@@ -1,0 +1,189 @@
+{
+  "package_id": "EarthDelta-R2-NextIteration-20260921",
+  "scope": "DELIVERY_CHECKS_ONLY_NOT_RESEARCH_EXECUTION",
+  "status": "PASS",
+  "content_contract_validation": {
+    "scope": "delivery_integrity_and_contract_consistency_only",
+    "passed": true,
+    "checks_count": 26,
+    "checks": [
+      {
+        "check": "required_files_exist",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "required_texts_nonempty",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "task_count_3_to_6",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "unique_task_ids",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "machine_required_fields",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "only_first_task_authorized",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "no_automatic_unlock",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "initial_task_statuses",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "dependencies_exist",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "dag_acyclic",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "declared_edges_match_dependencies",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "main_plan_has_uniform_tasks_and_exact_commands",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "main_plan_each_task_has_pass_fail_ci_semantics",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "all_15_findings_mapped",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "all_audit_categories_explained",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "no_fabricated_science_thresholds",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "memory_jepa_calibration_disabled",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "heavy_execution_locked",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "historical_tests_not_claimed_as_rerun",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "heads_separated",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "python_syntax_repo_preflight.py",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "python_syntax_test_delivery.py",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "python_syntax_validate_package.py",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "manifest_exists",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "manifest_coverage",
+        "passed": true,
+        "details": ""
+      },
+      {
+        "check": "manifest_all_sha256_match",
+        "passed": true,
+        "details": ""
+      }
+    ],
+    "repository_tests_run": false,
+    "weather_experiments_run": false,
+    "grants_execution_authority": false
+  },
+  "delivery_tool_self_tests": {
+    "tests_run": 10,
+    "passed": 10,
+    "failed": 0,
+    "command": "python3 tools/test_delivery.py",
+    "checks": [
+      "valid package",
+      "unauthorized unlock rejection",
+      "cycle rejection",
+      "fabricated threshold rejection",
+      "GPU authorization mutation rejection",
+      "missing file rejection",
+      "non-git preflight rejection",
+      "refuse report overwrite",
+      "main/JSON command drift rejection",
+      "SHA256 tamper detection"
+    ]
+  },
+  "not_run": [
+    "EarthDelta repository tests",
+    "real checkpoint loading",
+    "GPU/xformers S0",
+    "weather data validation",
+    "bank training",
+    "oracle/weather forecast evaluation",
+    "legal-policy training",
+    "output-correction training"
+  ],
+  "historical_cpu_record": "283 passed / 7 skipped / 0 failed is a read repository log, not a test run by this package builder.",
+  "initial_execution_lock": {
+    "current_task": "R2-P0-01",
+    "do_not_proceed_beyond": "R2-P0-01",
+    "allowed_operations": [
+      "repo_readonly",
+      "minimal_code_patch",
+      "synthetic_cpu_tests"
+    ],
+    "automatic_unlock": false
+  },
+  "verification_commands": [
+    "python3 tools/validate_package.py --package .",
+    "python3 tools/test_delivery.py"
+  ],
+  "integrity_verified": true
+}

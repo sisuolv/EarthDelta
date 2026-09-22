@@ -1,0 +1,545 @@
+{
+  "status": "PASS",
+  "scope": "PACKAGE_STRUCTURE_JSON_DAG_SYNTAX_LINKS",
+  "check_count": 107,
+  "failed_count": 0,
+  "repository_tests": "NOT_RUN",
+  "weather_experiments": "NOT_RUN",
+  "checks": [
+    {
+      "name": "file:START_HERE_FOR_CODEX.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "file:EarthDelta_Codex_Execution_Plan.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "file:FINAL_RESEARCH_DECISION.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "file:CODEX_TASKS.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "file:codex_tasks.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "file:STOP_CONDITIONS.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "file:IMPLEMENTATION_AUDIT_ACTIONS.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "file:experiments/P0_SURVIVAL_EXPERIMENTS.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "file:experiments/BASELINES.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "file:research/ROUND2_REVIEW_SUMMARY.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "file:configs/iteration1.template.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "file:provenance.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "file:tools/preflight.py",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "file:tools/validate_package.py",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "json:codex_tasks.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "json:TOOL_SELFTEST.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "json:DELIVERY_SCOPE.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "json:provenance.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "json:configs/iteration1.template.json",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "task_count_3_to_6",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "unique_task_ids",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "initial_stop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "one_task_unlocked",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no_auto_advance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "gpu_training_confirm_locked",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "audit_vs_delivery_distinct",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "historical_cpu_not_new_test",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no_scientific_runs_claimed",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:schema",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:nonempty",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:DAG_order",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:manual_next_grant",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:command_gates_aligned",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:one_main_task_block",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:uniform_sections",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:commands_in_main",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:checkbox",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:locked_state",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:no_destructive_command:0",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:no_destructive_command:1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:no_destructive_command:2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:no_destructive_command:3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-01:no_destructive_command:4",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:schema",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:nonempty",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:DAG_order",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:manual_next_grant",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:command_gates_aligned",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:one_main_task_block",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:uniform_sections",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:commands_in_main",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:checkbox",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:locked_state",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:no_destructive_command:0",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:no_destructive_command:1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:no_destructive_command:2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-02:no_destructive_command:3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-03:schema",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-03:nonempty",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-03:DAG_order",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-03:manual_next_grant",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-03:command_gates_aligned",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-03:one_main_task_block",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-03:uniform_sections",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-03:commands_in_main",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-03:checkbox",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-03:locked_state",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-03:no_destructive_command:0",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-03:no_destructive_command:1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-03:no_destructive_command:2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-04:schema",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-04:nonempty",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-04:DAG_order",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-04:manual_next_grant",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-04:command_gates_aligned",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-04:one_main_task_block",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-04:uniform_sections",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-04:commands_in_main",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-04:checkbox",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-04:locked_state",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-04:no_destructive_command:0",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-04:no_destructive_command:1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-05:schema",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-05:nonempty",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-05:DAG_order",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-05:manual_next_grant",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-05:command_gates_aligned",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-05:one_main_task_block",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-05:uniform_sections",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-05:commands_in_main",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-05:checkbox",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-05:locked_state",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-05:no_destructive_command:0",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-05:no_destructive_command:1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "R2I-05:no_destructive_command:2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "all_B_findings",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "all_action_categories_explained",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "placeholder_not_number",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "mde_distinct_from_value",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "oracle_pass_not_deployment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "syntax:tools/preflight.py",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "syntax:tools/validate_package.py",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "local_link:START_HERE_FOR_CODEX.md:FINAL_RESEARCH_DECISION.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "local_link:START_HERE_FOR_CODEX.md:EarthDelta_Codex_Execution_Plan.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "local_link:START_HERE_FOR_CODEX.md:CODEX_TASKS.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "local_link:START_HERE_FOR_CODEX.md:STOP_CONDITIONS.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "local_link:START_HERE_FOR_CODEX.md:IMPLEMENTATION_AUDIT_ACTIONS.md",
+      "passed": true,
+      "detail": ""
+    }
+  ]
+}

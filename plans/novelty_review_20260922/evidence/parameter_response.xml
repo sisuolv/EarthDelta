@@ -1,0 +1,1027 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/8kVQTLPJkrU3Vu+zZmPhnY6RBws</id>
+  <title>arXiv Query: search_query=(all:"parameter response" OR all:"intervention response" OR all:"counterfactual prediction" OR all:"edit response") AND (all:model OR all:neural) AND submittedDate:"202501010000 TO 202609222359"&amp;id_list=&amp;start=0&amp;max_results=35</title>
+  <updated>2026-09-22T02:56:12Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(all:%22parameter+response%22+OR+(all:%22intervention+response%22+OR+(all:%22counterfactual+prediction%22+OR+all:%22edit+response%22)))+AND+((all:model+OR+all:neural)+AND+submittedDate:%22202501010000+TO+202609222359%22)&amp;start=0&amp;max_results=35&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>35</opensearch:itemsPerPage>
+  <opensearch:totalResults>66</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2609.23183v1</id>
+    <title>K-TRAIL: Simulator-Guided Generative Design of EM/RF Circuits</title>
+    <updated>2026-09-19T19:13:54Z</updated>
+    <link href="https://arxiv.org/abs/2609.23183v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.23183v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Inverse design of RF and electromagnetic (EM) circuits is challenging because the relationship between circuit layout and electrical response is non-unique, and full-wave simulation is computationally expensive. This paper presents K-TRAIL, a simulator-guided generative framework for automated EM/RF circuit synthesis. K-TRAIL combines diffusion-based layout generation with derivative-free ensemble Kalman guidance, allowing feedback from a black-box EM simulator to refine candidate layouts during generation without requiring adjoint sensitivities or differentiable solver models. The framework supports both synthesis from prescribed S-parameter responses and synthesis directly from RF performance constraints. Experiments on multi-layer RFIC structures show that simulator-guided generation improves agreement with target responses and can identify structurally distinct layouts that satisfy circuit-level design requirements. The proposed approach provides a practical path toward generative, verification-aware RF circuit design while retaining the flexibility to explore diverse layout topologies.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-19T19:13:54Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Piyush Saha</name>
+    </author>
+    <author>
+      <name>Evan Newell</name>
+    </author>
+    <author>
+      <name>Hanna O'Leary</name>
+    </author>
+    <author>
+      <name>Arun Natarajan</name>
+    </author>
+    <author>
+      <name>Alireza Aghasi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.15978v1</id>
+    <title>The CAST-framework: Measure and model social media use as a multi-level phenomenon through real-world applications</title>
+    <updated>2026-09-14T17:57:30Z</updated>
+    <link href="https://arxiv.org/abs/2609.15978v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.15978v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Designing social media experiences that support well-being requires understanding when, how, and for whom use matters. Screen-time totals omit content and context, and connecting these with behavior and experience requires coordinating measurements across timescales. We introduce the CAST framework to connect measurement choices with person-specific models of exposure, behavior, physiology, and experience. Its dimensions specify where observations occur, how they are obtained, what they measure, and at what temporal resolution. Responses to interventions, such as whether to proceed after an app-opening pause, enter as behavioral measurements. We propose four synchronized measurement modules linking mobile and wearable data with self-reports and intervention responses. A synthetic demonstration with 120 simulated participants over 28 days illustrates how daily aggregation can obscure opposing effects of different activities under specified generating assumptions. The framework guides selection of measures and outcomes for evaluating social media interfaces and interventions.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-14T17:57:30Z</published>
+    <arxiv:comment>21 pages, 3 figures, 4 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>David Grüning</name>
+    </author>
+    <author>
+      <name>Jasper Doeninghaus</name>
+    </author>
+    <author>
+      <name>Zina Efchary</name>
+    </author>
+    <author>
+      <name>Yui Kondo</name>
+    </author>
+    <author>
+      <name>Kevin Dunnell</name>
+    </author>
+    <author>
+      <name>Lennart Fischer</name>
+    </author>
+    <author>
+      <name>Isabella Zimmermann</name>
+    </author>
+    <author>
+      <name>Linnea Körte</name>
+    </author>
+    <author>
+      <name>Leo Mehlig</name>
+    </author>
+    <author>
+      <name>Frederik Riedel</name>
+    </author>
+    <author>
+      <name>Paul Schmiedmayer</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.11331v1</id>
+    <title>Estimating Inconsistency Response Surfaces under Uncertainty in Cyber-Physical System Development</title>
+    <updated>2026-09-10T10:03:26Z</updated>
+    <link href="https://arxiv.org/abs/2609.11331v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.11331v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Cyber-Physical Systems (CPS) are commonly represented through multiple interconnected models. During development, CPS consistency requires that shared model elements remain compatible across these models. Uncertainty, for example, due to sensor noise or model abstraction, changes the admissible values of model elements and can introduce inconsistencies, i.e., situations in which models can no longer be jointly satisfied. While existing approaches can determine consistency for a given uncertainty configuration, they provide limited support for systematically exploring, analyzing, and explaining inconsistency across large uncertainty spaces. We address this challenge by reformulating inconsistency as an intervention response modeling problem. Using Saltelli sampling and multi-fidelity Monte Carlo estimation, we generate intervention-response datasets and train a surrogate model that directly predicts inconsistency from the propagated uncertainty geometry. Experiments on 48 scenarios and 10 CPS domains show that the surrogate matches Monte Carlo estimates while reducing evaluation time from milliseconds to microseconds, enabling orders-of-magnitude more response-surface evaluations within fixed computational budgets. Building on the learned response surfaces, we perform sensitivity analysis to identify dominant uncertainty drivers and introduce a gradient-based consistency recourse method to determine minimal uncertainty interventions that restore consistency. The results show that inconsistency under uncertainty can be effectively learned, analyzed, and repaired through response-surface modeling, providing a scalable foundation for uncertainty-aware consistency management in CPS development.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-10T10:03:26Z</published>
+    <arxiv:comment>Extended version of the paper accepted at IEEE ICDM 2026; 10 pages + appendix, 11 figures, 3 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Johannes Mäkelburg</name>
+    </author>
+    <author>
+      <name>Tim Schwabe</name>
+    </author>
+    <author>
+      <name>Maribel Acosta</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.07141v1</id>
+    <title>How Well Do LLMs Simulate Survey Responses Following a Breast Cancer Screening Intervention?</title>
+    <updated>2026-09-07T07:42:38Z</updated>
+    <link href="https://arxiv.org/abs/2609.07141v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.07141v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Collecting survey data is laborious and limited by privacy constraints. Large language models (LLMs) have shown promise as predictive social simulations. It is unclear whether they can replicate population-level response distributions before and after a healthcare intervention. Using information derived from 4125 women aged 35-59 years, we evaluate whether agents informed solely by pre-intervention profile information can reproduce post-intervention response distributions. Groups of LLM agents (n=50) were created with Gemma 4 E4B and Qwen3.5 9B; conditions ranged from zero-shot prompting to agent profiles enriched with aggregate or individual-level demographic characteristics and pre-intervention questionnaire responses. We compared predicted and observed response distributions with Total Variation Distance (TVD) and Normalized Wasserstein Distance (NWD). Across both LLMs, profile-based agents improved distributional accuracy relative to zero-shot and random baselines. Nevertheless, direct sampling of 50 real participants remained more accurate. Prediction errors were also higher among participants aged 55-59 years and those living in private property. Errors also varied by question theme and LLM model, with the highest errors observed for cancer fatalism and post intervention attitudes toward genetics. Sensitivity analyses showed that performance was influenced by prompt template changes and temperature hyperparameter. Our results show the potential of LLM-based agents to model behavioral responses to interventions in silico. However, profiles containing additional information beyond demographics did not consistently outperform simpler ones. Certain cultural constructs and population groups also remain inadequately represented by the LLM models evaluated. Future work may include building behaviorally grounded and locally validated virtual populations.</summary>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-07T07:42:38Z</published>
+    <arxiv:comment>69 pages, 25 tables, 11 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.SI"/>
+    <author>
+      <name>Kenneth Koh</name>
+    </author>
+    <author>
+      <name>Ryan Jak Yang Lim</name>
+    </author>
+    <author>
+      <name>Alessandro Sparacio</name>
+    </author>
+    <author>
+      <name>Peh Joo Ho</name>
+    </author>
+    <author>
+      <name>Mile Sikic</name>
+    </author>
+    <author>
+      <name>Borame L Dickens</name>
+    </author>
+    <author>
+      <name>Mikael Hartman</name>
+    </author>
+    <author>
+      <name>Jingmei Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.06257v1</id>
+    <title>SeaCausal-FL: Federated Fuzzy Causal Learning for Maritime IoT Fault Diagnosis and Counterfactual Reasoning</title>
+    <updated>2026-09-05T20:56:08Z</updated>
+    <link href="https://arxiv.org/abs/2609.06257v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.06257v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Reliable marine-engine fault diagnosis in maritime IoT is challenged by distributed data ownership, heterogeneous fault distributions, and continuously changing operating conditions. This paper proposes SeaCausal-FL, a federated fuzzy causal learning framework that combines a shared temporal diagnostic path with mechanism-conditioned causal reasoning. An interval type-2 fuzzy layer represents uncertain and overlapping operating mechanisms, while each mechanism is associated with a physics-constrained structural causal model. Before aggregation, locally learned mechanisms are aligned using operating context, causal structure, and conditional intervention-response signatures. Model parameters are then aggregated according to sample, class, mechanism, and mechanism-class evidence instead of client sample size alone. The learned structural equations further support interval counterfactual reasoning through abduction, action, and prediction. Experiments on a marine-engine fault dataset and a real-data-calibrated semi-synthetic causal benchmark show that SeaCausal-FL achieves an average F1 score of 87.07% across four client partitions, with AUROC and AUPRC of 98.98% and 94.81%, respectively. It also maintains strong performance under unseen loads and fault-type omission during training. On the causal benchmark, SeaCausal-FL reaches an Edge-F1 of approximately 0.58 and an Edge-AUPRC of 0.68, reduces coefficient RMSE to about 0.14, and provides favorable counterfactual estimation and intervention decisions.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-05T20:56:08Z</published>
+    <arxiv:comment>16 pages, 8 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Yuhang Qiu</name>
+    </author>
+    <author>
+      <name>Haihan Zhu</name>
+    </author>
+    <author>
+      <name>Koteeswaran Seerangan</name>
+    </author>
+    <author>
+      <name>Longsheng Zhu</name>
+    </author>
+    <author>
+      <name>Xiong Wang</name>
+    </author>
+    <author>
+      <name>Yijun Lu</name>
+    </author>
+    <author>
+      <name>Zheng Lin</name>
+    </author>
+    <author>
+      <name>Fangmin Ren</name>
+    </author>
+    <author>
+      <name>Jialiang Xie</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.29714v1</id>
+    <title>Neural ODE enhanced linear mixed effect models for estimating complex association patterns of time-varying covariates with the marker trajectory</title>
+    <updated>2026-08-30T10:45:02Z</updated>
+    <link href="https://arxiv.org/abs/2608.29714v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.29714v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Longitudinal cohort studies produce repeated data that enable the assessment of time-varying association patterns between exposures and health outcomes. Classical linear mixed-effects models (LMMs) can accommodate a large variety of association patterns while accounting for the irregularly spaced, partially observed measurement. But they require the analyst to pre-specify the functional form linking the exposure history to the outcome. We propose the Neural ODE-LMM, which embeds a Neural Ordinary Differential Equation (Neural ODE) within the linear mixed-effects framework: a learned vector field encodes covariate trajectories into a continuous-time latent state that drives both the fixed- and random-effect design, while preserving the standard LMM observation model. This retains classical likelihood-based inference while learning complex, potentially cumulative, covariate effects flexibly. All parameters are estimated by maximising a penalised marginal likelihood. To quantify covariate effects, we introduce contrasts of counterfactual predictions that compare the expected outcome under alternative covariate trajectories with variance estimated via the delta method. In simulations, the model recovers both instantaneous and cumulative-burden effects without prior specification of the functional form. Applied to the Trois-Cités (3C) cohort, a population-based study of 7{,}324 participants, the method reveals trajectory-dependent associations of BMI and fasting glucose with cognitive decline.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-30T10:45:02Z</published>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Zhe Aurore Li</name>
+    </author>
+    <author>
+      <name>Quentin Clairon</name>
+    </author>
+    <author>
+      <name>Cécilia Samieri</name>
+    </author>
+    <author>
+      <name>Rodolphe Thiébaut</name>
+    </author>
+    <author>
+      <name>Mélanie Prague</name>
+    </author>
+    <author>
+      <name>Cécile Proust-Lima</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.21141v1</id>
+    <title>Causal Explanations for Stratified Datalog</title>
+    <updated>2026-08-21T14:20:20Z</updated>
+    <link href="https://arxiv.org/abs/2608.21141v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.21141v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Rule-based reasoning with exceptions requires causal explanations that account for both present and absent facts. For positive Datalog, monotonicity allows minimal supports to determine deletion causality. Stratified negation removes that property because inserting or deleting a fact may create or destroy an answer. We study actual causes, responsibility, and robustness for safe and stratified Datalog under perfect-model semantics and interventions over a finite set of mutable extensional facts. We prove that minimal supports and inclusion-minimal outcome-changing interventions do not determine causality, while robustness radius one may coexist with unbounded minimum contingencies. Our main result characterizes the minimum contingency size of a candidate fact by compatible prime implicants for the observed and opposite outcomes. The characterization conservatively recovers support-based causality for positive Datalog and yields path--cut characterizations for blocked recursive reachability. For fixed nonrecursive stratified programs, we establish data-complexity NP-completeness for cause recognition, robustness, and responsibility, and coNP-completeness for intervention-response equivalence between two such programs.</summary>
+    <category term="cs.DB" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-21T14:20:20Z</published>
+    <arxiv:primary_category term="cs.DB"/>
+    <author>
+      <name>Ratan Bahadur Thapa</name>
+    </author>
+    <author>
+      <name>Steffen Staab</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.02917v1</id>
+    <title>Cross-Sectional Separability versus Longitudinal Response in Short-Record Parkinsonian Gait Analysis Using FEG-Pro: Nordic Walking and Adapted Physical Activity</title>
+    <updated>2026-08-16T01:57:32Z</updated>
+    <link href="https://arxiv.org/abs/2609.02917v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.02917v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>\textbf{Objective:} Machine-learning separation of rehabilitation cohorts does not inherently establish a differential intervention response. This study used Forecast-Error Growth Profiling (FEG-Pro) to distinguish cross-sectional cohort separability from subject-level longitudinal change following Nordic Walking (NW) and Adapted Physical Activity (APA) in Parkinson's disease. \textbf{Methods:} Publicly available short gait records from 24 participants (NW=14, APA=10) were analyzed. Lower-limb signals at baseline and 12 weeks were transformed into FEG-Pro and Forecast-Error Distribution Entropy descriptors. We compared individual change scores ($Δ=T1-T0$) between groups using baseline-adjusted sensitivity analyses and false-discovery-rate (FDR) correction. Additionally, a fully nested machine-learning pipeline evaluated whether multidimensional change vectors could identify the intervention. \textbf{Results:} The self-selected cohorts already differed clinically at baseline. Among 1,098 extracted features, none exhibited robust between-group differences in longitudinal change after FDR correction or baseline adjustment. Furthermore, nested classification based on multidimensional change vectors failed to perform above chance (mean MCC = $-0.178 \pm 0.228$). In contrast, exploratory cross-sectional models separated the cohorts with peak MCC values of 0.604 at baseline and 0.554 post-intervention. \textbf{Conclusion:} This cohort did not provide robust evidence of modality-specific longitudinal responses to NW or APA. These findings demonstrate that cross-sectional separability of self-selected cohorts must not be interpreted as an intervention effect; true rehabilitation biomarkers require subject-level longitudinal validation, baseline adjustment, and leakage-safe evaluation.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-16T01:57:32Z</published>
+    <arxiv:comment>27 pages, 7 figures</arxiv:comment>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Xuanbao Xiang</name>
+    </author>
+    <author>
+      <name>Andrei Velichko</name>
+    </author>
+    <author>
+      <name>Xiaobo Rao</name>
+    </author>
+    <author>
+      <name>Jianshe Gao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.13326v1</id>
+    <title>Beyond Local Accuracy: A Protocol-Level Identifiability Audit for Controlled LLM Reasoning Evaluation</title>
+    <updated>2026-08-13T14:49:47Z</updated>
+    <link href="https://arxiv.org/abs/2608.13326v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.13326v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>LLM benchmark scores can be precise even when the observation protocol does not identify the behavioral property they are intended to measure. In a controlled, solver-grounded setting, we formalize a protocol-level identifiability audit over a finite behavioral policy class: given policies H, observation support O, and estimand $τ$, we test whether O separates every pair with different $τ$. The audit requires zero model calls and resolves our diagnostic case: base-only observation collapses seven frozen deterministic policies into one equivalence class; full support yields seven classes and no cross-estimand collisions; every leave-one-out support retains a constructive collision witness. Empirically, both constrained-generation variants have pair-validity 1.0, yet base accuracy and selective-response fidelity diverge - 0.620 versus 0.324 across six balanced oracle-transition directions (cluster-bootstrap 95% CI [0.600, 0.642] vs. [0.304, 0.345]) - and the gap recurs on a second deterministic source (0.646 vs. 0.331). The audit also synthesizes a minimum identifying support $O^*$ for the frozen policy class: two cells instead of the full 36-cell tensor. This case shows how evaluation-design validity can be checked structurally before model inference and why base correctness does not determine intervention-response fidelity.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-13T14:49:47Z</published>
+    <arxiv:comment>15 pages, 9 figures. Ning Huang, Ziqi Sha, and Wenxuan Tang contributed equally as second authors. Wei Deng is the corresponding author</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Junhao Luo</name>
+      <arxiv:affiliation>School of Statistics and Data Science, Southwestern University of Finance and Economics</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Ning Huang</name>
+      <arxiv:affiliation>School of Statistics and Data Science, Southwestern University of Finance and Economics</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Ziqi Sha</name>
+      <arxiv:affiliation>School of Statistics and Data Science, Southwestern University of Finance and Economics</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Wenxuan Tang</name>
+      <arxiv:affiliation>School of Statistics and Data Science, Southwestern University of Finance and Economics</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Wei Deng</name>
+      <arxiv:affiliation>School of Statistics and Data Science, Southwestern University of Finance and Economics</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.11601v1</id>
+    <title>How Can Driving World Models Do Counterfactual Prediction?</title>
+    <updated>2026-08-12T03:19:59Z</updated>
+    <link href="https://arxiv.org/abs/2608.11601v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.11601v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Driving world models are often interpreted as counterfactual simulators for observed driving episodes: given a factual driving log, they are asked what would have happened under an alternative ego action. In this paper, we identify a fundamental mismatch between this goal and direct action-conditioned prediction. The direct prediction uses the shared history and the alternative action but not the factual continuation observed after that history. It can therefore generate a plausible future without preserving what actually happened in this episode. We formalize this gap using the causal recipe of abduction, action, and prediction and study it in a setting with a short time horizon, where the alternative ego action does not alter how surrounding agents evolve. To make the gap measurable, we construct a controlled simulation benchmark with factual outcomes and matched counterfactual outcomes. Across two representative world models, direct predictions fail to match the counterfactual ground truth, supporting our analysis. As a constructive check of this analysis, we introduce a deliberately simple, training-free pipeline that moves observed evidence into the counterfactual view and lets the frozen model complete what remains unknown. Even this simple construction raises the overall recovered fraction substantially and reduces perceptual distance to the matched counterfactual on both models. We hope this work draws attention to this gap and motivates better counterfactual prediction methods for driving world models.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-12T03:19:59Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Jiaru Zhang</name>
+    </author>
+    <author>
+      <name>Can Cui</name>
+    </author>
+    <author>
+      <name>Yi Xu</name>
+    </author>
+    <author>
+      <name>Xin Ye</name>
+    </author>
+    <author>
+      <name>Ruqi Zhang</name>
+    </author>
+    <author>
+      <name>Ziran Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.08288v2</id>
+    <title>Causal State-Space Model for Causal Inference: Estimating Longitudinal Individual Treatment Effects</title>
+    <updated>2026-08-12T10:57:04Z</updated>
+    <link href="https://arxiv.org/abs/2608.08288v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.08288v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Estimating counterfactual outcomes over time from longitudinal observational data is central to clinical decision support. Existing methods rely on domain confusion -- adversarial training that renders representations invariant to treatment assignment -- yet this invariance creates a mutual information conflict: it suppresses treatment-correlated covariate signals necessary for accurate outcome prediction. We formalise this tension via a Jensen-Shannon divergence bound on counterfactual prediction error and develop two complementary models. CSSD (Causal State-Space model with Direct decoder) adapts selective State Space Models with a parallel multi-step decoder that eliminates accumulated rollout error by producing all prediction horizons simultaneously in a single forward pass. CSSPD (Causal State-Space model with Predictive regularisation and Direct decoder) augments CSSD with Contrastive Predictive Coding and Local Information Maximisation to reinforce temporal predictability in the balancing representation and recover local covariate information destroyed by domain confusion. On MIMIC-III, CSSPD achieves lower counterfactual RMSE than the Causal Transformer at every horizon tau &gt;= 2 at O(T) encoder cost, with gains from 0.02 (2-step) to 0.07 (6-step). On Cancer Simulation across confounding strengths gamma in {0,1,2,3,4}, CSSPD outperforms CT at gamma &lt;= 3 (margins 25.9%--37.0%), and CSSD achieves the lowest overall average RMSE (12.7% reduction over CT), confirming the MI conflict analysis. To our knowledge, this is the first work to formalise the balancing-prediction MI conflict and propose a structured resolution through complementary predictive and information-theoretic training objectives.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-08T18:41:36Z</published>
+    <arxiv:comment>Submitted to AAAI 2027. 13 pages, 5 tables, appendices A-E</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Abisoye Abidakun</name>
+    </author>
+    <author>
+      <name>Mingjun Zhong</name>
+    </author>
+    <author>
+      <name>Georgios Leontidis</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.29215v1</id>
+    <title>Conditional projection methods for large-scale Bayesian VARs</title>
+    <updated>2026-07-31T09:34:16Z</updated>
+    <link href="https://arxiv.org/abs/2607.29215v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.29215v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We develop fast methods for conditional forecasting and structural scenario analysis with high-dimensional Bayesian vector autoregressions (VARs). Our general framework features a factor structure on the reduced-form errors, which enables fast and order-invariant equation-by-equation estimation; suitably identified factors admit a structural interpretation. The scenarios are defined through separate distributional restrictions on observables, structural shocks and idiosyncratic components. The computational cost of our proposed algorithm is cubic only in the number of restrictions, while the dimension of the forecasted system enters linearly. In our application with $33$ macroeconomic and financial variables and ten set-identified structural shocks for the US, we compute counterfactual predictions for oil price scenarios in the context of the 2026 closure of the Strait of Hormuz. The same oil price path is consistent with outcomes ranging from a mostly benign episode to pronounced stagflation, depending on which structural and idiosyncratic shocks are allowed to deliver it.</summary>
+    <category term="econ.EM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-31T09:34:16Z</published>
+    <arxiv:comment>JEL: C11, C32, C53, E37, Q43; keywords: structural scenario analysis, conditional forecasting, factor model, shrinkage</arxiv:comment>
+    <arxiv:primary_category term="econ.EM"/>
+    <author>
+      <name>Niko Hauzenberger</name>
+    </author>
+    <author>
+      <name>Michael Pfarrhofer</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.22430v2</id>
+    <title>On the Identifiability of Controlled World Models</title>
+    <updated>2026-07-27T09:57:43Z</updated>
+    <link href="https://arxiv.org/abs/2607.22430v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.22430v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>World model serves as a promising tool to infer environment dynamics under high-dimensional observations and candidate actions. Recently, LeCun's JEPA provides a compelling framework for learning such models in representation space. Its action-conditioned extension plays a central role in visual control and latent-space planning, but leaves a fundamental question: can it recover the controlled dynamics from nonlinear observations? This paper presents a joint identifiability condition for controlled world models with Gaussian latent states, which consists of two coupled components: (1) representation identifiability and (2) transition identifiability. The former depends on the spectral separation property while the latter is related to non-degenerate variation of conditional action. We prove that when this condition holds, minimizing the LeJEPA-style predictive objective can recover both latent states and controlled dynamics in the sense of orthogonal transformation. We further prove that the upper bound of transition prediction error is inversely proportional to the spectral separation margin. We also characterize an attainable amplification of counterfactual prediction error that scales inversely with the weakest conditional action-excitation margin. The theoretical predictions are empirically supported across four nonlinear observation settings.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-24T15:49:12Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Xiangteng Zhang</name>
+    </author>
+    <author>
+      <name>Yang Guan</name>
+    </author>
+    <author>
+      <name>Bo Zhang</name>
+    </author>
+    <author>
+      <name>Hongyang Li</name>
+    </author>
+    <author>
+      <name>Ya-Qin Zhang</name>
+    </author>
+    <author>
+      <name>Shengbo Eben Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.21914v1</id>
+    <title>Interventional Score Geometry for Causal Inference</title>
+    <updated>2026-07-24T02:42:05Z</updated>
+    <link href="https://arxiv.org/abs/2607.21914v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.21914v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Let $p(x)$ be the joint density of variables $X$, and let $ψ(x)=\nabla_x\log p(x)$ be its score field. Geometry constructed from $p$ and $ψ$ alone cannot identify causal direction: structural models with the same observational distribution have the same score geometry. I develop an interventional analogue. A hard intervention $\operatorname{do}(X_k=ξ)$ does not merely reweight the joint law; it restricts the distribution to the submanifold ${x_k=ξ}$. Its score should therefore be defined on the remaining $d-1$ free coordinates. I define causal influence $X_k\rightsquigarrow X_j$ as variation of the interventional marginal distribution of $X_j$ with $ξ$, and show that the corresponding derivative of the marginal interventional score gives a local sufficient condition for influence. Projecting the observational score onto admissible intervention directions does not generally recover causal response: two models may share the same observational score and admissible set yet respond differently. I therefore introduce an interventional response field supplied by structural information. A causal metric is defined as the Fisher information metric on a family of interventions with a common target, avoiding ill-posed comparisons across targets. The framework yields a geometric dictionary for randomized trials, instrumental variables, and conditional-independence designs, clarifying what each does and does not identify. A bivariate Gaussian example gives two models with the same observational score but different interventional score derivatives. The framework organizes relations among designs, interventions, and score fields, but adds no identification beyond the underlying assumptions. In Pearl's Ladder of Causation, observational score geometry belongs to association, intervention-indexed score fields to intervention, and unit-level counterfactual geometry is left for future work.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.EM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-24T02:42:05Z</published>
+    <arxiv:primary_category term="stat.ME"/>
+    <author>
+      <name>Mojtaba Eslami</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.20773v1</id>
+    <title>HARP: The Human--AI Research Platform</title>
+    <updated>2026-07-22T22:38:16Z</updated>
+    <link href="https://arxiv.org/abs/2607.20773v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.20773v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language models (LLMs) have shifted human--computer interaction from `traditional'' interface journeys toward more conversational exchanges. Researchers studying HCI and UI use moderated usability sessions, interviews, surveys, transcript analysis, and static prototypes. However, static prototypes provide limited opportunities to study interaction with live AI systems or systematically control how an LLM behaves across participants and scenarios. Conversation transcripts reveal little about how users formulate, revise, and hesitate over prompts before submission. We designed the Human--AI Research Platform (HARP) for researchers, designers, and anyone who has ever wondered, `What if AI did this?' HARP places participants in controlled mock scenarios with live, configurable AI agents. Researchers can control agent prompts, model parameters, response characteristics, and experimental conditions; trigger surveys at predefined moments; and record prompt composition time, response latency, deletions, and keystroke pauses. Planned capabilities include voice, facial expression, gesture, and, where legally and ethically appropriate, emotion analysis. We illustrate HARP through a study examining how technical specificity and response length affect retention of LLM output. By pairing controllable live agents with behavioral and self-report measures, HARP enables systematic testing of how AI design choices affect users.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-22T22:38:16Z</published>
+    <arxiv:comment>5 pages, 3 figures, SAP Academic Community Conference North America, 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Zeshu Zhu</name>
+    </author>
+    <author>
+      <name>Natalie Friedman</name>
+    </author>
+    <author>
+      <name>Kevin Weatherwax</name>
+    </author>
+    <author>
+      <name>Emily Eiben</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.03942v1</id>
+    <title>ThermoForce: A Physics-Structured Interventional World Model for Building HVAC Control</title>
+    <updated>2026-07-04T16:28:00Z</updated>
+    <link href="https://arxiv.org/abs/2607.03942v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.03942v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Model predictive control (MPC) of building HVAC systems needs thermal models that answer a causal question: what indoor temperature, energy use, and comfort will result if a control action is applied? Time-series foundation models (TSFMs) can forecast passive building trajectories with strong zero-shot skill, but high factual accuracy does not imply valid response to control interventions. We show that an observational grey-box model with the best passive accuracy predicts cooling effects with the wrong sign, and that adding control and weather covariates to a TSFM does not fix intervention response. We introduce ThermoForce, a control-ready interventional thermal world model that keeps a TSFM frozen as a passive free-response prior and learns a compact, physics-structured forced-response operator for the causal effect of HVAC actuation. The operator is monotone in the control input by construction, is identified from one to three days of control excitation, and composes with the free response into a counterfactual-capable world model. Across paired EnergyPlus heating and cooling interventions, ThermoForce attains the lowest intervention-effect error and correct effect sign where covariate-TSFM, observational grey-box, and distillation baselines fail. Embedded in MPC on the BOPTEST benchmark, it reduces thermal discomfort by 33--84\% relative to the native controller across three two-week windows while simultaneously reducing energy, using a frozen backbone, 195 trainable parameters, and CPU-only computation. ThermoForce reframes foundation models for building control: passive prediction and forced intervention response must be structurally separated for a model to be control-ready.</summary>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-04T16:28:00Z</published>
+    <arxiv:comment>23 pages, 9 figures</arxiv:comment>
+    <arxiv:primary_category term="eess.SY"/>
+    <author>
+      <name>Yifan Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.02968v1</id>
+    <title>Awakening Diffusion Transformers: Eliciting Stronger Generation and Understanding via Massive Activation Modulation</title>
+    <updated>2026-07-03T05:21:46Z</updated>
+    <link href="https://arxiv.org/abs/2607.02968v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.02968v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Massive Activations (MAs) have been widely observed in Transformer-based models, yet their structure and functional roles in Diffusion Transformers (DiTs) remain insufficiently understood. In this work, we systematically analyze MAs in representative DiTs and find that they are spatially distributed across image tokens while concentrated in a small set of fixed feature dimensions. We further show that these dimensions are closely aligned with AdaLN residual scaling factors and are primarily modulated by the denoising timestep rather than text conditions. This structure leads to two task-dependent effects: for generation, MAs are critical for fine-grained detail synthesis while having limited influence on global semantics; for understanding, their shared high-magnitude directions make raw DiT features overly similar across spatial tokens and weaken dense feature discrimination. Based on these findings, we introduce Eliciting Massive Activation (EMA), a training-free framework that leverages Massive Activations (MAs) as a unified modulation signal to improve both generative and representational capabilities of DiTs. For generation, EMA proposes MA-driven Detail G}uidance (DG), which suppresses MA dimensions to construct a detail-deficient counterfactual prediction and guides sampling toward finer visual details. DG further supports efficient partial-forward inference, integration with classifier-free guidance, and token-level Local DG for refining selected image regions. For understanding, EMA introduces MA-modulated REPresentation extraction (MREP), which uses pretrained AdaLN channel-wise modulation to reduce MA directional dominance and concatenates spatially normalized MA maps to preserve useful spatial structure. Extensive experiments demonstrate that EMA consistently improves both the generation quality and representation capability of DiTs.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-03T05:21:46Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Chaofan Gan</name>
+    </author>
+    <author>
+      <name>Zicheng Zhao</name>
+    </author>
+    <author>
+      <name>Yuanpeng Tu</name>
+    </author>
+    <author>
+      <name>Xi Chen</name>
+    </author>
+    <author>
+      <name>Ziran Qin</name>
+    </author>
+    <author>
+      <name>Tieyuan Chen</name>
+    </author>
+    <author>
+      <name>Supavadee Aramvith</name>
+    </author>
+    <author>
+      <name>Mehrtash Harandi</name>
+    </author>
+    <author>
+      <name>Weiyao Lin</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.31689v1</id>
+    <title>ScratchWorld: Evaluating If World Models Compute Executable Consequences</title>
+    <updated>2026-06-30T14:02:25Z</updated>
+    <link href="https://arxiv.org/abs/2606.31689v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.31689v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>World-model evaluations often score a predicted future by overlap with a target state or observation. In sparse-change worlds, this can turn copied persistent state into apparent accuracy. We introduce ScratchWorld, an offline diagnostic benchmark that treats Scratch projects as executable worlds and uses a pinned Scratch VM to produce replay-verified transitions, hidden variables, causal traces, and counterfactual outcomes. ScratchWorld evaluates next-state prediction, long-horizon tracking, causal event attribution, and counterfactual prediction; each replay-verified target can be presented under raw-program, structured-state, natural-language, or rendered input modalities, and our experiments use the structured-state condition. Its primary state metric is value-aware changed-field $F_1$, which gives credit only for the changed field and its executed value. In a 659-example release, seven prompted language/reasoning models reach at most 13.8% value-aware changed-field $F_1$ in a state-only partial-observation stress test. A same-instance copy diagnostic makes the overlap confound concrete: copying the input state reaches 98.0% implied full-state field accuracy and 0.0% changed-field $F_1$, with the largest inflation on real projects. Auxiliary diagnostics separate hidden-state rollout drift, intervention sensitivity, causal attribution, and perturbation robustness. Across these settings, models often react to actions or interventions without following the executable rule that determines the changed value.</summary>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-30T14:02:25Z</published>
+    <arxiv:primary_category term="cs.SE"/>
+    <author>
+      <name>Yufeng Lin</name>
+    </author>
+    <author>
+      <name>Jialu Zhang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.07760v1</id>
+    <title>scCBGM: Interpretable Single-Cell Counterfactual Editing</title>
+    <updated>2026-06-05T18:17:37Z</updated>
+    <link href="https://arxiv.org/abs/2606.07760v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.07760v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Understanding cellular phenotypes and how they respond to perturbations is critical for disease biology and therapeutic design. Single-cell RNA sequencing enables characterization at cellular resolution, yet the combinatorial space of conditions makes exhaustive experimental mapping infeasible. We introduce single-cell Concept Bottleneck Generative Models (scCBGM), a framework for interpretable and precise counterfactual editing of individual cells. scCBGM adapts concept bottleneck architectures for single-cell data through decoder skip connections and a cross-covariance penalty that promotes disentanglement without dimensional constraints. We extend the framework to flow matching models, enabling concept-guided editing in both encoding-decoding and generation regimes. To enable rigorous evaluation, we develop a synthetic benchmark with ground-truth counterfactuals. Across multiple real datasets, scCBGM demonstrates superior performance in combinatorial generalization and counterfactual prediction, supported by cell-level validation on synthetic data and population-level benchmarks on real datasets.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-05T18:17:37Z</published>
+    <arxiv:comment>Accepted to ICML 2026; code at https://github.com/almaan/scCBGM</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Alma Andersson</name>
+    </author>
+    <author>
+      <name>Aya Abdelsalam Ismail</name>
+    </author>
+    <author>
+      <name>Edward De Brouwer</name>
+    </author>
+    <author>
+      <name>Doron Haviv</name>
+    </author>
+    <author>
+      <name>Tommaso Biancalani</name>
+    </author>
+    <author>
+      <name>Kyunghyun Cho</name>
+    </author>
+    <author>
+      <name>Gabriele Scalia</name>
+    </author>
+    <author>
+      <name>Aïcha BenTaieb</name>
+    </author>
+    <author>
+      <name>Hector Corrada Bravo</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.05692v3</id>
+    <title>Benchmarking Counterfactual Prediction in Epidemic Time Series with Time-Varying Interventions</title>
+    <updated>2026-06-12T19:52:00Z</updated>
+    <link href="https://arxiv.org/abs/2606.05692v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.05692v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deep learning has enabled significant advances in time-series causal inference, yet progress remains constrained by the lack of realistic benchmarks with observable counterfactual outcomes. Existing datasets either rely on real-world observations without ground-truth counterfactuals or on simplified simulations that fail to capture complex causal dynamics. To address this gap, we develop a large-scale benchmark for counterfactual prediction in epidemic time series under dynamic interventions. Unlike existing benchmarks, it supports static and time-varying treatments, as well as both single-policy and multi-policy intervention settings, enabling evaluation of causal inference methods across a broad range of causal inference scenarios. Leveraging a calibrated agent-based model grounded in real-world demographic, mobility, epidemiological, and policy data, we generate realistic counterfactual trajectories across more than 150 U.S. counties. Using this benchmark, we evaluate widely used and state-of-the-art causal inference methods, revealing substantial performance differences and highlighting the challenges of realistic time-series causal reasoning.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-04T04:18:28Z</published>
+    <arxiv:comment>To appear in Proceedings of the 32nd ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD 2026)</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Wenhao Mu</name>
+    </author>
+    <author>
+      <name>Facundo Yan</name>
+    </author>
+    <author>
+      <name>Anik Mumssen</name>
+    </author>
+    <author>
+      <name>Marisa Eisenberg</name>
+    </author>
+    <author>
+      <name>Alexander Rodríguez</name>
+    </author>
+    <arxiv:doi>10.1145/3770855.3817522</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3770855.3817522" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.05164v1</id>
+    <title>Floquet-Engineered Parity Anomaly Staircase in a Cold Atom Dirac Lattice</title>
+    <updated>2026-06-03T17:59:29Z</updated>
+    <link href="https://arxiv.org/abs/2606.05164v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.05164v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We propose a Floquet-engineered cold atom realization of a parity anomaly inspired anomalous Hall staircase in a two dimensional $π$-flux lattice. The effective model hosts massive Dirac fermions generated by the combined action of a time reversal symmetry breaking Floquet mass and a static inversion breaking mass offset. An additional momentum dependent scalar displacement term shifts different Dirac sectors in opposite energy directions without modifying their Bloch eigenvectors. As a result, the Berry curvature contribution associated with individual massive Dirac sectors can be selectively occupied, allowing the anomalous Hall response to evolve stepwise as a function of chemical potential or scalar displacement term. Evaluating the full lattice Berry curvature integral, we find plateau-like responses near $0$, $e^2/2h$, and $e^2/h$, corresponding respectively to the activation of zero, one, and two effective massive Dirac sector contributions. We analyze the associated low energy Dirac theory, band topology, Berry curvature structure, and two parameter response maps, and discuss a possible realization using Raman-assisted tunneling, off-resonant Floquet driving, and auxiliary AC-Stark dressing in ultracold atomic optical lattices.</summary>
+    <category term="cond-mat.quant-gas" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-03T17:59:29Z</published>
+    <arxiv:primary_category term="cond-mat.quant-gas"/>
+    <author>
+      <name>Binayyak Roy</name>
+    </author>
+    <author>
+      <name>Vito Scarola</name>
+    </author>
+    <author>
+      <name>Sumanta Tewari</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.04457v1</id>
+    <title>Imagine Before You Draw: Visual Prompt Engineering for Image Generation</title>
+    <updated>2026-06-03T05:01:36Z</updated>
+    <link href="https://arxiv.org/abs/2606.04457v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.04457v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Incorporating visual semantic representations as an intermediate step before image generation can reduce the modeling difficulty between text and images, thereby improving generation quality. Recent works such as X-Omni and BLIP3o-Next have explored this direction, but they typically use a two-stage external pipeline: a separate autoregressive model first generates semantic tokens, which are then fed as conditioning to an independent diffusion decoder. Since the decoder cannot jointly access the original input and the semantic plan, this design introduces an information bottleneck that limits detail preservation in downstream tasks such as editing. Internal architectures such as Transfusion, BAGEL, and Show-o2 avoid this bottleneck by enabling cross-modal interaction within a single model, but they still face the difficult text-to-pixel modeling gap without intermediate semantic guidance. We propose Visual Prompt Engineering (VPE), which can be seamlessly integrated into such internal frameworks. Specifically, the model first autoregressively generates visual semantic tokens (e.g., SigLIP 2) as "visual prompts" that capture the semantic layout, then generates the full image tokens conditioned on this plan. We validate VPE across class-conditional generation, text-to-image generation, and image editing, covering various token types and model architectures. Results show that VPE can accelerate convergence, raise quality ceilings, and through internal integration, achieve substantially better editing preservation (PSNR: 26.76 vs. 19.92) than external alternatives of the same parameter scale, while maintaining competitive editing responsiveness.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-03T05:01:36Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Liyu Jia</name>
+    </author>
+    <author>
+      <name>Fengda Zhang</name>
+    </author>
+    <author>
+      <name>Jiachun Pan</name>
+    </author>
+    <author>
+      <name>Kesen Zhao</name>
+    </author>
+    <author>
+      <name>Saining Zhang</name>
+    </author>
+    <author>
+      <name>Wang Lin</name>
+    </author>
+    <author>
+      <name>Weijia Wu</name>
+    </author>
+    <author>
+      <name>Yue Liao</name>
+    </author>
+    <author>
+      <name>Aojun Zhou</name>
+    </author>
+    <author>
+      <name>Hanwang Zhang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.03371v4</id>
+    <title>See Better, Foresee Better, Act Wiser: Physically Grounded Proactive Modeling and Decision Making</title>
+    <updated>2026-09-09T16:06:38Z</updated>
+    <link href="https://arxiv.org/abs/2606.03371v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.03371v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Reliable proactive agents must choose an action and judge whether current evidence is sufficient to act. We study retail service from sparse third-person video: before an explicit customer request, an agent must use limited human-object interaction evidence to intervene or remain silent. Physical grounding here means converting observations into task-relevant retail state, not modeling low-level dynamics. We introduce the Proactive Intent World Model (PIWM): See constructs the perceptual basis, Foresee models counterfactual consequences, and Act selects an action. Performance is poor when the agent must extract information from raw video and decide directly, but improves substantially with structured inputs extracted and annotated from a professional retail perspective. AIDA-stage constraints and BDI-state ablations further support role- and goal-directed selection and organization of decision-relevant cues. Counterfactual prediction performs well in standalone evaluation, yet planning methods that query these forecasts at inference time degrade sharply: locally useful consequence prediction does not reliably improve action selection. This gap may reflect incomplete process understanding, uncertainty in fine-grained single-step outcomes, and insufficient joint modeling of scenes and temporal evolution. Hold remains the hardest action in structured-state evaluation, exposing a related challenge in temporal awareness. PIWM advances static intent recognition toward intent world modeling by organizing observations under task knowledge, anticipating candidate interventions, and treating intervention and non-intervention jointly. Future work will introduce long-horizon interaction trajectories and temporal consequence supervision to improve sustained reasoning and intervention timing.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-02T09:18:39Z</published>
+    <arxiv:comment>20 pages, 3 figures. Preprint. Revised title, manuscript, and author list</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Honghui Zhang</name>
+    </author>
+    <author>
+      <name>Anna Min</name>
+    </author>
+    <author>
+      <name>Chenmeinian Guo</name>
+    </author>
+    <author>
+      <name>Yujia Zhang</name>
+    </author>
+    <author>
+      <name>Yichen Yu</name>
+    </author>
+    <author>
+      <name>Zezhou Zhang</name>
+    </author>
+    <author>
+      <name>Guanyu Liu</name>
+    </author>
+    <author>
+      <name>Yongming Qin</name>
+    </author>
+    <author>
+      <name>Chongguo Song</name>
+    </author>
+    <author>
+      <name>Mengyue Yang</name>
+    </author>
+    <author>
+      <name>Lei Yu</name>
+    </author>
+    <author>
+      <name>Tianyu Shi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.02790v1</id>
+    <title>Disaster-induced behavioral change restructures social networks toward bonding ties</title>
+    <updated>2026-06-01T18:57:13Z</updated>
+    <link href="https://arxiv.org/abs/2606.02790v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.02790v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Population displacement following environmental shocks reshapes the spatial organization of social interactions, often fragmenting existing ties and weakening community cohesion. Although social capital is widely recognized as a key determinant of resilience, its dynamic restructuring after disruption remains poorly quantified. Here, we develop a spatially embedded, dynamic network framework that operationalizes social capital as a network of repeated encounter opportunities inferred from large-scale mobility data. We construct temporal co-presence networks at third places to track how socio-spatial networks reorganize under disruption. We apply this framework to communities affected by the 2021 Marshall Fire in Colorado. We find that disaster-induced displacement leads to substantial contraction of socio-spatial networks, with mean weighted degree decreasing by 48%. To isolate underlying mechanisms, we develop two counterfactual models: a random node removal model and a behaviour-informed model in which individuals are removed based on their estimated propensity to evacuate. Both counterfactuals predict substantially lower connectivity than observed, indicating that post-disaster connectivity remains systematically higher than expected based on displacement behavior alone. Structural analysis of the network reveals that this residual connectivity is disproportionately concentrated among bonding ties between sociodemographically similar individuals, while bridging ties are comparatively fragile. Furthermore, interaction becomes increasingly located around third places, suggesting that these places act as spatial anchors for the persistence of social ties under disruption. Together, these findings provide a first empirical view of how behavioral responses to disruption shape community resilience through the reorganization of social networks.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-01T18:57:13Z</published>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <author>
+      <name>Vaidehi Raipat</name>
+    </author>
+    <author>
+      <name>Daniel Aldrich</name>
+    </author>
+    <author>
+      <name>Takahiro Yabe</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.01148v1</id>
+    <title>Not All Explanations Simulate Equally: Comparing Verbalized Feature Attributions and Self-Generated Rationales</title>
+    <updated>2026-05-31T10:35:35Z</updated>
+    <link href="https://arxiv.org/abs/2606.01148v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.01148v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Natural-language explanations are often treated as a unified interface for understanding model behavior, but different explanation sources may support simulation in different ways. This paper compares two families of explanations for question answering models: verbalized feature attributions and self-generated rationales. We evaluate them under a shared counterfactual simulation setting, using an LLM judge as predictor and measuring whether it can better predict a model's answers to follow-up questions when given its explanation. Across multiple instruction-tuned models, we analyze how explanation source, verbalization strategy, and feature granularity affect the simulatability of explanations. Our results show that explanation format and granularity affect simulatability: attribution-based explanations and self-generated rationales differ in how much they improve counterfactual prediction, with effects that vary across models and formats.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-31T10:35:35Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Pingjun Hong</name>
+    </author>
+    <author>
+      <name>Benjamin Roth</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.10035v1</id>
+    <title>From Single-Step Edit Response to Multi-Step Molecular Optimization</title>
+    <updated>2026-05-11T06:00:16Z</updated>
+    <link href="https://arxiv.org/abs/2605.10035v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.10035v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Conditional molecular optimization aims to edit a molecule to realize a specified property shift. In practice, structurally similar molecule data is scarce, while decisions are inherently action-level: at each step, the system must select one local structural edit from a candidate set that is strictly filtered by chemical feasibility rules. This level mismatch between supervision and decision makes oracle-in-the-loop search unstable in molecular optimization. Regressing on property differences between molecule pairs improves data efficiency but relies on oracle-in-the-loop search, entangling transformation effects with global context and providing limited guidance for selecting the next feasible edit, often resorting to oracle-in-the-loop search. For this reason, we propose a response-oriented discrete edit optimization approach comprising two tightly coupled components: a single-step molecular edit response predictor (SMER) and a multi-step planner that composes local predictions into optimization trajectories via guided tree search (SMER-Opt). The approach learns a directional evaluation model over edit actions to support constraint-aware planning. It mines weakly related molecule pairs and decomposes their structural differences into minimal edit units, turning endpoint property annotations into process-level supervision and yielding reusable, transferable action primitives. A directional edit evaluator then scores feasible candidate edits by their likelihood of moving the molecule toward the desired property change, substantially reducing dependence on external evaluator queries at decision time. Code is available at https://anonymous.4open.science/r/SMER.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-11T06:00:16Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Haojie Rao</name>
+      <arxiv:affiliation>School of Computer Science, Wuhan University, Wuhan, China</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Kun Li</name>
+      <arxiv:affiliation>School of Computer Science, Wuhan University, Wuhan, China</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Yida Xiong</name>
+      <arxiv:affiliation>School of Computer Science, Wuhan University, Wuhan, China</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Jiameng Chen</name>
+      <arxiv:affiliation>School of Computer Science, Wuhan University, Wuhan, China</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Wenbin Hu</name>
+      <arxiv:affiliation>School of Computer Science, Wuhan University, Wuhan, China</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Yizhen Zheng</name>
+      <arxiv:affiliation>Department of Data Science and Artificial Intelligence, Monash University, Victoria, Australia</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Jiajun Yu</name>
+      <arxiv:affiliation>College of Computer Science and Technology, Zhejiang University, Hangzhou, China</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Duanhua Cao</name>
+      <arxiv:affiliation>School of Life Sciences and Technology, Tongji University, Shanghai, China</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.00925v1</id>
+    <title>Linking spatial biology and clinical histology via Haiku</title>
+    <updated>2026-04-30T18:53:32Z</updated>
+    <link href="https://arxiv.org/abs/2605.00925v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.00925v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Integrating molecular, morphological, and clinical data is essential for basic and translational biomedical research, yet systematic frameworks for jointly modeling these modalities remain limited. Here we present Haiku, a tri-modal contrastive learning model trained on multiplexed immunofluorescence (mIF). It comprises 26.7 million spatial proteomics patches from 3,218 tissue sections across 1,606 patients spanning 11 organ types, with matched hematoxylin and eosin (H&amp;E) histology and clinical metadata aligned in a shared embedding space. Haiku enables three-way cross-modal retrieval, improves downstream classification and clinical prediction tasks over unimodal baselines, and supports zero-shot biomarker inference through fusion retrieval conditioned on clinical metadata-only text descriptions. Across tasks, Haiku outperforms competing approaches, achieving cross-modal retrieval (Recall@50 up to 0.611 versus near-zero baseline), survival prediction (C-index 0.737, +7.91% relative improvement), and zero-shot biomarker inference (mean Pearson correlation 0.718 across 52 biomarkers). Furthermore, we introduce a counterfactual prediction framework in which modifying only clinical metadata while fixing tissue morphology surfaces niche-specific molecular shifts associated with breast cancer stage progression and lung cancer survival outcomes. In a lung adenocarcinoma case study, the counterfactual analysis recovers niche-specific shifts characterized by increased CD8 and granzyme B, reduced PD-L1, and decreased Ki67, broadly consistent with patterns reported for favorable outcomes. We present these counterfactual results as exploratory, hypothesis-generating signals rather than mechanistic claims. These capabilities demonstrate that tri-modal alignment via Haiku enables integrative analysis of spatial biology, bridging molecular measurements with clinical context for biological exploration.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.QM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-30T18:53:32Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Yan Cui</name>
+    </author>
+    <author>
+      <name>Jacob S. Leiby</name>
+    </author>
+    <author>
+      <name>Wenhui Lei</name>
+    </author>
+    <author>
+      <name>Dokyoon Kim</name>
+    </author>
+    <author>
+      <name>Yanxiang Deng</name>
+    </author>
+    <author>
+      <name>Aaron T. Mayer</name>
+    </author>
+    <author>
+      <name>Zhenqin Wu</name>
+    </author>
+    <author>
+      <name>Alexandro E. Trevino</name>
+    </author>
+    <author>
+      <name>Zhi Huang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.23465v1</id>
+    <title>Machine learning models for estimating counterfactuals in a single-arm inflammatory bowel disease study</title>
+    <updated>2026-04-25T23:09:07Z</updated>
+    <link href="https://arxiv.org/abs/2604.23465v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.23465v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Single-arm trials accelerate study timelines by reducing the number of patients that must be recruited for a concurrent control group. However, these designs require an alternative comparator to estimate treatment effects. One approach is to construct a virtual control arm using a machine learning (ML) model trained on external control data to predict the counterfactual outcomes of the treatment arm. Our aim in this study was to leverage virtual controls by developing and evaluating ML-based counterfactual outcome models trained on IFX-treated patients to predict 1-year steroid-free clinical remission (SFCR ) and a composite of C-reactive protein remission plus steroid-free clinical remission (CRP-SFCR) for ADA-treated pediatric Crohn's disease patients, and to compare the resulting IFX-versus-ADA treatment effect estimates with those obtained using propensity score matching to external controls. Five ML models were used to train counterfactual models on the observed IFX cohort data. The resulting models were used to predict the counterfactual outcomes for the ADA arm patients. LGBM yields the best OR closest to the propensity score matched reference, and all 95% CI results align with the conclusion from the reference study that no statistical difference in the primary and secondary outcomes has been observed between the patients treated with ADA or IFX. Our study supports virtual controls as a viable and effective substitute for expensive, lengthy or unethical patient recruitment in an inflammatory bowel disease (IBD) trial. The developed gradient boosted prediction model can be used as a pretrained model to generate IFX counterfactual predictions in future studies, pending external validation and assessment of transportability.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-25T23:09:07Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Dan Liu</name>
+    </author>
+    <author>
+      <name>Fida K. Dankar</name>
+    </author>
+    <author>
+      <name>Jennifer C. deBruyn</name>
+    </author>
+    <author>
+      <name>Amanda Ricciuto</name>
+    </author>
+    <author>
+      <name>Anne M. Griffiths</name>
+    </author>
+    <author>
+      <name>Thomas D. Walters</name>
+    </author>
+    <author>
+      <name>Khaled EI Emam</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.16293v2</id>
+    <title>From Prediction to Intervention: The Evolution of AI in Biomedicine</title>
+    <updated>2026-05-26T19:18:47Z</updated>
+    <link href="https://arxiv.org/abs/2605.16293v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.16293v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Artificial intelligence has advanced rapidly in biomedicine through large-scale multimodal data integration, enabling increasingly accurate prediction of clinical outcomes and patient stratification. These systems, however, remain fundamentally observational: they learn statistical associations from historical data and operate within previously observed biological and clinical states, limiting their ability to generalize to novel therapies or unobserved interventions.
+  We argue that AI in biomedicine is undergoing a structural transition. As biomedical decision-making increasingly depends on reasoning about intervention rather than extrapolation from past observations, predictive architectures become structurally insufficient. Systems that learn from historical data cannot, by construction, represent how biological systems evolve under perturbation, and therefore cannot reliably support decision-making in the presence of novel interventions.
+  We introduce a conceptual framework distinguishing observational and interventional intelligence and define disease-level models as systems that explicitly represent the state, dynamics, and intervention response of biological processes. These models enable a shift from inference to simulation -- reasoning about what will happen under intervention rather than what is likely based on the past.
+  This transition also implies a shift in where value is created: from data processing and prediction toward systems that support and define decision-making under intervention. It follows directly from the structure of biomedical decision-making and defines the next stage of AI in medicine. Systems that cannot model intervention will be structurally excluded from decision-making.</summary>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-14T17:49:51Z</published>
+    <arxiv:comment>10 pages, 3 figures, 1 table. Figures were replaced with a better versions</arxiv:comment>
+    <arxiv:primary_category term="cs.CY"/>
+    <author>
+      <name>Andrew Feinberg</name>
+    </author>
+    <author>
+      <name>Aleksandr Sarachakov</name>
+    </author>
+    <author>
+      <name>Viktor Svekolkin</name>
+    </author>
+    <author>
+      <name>Alexander Bagaev</name>
+    </author>
+    <author>
+      <name>Ferran Prat</name>
+    </author>
+    <author>
+      <name>Michael Feinberg</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.12992v1</id>
+    <title>Causal Diffusion Models for Counterfactual Outcome Distributions in Longitudinal Data</title>
+    <updated>2026-04-14T17:25:53Z</updated>
+    <link href="https://arxiv.org/abs/2604.12992v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.12992v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Predicting counterfactual outcomes in longitudinal data, where sequential treatment decisions heavily depend on evolving patient states, is critical yet notoriously challenging due to complex time-dependent confounding and inadequate uncertainty quantification in existing methods. We introduce the Causal Diffusion Model (CDM), the first denoising diffusion probabilistic approach explicitly designed to generate full probabilistic distributions of counterfactual outcomes under sequential interventions. CDM employs a novel residual denoising architecture with relational self-attention, capturing intricate temporal dependencies and multimodal outcome trajectories without requiring explicit adjustments (e.g., inverse-probability weighting or adversarial balancing) for confounding. In rigorous evaluation on a pharmacokinetic-pharmacodynamic tumor-growth simulator widely adopted in prior work, CDM consistently outperforms state-of-the-art longitudinal causal inference methods, achieving a 15-30% relative improvement in distributional accuracy (1-Wasserstein distance) while maintaining competitive or superior point-estimate accuracy (RMSE) under high-confounding regimes. By unifying uncertainty quantification and robust counterfactual prediction in complex, sequentially confounded settings, without tailored deconfounding, CDM offers a flexible, high-impact tool for decision support in medicine, policy evaluation, and other longitudinal domains.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.EM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-14T17:25:53Z</published>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Farbod Alinezhad</name>
+    </author>
+    <author>
+      <name>Jianfei Cao</name>
+    </author>
+    <author>
+      <name>Gary J. Young</name>
+    </author>
+    <author>
+      <name>Brady Post</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.03772v1</id>
+    <title>Debiased Machine Learning for Conformal Prediction of Counterfactual Outcomes Under Runtime Confounding</title>
+    <updated>2026-04-04T15:49:41Z</updated>
+    <link href="https://arxiv.org/abs/2604.03772v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.03772v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Data-driven decision making frequently relies on predicting counterfactual outcomes. In practice, researchers commonly train counterfactual prediction models on a source dataset to inform decisions on a possibly separate target population. Conformal prediction has arisen as a popular method for producing assumption-lean prediction intervals for counterfactual outcomes that would arise under different treatment decisions in the target population of interest. However, existing methods require that every confounding factor of the treatment-outcome relationship used for training on the source data is additionally measured in the target population, risking miscoverage if important confounders are unmeasured in the target population. In this paper, we introduce a computationally efficient debiased machine learning framework that allows for valid prediction intervals when only a subset of confounders is measured in the target population, a common challenge referred to as runtime confounding. Grounded in semiparametric efficiency theory, we show the resulting prediction intervals achieve desired coverage rates with faster convergence compared to standard methods. Through numerous synthetic and semi-synthetic experiments, we demonstrate the utility of our proposed method.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-04T15:49:41Z</published>
+    <arxiv:primary_category term="stat.ML"/>
+    <arxiv:journal_ref>Proceedings of the Fifth Conference on Causal Learning and Reasoning, Proceedings of Machine Learning Research 323:1345-1379, 2026</arxiv:journal_ref>
+    <author>
+      <name>Keith Barnatchez</name>
+    </author>
+    <author>
+      <name>Kevin P. Josey</name>
+    </author>
+    <author>
+      <name>Rachel C. Nethery</name>
+    </author>
+    <author>
+      <name>Giovanni Parmigiani</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.27320v1</id>
+    <title>Retrospective Counterfactual Prediction by Conditioning on the Factual Outcome: A Cross-World Approach</title>
+    <updated>2026-03-28T15:56:45Z</updated>
+    <link href="https://arxiv.org/abs/2603.27320v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.27320v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Retrospective causal questions ask what would have happened to an observed individual had they received a different treatment. We study the problem of estimating $μ(x,y)=\mathbb{E}[Y(1)\mid X=x,Y(0)=y]$, the expected counterfactual outcome for an individual with covariates $x$ and observed outcome $y$, and constructing valid prediction intervals under the Neyman-Rubin superpopulation model. This quantity is generally not identified without additional assumptions. To link the observed and unobserved potential outcomes, we work with a cross-world correlation $ρ(x)=cor(Y(1),Y(0)\mid X=x)$; plausible bounds on $ρ(x)$ enable a principled approach to this otherwise unidentified problem. We introduce retrospective counterfactual estimators $\hatμ_ρ(x,y)$ and prediction intervals $C_ρ(x,y)$ that asymptotically satisfy $P[Y(1)\in C_ρ(x,y)\mid X=x, Y(0)=y]\ge1-α$ under standard causal assumptions. Many common baselines implicitly correspond to endpoint choices $ρ=0$ or $ρ=1$ (ignoring the factual outcome or treating the counterfactual as a shifted factual outcome). Interpolating between these cases through cross-world dependence yields substantial gains in both theory and practice.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-28T15:56:45Z</published>
+    <arxiv:primary_category term="stat.ME"/>
+    <author>
+      <name>Juraj Bodik</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.16343v1</id>
+    <title>Elder-Sim: A Psychometrically Validated Platform for Personality-Stable Elderly Digital Twins</title>
+    <updated>2026-03-16T07:39:35Z</updated>
+    <link href="https://arxiv.org/abs/2604.16343v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.16343v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Background: LLMs enable patient-facing conversational agents, creating a pathway toward digital twins that capture older adults' lived experiences and behavioral responses across time. A central barrier is personality drift -- inconsistent trait expression across repeated interactions -- which undermines reliability of generated trajectories and intervention-response simulation in geriatric care.
+  Objective: To develop ELDER-SIM, a multi-role elderly-care conversational platform for building personality-stable digital twin agents, and to propose a psychometric validation framework for quantifying personality consistency in LLM-based agents.
+  Methods: ELDER-SIM was implemented via n8n workflow orchestration with local LLM inference (Ollama/vLLM), integrating (1) Big Five (OCEAN) trait specifications, (2) a Cognitive Conceptualization Diagram (CCD) grounded in Beck's CBT framework, and (3) a MySQL-based long-term memory module. Ablation studies across four conditions -- Baseline, +Memory, +CCD, and +LoRA (fine-tuned on 19,717 instruction pairs from CHARLS) -- were evaluated via Cronbach's $α$, ICC, and role discrimination accuracy.
+  Results: Reliability was acceptable to excellent across conditions (Cronbach's $α$: 0.70--0.94; ICC: 0.85--0.96). Role discrimination improved from 83.3% (Baseline) to 88.9% (+Memory), 94.4% (+CCD), and 97.2% (+LoRA). CCD produced the largest consistency gain (mean $α$ 0.702$\to$0.892), while LoRA achieved the highest overall consistency ($α$ 0.940; ICC 0.958).
+  Conclusions: ELDER-SIM provides a psychometrically validated approach for constructing personality-consistent elderly digital twin agents. Structured cognitive modeling and domain adaptation reduce personality drift, supporting reliable longitudinal simulation for elderly mental health care and reproducible in silico evaluation before clinical deployment.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-16T07:39:35Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Jiaqing Wang</name>
+    </author>
+    <author>
+      <name>Zhongfang Yang</name>
+    </author>
+    <author>
+      <name>Xingyuan Zhu</name>
+    </author>
+    <author>
+      <name>Zong'an Huang</name>
+    </author>
+    <author>
+      <name>Hao Wang</name>
+    </author>
+    <author>
+      <name>Li Tian</name>
+    </author>
+    <author>
+      <name>Ying Cao</name>
+    </author>
+    <author>
+      <name>Xiaomin Qu</name>
+    </author>
+    <author>
+      <name>Xiang Qi</name>
+    </author>
+    <author>
+      <name>Bei Wu</name>
+    </author>
+    <author>
+      <name>Zheng Zhu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2602.16787v1</id>
+    <title>Better Think Thrice: Learning to Reason Causally with Double Counterfactual Consistency</title>
+    <updated>2026-02-18T19:00:07Z</updated>
+    <link href="https://arxiv.org/abs/2602.16787v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2602.16787v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Despite their strong performance on reasoning benchmarks, large language models (LLMs) have proven brittle when presented with counterfactual questions, suggesting weaknesses in their causal reasoning ability. While recent work has demonstrated that labeled counterfactual tasks can be useful benchmarks of LLMs' causal reasoning, producing such data at the scale required to cover the vast potential space of counterfactuals is limited. In this work, we introduce double counterfactual consistency (DCC), a lightweight inference-time method for measuring and guiding the ability of LLMs to reason causally. Without requiring labeled counterfactual data, DCC verifies a model's ability to execute two important elements of causal reasoning: causal intervention and counterfactual prediction. Using DCC, we evaluate the causal reasoning abilities of various leading LLMs across a range of reasoning tasks and interventions. Moreover, we demonstrate the effectiveness of DCC as a training-free test-time rejection sampling criterion and show that it can directly improve performance on reasoning tasks across multiple model families.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-02-18T19:00:07Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Victoria Lin</name>
+    </author>
+    <author>
+      <name>Xinnuo Xu</name>
+    </author>
+    <author>
+      <name>Rachel Lawrence</name>
+    </author>
+    <author>
+      <name>Risa Ueno</name>
+    </author>
+    <author>
+      <name>Amit Sharma</name>
+    </author>
+    <author>
+      <name>Javier Gonzalez</name>
+    </author>
+    <author>
+      <name>Niranjani Prasad</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2602.14871v1</id>
+    <title>interID -- An Ecosystem-agnostic Verifier-as-a-Service with OpenID Connect Bridge</title>
+    <updated>2026-02-16T16:02:51Z</updated>
+    <link href="https://arxiv.org/abs/2602.14871v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2602.14871v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Self-Sovereign Identity (SSI) enables user-controlled, cryptographically verifiable credentials. As EU regulations mandate EUDI Wallet acceptance by 2027, SSI adoption becomes a compliance necessity. However, each SSI Verifier exposes different APIs with distinct request parameters, response formats, and claim structures, requiring custom wrappers and dedicated infrastructure, contrasting with OpenID Connect (OIDC) where standardized protocols enable seamless integration.
+  interID is an ecosystem-agnostic platform unifying credential verification across Hyperledger Aries/Indy, EBSI, and EUDI ecosystems. We extend interID with an OIDC bridge providing Verifier-as-a-Service, enabling SSI verification through standard OIDC flows. Organizations receive ID Tokens with verified credential attributes without implementing Verifier-specific logic or deploying infrastructure. The multi-tenant architecture leverages Keycloak with strict tenant isolation. Key innovations include PKCE support, scope-to-proof-template mappings translating OIDC scopes into ecosystem-specific verification requests, and a security analysis identifying novel attack surfaces at the intersection of OIDC, SSI, and multi-tenant architectures, threats covered by neither RFC 6819 nor existing SSI analyses alone.
+  Our evaluation demonstrates security equivalence to production identity providers through threat modeling identifying 11 attack vectors, including seven beyond RFC 6819's scope. Integration analysis shows organizations can adopt SSI authentication with comparable effort to adding traditional federated providers. By combining familiar OIDC patterns with SaaS deployment, our work lowers integration and operational barriers, enabling regulatory compliance through configuration rather than custom development.</summary>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-02-16T16:02:51Z</published>
+    <arxiv:comment>submitted to ACM TOPS</arxiv:comment>
+    <arxiv:primary_category term="cs.CR"/>
+    <author>
+      <name>Hakan Yildiz</name>
+    </author>
+    <author>
+      <name>Axel Küpper</name>
+    </author>
+  </entry>
+</feed>

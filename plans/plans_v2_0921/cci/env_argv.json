@@ -1,0 +1,10 @@
+[
+  "python3",
+  "-u",
+  "@SNAPSHOT@/cci/env_check.py",
+  "--run-dir",
+  "@OUTPUT@",
+  "--assets",
+  "@ASSETS@",
+  "--skip-install"
+]

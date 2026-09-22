@@ -1,0 +1,80 @@
+{
+  "status": "PASS",
+  "entries": 13,
+  "checks": [
+    {
+      "plan_id": "expert0_a0.125",
+      "amplitude": 0.125,
+      "expert": 0,
+      "roundtrip_exact": true
+    },
+    {
+      "plan_id": "expert1_a0.125",
+      "amplitude": 0.125,
+      "expert": 1,
+      "roundtrip_exact": true
+    },
+    {
+      "plan_id": "expert2_a0.125",
+      "amplitude": 0.125,
+      "expert": 2,
+      "roundtrip_exact": true
+    },
+    {
+      "plan_id": "expert3_a0.125",
+      "amplitude": 0.125,
+      "expert": 3,
+      "roundtrip_exact": true
+    },
+    {
+      "plan_id": "expert0_a0.1875",
+      "amplitude": 0.1875,
+      "expert": 0,
+      "roundtrip_exact": true
+    },
+    {
+      "plan_id": "expert1_a0.1875",
+      "amplitude": 0.1875,
+      "expert": 1,
+      "roundtrip_exact": true
+    },
+    {
+      "plan_id": "expert2_a0.1875",
+      "amplitude": 0.1875,
+      "expert": 2,
+      "roundtrip_exact": true
+    },
+    {
+      "plan_id": "expert3_a0.1875",
+      "amplitude": 0.1875,
+      "expert": 3,
+      "roundtrip_exact": true
+    },
+    {
+      "plan_id": "expert0_a0.25",
+      "amplitude": 0.25,
+      "expert": 0,
+      "roundtrip_exact": true
+    },
+    {
+      "plan_id": "expert1_a0.25",
+      "amplitude": 0.25,
+      "expert": 1,
+      "roundtrip_exact": true
+    },
+    {
+      "plan_id": "expert2_a0.25",
+      "amplitude": 0.25,
+      "expert": 2,
+      "roundtrip_exact": true
+    },
+    {
+      "plan_id": "expert3_a0.25",
+      "amplitude": 0.25,
+      "expert": 3,
+      "roundtrip_exact": true
+    }
+  ],
+  "probe_setup_note": "Initial harness assumed a passed field; corrected after reading validate, whose contract raises on invalid entries and returns a summary.",
+  "scope": "CPU verification of proposed finite coefficients, plan round-trip and hold window only. No artifact binding, GPU execution, training quality or scientific admission is certified."
+}

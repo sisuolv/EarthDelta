@@ -1,0 +1,34 @@
+{
+  "repository": "sisuolv/EarthDelta",
+  "branch": "main",
+  "audited_commit": "4fe55a7af90ea92f62a3232a571af92bfbd6114d",
+  "audit_date_utc": "2026-09-21",
+  "audit_date_america_new_york": "2026-09-20",
+  "repo_mutated": false,
+  "repository_tests_run_in_this_review": false,
+  "gpu_experiments_run_in_this_review": false,
+  "reported_tests": {
+    "headline": 195,
+    "detailed_passed": 192,
+    "detailed_skipped": 3,
+    "verification": "README report; not independently rerun"
+  },
+  "reported_data": {
+    "year": 2020,
+    "shape": [
+      1464,
+      69,
+      128,
+      256
+    ],
+    "verification": "REMOTE_PRIVATE_ASSET_UNVERIFIED"
+  },
+  "checkpoint_bytes_and_sha": "UNVERIFIED",
+  "real_S0": "NOT_ESTABLISHED",
+  "weather_training_results": "UNVERIFIED",
+  "source_access": "GitHub connector read-only; targeted files and ranges, not exhaustive full-repository proof",
+  "user_original_files": [
+    "Pasted markdown(20260921-032819).md",
+    "Pasted markdown (2)(9).md"
+  ]
+}

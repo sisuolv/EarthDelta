@@ -1,0 +1,808 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/n9Ge8mx6iqom62hswPQnW4NpFkY</id>
+  <title>arXiv Query: search_query=(ti:LoRA OR ti:steering OR ti:intervention OR ti:merging) AND (abs:"predict" OR abs:"response" OR abs:"surrogate") AND submittedDate:"202601010000 TO 202609222359"&amp;id_list=&amp;start=0&amp;max_results=30</title>
+  <updated>2026-09-22T03:01:53Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=(ti:LoRA+OR+(ti:steering+OR+(ti:intervention+OR+ti:merging)))+AND+((abs:%22predict%22+OR+(abs:%22response%22+OR+abs:%22surrogate%22))+AND+submittedDate:%22202601010000+TO+202609222359%22)&amp;start=0&amp;max_results=30&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>30</opensearch:itemsPerPage>
+  <opensearch:totalResults>471</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2609.24979v1</id>
+    <title>LoRA-generating hypernetworks for efficient on-device LLM generative personalization</title>
+    <updated>2026-09-21T17:55:48Z</updated>
+    <link href="https://arxiv.org/abs/2609.24979v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.24979v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>On-device large language models (`LLMs'), e.g. running on mobile phones, are ripe for improvement via personalization. The limited compute resources of mobile devices impose limits on model scale and thus model quality, making any realizable quality gains highly impactful. At the same time, their personal nature (i.e., the close coupling to a particular user) means that a given on-device LLM tends to be used in similar, predictable patterns over the course of time. This paper presents a novel method for personalizing on-device LLMs. It trains a hypernetwork to map a user's context tokens to a low-rank adaptation (`LoRA') well-suited to that user. Once the trained common artifacts are deployed to users' devices, each user uses the hypernetwork to synthesize (entirely on device) a personalized LoRA. This approach blends the benefits while avoiding the drawbacks of two existing approaches to LLM customization: in-context learning (`ICL') and parameter-efficient fine-tuning (`PEFT'). Like ICL (and unlike PEFT), the on-device phase of our approach is computationally feasible, requiring only forward passes through neural networks. Like PEFT (and unlike ICL), our approach modifies the `target' base LLM via weights (the LoRA), avoiding negative consequences (e.g. increased latency) associated with extending the input sequence. Our approach is particularly well-suited to the mobile device regime. Apart from the on-device compute and latency benefits mentioned, it also requires minimal additional storage, as internally its architecture partly leverages the same LLM weights as belong to the target LLM to be personalized. We demonstrate the benefits of LoRA-generating hypernetworks on several representative personalization datasets, comparing against baselines like ICL and PEFT. Of note, our personalization experiments focus on more challenging and less studied long-form text generation tasks.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-21T17:55:48Z</published>
+    <arxiv:comment>19 pages, 4 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Sean Augenstein</name>
+    </author>
+    <author>
+      <name>Li Ding</name>
+    </author>
+    <author>
+      <name>Jihwan Lee</name>
+    </author>
+    <author>
+      <name>Keith Rush</name>
+    </author>
+    <author>
+      <name>Andrey Zhmoginov</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.24576v1</id>
+    <title>What do VLM-Based Vision-Language Navigation Models Rely on: Interpreting and Steering Policy Behavior</title>
+    <updated>2026-09-21T13:42:48Z</updated>
+    <link href="https://arxiv.org/abs/2609.24576v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.24576v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Modern Vision-Language Navigation (VLN) models rely mostly on pre-trained large Vision-Language Models (VLMs) to predict navigation actions. While this fusion of language instructions and visual observations allows multimodal reasoning, it obscures how information is routed across modalities or what mechanisms drive navigation decisions. Thus, it remains unclear whether VLN models ground their predictions in relevant semantic cues or can track task progress. In this work, we study the interpretability and steerability of VLN models. We use intervention-based metrics that measure how visual observations, instructions, and visual memory causally influence navigation decisions. Our results show that these navigation policies are sensitive to all input modalities and do not depend on a single one. We further show that these agents encode navigation progress and retain semantic structure from their VLM backbones, enabling concept-level steering through internal activations. Finally, we extract activation vectors for abstract behaviors to transfer them zero-shot to out-of-distribution real-world scenarios, improving performance without additional fine-tuning.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-21T13:42:48Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Débora Oliveira Makowski</name>
+    </author>
+    <author>
+      <name>Samiran Gode</name>
+    </author>
+    <author>
+      <name>Abhijeet Nayak</name>
+    </author>
+    <author>
+      <name>Marco Hutter</name>
+    </author>
+    <author>
+      <name>Cordelia Schmid</name>
+    </author>
+    <author>
+      <name>Lukas Rosenberger Schmid</name>
+    </author>
+    <author>
+      <name>Wolfram Burgard</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.24198v1</id>
+    <title>SKstars at SHROOM: Visions Agreement-Guided Ensembling of Zero-Shot and LoRA-Adapted Vision--Language Models</title>
+    <updated>2026-09-21T07:13:24Z</updated>
+    <link href="https://arxiv.org/abs/2609.24198v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.24198v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper describes the SKstars submission to SHROOM-Visions 2026, a shared task on fine-grained hallucination detection in large vision-language model outputs. The task requires systems to identify hallucinated character spans, assign hallucination categories, and provide confidence estimates for their predictions. Our approach combines zero-shot predictions from Qwen2.5-VL-72B-Instruct with those of a LoRA-adapted Qwen2.5-VL-7B-Instruct model. The outputs of the two models are integrated through a lightweight ensemble procedure, followed by span refinement and confidence adjustment. We evaluate the main system components on a small internal development subset and report the performance of the submitted system on the official English test set. SKstars achieved a Cor+Lbl score of 0.2902, ranking 15th among 29 teams, and obtained Cor and IoU scores of 0.3642 and 0.3151, respectively, ranking 18th on both metrics. The results show that combining a large zero-shot model with a smaller adapted model provides a practical framework for multilingual and fine-grained hallucination localization, while also highlighting the difficulty of transferring development-set improvements to hidden test data. Code and predictions: https://github.com/aliathar1401/SK-Stars-shroom-visions-2026</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-21T07:13:24Z</published>
+    <arxiv:comment>This paper has been accepted at the SHROOM-Visions 2026 Shared Task, co-located with EMNLP2026</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <arxiv:journal_ref>EMNLP2026 (Conference)</arxiv:journal_ref>
+    <author>
+      <name>Ali Athar</name>
+    </author>
+    <author>
+      <name>Imran Ahsan</name>
+    </author>
+    <author>
+      <name>Joon-Yong Jung</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.23897v1</id>
+    <title>Proxy-Adjusted Causal Discovery from Targeted Interventions</title>
+    <updated>2026-09-20T22:05:54Z</updated>
+    <link href="https://arxiv.org/abs/2609.23897v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.23897v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Randomized perturbations can reveal downstream responses without identifying which causal relationships are direct. Conditioning on intermediate responses may induce associations through unmeasured common causes, even when the source is randomized. We introduce Proxy-Adjusted Balanced Masking (PABM), a nonparametric framework for recovering directed acyclic graphs from targeted interventions, response data, and recorded proxies. PABM uses valid target-specific interventions to identify candidate ancestors. It then compares conditional target distributions with and without a candidate response and, when supported by the design, its intervention variable, adjusting for other ancestors and proxies. Each comparison uses matched observations, adjustment variables, and fitting procedures. Identification requires every included nonparent comparison to have zero conditional gain and each parent to have positive gain in at least one comparison. We establish population identification, finite-sample recovery conditions that accommodate incomplete adjustment and estimation error, and familywise error control under valid held-out p-values. Continuous-response simulations show favorable graph recovery relative to specified comparator pipelines; K562-calibrated count simulations reveal a selection--ranking tradeoff. Proxy ablations assess sensitivity to recorded information. An analysis of K562 Perturb-seq data illustrates descriptive candidate-network construction; proxy adequacy for unmeasured biological variation remains unresolved.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-20T22:05:54Z</published>
+    <arxiv:primary_category term="stat.ME"/>
+    <author>
+      <name>Li Chen</name>
+    </author>
+    <author>
+      <name>Wei Pan</name>
+    </author>
+    <author>
+      <name>Xiaotong Shen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.23594v1</id>
+    <title>Bilinear Optimization Divergence: Diagnosing Factor-Constrained LoRA Continual Learning</title>
+    <updated>2026-09-20T12:26:14Z</updated>
+    <link href="https://arxiv.org/abs/2609.23594v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.23594v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Orthogonality in a LoRA factor does not by itself specify what the composed update protects: the answer depends on the task-start state, the parameterization, and the realized optimizer displacement. We formalize this question through Bilinear Optimization Divergence (BOD), an anchor-relative diagnostic of effective-update response on selected historical features. The finite-step analysis distinguishes two cases. In a shared adapter, protecting the routing displacement leaves a learned-anchor residual through the changing companion factor. In a fresh zero-output block, a feasible routing state can protect the composed update while both current factors remain trainable. These conditions yield Semi-Frozen Orthogonal Routing (SFOR) for shared adapters and current-block hard protection for cumulative O-LoRA; Weight Residual Projection (WRP) enforces the required displacement after the optimizer step. Controlled two-task traces verify the predicted residual paths, reducing normalized historical response from 19.12% to 0.005% in the shared family and from 7.72% to 0.002% in the cumulative family. Four-task experiments on Qwen3-8B characterize the resulting trade-offs: SFOR improves backward transfer (BWT) from -2.47 to -0.86 with nearly unchanged average accuracy (AA), while O-LoRA hard protection improves three-order mean AA from 80.27% to 81.30% and forgetting measure (FM) from 2.20 to 0.43. Component controls also show that stricter feasibility need not improve final task performance. Together, the analysis and evidence provide an architecture-conditioned account of which constraint to enforce, how to enforce it, and how to interpret its empirical value.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-20T12:26:14Z</published>
+    <arxiv:comment>22 pages, 3 figures. Code is available at [https://github.com/legend91019/My_first](https://github.com/legend91019/My_first)</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>YongShun Wang</name>
+    </author>
+    <author>
+      <name>JianLin Su</name>
+    </author>
+    <author>
+      <name>Yong Ma</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.23271v1</id>
+    <title>Steering Through Contact: A Finite-Support Motion Model for Single-Track Center-Articulated Robots</title>
+    <updated>2026-09-20T01:04:45Z</updated>
+    <link href="https://arxiv.org/abs/2609.23271v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.23271v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Trajectory planning and control in field robotics rely on predicting how propulsion and steering affect vehicle motion when contact points undergo slip. For articulated vehicles, the point-contact kinematic model (PCK) accounts for the linkage geometry but neglects the rotational resistance distributed along the contacts. We propose a finite-support quadratic model (FSQ) for single-track, center-articulated vehicles that incorporates this resistance through a quasi-static balance of lateral slip. Our approach generalizes the standard PCK formulation by relaxing the contact-point assumption. An exact reduction of the quadratic slip cost to contact moments gives a compact closed-form solution for real-time prediction of lateral velocity and yaw rate. We evaluate the proposed method in real-world experiments across asphalt, grass, ice, and mixed routes, using more than 7 km of data. For five-second predictions, FSQ reduces the weighted median translation and yaw errors by 53.5% and 68.9%, respectively, relative to PCK.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-20T01:04:45Z</published>
+    <arxiv:comment>8 pages, 7 figures, 1 table</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Mohamed Dhia Ounally</name>
+    </author>
+    <author>
+      <name>Nicolas Samson</name>
+    </author>
+    <author>
+      <name>Mathis Turgeon-Roy</name>
+    </author>
+    <author>
+      <name>Veronica Vannini</name>
+    </author>
+    <author>
+      <name>Johann Laconte</name>
+    </author>
+    <author>
+      <name>François Pomerleau</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.23065v1</id>
+    <title>From Concept Alignment to Causal Grounding: An Intervention Test of Chain-of-Thought Faithfulness</title>
+    <updated>2026-09-19T14:55:47Z</updated>
+    <link href="https://arxiv.org/abs/2609.23065v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.23065v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Chain-of-thought (CoT) can sound plausible yet be unfaithful to the model's underlying reasoning. Most prior work probes CoT faithfulness through input--output behavior or input attributions, leaving internal computation largely underexplored. We instead cast faithfulness as internal concept grounding: Does a large language model's (LLM) CoT reasoning engage the same internal concepts that support the LLM's direct prediction, and do the shared concepts causally drive its answer? Encoding a prediction pass and a CoT pass with a single shared sparse autoencoder (SAE), a reliable approximator of the latent concepts LLMs use, makes their internal concepts directly comparable. We introduce three correlational metrics of concept-level alignment and a causal metric, $Δp$, which ablates the shared concepts and measures the drop in answer probability. Across five LLMs and four datasets, concept alignment is generally high, as indicated by the correlational metrics; yet these only identify which concepts are shared, not how much they causally contribute. $Δp$ fills this gap: causal faithfulness varies substantially with model depth, peaking at mid-to-late layers rather than the final ones, and model scale reshapes the layer-wise profile. Moreover, causally important shared concepts are not always verbalized in the CoT. These dissociations suggest that faithfulness cannot be reliably assessed from surface-level or representational correspondence alone; assessing it requires causal tests of whether the internal concepts underlying a CoT actually drive the model's prediction.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-19T14:55:47Z</published>
+    <arxiv:comment>In submission</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Qianli Wang</name>
+    </author>
+    <author>
+      <name>Yilong Wang</name>
+    </author>
+    <author>
+      <name>Dennis Wei</name>
+    </author>
+    <author>
+      <name>Jingyi Sun</name>
+    </author>
+    <author>
+      <name>Simon Ostermann</name>
+    </author>
+    <author>
+      <name>Pepa Atanasova</name>
+    </author>
+    <author>
+      <name>Nils Feldhus</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.22816v1</id>
+    <title>FIRM-WM: State-factorized factual-interventional recurrent modeling for reward-free visual planning</title>
+    <updated>2026-09-19T06:32:56Z</updated>
+    <link href="https://arxiv.org/abs/2609.22816v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.22816v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Reward-free latent world models can learn from offline videos and solve new image--goal tasks by optimizing actions through predicted latent futures. This setting places two demands on the planning state: its coordinates must be comparable with a goal image. Moreover, its dynamics must retain velocity, motion trend, contact, and other history--dependent information beyond those goal coordinates. Offline training creates a second mismatch: each recorded trajectory reveals one factual future, whereas a sampling--based planner compares many actions that were not taken from the same state. We introduce FIRM-WM (Factual--Interventional Recurrent World Model), a compact pixel world model designed around these two gaps. Its recurrent state separates a typed, goal--comparable configuration from a 128-dimensional dynamic fiber used for prediction but excluded from the terminal goal cost. Broad factual trajectories provide state coverage, while common--reset intervention branches provide observed outcomes for alternative action sequences. Before executing each branch, we reset the environment and restore the same recorded values exposed by the environment's state--setting interface. Under matched CEM planning and three independent full-pipeline seeds, FIRM-WM reaches 99.0$\pm$1.0% on TwoRoom, 92.7$\pm$2.1% on Reacher, and 88.0$\pm$3.0% on OGBench-Cube, compared with 89.0%, 88.0%, and 70.0% for LeWM. The deployed model uses 2.98--3.42M parameters and records 2.13--11.60$\times$ lower planning time on these tasks.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-19T06:32:56Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Yilun Wu</name>
+    </author>
+    <author>
+      <name>Yunjian Zhang</name>
+    </author>
+    <author>
+      <name>Aobo Li</name>
+    </author>
+    <author>
+      <name>Mujiangshan Wang</name>
+    </author>
+    <author>
+      <name>Haitao Wu</name>
+    </author>
+    <author>
+      <name>Aqiang Zhang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.22782v1</id>
+    <title>Look Before You Steer: Geometry Predicts SAE Feature Steerability</title>
+    <updated>2026-09-19T05:29:00Z</updated>
+    <link href="https://arxiv.org/abs/2609.22782v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.22782v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Steering with SAE features requires per-feature coefficient tuning, which currently demands intervention sweeps. We ask whether properties of the SAE itself, computable before any forward pass, predict which features will be cheap or expensive to steer. We show that variation in SAE feature steerability is partially predicted by decoder-space geometry: neighbor density and maximum cosine similarity to nearby decoder directions, both computable from the SAE weight matrix before any intervention, rank features by how much steering they require for a fixed behavioral effect ($ρ$ up to $-0.546$, $p &lt; 10^{-6}$, AUROC 0.610-0.822 across conditions; the signal is rank-based, consistent with grid discreteness). This geometry-steerability relationship replicates across two Gemma-2 model scales (2B and 9B), two SAE widths (16K and 65K), and is detectable cross-architecturally on Llama-3.1-8B-Instruct ($ρ= -0.266$, $n = 300$). On Qwen3-8B with BatchTopK SAEs, geometry predicts whether a feature is steerable at all but not the continuous ordering among responsive features, revealing a boundary condition tied to SAE training regime. The signal weakens at deep proportional layer depth in both models, where the cost of steering exceeds our intervention budget, a consistent depth boundary. These results provide preliminary evidence that pre-steering geometry can partially inform coefficient selection, offering a path toward screening features for controllability before deployment.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-19T05:29:00Z</published>
+    <arxiv:comment>12 pages, 3 figures, 5 tables. Accepted at the Mechanistic Interpretability Workshop at ICML 2026 and AIW 2026 at COLM</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Muhammad Khan</name>
+    </author>
+    <author>
+      <name>Shlok Channawar</name>
+    </author>
+    <author>
+      <name>Akshaj Gurugubelli</name>
+    </author>
+    <author>
+      <name>Girish Gupta</name>
+    </author>
+    <author>
+      <name>Aditya Shah</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.21906v1</id>
+    <title>Intervention Granularity Matters: Coherent Treatment Bundles in Counterfactual Simulation with Clinical World Models</title>
+    <updated>2026-09-18T15:33:04Z</updated>
+    <link href="https://arxiv.org/abs/2609.21906v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.21906v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Counterfactual simulation with a clinical world model means fixing a patient's history, changing the treatment, and reading off the predicted response. Doing so requires deciding what counts as one intervention. In clinical settings, interventions are documented as bundles: a co-occurrence audit of 945,707 patient-hours from MIMIC-IV shows groups of components, such as every parameter of a dialysis circuit, that never appear apart, so an edit that changes one component on its own describes an hour that never occurs in the data. We hypothesize that the granularity at which an intervention is edited changes how a world model responds, and test this with Clin-JEPA, a latent world model of patient trajectories conditioned on hourly treatment text. At 1,019 documented onsets of invasive ventilation, we keep the patient's history and other treatments fixed and compare editing one ventilator setting with editing the complete configuration recorded for a real patient with the most similar recent trajectory. The complete bundle moves the predicted next state further than any single setting, consistently across all five settings, and the difference remains after accounting for how much each edit changes the model's input. Intervention granularity therefore materially affects the response of a clinical world model: single-component edits may understate treatment sensitivity, and bundle-aware editing may offer a better-supported basis for counterfactual treatment simulation.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-18T15:33:04Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Fangzhou Wang</name>
+    </author>
+    <author>
+      <name>Yixuan Yang</name>
+    </author>
+    <author>
+      <name>Camilla Balzarotti</name>
+    </author>
+    <author>
+      <name>Rishikesan Kamaleswaran</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.21787v1</id>
+    <title>Compact but Moving: Intervention-Relevant Geometry in Recurrent World Models</title>
+    <updated>2026-09-18T14:03:05Z</updated>
+    <link href="https://arxiv.org/abs/2609.21787v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.21787v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Learned world models may have compact interventions even when their recurrent state is high-dimensional, but it is unclear what happens to such a correction after it enters the model. We study this question in a controlled recurrent world model where prior work identified a checkpoint-specific rank-4 interface for one-shot counterfactual velocity interventions. The correction rapidly leaves this fixed entry subspace during autonomous rollout. Nevertheless, a low-rank image obtained by transporting the entry directions through the factual recurrent Jacobian chain continues to capture most of the nonlinear correction. Restarts using the tangent-predicted correction preserve substantial counterfactual future function. This transport/function pattern recurs across independently trained structured-GRU models and a parameter-matched LSTM initialized with a privileged compact correction. We further characterize a finite-horizon future-response operator over the full recurrent carrier. Patching shifts its leading future-sensitive directions toward the matched native-counterfactual organization, and the local operator accurately ranks finite perturbation effects over the registered direction panels at the patched and native-counterfactual basepoints. A separate full-amplitude assay finds substantial factual-endpoint tangent residuals and supports response reconfiguration in two of three checkpoints. Together, these results show that compact intervention structure can persist as a moving, state-dependent local geometry embedded in high-dimensional recurrent dynamics, without implying a fixed or dynamically closed low-dimensional state.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-18T14:03:05Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Yuming Chen</name>
+    </author>
+    <author>
+      <name>Yang Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.21239v1</id>
+    <title>Self-Care and Mental Health: Mapping Over A Decade of HCI Interventions</title>
+    <updated>2026-09-18T02:32:48Z</updated>
+    <link href="https://arxiv.org/abs/2609.21239v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.21239v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Technology increasingly supports self-care for understanding and improving one's own mental health. HCI is at the center of the turn towards self-care technology, yet we lack an account of who these interventions serve, what practices they support, how technology mediates those practices, and assumptions underlying design for self-care. In order to characterize the current landscape and inform future research, we analyzed 91 SIGCHI papers that contribute HCI interventions for mental health self-care from the ACM Digital Library from 2015 through June 2026. Then, we conducted an interpretive synthesis to surface six orientations of self-care, which describe how HCI self-care interventions constitute care through shared assumptions regarding self, care, and technology. Overall, our work provides an interconnected vocabulary for positioning HCI mental health self-care, highlights changing responsibilities of care towards users, and discusses implications for providing a more situated account of HCI self-care technology in addressing the 'general' user.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-18T02:32:48Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Anna Fang</name>
+    </author>
+    <author>
+      <name>Tony Wang</name>
+    </author>
+    <author>
+      <name>Jenny Fu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.20722v1</id>
+    <title>Deep Noir: Autonomous Steering Discovery via Architectural Chronometry in Transformer Models</title>
+    <updated>2026-09-17T17:16:31Z</updated>
+    <link href="https://arxiv.org/abs/2609.20722v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.20722v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Activation steering modifies LLM behavior at inference time, but identifying where and how strongly to steer remains manual. We introduce Deep Noir, a framework that uses Logit Lens convergence and causal head-level attribution to autonomously discover optimal steering parameters. Across three scales (1B x 3, 2-3B x 2, and 7-9B x 4), our engine achieves 16.7 percentage-point improvement on spam at 1B (standard deviation 4.7; 39 runs), with gains increasing to 21 to 42 percentage points at 7-9B across four architectures. On SST-2 sentiment, it achieves a 13.1 percentage-point improvement with zero code changes. Mechanistic grounding enables automated discovery of intervention points that generalize across tasks and architectures. On sentiment, RepE without head masking fails to improve over baseline, while Deep Noir improves all models (p less than 0.01). We further show that steering creates a predictable prompt-injection attack surface whose vulnerability increases monotonically with steering magnitude. This finding is relevant to agent systems deploying steered classifiers.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-17T17:16:31Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Frank E. Bobe</name>
+    </author>
+    <author>
+      <name>Gregory D. Vetaw</name>
+    </author>
+    <author>
+      <name>Darshan W. Bryner</name>
+    </author>
+    <author>
+      <name>Matthew G. Cook</name>
+    </author>
+    <author>
+      <name>Jose L. Salas-Vernis</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.20565v1</id>
+    <title>Steering the Compass: Aligning Dynamic Psychological Counseling Conversations with Cognitive Behavioral Therapy Strategies</title>
+    <updated>2026-09-17T15:28:37Z</updated>
+    <link href="https://arxiv.org/abs/2609.20565v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.20565v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent advancements in large language models have revolutionized the field of psychological counseling, especially in the context of Cognitive Behavioral Therapy (CBT). While the success of CBT relies heavily on dynamic decision-making informed by the client's real-time mental state, this aspect has often been overlooked in current research, limiting both flexibility and therapeutic outcomes. In this paper, we introduce StratCBT, a dataset specifically designed for psychological counseling conversations with CBT Strategies, consisting of 9,688 sessions and around 256K utterances, with each counselor's response aligned with one of eight distinct strategies. The creation of StratCBT involves modeling clients based on their negative thoughts and generating high-quality counseling conversations through self-chat, incorporating realistic sessions as guidance, thereby significantly surpassing existing datasets in both general counseling and CBT-specific skills. We conduct extensive experiments to demonstrate the effectiveness of strategy-aligned generation and evaluate its efficacy in delivering professional and effective counseling with LLM-simulated clients to reflect real-world scenarios. The dataset can be obtained from https://github.com/zimuwangnlp/StratCBT.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-17T15:28:37Z</published>
+    <arxiv:comment>Accepted at EMNLP 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Zimu Wang</name>
+    </author>
+    <author>
+      <name>Yiwen Jiang</name>
+    </author>
+    <author>
+      <name>Xiangyu Zhao</name>
+    </author>
+    <author>
+      <name>Yaling Shen</name>
+    </author>
+    <author>
+      <name>Jiahe Liu</name>
+    </author>
+    <author>
+      <name>Stephanie Fong</name>
+    </author>
+    <author>
+      <name>Maxmartwell H Cheng</name>
+    </author>
+    <author>
+      <name>Guilherme C Oliveira</name>
+    </author>
+    <author>
+      <name>Anh Nguyen</name>
+    </author>
+    <author>
+      <name>Robert Desimone</name>
+    </author>
+    <author>
+      <name>Barnaby Nelson</name>
+    </author>
+    <author>
+      <name>Dominic Dwyer</name>
+    </author>
+    <author>
+      <name>Zongyuan Ge</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.20902v1</id>
+    <title>Generative Artificial Intelligence Chatbots for Motivational Interviewing: A Scoping Review From System Design to Intervention Outcomes</title>
+    <updated>2026-09-17T13:43:09Z</updated>
+    <link href="https://arxiv.org/abs/2609.20902v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.20902v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Motivational interviewing (MI) is a collaborative approach to elicit autonomous motivation for health behavior change. Generative AI (GenAI) offers new ways to deliver MI via conversational systems, but evidence on their design, assessment, and translation into interventions remains fragmented. This scoping review characterized evidence on GenAI-MI chatbots across system design, safety, MI quality, user perceptions, and intervention outcomes. We conducted a PRISMA-ScR scoping review. Nine datasets were searched for studies published or publicly available from January 1, 2015 to June 2, 2026 that used GenAI to generate MI chatbot responses or counselor utterances. Data were extracted using a predefined framework and synthesized descriptively. Forty-seven reports (48 studies) were included. Twenty (41.7%) focused on system design without direct participant use; 28 (58.3%) involved direct interaction. Most systems were text based and disembodied; 23 (47.9%) incorporated dynamic adaptation. Safety measures were unevenly reported. Among studies with direct use, 21/28 (75.0%) reported informed consent or user education. Thirty (62.5%) assessed MI quality, generally suggesting MI-consistent interactions. User perceptions were favorable, especially empathy, usability, helpfulness, and intention to use, though measures were heterogeneous. Eighteen (37.5%) reported intervention outcomes, mostly after a single session. Positive findings were more consistent for short-term motivation than sustained behavioral or functional change. GenAI-MI chatbots can deliver MI-consistent interactions perceived favorably, but evidence for sustained behavioral or functional change is limited. Future research should strengthen runtime safety monitoring, standardize MI quality assessment, and use longer-term comparative designs with behavioral and functional outcomes.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-17T13:43:09Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Runze Hu</name>
+    </author>
+    <author>
+      <name>Jingqi Kong</name>
+    </author>
+    <author>
+      <name>Yang Yang</name>
+    </author>
+    <author>
+      <name>Yihang Yang</name>
+    </author>
+    <author>
+      <name>Jingyao Liu</name>
+    </author>
+    <author>
+      <name>Haizhou Tang</name>
+    </author>
+    <author>
+      <name>Shanghang Zhang</name>
+    </author>
+    <author>
+      <name>Zheng Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.20051v1</id>
+    <title>DART: Distillation-Aware Reparameterization for Training-Free LoRA Reuse in Few-Step Video Diffusion Models</title>
+    <updated>2026-09-17T10:58:04Z</updated>
+    <link href="https://arxiv.org/abs/2609.20051v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.20051v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Step distillation reduces the cost of video generation, but reusing a LoRA trained for a longer trajectory can alter its functional effect or degrade target quality. Static parameter compatibility offers one perspective on this problem; our observations show that similar measured geometry can coexist with different adapter behavior under a shortened denoising schedule. We propose DART, a training-free method that combines low-rank coordinate transport with target-schedule response calibration using forward evaluations and no source training videos. On a four-step Wan2.2 target, DART-F improves the joint quality score from 0.9029 to 0.9227 and changes macro functional retention from -0.4644 to +0.1349. Component analysis shows that calibration accounts for most of the quality improvement, while coordinate transport provides complementary gains when combined with calibration. Adapter-level results reveal positive functional effects for some adapters and strong attenuation with reduced negative functional effects for others. Evaluations on two additional targets show the same aggregate trend. These results motivate evaluating distilled-model LoRA reuse jointly through functional preservation and negative-transfer avoidance, without assuming recovery for every adapter.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-17T10:58:04Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Shihong Li</name>
+    </author>
+    <author>
+      <name>Juntao Xu</name>
+    </author>
+    <author>
+      <name> JinCao</name>
+    </author>
+    <author>
+      <name>Maowen Tang</name>
+    </author>
+    <author>
+      <name>Jun Huang</name>
+    </author>
+    <author>
+      <name>Jintao Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.19820v1</id>
+    <title>Steering Equilibrium Selection in Regularized Self-Play via the Reference Policy</title>
+    <updated>2026-09-17T07:30:23Z</updated>
+    <link href="https://arxiv.org/abs/2609.19820v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.19820v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Regularized self-play -- the family behind DeepNash's Stratego play -- drives a two-player zero-sum policy to a Nash equilibrium by best-responding to a slowly moving, entropy-regularized reference policy $ρ$. When the game has a polytope of value-equivalent equilibria, the regularizer silently breaks the tie: with a uniform reference it selects the maximum-entropy member, the I-projection of $ρ$ onto the Nash set. Can the reference be used to choose the equilibrium on purpose? On five exactly solvable games plus a 2-D polytope, with exact best responses and equivalence tests over independent seeds, anchoring the reference at a target member and refining steers self-play to that member with mean coordinate error 0.007 at median exploitability $5\times10^{-5}$, TOST-equivalent to the request within $\pm0.05$; the anchoring persists through refinement and follows the reference, not the initialization. Selection follows the reach-weighted I-projection (slope 0.969 [0.950, 0.987]). We report with equal emphasis where the story breaks: fixed off-manifold references cost 0.08-0.25 exploitability; stiff or flat families require a smaller mirror step, set by a pre-registered rule; boundary targets undershoot; curvature predicts where boundary saturation bites (rank correlation 0.90, p=0.037) while interior precision is curvature-independent. Table and MLP steering maps are equivalent within $\pm0.03$ at every target (30 seeds); matched control arms show attention's robust signature is excess seed variance, any systematic shift bounded at 0.018 and not significant. Against a best response the selection-robustness trade-off is degenerate: steering matters only against fixed, non-equilibrium opponents. The recipe -- anchor the reference at the desired member and refine -- reinterprets the KL anchor of RLHF-style RL as a selection knob, not only a stability leash.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.GT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-17T07:30:23Z</published>
+    <arxiv:comment>17 pages, 8 figures, 4 tables. Companion to arXiv:2606.28308 and arXiv:2607.17543. Fully reproducible: a single self-contained notebook regenerates every number, table, and figure</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Luis Leal</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.19509v1</id>
+    <title>The extreme Disturbed Galaxy Cluster Sample (eDGeS): Spectroscopy and Dynamical Analysis of the eROSITA-Selected Merging Galaxy Cluster Candidate 1eRASS J025859.4-193727</title>
+    <updated>2026-09-16T23:50:08Z</updated>
+    <link href="https://arxiv.org/abs/2609.19509v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.19509v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Addressing open questions such as the effect of galaxy cluster mergers on the evolution of galaxies and the self-interaction cross-section of dark matter requires the construction of a large, diverse sample of disturbed galaxy clusters. One contribution to such a sample is the extreme Disturbed Galaxy Cluster Sample (eDGeS), an ongoing spectroscopic study of massive disturbed and merging galaxy clusters selected from complementary surveys. Here, we present our first results from the eROSITA-selected subsample (eDGeS-eROSITA): a dynamical state analysis for the merging cluster candidate 1eRASS J025859.4-193727. We present the first spectroscopic redshift measurements for 76 galaxies in the direction of the cluster, confirming 51 as cluster members. The cluster displays a line-of-sight velocity dispersion of $σ_{\rm{cl}}=808^{+59}_{-66}~\rm{km~s^{-1}}$ and a dynamical mass of $M_{200}=4.47^{+0.94}_{-0.93} \times 10^{14}~M_{\rm{Sun}}$. While the cluster shows no evidence for substructure along the line of sight, the projected distribution of member galaxies reveals three subclusters, only one of which appears associated with the cluster's X-ray contours. Phase-space analysis reveals a large fraction of recently infallen member galaxies. Together, this evidence suggests a cluster merger along the plane of the sky. Assuming that the two most massive subclusters are on outgoing (incoming) trajectories after their first pericentric passage, a two-body Monte Carlo model predicts that the two subclusters collided $0.50^{+0.20}_{-0.22}~\rm{Gyr}$ ($1.24^{+0.96}_{-0.38}~\rm{Gyr}$) ago.</summary>
+    <category term="astro-ph.GA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="astro-ph.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-16T23:50:08Z</published>
+    <arxiv:comment>19 pages, 6 figures, 6 tables. Submitted to ApJ</arxiv:comment>
+    <arxiv:primary_category term="astro-ph.GA"/>
+    <author>
+      <name>Anish S. Aradhey</name>
+    </author>
+    <author>
+      <name>Eleazar R. Carrasco</name>
+    </author>
+    <author>
+      <name>Alfredo Zenteno</name>
+    </author>
+    <author>
+      <name>Rogério Monteiro-Oliveira</name>
+    </author>
+    <author>
+      <name>Facundo A. Gómez</name>
+    </author>
+    <author>
+      <name>Konstantina Boutsia</name>
+    </author>
+    <author>
+      <name>Esra Bulbul</name>
+    </author>
+    <author>
+      <name>Guillermo Damke</name>
+    </author>
+    <author>
+      <name>Amelia Ramirez</name>
+    </author>
+    <author>
+      <name>Hector Cuevas</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.17058v1</id>
+    <title>Distributionally Robust Linearly Constrained Minimum Variance Beamforming Under Steering-Vector Mismatch</title>
+    <updated>2026-09-15T12:06:40Z</updated>
+    <link href="https://arxiv.org/abs/2609.17058v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.17058v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Linearly constrained minimum variance (LCMV) beamforming is a fundamental technique for controlling the array response toward multiple desired signals while suppressing interference and noise. In practical systems, however, the steering vectors involved in the response constraints are often affected by direction-of-arrival errors, calibration imperfections, and other array uncertainties. Such mismatches may cause constraint violations and substantial performance degradation. This paper investigates multi-signal LCMV beamforming under steering-vector mismatch and develops probabilistic constraints to guarantee a prescribed reliability level for each desired signal. Several uncertainty-information settings are considered. When the exact mismatch distribution is known and belongs to the class of complex elliptically symmetric distributions (CES), a distribution-informed convex safe reformulation is derived using exact CES quantiles. When the mismatch distribution is unknown, and only partial statistical information or empirical data is available, robust probabilistic reformulations are developed under moment-based ambiguity, support-based uncertainty, and Wasserstein data-driven ambiguity, and the resulting deterministic formulations can be expressed as convex second-order cone programs. Numerical experiments show that the proposed designs improve out-of-sample reliability and reduce beam-gain sensitivity to steering-vector mismatch, while maintaining competitive output signal-to-interference-plus-noise (SINR) ratio and robust beampatterns.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-15T12:06:40Z</published>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Raneem Madani</name>
+      <arxiv:affiliation>L2S</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Abdel Lisser</name>
+      <arxiv:affiliation>L2S</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Zeno Toffano</name>
+      <arxiv:affiliation>L2S</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.16245v1</id>
+    <title>Metacognitive Steering: Learning the Structure of Scientific Judgment</title>
+    <updated>2026-09-14T19:10:03Z</updated>
+    <link href="https://arxiv.org/abs/2609.16245v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.16245v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Long-horizon scientific discovery requires agents to alternate between exploration, disciplined execution, and critical reassessment as evidence changes. Current language models are trained primarily on the products of science and optimized using outcome-level signals, providing limited supervision for these process-level shifts in scientific judgment. We investigate whether such judgment can be recovered from scientist interaction traces and used to control the internal computation of a frozen frontier model. Using contrastive interventions collected during real scientific research, we identify a coordinated, low-dimensional control structure within Kimi 2.6, a trillion-parameter mixture-of-experts model. Residual analysis, attention-weight subspace alignment, and cross-layer singular value decomposition converge on a mid-depth control surface spanning key layers. We introduce Metacognitive Steering, an inference-time controller that reads the model's cognitive regime and dynamically composes layer-specific interventions for exploration, procedural convergence, or critical reassessment without modifying model parameters. Behavioral analyses show that this control produces more sustained exploration, explicit pruning, and evidence-responsive synthesis. We operationalize the method in Columbus-1, an autonomous research system that identified eight independently reproduced, attacker-reachable vulnerabilities in BlueZ and directed the design, simulation, and fabrication of a ten-foot rocket intended to land propulsively using non-throttleable solid motors. Together, these results show that process-level scientific judgment can provide supervision for interpretable, dynamic control over a model's reasoning strategy.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-14T19:10:03Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Vincent Karpf</name>
+    </author>
+    <author>
+      <name>Joseph Reth</name>
+    </author>
+    <author>
+      <name>Eike Gerhardt</name>
+    </author>
+    <author>
+      <name>Audrey Wang</name>
+    </author>
+    <author>
+      <name>Anna Butz</name>
+    </author>
+    <author>
+      <name>Jiehao Xing</name>
+    </author>
+    <author>
+      <name>Jialing Song</name>
+    </author>
+    <author>
+      <name>Larry Callahan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.17598v1</id>
+    <title>Not All Agents Are Equal: Code Quality and Post-Merge Maintenance Across Five Autonomous Coding Agents in the Wild</title>
+    <updated>2026-09-12T19:51:53Z</updated>
+    <link href="https://arxiv.org/abs/2609.17598v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.17598v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Autonomous coding agents now open pull requests in public repositories at a scale that was out of reach two years ago, yet little is known about what happens to that code after it lands. This paper studies 37,623 provenance-labeled pull requests (PRs) from five commercial agents (OpenAI Codex, Devin, GitHub Copilot, Cursor, and Claude Code) and a matched human baseline, drawn from 2,807 GitHub repositories between December 2024 and July 2025. We combine the AIDev dataset with 58,792 cached GitHub API responses to measure security smells in added code, structural maintainability, post-merge churn, revert rates, and human review behavior. Three results stand out. First, quality differences are vendor-specific rather than uniform: Codex-authored PRs were reverted about half as often as human PRs (6.1% vs. 11.5%, odds ratio 0.50), while Devin PRs were reverted more often (14.5%, odds ratio 1.31). Second, agent code pooled across vendors was less likely than human code to contain a security smell (odds ratio 0.63), driven by fewer hardcoded credentials and eval-style constructs. Third, review effort concentrates unevenly: Copilot PRs drew the most human reviews and change requests, and Claude Code PRs waited the longest for a first human review (median 12.6 hours). All pipeline code, statistical reports, and figures are released for replication.</summary>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-12T19:51:53Z</published>
+    <arxiv:comment>9 pages, 5 figures, 2 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.SE"/>
+    <author>
+      <name>Obada Kraishan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.13918v1</id>
+    <title>LoRA Fine-Tuned Models for Control Systems Course Q\&amp;A: A Multidimensional Evaluation of Model Scale and Rank Effects</title>
+    <updated>2026-09-12T13:04:04Z</updated>
+    <link href="https://arxiv.org/abs/2609.13918v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.13918v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language models (LLMs) are increasingly used in specialized university courses, but control-systems questions require coordinated terminology, notation, derivations, and stepwise explanations. Direct general-purpose responses may be inconsistently structured and hard to verify. Using exercises and reference solutions from a Linear Control Systems course, we built a supervised fine-tuning dataset of 360 system-user-assistant conversations. We applied LoRA to Qwen2.5-3B-Instruct and Qwen2.5-7B-Instruct. With identical data splits, inference settings, and evaluation protocols, we compared base and fine-tuned models and tested LoRA ranks r=4, 8, and 16. Evaluation used ROUGE, BERTScore, and structured-output features to measure reference-answer similarity and stability of the Solution-Method-Teaching Points format. LoRA improved both similarity and structured-output stability at both sizes. On the current test set, 7B-r16 achieved the highest ROUGE-L (0.4093) and BERTScore-F1 (0.8643), while r=8 offered a better balance between performance and parameter efficiency. Bootstrap resampling showed ROUGE-L gains of 0.0764 [0.0613, 0.0915] for 3B-r16 and 0.0874 [0.0687, 0.1042] for 7B-r16; both intervals exceeded zero, indicating stable textual-similarity improvements on the current test set. These results suggest LoRA can align open-source instruction-tuned models more closely with the language and pedagogical organization of course reference answers. However, the metrics mainly capture textual similarity and formatting consistency, not domain-specific reasoning or mathematical correctness, which require expert assessment and task-specific rubrics.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-12T13:04:04Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Shaowen Lu</name>
+    </author>
+    <author>
+      <name>Chengxu Liu</name>
+    </author>
+    <author>
+      <name>Ping Zhou</name>
+    </author>
+    <author>
+      <name>Tao Yang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.12897v1</id>
+    <title>Tracing and Coordinating Cross-Layer Influence for Multimodal Model Merging</title>
+    <updated>2026-09-11T14:24:07Z</updated>
+    <link href="https://arxiv.org/abs/2609.12897v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.12897v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multimodal model merging aims to consolidate task experts into a single model that retains their complementary capabilities. Most unimodal model merging methods combine expert updates within individual layers, and multimodal approaches largely follow this design. However, an expert update changes the representations passed to subsequent layers, allowing its influence to propagate across depth and affect how visual and textual information interact. When visual and language updates are combined, later updates act on inputs already modified by earlier ones, coupling their effects. This poses two challenges: (1) how to characterize the multimodal influence of individual expert updates across depth, and (2) how to jointly combine expert updates based on their multimodal influence. To address these challenges, we propose TAC-Merge for tracing and coordinating cross-layer influence in multimodal model merging. It contains two modules, i.e., multimodal influence mapping (MIM) and coupled merge control (CMC). MIM constructs graphs of update effects and uses Ricci curvature together with expert predictions to define a shared fusion objective. CMC models interactions among coefficient adjustments and jointly optimizes regional weights to synthesize one shared model. Experiments across diverse multimodal tasks demonstrate the effectiveness of TAC-Merge in consolidating complementary expert capabilities and supporting generalization to unseen tasks.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-11T14:24:07Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Pengyang Zhou</name>
+    </author>
+    <author>
+      <name>Xiaobin Tu</name>
+    </author>
+    <author>
+      <name>Zhengxi Liu</name>
+    </author>
+    <author>
+      <name>Rongkun Xue</name>
+    </author>
+    <author>
+      <name>Haochen Li</name>
+    </author>
+    <author>
+      <name>Miancan Liu</name>
+    </author>
+    <author>
+      <name>Ziyuan Chen</name>
+    </author>
+    <author>
+      <name>Yinggui Wang</name>
+    </author>
+    <author>
+      <name>Jinkui Ren</name>
+    </author>
+    <author>
+      <name>Xiantao Zhang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.12327v1</id>
+    <title>LoRA-RC: Reservoir Computing with Low-Rank Adaptation</title>
+    <updated>2026-09-11T01:19:48Z</updated>
+    <link href="https://arxiv.org/abs/2609.12327v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.12327v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Reservoir computing (RC) trains only a linear readout over a fixed recurrent layer, making it fast and data-efficient for online prediction. However, a static reservoir degrades under system drift, readout-only adaptation is then insufficient, and unconstrained reservoir adaptation can destroy the echo-state and incremental stability properties that make RC reliable. This paper proposes LoRA-RC, which adapts the recurrent matrix through a low-rank correction driven by streaming prediction errors. The base reservoir and adaptation bases are fixed offline; a small core matrix is adapted online, projected onto a spectral-norm ball, and low-pass filtered at each step. The projection guarantees that every applied recurrent matrix remains within a certified contraction set, and an incremental input-to-state stability bound is established for the reservoir along each online adaptation path, with path-independent rate and gain. On a Lorenz system with an abrupt parameter drift, LoRA-RC cuts post-drift prediction error by 56% versus a fixed RC and 51% versus readout-only adaptation; ablations over 20 seeds show that removing the projection inflates this error by more than a factor of 40.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.DS" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-11T01:19:48Z</published>
+    <arxiv:comment>accepted at ieee lcss</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Wenbin Wan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.11270v1</id>
+    <title>Beyond Noise Steering: Dual-Latent Space Reinforcement Learning for Generative Robot Policy</title>
+    <updated>2026-09-10T09:04:04Z</updated>
+    <link href="https://arxiv.org/abs/2609.11270v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.11270v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Pretrained generative robot policies learn expressive action priors from demonstrations. However, existing reinforcement learning methods only steer the noisy space but fail to modulate intermediate action representations during the generation process, resulting in performance degradation and inefficiency. To address this limitation, we propose a novel Dual-Latent Space Reinforcement Learning (DLSRL) framework, which complements initial-noise steering with representation-level control inside the frozen generator. Specifically, our actor network predicts two distinct latent variables: an initial-noise latent variable that steers behavior generation, and an action-representation latent variable for intermediate feature modulation. Moreover, this representation latent variable is mapped to adapter features and ingeniously injected into the hidden states of intermediate action tokens via residual connections. Our dual-control design enables direct adjustment of action representations without updating the base policy. Experiments across generative policy architectures and robotic manipulation tasks show that DLSRL effectively accelerates online robot policy adaptation and achieves competitive performance. Our code is available at \href{https://github.com/xianchaoxiu/DLSRL}{https://github.com/xianchaoxiu/DLSRL}.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-10T09:04:04Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Pengfei Zhang</name>
+    </author>
+    <author>
+      <name>Teng Sun</name>
+    </author>
+    <author>
+      <name>Xianchao Xiu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.11170v2</id>
+    <title>From Explanations to Interventions: Execution-Guided Counterfactual Synthesis in Temporal Graphs</title>
+    <updated>2026-09-14T07:33:43Z</updated>
+    <link href="https://arxiv.org/abs/2609.11170v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.11170v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Can a trace explaining model execution also compute the changes needed for a specified alternative prediction? We propose trace-guided intervention search, which uses executable reasoning traces as an intermediate representation for intervention synthesis. A Specified-Foil Counterfactual edits past events so that a frozen temporal predictor selects a designated foil. Our method constructs facts and replacement values from completed original and foil executions and recovered unmet conditions. Proposal generation constructs edits and selects candidates within a fixed cap; exact replay verifies foil top-1 outcomes among retained edits and compositions. Implemented in LiFTER for continuous-time dynamic graphs (CTDGs) and TLogic for temporal knowledge graphs (TKGs), the method improves success over coordinate-based proposal generation by 13.7-34.7 percentage points on four CTDG datasets and 60.0-83.3 points on two TKG datasets under matched downstream search and a proposal cap of 32. Separate shared-candidate comparisons retain 85.7-93.6% of black-box greedy's CTDG success rate with 75.0-80.0% fewer predictor evaluations. A Pulse case study confirms simulator-level survival for five of six interventions. Executable traces thus provide both explanatory evidence and a reusable computational representation for constructing and testing specified alternatives.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-10T07:19:06Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Minwoo Yu</name>
+    </author>
+    <author>
+      <name>Young-guk Ha</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.10253v1</id>
+    <title>DiSCo: A Distribution-First Steering and Cultural Prior Evaluation Framework for Measuring Cultural Preference Bias in LLMs</title>
+    <updated>2026-09-09T14:40:08Z</updated>
+    <link href="https://arxiv.org/abs/2609.10253v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.10253v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language models (LLMs) are increasingly deployed in globally used assistants, yet their default choices in culturally grounded everyday situations can systematically favour some cultures over others, affecting localisation, user trust, and equitable behaviour. Existing cultural benchmarks evaluate accuracy against a single "correct" answer, making it difficult to characterise an LLM's cultural preference prior when multiple culturally grounded responses are all valid; they also conflate default preferences with context-driven adaptation. We propose DiSCo, a distribution-first forced-choice evaluation framework that isolates default cultural priors and tests steerability via a four-level context gradient (C0--C3). Using DiSCo-Bench (304 items) derived from BLEnD spanning 12 cultures, we evaluate six diverse instruction-tuned LLMs. Default priors are heavily concentrated, with UK and US together absorbing approximately 35\% of all selections despite representing only 2 of 12 cultures. Most critically, prompt-based steering consistently widens the selection gap between high- and low-resource cultures, and injecting explicit cultural facts produces negligible distributional disruption, confirming that cultural preference bias cannot be resolved through prompt-based personalisation alone.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-09T14:40:08Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Bhuvan Arora</name>
+    </author>
+    <author>
+      <name>Devesh Saraogi</name>
+    </author>
+    <author>
+      <name>Sravya Varada</name>
+    </author>
+    <author>
+      <name>Dhruv Kumar</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.09148v3</id>
+    <title>Proxy Policy Steering</title>
+    <updated>2026-09-13T20:53:27Z</updated>
+    <link href="https://arxiv.org/abs/2609.09148v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.09148v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Generalist robot policies carry broad manipulation priors from large-scale data, but specializing them to a new task remains the deployment bottleneck. This requires eliciting task-specific behavior from limited demonstrations without degrading their broad capabilities. We introduce Proxy Policy Steering (PPS), an inference-time adaptation method that resolves this challenge by training two lightweight proxy policies whose calibrated velocity-space difference steers the frozen base sampler. A reference proxy models the frozen base's behavior on target-task observations, and a task proxy, initialized from the reference, captures how this behavior changes under task supervision. Their difference forms a calibrated velocity-space residual that steers the frozen base sampler at every denoising step. We identify the conditions under which this residual isolates the change induced by task supervision, and validate them empirically. Because the base is never directly modified, its broad capabilities remain available at inference, including behaviors such as recovery from failure that the demonstrations themselves do not exercise. Adaptation requires only forward velocity predictions from the base, making PPS lightweight to train and applicable even without access to the base's parameters. On 8 real-world and 4 simulation manipulation tasks, PPS lifts the state-of-the-art pi 0.5 base policy by 53% absolute success rate on average, with zero-to-one gains on tasks the base never solves, while preserving the base's broad capabilities. PPS outperforms LoRA fine-tuning, from-scratch specialists, residual policies, and prior inference-time steering methods.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-08T17:59:03Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Chuanruo Ning</name>
+    </author>
+    <author>
+      <name>Tianrui Wang</name>
+    </author>
+    <author>
+      <name>Wei-Chiu Ma</name>
+    </author>
+    <author>
+      <name>Kuan Fang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.08686v1</id>
+    <title>CausalChapter: Improving Long-Video Chaptering with Interventional Dependency Modeling</title>
+    <updated>2026-09-08T12:54:57Z</updated>
+    <link href="https://arxiv.org/abs/2609.08686v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.08686v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Long-form instructional videos require automatic chaptering to support browsing, navigation, and knowledge access. Recent long-context language models can perform chaptering from textualized video inputs, but they remain costly and brittle for content-dense lecture videos with long transcripts, smooth topic transitions, and detailed chapter outputs. A scalable segment-then-caption paradigm reduces this cost, but introduces two new challenges: boundary error propagation and fragmented cross-chapter context. We propose \textbf{CausalChapter}, an intervention-inspired framework for long-video chaptering that estimates prediction-level influence through lightweight masking and removal interventions. For boundary localization, our Local Dependency Shift module detects drops in predictive dependency between adjacent temporal windows; for chapter description generation, our Cross-Segment Support Selection module reranks historical contexts according to their support for the current prediction. Experiments on long-video chaptering benchmarks show that CausalChapter improves boundary localization, chapter description quality, and cross-chapter coherence.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-08T12:54:57Z</published>
+    <arxiv:comment>Accepted by EMNLP 2026 conference</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Xinran Duan</name>
+    </author>
+    <author>
+      <name>Guozhang Li</name>
+    </author>
+    <author>
+      <name>Yaoyao Zhong</name>
+    </author>
+    <author>
+      <name>Mei Wang</name>
+    </author>
+    <author>
+      <name>Lizhi Wang</name>
+    </author>
+    <author>
+      <name>Hua Huang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.08618v1</id>
+    <title>Target-Independent Micro-Interventions for Predicting Training Response Across Language-Model Families</title>
+    <updated>2026-09-08T11:54:09Z</updated>
+    <link href="https://arxiv.org/abs/2609.08618v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.08618v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Benchmark scores describe what a checkpoint can do now, but they do not determine how it will respond to the next training episode. We measure this missing state by branching four short, standardized, target-independent micro-interventions from the same checkpoint and recording their effects in a common capability space. Together with current capability, these responses form L-State; its pulse block supports a flexible direct readout and a structure-preserving operator readout. Under smooth local dynamics, the operator construction admits an end-to-end cross-family bound with explicit source- and target-family coordinate heterogeneity. In three-family leave-one-family-out development, both pulse readouts reduce source-standardized MSE by 39.4% relative to capability alone, while separating the best response and direction estimates. On sealed GLM-4-9B, the direct and operator readouts reduce MSE by 71.8% and 78.3%, respectively, and the operator readout raises sign balanced accuracy from 0.366 to 0.754. On sealed Granite-3.1-8B, the direct readout reaches RMSE 0.544 and a development-fitted action-wise selector reaches 0.554, compared with 1.172 for capability alone. A five-family audit finds that the operator coordinate varies by action and family, and that modeling these deviations improves retrospective held-trajectory prediction. Target-independent interventions therefore expose training-response information that current capability misses, with direct and structured readouts covering complementary transfer regimes.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-08T11:54:09Z</published>
+    <arxiv:comment>24 pages, 2 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Zhongxuan Liu</name>
+    </author>
+    <author>
+      <name>Sicheng Zhou</name>
+    </author>
+    <author>
+      <name>Hongzhi Wang</name>
+    </author>
+  </entry>
+</feed>

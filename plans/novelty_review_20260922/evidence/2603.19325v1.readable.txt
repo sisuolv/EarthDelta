@@ -1,0 +1,299 @@
+Target Concept Tuning Improves Extreme Weather Forecasting
+
+Deep learning models for meteorological forecasting often fail in rare but high-impact events such as typhoons, where relevant data is scarce. Existing fine-tuning methods typically face a trade-off between overlooking these extreme events and overfitting them at the expense of overall performance. We propose TaCT, an interpretable concept-gated fine-tuning framework that solves the aforementioned issue by selective model improvement: models are adapted specifically for failure cases while preserving performance in common scenarios. To this end, TaCT automatically discovers failure-related internal concepts using Sparse Autoencoders and counterfactual analysis, and updates parameters only when the corresponding concepts are activated, rather than applying uniform adaptation. Experiments show consistent improvements in typhoon forecasting across different regions without degrading other meteorological variables. The identified concepts correspond to physically meaningful circulation patterns, revealing model biases and supporting trustworthy adaptation in scientific forecasting tasks. The code is available at https://anonymous.4open.science/r/Concept-Gated-Fine-tune-62AC.
+
+1. Introduction
+
+Weather forecasting is critical to socio-economic stability. Nearly $3 trillion in annual private industry revenues, one-third of the sector’s total, is exposed to weather and climate risk ( Dutton, 2002 ) . In energy management, weather forecasts are vital for predicting load demand and renewable power supply, thereby preventing costly blackouts and curtailment ( Hong et al., 2020 ) .
+
+Recently, AI-based forecasting models ( Bi et al., 2023 ; Lam et al., 2023 ) have emerged as powerful alternatives to traditional Numerical Weather Prediction (NWP) systems, achieving high accuracy on standard variables such as temperature and wind with much faster inference ( Rasp et al., 2024 ; Shi et al., 2025 ) . However, their performance drops during extreme events such as typhoons (also known as Tropical Cyclones, TC), heatwaves and cold surges. Although rare, these events can have severe consequences, including loss of life, grid collapse, and infrastructure damage. These high-stakes scenarios require reliable forecasts for early warning and emergency response ( Katz and Murphy, 1997 ) , and reliable deployment requires not only accuracy but also trustworthy models that can diagnose and interpret model behavior when failures occur.
+
+Achieving such reliability, however, is challenging for extreme weather forecasting due to the severe data imbalance that far exceeds typical imbalanced learning settings. For example, the probability of a typhoon forming within any 5^{\circ}\times 5^{\circ} region over 24 hours is below 0.039% ( Schumacher et al., 2009 ) . Current learning paradigms fail under extreme imbalance because they are inherently a trade-off: both full-model fine-tuning and parameter-efficient methods ( Hu et al., 2022 ; Liu et al., 2024a ; Zou et al., 2023 ; Liu et al., 2024b ) mitigate data imbalance by trading off performance across different distributions, rather than correcting model errors in both common and rare scenarios. This trade-off becomes particularly severe in extreme imbalance settings, where hyperparameter tuning becomes highly sensitive ( Zhang et al., 2022 ) and resampling or reweighting becomes ineffective ( Teng et al., 2025 ) . Furthermore, the lack of interpretability in these methods limits control over when updates take effect, hinders understanding of why failures occur, and undermines trust—both essential in high-stakes deployments.
+
+We aim to avoid the trade-off between accuracy on rare extreme and common events, while simultaneously providing interpretability during fine-tuning. Our approach is inspired by cognitive neuroscience, which shows that individuals with more modular brain organization exhibit greater neural plasticity when learning new tasks ( Gallen and D’Esposito, 2019 ) , suggesting localized task-specific updates minimize interference with previously acquired functions. In contrast, neurons in deep learning models often encode superposed features — multiple concepts mixed within a single activation ( Elhage et al., 2022 ) — and it is difficult to update specific knowledge without overwriting existing representations ( Holton, 2025 ) . Motivated by this observation, we propose to fine-tune models within a disentangled representation space, where activations correspond to mono-semantic and interpretable concepts. By targeting only the concepts responsible for failures, our method enables precise, interpretable fine-tuning for extreme weather events without compromising the general ability of the models.
+
+Specifically, we introduce TaCT (Targeted Concept Tuning) , an interpretable, concept-guided fine-tuning framework for failure-aware model adaptation. TaCT leverages Sparse Autoencoders (SAEs) ( Zhang et al., 2023 ) to promote functional disentanglement, decomposing superposed representations into quasi-modular, mono-semantic units ( Zhang et al., 2023 ) . These units naturally correspond to coherent meteorological structures, such as typhoon vortices or high-pressure ridges. Using a small set of extreme-event cases (438 out of 1460 samples), TaCT automatically identifies concepts consistently activated during model failures via continuous counterfactual reasoning. Fine-tuning is then performed in a concept-gated manner, updating newly added model parameters only when failure-associated concepts are active, keeping other predictions unaffected. This mechanism yields concept-level plasticity: similar to that observed in modular human brains, the model learns precisely where and when it fails, without interfering with other functional modules and therefore preserving its general predictive ability.
+
+We demonstrate the effectiveness of this approach on typhoon forecasting across multiple cyclone basins (Northern Atlantic, Western Pacific and Eastern Pacific). The resulting models achieve prominent improvements across key typhoon characteristics including sea-level pressure (9.3% MAE reduction in 72h forecast) and near-surface winds (4.8% MAE reduction in 72h forecast), while maintaining the forecast accuracy on other variables (error change: ours -2 vs LoRA +4 in z850 and 0 vs +0.1 in T850). Beyond performance gains, the concepts identified by TaCT correspond to physically meaningful atmospheric structures, such as mid-latitude transient waves, which meteorologists recognize as key drivers of typhoon behavior. TaCT not only improves typhoon forecast performance but also reveals concepts that have been improved during fine-tuning, fostering trust and facilitating integration into operational weather prediction workflows.
+
+Our contributions are as follows:
+
+We propose TaCT, an interpretable fine-tuning framework that leverages brain-inspired modular learning to disentangle superposed representations into physically grounded concepts, and uses them to guide targeted adaptation. It serves as a generic add-on for intermediate layers and is also generalizable for other deep learning domains.
+
+We introduce a counterfactual concept localization method, which integrates SAE with continuous counterfactual reasoning to automatically identify concepts to be improved in extreme weather conditions. This module requires only a small amount of extreme weather data points and can operate fully automatically without manual intervention.
+
+We design a concept-gated fine-tuning algorithm that conditions parameter updates on the activation of failure-related concepts. This module precisely corrects extreme-event failures while preserving performance in common weather regimes, avoiding the trade-off between rare-event performance and overall accuracy.
+
+2. Problem Formulation
+
+We consider the standard AI weather forecasting task ( Chen et al., 2023 ) : given the current state of the weather (e.g., temperature, humidity, wind speed), predict its future state at a specified lead time. The input - global weather data - is represented as a 3D tensor discretized over a latitude-longitude grid. To reduce memory consumption, the input is typically partitioned into patches, each represented as a single unit for model input. Formally, let X_{t}\in\mathbb{R}^{H\times W\times C} denote the weather conditions at time t , where C is the number of weather variables, and H and W denote the number of patches along latitude and longitude, respectively. Our goal is to predict X_{t+\Delta t}\in\mathbb{R}^{H\times W\times C} at lead time t+\Delta t using an AI weather model \mathcal{F} with parameters \Theta :
+
+(1) \hat{X}_{t+\Delta t}=\mathcal{F}(X_{t};\Theta)
+
+For long-range weather forecasting, predictions are made autoregressively. Specifically, to predict weather conditions at time t+a\Delta t , we iteratively apply the model with lead time \Delta t for a times, feeding each prediction back as input for the next step:
+
+(2) \hat{X}_{t+a\Delta t}=\mathcal{F}^{(a)}(X_{t};\Theta)=\underbrace{\mathcal{F}(\cdots\mathcal{F}(\mathcal{F}}_{a\text{ times}}(X_{t};\Theta);\Theta)\cdots;\Theta)
+
+where \mathcal{F}^{(a)} denotes a iterative applications of \mathcal{F} .
+
+3. Methods
+
+This section introduces the Targeted Concept Tuning (TaCT) framework, which enables interpretable and precise fine-tuning for extreme weather events without compromising the general abilities. Analogous to modular human brains ( Gallen and D’Esposito, 2019 ) , TaCT fine-tunes in a disentangled representation space, where each activation corresponds to a mono-semantic, quasi-modular concept, enabling targeted adaptation without overwriting unrelated knowledge.
+
+Specifically, our framework consists of two major modules as shown in Figure 1 : (1) counterfactual concept localization , which disentangles the model’s internal representations into mono-semantic concepts without any supervision signals about which concepts exist for the given model, and then identifies key concepts relevant to specific weather scenarios (e.g., extreme events or regional biases) via counterfactual analysis; and (2) concept-gated fine-tuning , which performs selective updates to model parameters based on the localized target concepts.
+
+Next, we will introduce the two modules and discuss the theoretical relation between TaCT and existing fine-tuning methods.
+
+3.1. Counterfactual Concept Localization
+
+This module disentangles the model’s hidden representations into interpretable concepts and identify those most responsible for prediction failures under the target scenario (i.e., extreme weather scenarios). Given a small set of extreme weather samples (X_{t},X_{t+\Delta t}) , we obtain a concept set C that guides the subsequent fine-tuning through two stages: unsupervised concept decomposition and continuous counterfactual reasoning.
+
+3.1.1. Unsupervised Concept Decomposition
+
+Given hidden embedding H_{l}=\mathcal{F}_{1:l}(X_{t})\in\mathbb{R}^{H\times W\times d} from layer l , the goal of unsupervised concept decomposition is to decompose H_{l}=\mathcal{F}_{1:l}(X_{t}) into sparse concepts Z\in\mathbb{R}^{H\times W\times n} ( n>d ) without additional supervision signal about which concepts exist in the weather forecasting models. We achieve this goal by employing Sparse Autoencoders (SAEs) ( Bussmann et al., ; Gao et al., ) , which constructs a disentangled concept space Z by learning sparse representations with an auto-encoder while accurately reconstructing the original input. Each concept z^{(i,j)} in Z then corresponds to a mono-semantic feature relevant to meteorological structures (e.g., typhoon vortices or pressure ridges).
+
+Mathematically, given a sample X^{(i,j)} at geographic coordinate (i,j) , the encoder projects the l -th layer hidden representation h_{l}^{(i,j)}\in\mathbb{R}^{d} into a high-dimensional sparse concepts space z^{i,j}\in\mathbb{R}^{n} ( n>d ), and the decoder reconstructs the original embedding:
+
+(3) z^{(i,j)}=\text{Enc}(h_{l}^{(i,j)})=\text{Topk}(\text{ReLU}(W_{enc}(h_{l}^{(i,j)}-b_{dec})+b_{enc},k)),
+
+(4) \hat{h}_{l}^{(i,j)}=\text{Dec}(z^{(i,j)})=W_{dec}z^{(i,j)}+b_{dec},
+
+where W_{enc}\in\mathbb{R}^{n\times d} , W_{dec}\in\mathbb{R}^{d\times n} , b_{enc}\in\mathbb{R}^{n} , b_{dec}\in\mathbb{R}^{d} are parameters to be learned, and TopK (\cdot) retains only the k largest activations and setting other elements to 0, ensuring sparse activation.
+
+The encoder-decoder is then learned to reconstruct the hidden representations accurately, with an auxiliary loss function Aux(\cdot) ( Gao et al., ) to reactivate dead concepts whose activations z^{(i,j)} are consistently low for almost all samples:
+
+(5) \mathcal{L}_{SAE}=|\hat{h}_{l}^{(i,j)}-h_{l}^{(i,j)}|_{2}^{2}+\lambda Aux(z^{(i,j)}).
+
+Appendix A introduces Aux(\cdot) and SAE training in detail.
+
+3.1.2. Continuous Counterfactual Reasoning
+
+Given n discovered concepts, where n>d is usually large, we then discover a subset C of concepts that is most responsible for prediction failures under extreme weather scenarios. This requires quantifying each concept’s contribution to the forecasting loss. Our idea is based on counterfactual reasoning ( Abid et al., 2022 ; Ross et al., 2021 ; Pan and Bareinboim, 2024 ) , which estimates concept importance by measuring how minimal interventions on individual concepts affect losses in a small set of extreme weather samples:
+
+(6) \min_{z^{\prime}}\text{dist}(z,z^{\prime})\quad\text{s.t.}\quad F_{l+1:L}(\text{Dec}(z^{\prime}))=y_{target}.
+
+Here, we omit the position index (i,j) of z for conciseness, and the minimal intervention magnitude |z-z^{\prime}| represents the importance of the corresponding concepts in decreasing loss.
+
+Unlike prior counterfactual methods shown in the last equation, which are designed for discrete classification, weather forecasting is a continuous regression problem. We therefore change the hard constraint F_{l+1:L}(\text{Dec}(z^{\prime}))=y_{target} into a soft reconstruction objective and optimize perturbations directly in concept space, enabling continuous counterfactual reasoning:
+
+(7) \min_{\Delta_{z}}\mathcal{L}=|F_{l+1:L}(\text{Dec}(z^{\prime}))-y_{target}|_{2}^{2}+\lambda|z^{\prime}-z|,
+
+(8) y_{target}=X_{t+\Delta_{t}}^{(i,j)},\text{ }z^{\prime}=z+\mathbb{I}(z>0)\Delta{z},
+
+(9) \Delta z=z^{\prime}-z.
+
+Here, the L_{1} penalty encourages sparse perturbations, \mathbb{I}(\cdot) is an indicator function where \mathbb{I}(\text{true})=1 and \mathbb{I}(\text{false})=0 . z^{\prime}=z+\mathbb{I}(z>0)\Delta{z} ensures that a counterfactual intervention will be conducted only for relevant samples. Intuitively, each entry in \Delta z=z^{\prime}-z measures how much a specific concept must change to reduce prediction error: larger magnitudes indicate concepts whose adjustment most improves the forecast.
+
+Finally, the top-k concepts with the highest average magnitudes across all m extreme weather samples are then selected as the target concepts for subsequent modification. This selection process is formally defined in Eq. ( 10 ):
+
+(10) \mathcal{C}=\text{Topk}_{id}(\frac{1}{m}\sum_{t=1}^{m}|\Delta{z}_{t}|,k).
+
+where the resulting set \mathcal{C} contains the key concepts to be fine-tuned for the target scenario. These concepts exhibit the most significant influence on the model’s performance for the target task, and \text{Topk}_{id} is used to find the indices of the k largest elements.
+
+3.2. Concept-Gated Fine-tuning
+
+To enhance specific model capabilities by modifying the concepts identified through counterfactual reasoning—while simultaneously preserving its general performance—we introduce a concept-based gating mechanism. Specifically, this mechanism leverages the activation states of concepts to precisely control whether the current data point should be used to optimize a particular concept. Such a structured fine-tuning strategy ensures that biases are corrected with precision, thereby minimizing any degradation of the model’s performance on other data.
+
+3.2.1. Concept-Gated Fine-tuning
+
+Previous work has demonstrated that certain knowledge can be modified or forgotten by manipulating specific neurons ( Dai et al., 2022 ) . Inspired by this, we introduce a concept activation-gated mechanism to precisely modify performance under specific concepts without affecting the model’s performance in other scenarios, such as extreme low pressure in typhoon scenarios. Specifically, for each concept c_{i} in the concept set \mathcal{C} identified in Section 3.1.2 , we define an threshold \beta_{i} . This threshold ensures that the fine-tuned parameters are only activated when the corresponding concept is triggered. Formally, for the l -th layer targeted for intervention, let the intermediate representation be \mathbf{h}_{l} . The concept activation vector obtained through SAE encoding is denoted as \mathbf{z}=\text{Enc}(\mathbf{h}_{l}) . We modify the model’s forward pass by introducing a gated residual term. This controlled modification term, \Delta\mathbf{h}_{l} , is computed as shown in Eq. ( 11 ), where \mathbb{I}(\cdot) is the indicator function shown in Eq. ( 12 ), which determines whether the activation of the i -th concept exceeds the threshold \beta_{i} . Here, f^{\prime} represents an existing fine-tuning method, such as LoRA or Adapter.
+
+(11) \Delta\mathbf{h}_{l}=\mathbb{I}\left(\vee_{i\in C}(z_{i}>\beta_{i})\right)\cdot f^{\prime}(\mathbf{h}_{l}).
+
+(12) \mathbb{I}(\vee_{i\in C}~(z_{i}>\beta_{i}))=\begin{cases}1,&\text{if Ture}\\ 0,&\text{otherwise}\par\end{cases}.
+
+When the input does not involve the target concepts, the term \Delta\mathbf{h}_{l} vanishes as the indicator function evaluates to zero. Finally, we inject the generated gated residual into the original model to obtain the modified final prediction, formalized as Eq. ( 13 ), where F_{l+1:L} represents the subsequent processing of the model from the intervention layer to the output layer, \hat{X}^{\prime}_{t+\Delta{t}} represents the model output after intervention.
+
+(13) \hat{X}^{\prime}_{t+\Delta{t}}=F_{l+1:L}(\mathbf{h}_{l}+\Delta\mathbf{h}_{l}).
+
+3.2.2. Loss Function
+
+The loss function follows previous work ( Chen et al., 2023 ) , employing a latitude-weighted loss, formulated as Eq. ( 14 ), where H , and W denote the number of grid points in the latitude and longitude directions, respectively. \hat{X}^{\prime} and X are the predicted and ground-truth values for a specific variable and location (latitude and longitude) at time step t+\Delta{t} . w_{i} represents the weight at latitude i , which decreases as the latitude increases. The loss is averaged across all grid points and variables.
+
+(14) \mathcal{L}=\frac{1}{HW}\sum_{i=1}^{H}\sum_{j=1}^{W}w_{i}\cdot|\hat{X}^{\prime}_{t+\Delta{t}}-X_{t+\Delta{t}}|.
+
+3.3. Method Comparison
+
+From the perspective of concept intervention, different model editing methods essentially adopt different strategies for intervening on concepts. Our method proposes a more general framework for concept-gated intervention.
+
+“Black-box” methods, such as PEFT, employ a global and indiscriminate intervention strategy. They do not differentiate based on concept importance, applying adjustments uniformly across all internal states. This can be viewed as a special case with the most lenient intervention condition: the gating unit is always open, intervening on all concepts C_{\text{all}} , as formalized in Eq. ( 15 ).
+
+(15) \mathbb{I}_{\text{LoRA}}=\mathbb{I}(\vee i\in C_{\text{all}}(z_{i}>0))=1\quad.
+
+Representation engineering is another approach where intervention concepts are pre-defined. The intervention target C_{\text{pre}} , relies entirely on human prior knowledge and manual specification. An intervention is executed only when a pre-defined concept is activated, as formalized in Eq. ( 16 ).
+
+(16) \mathbb{I}_{\text{RepE}}(\vee i\in C_{\text{pre}}(z_{i}>\beta^{\text{pre}}_{i}))=\begin{cases}1,&\text{if True}\\ 0,&\text{otherwise}\end{cases}.
+
+Unlike PEFT’s indiscriminate updates and ReFT’s reliance on pre-defined concepts. Our methods learns to automatically discover when and on which key concepts to intervene, thereby enabling automated form of concept intervention.
+
+4. Experiments
+
+4.1. Experimental Settings
+
+Datasets . We utilize the ERA5 dataset ( Hersbach et al., 2020 ) for model training and test as both inputs and ground truths. Produced by the European Centre for Medium-Range Weather Forecasts (ECMWF), ERA5 is a comprehensive global atmospheric reanalysis dataset providing detailed climate and weather information from 1940 to the present. It encompasses a wide array of variables, including temperature, humidity, precipitation, and mean sea level pressure. ERA5 offers a high spatial resolution of 0.25° latitude-longitude and includes 37 vertical pressure levels. We adopt the International Best Track Archive for Climate Stewardship (IBTrACS) ( Knapp et al., 2010 ) and CMA Best Track Dataset ( Ying et al., 2014 ; Lu et al., 2021 ) as our primary data source. IBTrACS is a global typhoon dataset maintained by the U.S. National Oceanic and Atmospheric Administration (NOAA) and is widely considered the gold standard for research in this field. The CMA Best Track Dataset is a typhoon best track dataset released and maintained by the Shanghai Typhoon Institute (STI) under the China Meteorological Administration (CMA). It is one of the most authoritative historical records of typhoon over the Western North Pacific and the South China Sea.
+
+Foundation Model . The foundation weather forecasting model used in this work is Baguan ( Niu et al., 2025 ) , a large-scale pre-trained weather model developed by Alibaba. Baguan is a deep learning model designed for global medium-range weather forecasting, trained end-to-end on the ERA5 dataset with robust spatiotemporal modeling capabilities. It operates at a spatial resolution of 0.25° × 0.25° and covers major meteorological factors such as geopotential, wind speed, temperature, humidity, and precipitation, with a 6-hour time step. Benefiting from extensive pre-training on large-scale weather data and the implicit learning of atmospheric physics, Baguan has demonstrated predictive accuracy comparable to traditional Numerical Weather Prediction (NWP) systems.
+
+Baseline and Metric . To provide a comprehensive evaluation, we compare with four baselines: the Baguan-Weather forecasting model, two parameter-efficient fine-tuning (PEFT) methods: LoRA and Adapter and a representation-based fine-tuning method: LoREFT. The implementation details and hardware configuration can be found in the Appendix C . Our evaluation metrics are the minimum mean sea-level pressure (MSL) and the maximum 10-meter wind speed (V10) of tropical cyclones.
+
+Implementation Details . To evaluate the model’s performance, typhoon data from 2022 is used exclusively as an external test set to ensure complete isolation from the training process and prevent potential data leakage. The training phase utilizes unlabeled ERA5 data spanning from 1979 to 2021. Due to limited computational resources, we restricted the optimization process by uniformly fixing the number of training steps at 6,000. This approach ensures model convergence while maximizing overall training efficiency.
+
+4.2. Overall Performance
+
+Results . We evaluated the 72-hour forecast accuracy of typhoon intensity, including MSL and V10, across multiple regions. The results for the Western Pacific are illustrated in Figure 2 , while the remaining results are presented in Appendix F . TaCT demonstrated comparable performance for both typhoon minimum pressure and wind speed forecasts. The performance of LoREFT is highly similar to that of the Base Model. This is because LoREFT only modifies a subset of tokens, which may be located far from the typhoon center. As AI weather models typically focus on data within a local neighborhood ( Niu et al., 2025 ) , the impact of these distant modifications is minimal. In contrast, Lora and Adapter achieved sub-optimal results due to a lack of fine-grained conceptual guidance. To compare with models fine-tuned on tropical cyclone data, we evaluate our method against several fine-tuning approaches trained on the same tropical cyclone dataset. The experimental results are presented in Appendix G .
+
+4.3. Ablation Study and Sensitivity Analysis
+
+Ablation Study . We conduct an ablation study to evaluate the contribution of each component in our framework. To assess the effect of the concept-gated module, we remove the concept-gated unit, which degrades the method to a simple Adapter. To evaluate the continuous counterfactual reasoning module, we consider two ablated variants: one with randomly sampled concepts and another using a statistical method for concept identification. The specific implementation details are provided in Appendix B . The results in Table 1 demonstrate that the interpretability module plays the primary role in enhancing model performance. Replacing our components with these alternatives leads to a consistent drop in performance, thereby validating the effectiveness of our proposed method.
+
+Threshold of Concepts . To evaluate the impact of the number of gated concepts on model performance. We choose three activation thresholds that filter out 90%, 99%, and 99.9% of the data, respectively, as shown in Figure 3 (e). The results clearly indicate that the number of concepts is correlated with model effectiveness. Within a certain range, increasing the number of concepts leads to a lower MAE, as the model tends to learn better representations when more concepts are adjusted. However, once the number of concepts reaches a certain threshold, model performance begins to decline. This is because too many concepts can introduce more noise, degrading the quality of the learned concepts.
+
+Number of Concepts . We evaluate the effect of the number of gated concepts on model performance, as shown in Figure 3 (f). The results clearly indicate that the number of concepts is correlated with model effectiveness. Within a certain range, increasing the number of concepts leads to a lower MAE, as the model tends to learn better representations with more concepts being adjusted. However, once the number of concepts reaches a certain threshold, model performance begins to decline. This is because a large number of concepts can introduce more noise, leading to a degradation in the quality of the learned concepts.
+
+Randomized Scenarios . To minimize randomness as much as possible, we evaluated our method with three different random seeds and under varying fine-tuning parameter budgets, as shown in Figure 3 (a-d) and Table 2 . The results demonstrate that our method consistently outperforms the baseline across different settings.
+
+Region w/o M1 Random Statistics Ours West Pacific 80.21 82.30 78.09 76.88 East Pacific 67.34 67.97 64.80 63.53 North Atlantic 126.50 131.48 121.36 119.21 Avg 91.35 93.92 88.08 86.54 \Delta (%) 5.27 7.85 1.75 -
+
+Region Seed=1979 Seed=2025 Seed=2026 West Pacific 76.88 77.92 75.84 East Pacific 63.53 64.06 61.97 North Atlantic 119.21 121.55 116.56
+
+4.4. General Capabilities
+
+To verify the impact of fine-tuning on the model’s general capabilities, we conducted a comprehensive evaluation of the model’s performance on global weather forecasting tasks. We validate the model’s 72-hour forecast performance across the entire globe. The performance changes relative to the base model are illustrated in Figure 4 , where values closer to zero indicate better preservation of general capabilities. The experimental results demonstrate that our method not only achieves significant performance improvements in typhoon-specific scenarios but also maintains the strongest general forecasting capabilities among all compared fine-tuning approaches. Notably, our approach exhibits minimal degradation across all evaluated variables, with performance changes consistently smaller than those of other methods, confirming the effectiveness of our counterfactual concept localization strategy in balancing task-specific optimization with the retention of foundational model knowledge.
+
+4.5. Case Study
+
+To interpret the physical meaning of these concepts, we adopt an automated approach based on Multimodal Large Language Models (MLLMs). In brief, the MLLM-based method feeds a concept’s activation locations together with its corresponding input–output information into an MLLM, leveraging its strong pre-trained capabilities to summarize the concept’s function. More details are provided in Appendix D .
+
+4.5.1. Concepts-general Analysis
+
+To gain a deeper understanding of the physical concepts learned by the model, we first analyze the list of concepts presented in Figure 5 . This table enumerates a series of concepts, including their names and detailed descriptions as generated by a MLLM. The Improved Acc column indicates the proportion in Mean Absolute Error (MAE) after fine-tuning when a concept is activated; a higher value signifies a more substantial improvement in model performance. The Activate Ratio column quantifies the number of typhoon cases in which the concept was activated.
+
+From the data, several key observations can be made. The first three concepts, namely #11736 , #10970 , and #14233 , which were identified by our counterfactual concept localization method, are activated in a large number of typhoon cases. They also significantly improve the model’s predictive accuracy. This demonstrates that the model successfully captures critical physical patterns closely associated with typhoon events.
+
+In contrast, the remaining three concepts, namely #14889 , #3873 , and #7476 , were not identified by our counterfactual concept localization method. Concept #14889 is rarely activated in typhoon cases (only once), suggesting its correlation with the typhoon phenomenon is weak. It is also noteworthy that concepts #3873 and #7476 , although not directly identified by counterfactual concept localization, are also relevant to typhoon phenomena. Consequently, they are activated in many cases and contribute positively to the model’s performance enhancement.
+
+These findings validate the effectiveness of our proposed method in automatically identifying and utilizing physical concepts related to specific extreme weather events like typhoons, thereby laying the groundwork for the subsequent case study analysis.
+
+4.5.2. Concept-specific Cases
+
+We further illustrate a critical concept 11736 activations whose semantic meanings are interpreted by an MLLM.
+
+Transient Waves . Figure 6 and Figure 7 shows the activation map of concept 11736 over the 500 hPa meridional wind field ( v_{500} , z_{500} ). Black-shaded regions indicate areas of strong activation. Based on LLM interpretation of the most activated samples, this concept corresponds to atmospheric transient waves: A series of troughs and ridges on quasi-horizontal surfaces in the major belt of upper tropospheric westerlies. which are closely coupled with the mid-latitude upper-level jet stream. These oscillations are not stationary; rather, they continuously evolve and migrate under the influence of the prevailing westerlies. According to the wave characteristic analysis, the extracted transient wave train exhibits distinct zonal periodicity, with a zonal wave number stable between 9 and 10 8 . These waves propagate in a meandering fashion within the mid-latitude jet stream, constituting the complex and variable synoptic background for mid-to-high latitude regions.
+
+Identification of such wave features is essential for accurate forecast for intensity of the tropical cyclone. These transient waves function as a critical determinant in tropical cyclone predictions by perturbing the mid-latitude steering currents. Moreover, given that the trajectory and intensity of tropical cyclones are profoundly sensitive to the surrounding atmospheric state, the dynamical interaction between mid-latitude wave systems and tropical cyclones governs their lifetime. Accurately recording the phase speed and amplitude of these transient waves in forecasting models is necessary to reduce errors in long-term intensity predictions.
+
+5. Related Work
+
+Efficient Fine-Tuning . As the scale of pre-trained models continues to expand, full fine-tuning imposes prohibitive memory and computational costs. This has motivated the development of Parameter-Efficient Fine-Tuning (PEFT) ( Ding et al., 2023 ) , which aims to adapt models using a minimal set of trainable parameters while maintaining competitive performance. Early representative methods, such as Adapters ( Pfeiffer et al., 2020 ; Houlsby et al., 2019 ) , insert small feed-forward modules between Transformer layers while freezing the original weights. Although they introduce only a few million parameters, they require structural modifications to the architecture. Alternatively, Prefix-Tuning ( Li and Liang, 2021 ) and Prompt Tuning ( Lester et al., 2021 ) guide model behavior by prepending learnable continuous vectors to input embeddings or hidden states without altering the backbone network. Recently, Low-Rank Adaptation (LoRA) and its variants ( Hu et al., 2022 ; Liu et al., 2024a ) have gained widespread adoption due to their simplicity and efficiency. LoRA approximates weight updates through low-rank matrix decomposition: it injects trainable low-rank matrices into attention layers while keeping the original weights frozen. In contrast to these methods, our approach can automatically select concepts for fine-tuning, enabling targeted model adjustments without compromising general capabilities.
+
+Model Interpretability and Intervention . As the scale and diversity of data increase, modifying model behavior through retraining becomes intractable. Consequently, a large of works has shifted its focus to model intervention ( Meng et al., 2022 ; Meng et al., ; Hernandez et al., ) , which refers to the ability to understand, analyze, and modify the internal knowledge and behavior of a model after it has been trained. Model Intervention contains model editing ( De Cao et al., 2021 ; Dai et al., 2022 ) and machine unlearning ( Yao et al., 2024 ) . Model editing achieve precise modifications of model behavior by intervening in the model’s internal representations or parameters. Machine unlearning aims to remove the influence of specific data from a trained model without the prohibitive cost of retraining from scratch. In contrast, model editing focuses on directly modifying or injecting new knowledge. In the realm of large language models, knowledge editing techniques like ROME ( Meng et al., 2022 ) have achieved remarkable success, as they can locate and alter the weights associated with specific facts (e.g., "The Eiffel Tower is in Paris"). Furthermore, some studies have attempted to edit more abstract "concepts," for instance, by using linear transformations to suppress or enhance a model’s expression of a certain concept ( Kim et al., 2018 ) .
+
+6. Limitations and Ethical Considerations
+
+Limitations . Compared to direct fine-tuning, our method requires pre-training an SAE, which introduces a certain training overhead. However, this is a one-time cost, and we argue it is acceptable given the SAE’s demonstrated potential to enhance both performance and model interpretability. Additionally, since our method is concept-based, its fine-tuning effectiveness is correlated with concept quality. Fortunately, a large of existing work is dedicated to improving the interpretability of SAEs. Therefore, our method stands to achieve further performance gains by incorporating more advanced SAE techniques in the future.
+
+Ethical Considerations . Our study uses meteorological reanalysis/products (e.g., ERA5) and public cyclone tracks. All data are used in aggregated form for forecasting validation and do not include personally identifiable information. No human participants are involved, and no interventions are performed. All data were obtained and used in accordance with the corresponding data-use policies and institutional regulations; thus, IRB review and informed consent are not applicable.
+
+7. Conclusion
+
+The TaCT framework proposed in this study introduces a new paradigm for the application of AI in meteorological science. Its core value can be summarized as follows:
+
+Key Contribution to the Domain: The primary contribution of this work is empowering AI models with a “surgical” correction capability. This enables the model to specifically rectify critical failures in predicting high-impact events, such as tropical cyclones, rather than undergoing a broad, general optimization. This directly addresses a core obstacle to the operational trust of AI models: their unreliability in handling high-risk, low-frequency events, thereby paving the way for their deeper integration into disaster mitigation decisions.
+
+Specific AI/ML Challenges Tackled: Through our “concept-centric” fine-tuning approach, we effectively address the training challenge of data scarcity for extreme weather. Concurrently, by linking model corrections to physical concepts, we significantly enhance model interpretability, directly confronting the “black-box” problem.
+
+General Challenges with Using AI/ML: Our “concept-gating” mechanism facilitates precise interventions on specific errors, thereby mitigating the common issue of "catastrophic forgetting" that occurs during specialized optimization. This provides a tangible technical solution for balancing the "specialist" and "generalist" capabilities of AI models.
+
+GenAI Disclosure
+
+We used large language models (LLMs) only to assist with and polish the writing. Specifically, LLMs were used to: (1) check grammar and spelling; and (2) help improve the phrasing in professional academic English. LLMs were not used to generate research ideas, methods, experiments, figures, or results.
+
+References
+
+Appendix A Implementation Details of Sparse Autoencoders
+
+For the SAE, we follow the setting of Gao et al. ( Gao et al., ) and employ a Top-k function for sparsity. Additionally, we normalize the hidden embeddings before feeding them into SAE. Specifically, given an input climate field X_{t}\in\mathbb{R}^{H\times W\times C} , let the hidden embeddings at the l -th layer be H\in\mathbb{R}^{H\times W\times D} . We first reshape these embeddings into a 2D matrix, which we denote as H^{\prime} , of shape (H\times W)\times d :
+
+(17) H^{\prime}\in\mathbb{R}^{(H\times W)\times d}.
+
+We then compute the mean \mu_{H}\in\mathbb{R}^{d} and standard deviation \sigma_{H}\in\mathbb{R}^{d} across the second dimension (the flattened spatial dimensions). Finally, these statistics are used to standardize the matrix H^{\prime} . The standardized matrix, \hat{H}^{\prime} , is computed as follows:
+
+(18) \hat{H}^{\prime}=\frac{H^{\prime}-\mu_{H}}{\sigma_{H}+\epsilon},
+
+where \epsilon is a small constant added for numerical stability.
+
+To alleviate the issue of “dead concepts”, we introduce an auxiliary loss, Aux(\cdot) , during training. Specifically, for concepts that remain inactive for extended periods, we sample the top-k residuals from the SAE’s reconstruction corresponding to these concepts, as formalized in Eq. 19 .
+
+(19) Aux=||(H^{\prime}-\hat{H}^{\prime})-Dec(Topk(z_{dead}))||_{2}.
+
+Appendix B Statistical Methods for Concept Discovery
+
+As a component of our ablation study (see Section 4.3), we benchmarked our proposed method against a traditional statistical approach for identifying model concepts associated with typhoon events. The objective of this baseline method is to isolate concepts from SAE that exhibit the most significant difference in activation between typhoon and non-typhoon conditions.
+
+The methodology is implemented through the following steps:
+
+B.1. Data Collection and Patch Labeling
+
+We first leverage the IBTrACS (International Best Track Archive for Climate Stewardship) dataset to source the historical best-track positions (latitude and longitude) of typhoons at 6-hour intervals. The model’s input data, derived from the ERA5 dataset, is segmented into a grid of patches.
+
+Let the set of all input patches be denoted by \mathcal{P} . We define a mapping function, M , which associates a given typhoon’s geo-coordinate with its corresponding patch in \mathcal{P} . Using this, we partition all patches into two distinct subsets:
+
+\mathcal{P}_{\text{typhoon}} : The set of patches containing a typhoon center.
+
+\mathcal{P}_{\text{typhoon}}=\{p\in\mathcal{P}\mid M(\text{lat, lon})=p,(lat,lon)\in IBTrACS\}
+
+\mathcal{P}_{\text{non-typhoon}} : The set of patches not containing a typhoon center.
+
+\mathcal{P}_{\text{non-typhoon}}=\mathcal{P}\setminus\mathcal{P}_{\text{typhoon}}
+
+B.2. Concept Activation Analysis
+
+For each concept, c_{i} , within the SAE’s concept library, we compute its mean activation value across all patches in the \mathcal{P}_{\text{typhoon}} set. Let a(c_{i},p) be the activation of concept c_{i} for a given patch p . The mean activation is formulated as:
+
+(20) \bar{A}(c_{i},\mathcal{P}_{\text{typhoon}})=\frac{1}{|\mathcal{P}_{\text{typhoon}}|}\sum_{p\in\mathcal{P}_{\text{typhoon}}}a(c_{i},p)
+
+Similarly, we calculate the mean activation for the same concept across the \mathcal{P}_{\text{non-typhoon}} set:
+
+(21) \bar{A}(c_{i},\mathcal{P}_{\text{non-typhoon}})=\frac{1}{|\mathcal{P}_{\text{non-typhoon}}|}\sum_{p\in\mathcal{P}_{\text{non-typhoon}}}a(c_{i},p)
+
+B.3. Difference Calculation and Ranking
+
+To quantify the relevance of each concept to the presence of a typhoon, we calculate the delta ( \Delta ) between the two mean activation values:
+
+(22) \Delta(c_{i})=\bar{A}(c_{i},\mathcal{P}_{\text{typhoon}})-\bar{A}(c_{i},\mathcal{P}_{\text{non-typhoon}})
+
+All SAE concepts are then ranked in descending order based on their resulting \Delta value.
+
+B.4. Relevant Concept Selection
+
+Concepts with the highest positive \Delta values are considered to be the most statistically correlated with typhoon phenomena. In our ablation study, these top-ranked concepts were selected to represent the outcome of the statistical discovery method for comparative analysis.
+
+Appendix C Implementation Details
+
+For our SAE, we targeted the 18th layer of the base model. The SAE was configured with an intermediate dimension of 15,360, a ReLU activation function, and a top-k value of 320. The SAE was trained for 12 hours on 6*A800 GPUs using the AdamW optimizer with a learning rate of 5e-5.
+
+For LoREFT, we apply interventions to the first 128 token positions.
+
+For counterfactual concept localization, we randomly sampled 438 typhoon data with active tropical cyclone events from the year 2021 as the data for concept localization analysis.
+
+To ensure that the analysis accurately reflects the internal errors of the base model rather than the SAE’s own reconstruction errors, the training objective is to keep the output of the model’s subsequent layers as consistent as possible, whether the input is the original hidden embedding or the one reconstructed by the SAE, as formalized \mathcal{F}_{l:L}(h_{l})\approx\mathcal{F}_{l:L}(\hat{h_{l}}) .
+
+Appendix D Interpretation Methods
+
+To automate the process and reduce manual effort, we design an MLLM-based automated interpretation framework. The prompt provided to the MLLM is detailed in Appendix E . Our input consists of the following components: input-field data, output-field data, the climatological mean, the importance of each variable for the current concept, latitude–longitude information, and land–sea mask information. Specifically, we compute the concept’s input-field data by averaging all variables over a local region centered at each activated location for the same concept. Similarly, we apply the same procedure to obtain the concept’s output-field data. To capture the differences between the concept-related fields and the mean state, we also provide the climatological mean as a reference baseline. We derive the importance of each variable to the concept by computing the gradients of the concept with respect to each variable. For latitude–longitude information, we use binning and take the activation frequency within each bin as the spatial distribution feature. For land–sea information, we categorize locations into three types: land, ocean, and coastline.
+
+Appendix E Interpretation Prompt
+
+The detailed prompt template employed for SAE concept interpretation is presented in Figure 10 .
+
+Prompt for interpreting concepts
+
+Appendix F 72-Hours Results
+
+Figure 9 shows the 72-hour forecast results for other regions, where EP denotes the Eastern Pacific and NA denotes the North Atlantic.
+
+Region Base Model LoRA Adapter LiREFT Ours North Atlantic 132.09 124.18 123.28 131.99 119.21 Western Pacific 82.09 78.39 78.35 82.01 76.88 Eastern Pacific 67.73 65.13 64.58 67.67 63.53 Avg 93.97 89.23 88.74 93.89 86.54 \Delta (%) 7.91 3.00 2.48 7.83 -
+
+Appendix G Fine-tuning with Same Data
+
+To compare with models fine-tuned on typhoon data, we evaluate our method against several fine-tuning approaches trained on the same typhoon dataset. Our method still achieves competitive performance. In contrast, other methods may suffer from overfitting due to the scarcity of tropical cyclone data, where excessive fine-tuning on such limited samples can degrade generalization ability, the experimental results are shown in Table 3 .

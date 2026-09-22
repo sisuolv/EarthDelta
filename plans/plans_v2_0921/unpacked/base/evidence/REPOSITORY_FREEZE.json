@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "iteration_id": "round2-next-iteration-20260921",
+  "verified_on": "2026-09-21",
+  "repository": "sisuolv/EarthDelta",
+  "branch": "audit/round2-review-20260921",
+  "observed_branch_head": "403b55db65f4c35c1a85d0794ad0de2765b07d96",
+  "audited_source_head": "fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+  "prior_audit_range": "4fe55a7af90ea92f62a3232a571af92bfbd6114d..fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+  "comparison": {
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "new_commit_message": "docs(audit): package round-two findings and independent Pro review",
+    "method": "Compared complete, non-truncated Git root trees at both commits.",
+    "only_added_root_entry": "codex_audit_round2",
+    "common_entries_equal": true
+  },
+  "identical_tree_entries": {
+    "earthdelta": "867ea7c5ad43ffd7850cda3b6627287032a4db8f",
+    "scripts": "17893b917ce06ffd7fed2655e15bb0a129268320",
+    "tests": "e3c5d9d8bd207b492554487e7d9b0bd669ab4193",
+    "plans": "3e2d34421293ea1d3553213c7cdfbffcd84bbd08",
+    "reference": "f127c7c902a02525645bffd09a1acff0dc4b51a4",
+    "checkpoints": "d84171d8010f8fc232d545b72a8320157a1d97b9"
+  },
+  "identical_blob_entries": {
+    "README.md": "ac85225141d56baceed632b8783b9cfed2688965",
+    "pyproject.toml": "adcad73a0ae57fa8fe3bdaf830f200c20969fa55",
+    ".gitignore": "72851d6834f8e832403e2022919e787e713e96ec"
+  },
+  "prior_cpu_log": {
+    "path": "codex_audit_round2/results/evidence/pytest_cpu.log",
+    "blob_sha": "e8532a8c82356b11b6eefb38e612bcac9e71c0dc",
+    "collected": 290,
+    "passed": 283,
+    "skipped": 7,
+    "failed": 0,
+    "evidence_type": "RETRIEVED_PRIOR_RUN_LOG",
+    "rerun_in_package_creation": false
+  },
+  "actual_weather_status": {
+    "gpu_xformers_s0": "BLOCKED_UNVERIFIED",
+    "checkpoints_on_executor": "UNVERIFIED",
+    "data_on_executor": "UNVERIFIED",
+    "trained_reference_bank": "UNVERIFIED",
+    "weather_gains": "NOT_ESTABLISHED"
+  },
+  "this_delivery": {
+    "literature_review_rerun": false,
+    "remote_source_modified": false,
+    "repository_tests_rerun": false,
+    "weather_training_executed": false,
+    "action": "Generate engineering task package from preceding independent review; verify metadata only."
+  },
+  "sources": [
+    "https://api.github.com/repos/sisuolv/EarthDelta/branches?per_page=100",
+    "https://api.github.com/repos/sisuolv/EarthDelta/compare/fb767f7f6efbc428be39c9ad84f5905331d6e40f...403b55db65f4c35c1a85d0794ad0de2765b07d96",
+    "https://api.github.com/repos/sisuolv/EarthDelta/git/trees/fb767f7f6efbc428be39c9ad84f5905331d6e40f",
+    "https://api.github.com/repos/sisuolv/EarthDelta/git/trees/403b55db65f4c35c1a85d0794ad0de2765b07d96",
+    "https://github.com/sisuolv/EarthDelta/blob/403b55db65f4c35c1a85d0794ad0de2765b07d96/codex_audit_round2/results/evidence/pytest_cpu.log"
+  ]
+}
