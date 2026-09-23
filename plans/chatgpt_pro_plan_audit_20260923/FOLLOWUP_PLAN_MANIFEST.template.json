@@ -1,0 +1,27 @@
+{
+  "package_name": "EarthDelta_Codex_Followup_Plan_YYYYMMDD",
+  "generated_at_utc": "",
+  "source_review": {
+    "implementation_commit": "",
+    "comparison_base": "",
+    "plan_directory": "plans_v3_0922"
+  },
+  "overall_verdict": "",
+  "blocking_gates": [],
+  "tasks": [
+    {
+      "id": "",
+      "priority": "P0 | P1 | P2",
+      "depends_on": [],
+      "scope": "",
+      "status": "TO_BE_RUN | OBSERVED | BLOCKED | MISSING",
+      "commands": [],
+      "acceptance_criteria": [],
+      "evidence_outputs": [],
+      "stop_if": [],
+      "estimated_minutes": 0
+    }
+  ],
+  "required_inputs": [],
+  "sha256": ""
+}

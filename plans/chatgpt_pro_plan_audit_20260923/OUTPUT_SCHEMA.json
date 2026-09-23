@@ -1,0 +1,31 @@
+{
+  "overall_verdict": "PLAN_EXECUTED | PARTIALLY_EXECUTED | BLOCKED | FAILED_PLAN_COMPLIANCE | INSUFFICIENT_EVIDENCE",
+  "baseline": {
+    "planned_source": "",
+    "implementation_commit": "",
+    "comparison_base": ""
+  },
+  "plan_items": [
+    {
+      "id": "",
+      "planned_requirement": "",
+      "implementation_status": "COMPLETE | PARTIAL | BLOCKED | NOT_STARTED | NOT_APPLICABLE",
+      "code_evidence": [{"file": "", "line": 0}],
+      "test_evidence": [],
+      "execution_evidence": [],
+      "goal_status": "ACHIEVED | PARTIALLY_ACHIEVED | NOT_ESTABLISHED",
+      "evidence_status": "STATIC_CONFIRMED | EXECUTION_CONFIRMED | PLAUSIBLE_UNVERIFIED | MISSING",
+      "gap_or_risk": ""
+    }
+  ],
+  "special_verdicts": {
+    "s0_parity_verdict": "",
+    "fs_fit_divergence_verdict": "",
+    "stage4_readiness": "",
+    "novelty_claim_status": "",
+    "weather_utility_claim_status": ""
+  },
+  "blocking_findings": [],
+  "required_next_actions": [],
+  "claims_that_must_not_be_made": []
+}
