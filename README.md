@@ -7,11 +7,16 @@ reversible parameter edit — before ever applying it — and selects edits at i
 under a budget, using an exact quadratic form derived from forecast sensitivity theory.
 No fine-tuning loop, no retraining the base model, no peeking at future truth.
 
-> **Status (2026-09-21):** core primitives, Stormer bridge, and the ERA5 data pipeline are
-> implemented and unit-tested (195 tests, CPU). The GPU-side S0 validation gate (real
-> checkpoints, zero-edit equivalence, RMSE-vs-paper) is the next milestone — see
-> [Status & roadmap](#status--roadmap). This is an active research repo, not a released
-> package.
+> **Status (2026-09-24):** the S0 gate now passes official Stormer parity exactly (1/4/12-step
+> `max_abs_diff = 0.0` on real H100 hardware, after fixing an attention-backend/TF32 bug — see
+> [Status & roadmap](#status--roadmap)). On top of that, a single static reference adapter
+> ("Fs") and a K=4/rank=4 dynamic expert bank are now formally certified through a
+> pre-registered protocol with real GPU evidence. **Neither has demonstrated real
+> out-of-sample skill yet** — Fs itself is only "no material harm" relative to the frozen
+> backbone on a held-out panel, and the bank's per-expert gains are in-sample only. The
+> project is now in a read-only evidence-audit phase (FP-05a, see `plans/plan_v4_0923/`)
+> before any out-of-sample policy evaluation is attempted. This is an active research repo,
+> not a released package.
 
 ---
 
@@ -140,9 +145,12 @@ requires the summary operator to be linear). Read the module docstring before th
   normalization → diff-predict → denormalize → accumulate → renormalize rollout loop,
   and injects `ExpertLoRA` coefficients on `attn.proj` in blocks 18–23 via
   `controlled_rollout`. Zero coefficients are an exact no-op (`no_state_leak` test).
-  Real H100 S0 evidence currently passes one-step parity after the inverse-normalization
-  repair but still fails the frozen `1e-5` tolerance at 4 and 12 steps; downstream
-  scientific runs therefore remain gated.
+  Real H100 S0 evidence now passes all three registered rollouts (1/4/12-step) at
+  `max_abs_diff = 0.0` against the official implementation, after two root-caused fixes:
+  the inverse-normalization transform was reading device/dtype-cast constants instead of
+  the original NPZ-precision ones, and TF32 (on by default on H100) was silently
+  corrupting precision by ~3 orders of magnitude above the frozen `1e-5` tolerance. See
+  `plans/plan_v4_0923/run_20260923T_fp01_trace/` for the real job evidence.
 
 ## Data pipeline
 
@@ -189,16 +197,21 @@ resolution).
 | Core package (110 unit tests) | contracts, factorization, selection, LoRA experts | ✅ done |
 | Stormer bridge (CPU, random weights) | SDPA≡softmax, zero-edit no-op, normalization round-trip | ✅ done |
 | ERA5 data pipeline | 2020 pulled, rechunked, split manifest built | ✅ done |
-| **S0 gate** (`scripts/s0_gate.py`, GPU) | strict real-ckpt load, zero-edit parity, and multistep rollout checks at a frozen `1e-5` tolerance | ⚠️ blocked: one-step PASS, 4/12-step parity FAIL on H100 |
-| S1+ | expert training, qualification, candidate cache, and holdout evaluation | STOPPED until S0 multistep parity is closed |
+| **S0 gate** (`scripts/s0_gate.py`, GPU) | strict real-ckpt load, zero-edit parity, and multistep rollout checks at a frozen `1e-5` tolerance | ✅ PASS on real H100 (1/4/12-step `max_abs_diff = 0.0`) |
+| **Fs certification** (static reference adapter, GPU) | pre-registered protocol, formal qualification against a fresh out-of-sample panel, exact freeze/reload verification | ✅ certified (`FS_SELECTED`) — but only "no material harm" vs the frozen backbone out of sample, not a demonstrated gain |
+| **K=4/rank=4 dynamic bank** (GPU) | each expert trained from one shared certified Fs (not re-fit per worker), exact assembly-equivalence verification | ✅ certified (`BANK_CERTIFIED`) — per-expert gains are in-sample only, no out-of-sample evidence yet |
+| **FP-05** (candidate cache + out-of-sample policy evaluation) | whether the certified bank has any real out-of-sample skill over the static Fs baseline | 🔍 read-only evidence audit in progress (FP-05a); no cache built, no policy evaluated yet |
+| S1+ / holdout evaluation | final confirm-set evaluation | not started — no genuinely untouched confirm data currently exists on disk (see `plans/plan_v4_0923/FP05A_PLAN.md`) |
 
-The S0 gate is the real go/no-go: it's the first point where predictions from this
-codebase are checked against the official Stormer implementation on real weights and
-real data, not against each other. See `plans/plans_v1_0919/v6_draft/` for the full
-staged plan (S0 through S7) and the pre-registered kill criteria at each stage — the
-single largest risk to this project is not novelty (see above) but whether the oracle
-edit-selection gain clears a 2–3% Z500@72h RMSE bar at the S3 go/no-go; that bar, not
-implementation difficulty, is what would end the project.
+The S0 gate was the first real go/no-go: the point where predictions from this codebase
+are checked against the official Stormer implementation on real weights and real data,
+not against each other — it now passes cleanly. The next real go/no-go is FP-05/06: does
+editing this backbone with the certified expert bank produce any real, out-of-sample
+forecast improvement over the (already only break-even) static reference? Nothing
+certified so far answers that question yet. See `plans/plan_v4_0923/` for the full
+real-job evidence trail (protocols, decisions, deviations, certification bundles) behind
+every claim above, and `plans/plans_v1_0919/v6_draft/` for the original staged S0–S7 plan
+this work descends from.
 
 ## Provenance & licensing
 
