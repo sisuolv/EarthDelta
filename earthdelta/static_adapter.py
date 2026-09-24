@@ -57,6 +57,7 @@ from __future__ import annotations
 
 import contextlib
 import copy
+import dataclasses
 import datetime
 import hashlib
 import math
@@ -102,6 +103,7 @@ __all__ = [
     "objective_fields",
     "objective_loss_for_sample",
     "per_sample_loss_direction",
+    "evaluate_fs_quality",
     "fit_static_adapter",
     "state_dict_digest",
     "static_adapter_digest",
@@ -117,6 +119,17 @@ __all__ = [
     "record_post_freeze_reference",
     "load_admitted_sample",
     "load_admitted_samples",
+    "certify_admission_for_fs",
+    "FS_QUALIFICATION_VERDICTS",
+    "fs_panel_losses",
+    "panel_ratio_summary",
+    "training_stability",
+    "evaluate_fs_qualification",
+    "decide_lr_screen",
+    "decide_formal_fs",
+    "load_fs_adapter",
+    "build_continuation_probe_bank",
+    "verify_continuation_is_fs",
 ]
 
 
@@ -153,15 +166,22 @@ DEFAULT_TARGET_BLOCKS: Tuple[int, ...] = (18, 19, 20, 21, 22, 23)
 MODE_UPDATE_CAPS: Dict[str, int] = {
     "gradient_check": 32,
     "formal": 500,
+    #: FP-03 FS-SCREEN-v1: the pre-registered learning-rate stability screen.
+    #: Its records are diagnostic (the formal per-visit gate does not apply)
+    #: and can never be frozen as Fs.
+    "stability_screen": 256,
 }
 
 #: Pre-declared eligibility rules. Section 6.2: "只允许按事前资格规则处理无效库,
-#: 不按评估收益删掉专家." A fit is declared ineligible ONLY for these reasons.
-#: Low evaluation-time gain is deliberately absent and must never be added.
+#: 不按评估收益删掉专家." A fit is declared ineligible only for finite-state
+#: failures or the formal training-direction check below.  Evaluation-time gain
+#: is deliberately absent and must never be used to select an adapter.
 FS_ELIGIBILITY_RULES: Tuple[str, ...] = (
     "NON_FINITE_LOSS: an update produced a non-finite objective value",
     "NON_FINITE_GRADIENT: an update produced a non-finite gradient norm",
     "NO_UPDATES_RUN: the fit performed zero updates, so nothing was trained",
+    "FORMAL_LOSS_DIRECTION_UNAVAILABLE: formal fit did not repeat any sample",
+    "FORMAL_LOSS_DIRECTION_REGRESSION: a repeated sample ended with a higher loss",
 )
 
 _DEFAULT_LOSS_DTYPE = torch.float64
@@ -672,8 +692,24 @@ class FsFitConfig:
     #: Process flag, recorded not enforced: the caps above may be adjusted only
     #: BEFORE any development result is viewed (section 5.2 / 6.1).
     frozen_before_dev_results: bool = True
+    #: FP-03 pre-registration binding: which declared protocol configuration
+    #: this fit is, and the SHA-256 of the protocol file that declared it.
+    #: Optional (synthetic/CPU fits carry none); written by `to_dict`.
+    config_id: Optional[str] = None
+    protocol_sha256: Optional[str] = None
 
     def __post_init__(self):
+        if self.protocol_sha256 is not None and (
+            not isinstance(self.protocol_sha256, str)
+            or len(self.protocol_sha256) != 64
+            or any(c not in "0123456789abcdef" for c in self.protocol_sha256)
+        ):
+            raise StaticAdapterViolation(
+                "FS_PROTOCOL_SHA256_INVALID",
+                "protocol_sha256 must be a lowercase 64-hex SHA-256, got "
+                f"{self.protocol_sha256!r}.",
+                {"protocol_sha256": repr(self.protocol_sha256)},
+            )
         object.__setattr__(self, "lead_steps", tuple(int(s) for s in self.lead_steps))
         object.__setattr__(
             self, "target_blocks", tuple(int(b) for b in self.target_blocks)
@@ -758,6 +794,8 @@ class FsFitConfig:
             "grad_clip": self.grad_clip,
             "seed": int(self.seed),
             "frozen_before_dev_results": bool(self.frozen_before_dev_results),
+            "config_id": self.config_id,
+            "protocol_sha256": self.protocol_sha256,
         }
 
 
@@ -770,6 +808,28 @@ class FsFitRecord:
     n_updates: int = 0
     losses: List[float] = field(default_factory=list)
     grad_norms: List[float] = field(default_factory=list)
+    #: Optimizer-side trajectory (ARTIFACT_CONTRACT section 4: "梯度/optimizer/
+    #: update"). Recorded AFTER each optimizer step, under no_grad, in float64;
+    #: pure observation that never feeds back into the fit. `param_norms[t]` is
+    #: the L2 norm of every Fs factor after update t, `update_norms[t]` the L2
+    #: norm of the parameter change that update t actually applied, and
+    #: `initial_param_norm` the norm before the first update.
+    param_norms: List[float] = field(default_factory=list)
+    update_norms: List[float] = field(default_factory=list)
+    initial_param_norm: Optional[float] = None
+    #: Pre-clip gradient L2 norms of the A (`down`) and B (`up`) factors,
+    #: per update, float64. B is zero-initialized, so A's gradient is exactly
+    #: zero at update 0 and B's is not; both are the real `.grad` tensors.
+    grad_norms_A: List[float] = field(default_factory=list)
+    grad_norms_B: List[float] = field(default_factory=list)
+    #: Updates whose pre-clip total norm exceeded `grad_clip` (clip engaged).
+    clip_events: int = 0
+    clip_event_updates: List[int] = field(default_factory=list)
+    #: `static_adapter_digest` of the factors before the first / after the
+    #: last update, and the optimizer hyper-parameters actually used.
+    initial_adapter_digest: Optional[str] = None
+    final_adapter_digest: Optional[str] = None
+    optimizer: Dict[str, Any] = field(default_factory=dict)
     initial_loss: Optional[float] = None
     final_loss: Optional[float] = None
     min_loss: Optional[float] = None
@@ -783,6 +843,7 @@ class FsFitRecord:
     eligibility_rules: Tuple[str, ...] = FS_ELIGIBILITY_RULES
     wallclock_seconds: float = 0.0
     objective: Dict[str, Any] = field(default_factory=dict)
+    quality_gate: Dict[str, Any] = field(default_factory=dict)
     started_at: str = ""
     finished_at: str = ""
 
@@ -810,6 +871,16 @@ class FsFitRecord:
             "n_updates": int(self.n_updates),
             "losses": [float(v) for v in self.losses],
             "grad_norms": [float(v) for v in self.grad_norms],
+            "param_norms": [float(v) for v in self.param_norms],
+            "update_norms": [float(v) for v in self.update_norms],
+            "initial_param_norm": self.initial_param_norm,
+            "grad_norms_A": [float(v) for v in self.grad_norms_A],
+            "grad_norms_B": [float(v) for v in self.grad_norms_B],
+            "clip_events": int(self.clip_events),
+            "clip_event_updates": [int(v) for v in self.clip_event_updates],
+            "initial_adapter_digest": self.initial_adapter_digest,
+            "final_adapter_digest": self.final_adapter_digest,
+            "optimizer": dict(self.optimizer),
             "initial_loss": self.initial_loss,
             "final_loss": self.final_loss,
             "min_loss": self.min_loss,
@@ -825,6 +896,7 @@ class FsFitRecord:
             "eligibility_rules": list(self.eligibility_rules),
             "wallclock_seconds": float(self.wallclock_seconds),
             "objective": dict(self.objective),
+            "quality_gate": dict(self.quality_gate),
             "started_at": self.started_at,
             "finished_at": self.finished_at,
         }
@@ -837,6 +909,15 @@ def count_trainable_parameters(modules: Iterable[nn.Module]) -> int:
             if param.requires_grad:
                 total += param.numel()
     return total
+
+
+def _grad_l2_norm(params: Sequence[Tensor]) -> float:
+    """float64 L2 norm of the current `.grad` of `params` (0.0 if none has one)."""
+    with torch.no_grad():
+        squares = [p.grad.double().pow(2).sum() for p in params if p.grad is not None]
+        if not squares:
+            return 0.0
+        return float(torch.stack(squares).sum().sqrt())
 
 
 def per_sample_loss_direction(
@@ -888,6 +969,37 @@ def per_sample_loss_direction(
     }
 
 
+def evaluate_fs_quality(record: FsFitRecord) -> Dict[str, Any]:
+    """Apply the predeclared formal-fit direction gate.
+
+    Merge equivalence only proves that two implementations execute the same
+    update.  It says nothing about whether the fitted adapter improves its
+    training objective.  Formal fits therefore require every repeated sample
+    to finish below its own first observation.  The gradient-check mode keeps
+    the historical diagnostic-only behavior so a short smoke run cannot be
+    mistaken for a formal qualification.
+    """
+    direction = record.loss_direction
+    result: Dict[str, Any] = {
+        "mode": record.mode,
+        "n_samples_with_repeats": int(direction["n_samples_with_repeats"]),
+        "n_decreased": int(direction["n_decreased"]),
+        "fraction_decreased": direction["fraction_decreased"],
+        "passed": True,
+        "reason": None,
+    }
+    if record.mode != "formal":
+        result["reason"] = "DIAGNOSTIC_ONLY_NON_FORMAL_MODE"
+        return result
+    if result["n_samples_with_repeats"] == 0:
+        result["passed"] = False
+        result["reason"] = "FORMAL_LOSS_DIRECTION_UNAVAILABLE"
+    elif result["n_decreased"] != result["n_samples_with_repeats"]:
+        result["passed"] = False
+        result["reason"] = "FORMAL_LOSS_DIRECTION_REGRESSION"
+    return result
+
+
 def fit_static_adapter(
     bridge: WeatherStepBridge,
     samples: Sequence[TrainingSample],
@@ -937,6 +1049,29 @@ def fit_static_adapter(
         started_at=_utc_now(),
     )
 
+    group = optimizer.param_groups[0]
+    record.optimizer = {
+        "name": type(optimizer).__name__,
+        "lr": float(group["lr"]),
+        "betas": [float(b) for b in group["betas"]],
+        "eps": float(group["eps"]),
+        "weight_decay": float(group["weight_decay"]),
+        "amsgrad": bool(group["amsgrad"]),
+        "grad_clip_max_norm": config.grad_clip,
+        "schedule": "constant",
+    }
+    record.initial_adapter_digest = static_adapter_digest(adapters)
+    params_a = [p for lora in adapters.values() for p in lora.down.parameters()]
+    params_b = [p for lora in adapters.values() for p in lora.up.parameters()]
+
+    # Observation only: snapshots of the factors so the applied step and the
+    # resulting parameter norm can be recorded. Never read by the optimizer.
+    with torch.no_grad():
+        previous_params = [p.detach().clone() for p in params]
+        record.initial_param_norm = float(
+            torch.stack([p.double().pow(2).sum() for p in previous_params]).sum().sqrt()
+        )
+
     started = time.perf_counter()
     for update in range(int(config.max_updates)):
         sample = samples[update % len(samples)].to(device)
@@ -959,6 +1094,9 @@ def fit_static_adapter(
             break
 
         loss.backward()
+        # Pre-clip per-factor norms: read-only on the real `.grad` tensors.
+        grad_a = _grad_l2_norm(params_a)
+        grad_b = _grad_l2_norm(params_b)
         grad_norm = float(
             torch.nn.utils.clip_grad_norm_(
                 params,
@@ -973,8 +1111,24 @@ def fit_static_adapter(
 
         optimizer.step()
 
+        with torch.no_grad():
+            current_params = [p.detach().clone() for p in params]
+            update_sq = torch.stack([
+                (c.double() - q.double()).pow(2).sum()
+                for c, q in zip(current_params, previous_params)
+            ]).sum()
+            param_sq = torch.stack([c.double().pow(2).sum() for c in current_params]).sum()
+            previous_params = current_params
+        record.update_norms.append(float(update_sq.sqrt()))
+        record.param_norms.append(float(param_sq.sqrt()))
+
         record.losses.append(loss_value)
         record.grad_norms.append(grad_norm)
+        record.grad_norms_A.append(grad_a)
+        record.grad_norms_B.append(grad_b)
+        if config.grad_clip is not None and grad_norm > float(config.grad_clip):
+            record.clip_events += 1
+            record.clip_event_updates.append(int(update))
         record.n_updates += 1
         record.training_issue_ids.append(sample.issue_id)
         record.training_times_utc.append(sample.time_utc)
@@ -983,6 +1137,7 @@ def fit_static_adapter(
 
     record.wallclock_seconds = time.perf_counter() - started
     record.finished_at = _utc_now()
+    record.final_adapter_digest = static_adapter_digest(adapters)
     if record.losses:
         record.initial_loss = float(record.losses[0])
         record.final_loss = float(record.losses[-1])
@@ -990,7 +1145,640 @@ def fit_static_adapter(
     if record.n_updates == 0 and record.eligible:
         record.eligible = False
         record.ineligible_reason = "NO_UPDATES_RUN"
+    record.quality_gate = evaluate_fs_quality(record)
+    if record.eligible and not record.quality_gate["passed"]:
+        record.eligible = False
+        record.ineligible_reason = str(record.quality_gate["reason"])
     return adapters, record
+
+
+# =============================================================================
+# FP-03: fixed panels, training stability, pre-registered qualification
+# =============================================================================
+#
+# These are PURE functions of recorded numbers plus a rule mapping taken from
+# the pre-registered protocol file. They never read policy_dev/confirm data and
+# never rank candidates by a quality number: `decide_formal_fs` only ever
+# looks at the designated device index and the binary per-replica verdicts.
+
+FS_QUALIFICATION_VERDICTS: Tuple[str, ...] = (
+    "PASS", "FAIL", "INCONCLUSIVE_QUALIFICATION", "INVALID",
+)
+
+
+def fs_panel_losses(
+    bridge: WeatherStepBridge,
+    samples: Sequence[TrainingSample],
+    spec: ObjectiveSpec,
+    *,
+    lead_steps: Sequence[int] = (1, 4, 12),
+    fs_adapters: Optional[Mapping[int, ExpertLoRA]] = None,
+    target_blocks: Sequence[int] = DEFAULT_TARGET_BLOCKS,
+    variables: Optional[Sequence[str]] = None,
+    interval_hours: int = 6,
+) -> Dict[str, Dict[str, float]]:
+    """No-grad per-issue objective at each lead, from ONE rollout per issue.
+
+    Returns ``{issue_id: {"6": L, "24": L, "72": L}}``; the keys are lead HOURS
+    as strings so the mapping survives a JSON round trip unchanged. Every value
+    is the objective the fit minimizes (`objective_loss_for_sample`, float64
+    reduction, same Q and scale) restricted to that single lead -- leads are
+    never averaged together. ``fs_adapters=None`` is the plain backbone; the
+    zero-initialized Fs factors must reproduce it exactly.
+    """
+    steps = sorted({int(s) for s in lead_steps})
+    if not steps or steps[0] <= 0:
+        raise StaticAdapterViolation(
+            "PANEL_LEAD_STEPS_INVALID",
+            f"panel lead_steps must be positive rollout steps, got {list(lead_steps)}.",
+            {"lead_steps": list(lead_steps)},
+        )
+    names = list(variables) if variables is not None else list(bridge.variables)
+    device = next(bridge.model.parameters()).device
+    per_lead = {s: dataclasses.replace(spec, lead_steps=(s,)) for s in steps}
+    adapters = dict(fs_adapters) if fs_adapters else None
+    panel: Dict[str, Dict[str, float]] = {}
+    with torch.no_grad():
+        for sample in samples:
+            if sample.issue_id in panel:
+                raise StaticAdapterViolation(
+                    "PANEL_DUPLICATE_ISSUE",
+                    f"issue {sample.issue_id!r} appears twice in one panel.",
+                    {"issue_id": sample.issue_id},
+                )
+            on_device = sample.to(device)
+            trajectory = fs_rollout_trajectory(
+                bridge,
+                on_device.x_norm,
+                names,
+                steps=steps[-1],
+                fs_adapters=adapters,
+                target_blocks=target_blocks,
+                interval_hours=int(interval_hours),
+            )
+            panel[sample.issue_id] = {
+                str(s * int(interval_hours)): float(
+                    objective_loss_for_sample(bridge, trajectory, on_device, per_lead[s])
+                )
+                for s in steps
+            }
+    return panel
+
+
+def _panel_column(panel: Mapping[str, Mapping[str, float]], lead_hours: int) -> Dict[str, float]:
+    key = str(int(lead_hours))
+    missing = [iid for iid, row in panel.items() if key not in row]
+    if missing:
+        raise StaticAdapterViolation(
+            "PANEL_LEAD_MISSING",
+            f"panel has no {key}h value for issue(s) {missing[:4]}.",
+            {"lead_hours": key, "missing": missing[:16]},
+        )
+    return {str(iid): float(row[key]) for iid, row in panel.items()}
+
+
+def panel_ratio_summary(
+    panel0: Mapping[str, Mapping[str, float]],
+    panel1: Mapping[str, Mapping[str, float]],
+    lead_hours: int,
+) -> Dict[str, Any]:
+    """Per-issue ``r_i = L1/L0`` and ``m = mean(L1)/mean(L0)`` at one lead.
+
+    Both panels must cover exactly the same issues: a ratio over mismatched
+    issue sets would compare different weather.
+    """
+    col0 = _panel_column(panel0, lead_hours)
+    col1 = _panel_column(panel1, lead_hours)
+    if set(col0) != set(col1) or not col0:
+        raise StaticAdapterViolation(
+            "PANEL_ISSUE_SET_MISMATCH",
+            "initial and final panels do not cover the same non-empty issue set.",
+            {"only_initial": sorted(set(col0) - set(col1))[:16],
+             "only_final": sorted(set(col1) - set(col0))[:16]},
+        )
+    issues = sorted(col0)
+    ratios = {iid: col1[iid] / col0[iid] for iid in issues}
+    mean0 = sum(col0[i] for i in issues) / len(issues)
+    mean1 = sum(col1[i] for i in issues) / len(issues)
+    return {
+        "lead_hours": int(lead_hours),
+        "n_issues": len(issues),
+        "per_issue_ratio": ratios,
+        "max_ratio": max(ratios.values()),
+        "min_ratio": min(ratios.values()),
+        "mean_initial": mean0,
+        "mean_final": mean1,
+        "mean_ratio": mean1 / mean0,
+    }
+
+
+def _record_dict(record: "FsFitRecord | Mapping[str, Any]") -> Dict[str, Any]:
+    return record.to_dict() if isinstance(record, FsFitRecord) else dict(record)
+
+
+def training_stability(
+    record: "FsFitRecord | Mapping[str, Any]",
+    l0_24h: Mapping[str, float],
+    *,
+    horizon: int,
+    clip_events_max: int = 0,
+    per_visit_ratio_max: float = 1.25,
+    epoch_onset_factor: float = 1.02,
+    epoch_size: int = 8,
+) -> Dict[str, Any]:
+    """FS-QUAL-v1 Q1 (finite, exact horizon) and Q2 (stability) from a trace.
+
+    Q2 has three parts, all required: no clip event; every training loss at
+    most ``per_visit_ratio_max`` times that issue's L0 24h panel loss; and no
+    epoch-mean onset, i.e. ``E_k <= epoch_onset_factor * min(E_0..E_{k-1})``
+    for every full epoch k >= 1, with ``E_k`` the mean loss of updates
+    ``8k..8k+7``. The first violating epoch is reported as the onset.
+    """
+    rec = _record_dict(record)
+    losses = [float(v) for v in rec.get("losses", [])]
+    grads = [float(v) for v in rec.get("grad_norms", [])]
+    ids = [str(v) for v in rec.get("training_issue_ids", [])]
+    n = int(rec.get("n_updates", 0))
+    finite_losses = all(math.isfinite(v) for v in losses)
+    finite_grads = all(math.isfinite(v) for v in grads)
+    q1 = {
+        "all_losses_finite": finite_losses,
+        "all_grad_norms_finite": finite_grads,
+        "n_updates": n,
+        "required_n_updates": int(horizon),
+        "trace_lengths_consistent": len(losses) == n == len(grads) == len(ids),
+    }
+    q1["passed"] = bool(
+        finite_losses and finite_grads and n == int(horizon)
+        and q1["trace_lengths_consistent"] and rec.get("ineligible_reason") not in (
+            "NON_FINITE_LOSS", "NON_FINITE_GRADIENT")
+    )
+
+    missing = sorted({i for i in ids if i not in l0_24h})
+    if missing:
+        raise StaticAdapterViolation(
+            "STABILITY_L0_MISSING",
+            f"no L0 24h panel loss for trained issue(s) {missing[:4]}; the "
+            "per-visit ratio cannot be formed.",
+            {"missing": missing[:16]},
+        )
+    clip = (rec.get("config") or {}).get("grad_clip")
+    clip_from_trace = sum(1 for g in grads if clip is not None and g > float(clip))
+    clip_events = int(rec["clip_events"]) if rec.get("clip_events") is not None else clip_from_trace
+    ratios = [loss / float(l0_24h[iid]) for loss, iid in zip(losses, ids)]
+    max_ratio = max(ratios) if ratios else None
+    argmax = ratios.index(max_ratio) if ratios else None
+    epochs = [losses[k:k + epoch_size] for k in range(0, len(losses) - len(losses) % epoch_size, epoch_size)]
+    e_means = [sum(e) / len(e) for e in epochs]
+    onset = None
+    for k in range(1, len(e_means)):
+        if e_means[k] > float(epoch_onset_factor) * min(e_means[:k]):
+            onset = k
+            break
+    first_clip = next((t for t, g in enumerate(grads) if clip is not None and g > float(clip)), None)
+    clip_ok = clip_events <= int(clip_events_max)
+    ratio_ok = max_ratio is not None and max_ratio <= float(per_visit_ratio_max)
+    onset_ok = onset is None and len(e_means) >= 2
+    q2 = {
+        "clip_events": clip_events,
+        "clip_events_from_trace": clip_from_trace,
+        "clip_events_max": int(clip_events_max),
+        "first_clip_update": first_clip,
+        "clip_ok": clip_ok,
+        "max_per_visit_ratio": max_ratio,
+        "argmax_update": argmax,
+        "argmax_issue": ids[argmax] if argmax is not None else None,
+        "per_visit_ratio_max": float(per_visit_ratio_max),
+        "ratio_ok": bool(ratio_ok),
+        "epoch_means": e_means,
+        "epoch_onset_factor": float(epoch_onset_factor),
+        "onset_epoch": onset,
+        "onset_update": onset * epoch_size if onset is not None else None,
+        "epoch_ok": bool(onset_ok),
+    }
+    q2["passed"] = bool(clip_ok and ratio_ok and onset_ok)
+    return {"q1": q1, "q2": q2, "stable": bool(q1["passed"] and q2["passed"])}
+
+
+def _le(value: Optional[float], threshold: Optional[float]) -> str:
+    if threshold is None:
+        return "NOT_PREREGISTERED"
+    if value is None or not math.isfinite(float(value)):
+        return "FAIL"
+    return "PASS" if float(value) <= float(threshold) else "FAIL"
+
+
+def _guard(status: str, report_only: bool) -> str:
+    """Report-only criteria never block; a null threshold blocks otherwise."""
+    return "REPORT_ONLY" if report_only else status
+
+
+def evaluate_fs_qualification(
+    record: "FsFitRecord | Mapping[str, Any]",
+    panel0: Mapping[str, Mapping[str, Mapping[str, float]]],
+    panel1: Mapping[str, Mapping[str, Mapping[str, float]]],
+    rule: Mapping[str, Any],
+    *,
+    validity: Optional[Mapping[str, bool]] = None,
+) -> Dict[str, Any]:
+    """FS-QUAL-v1 for one replica. Verdict in `FS_QUALIFICATION_VERDICTS`.
+
+    ``panel0`` / ``panel1`` are ``{"train": panel, "holdout": panel}`` at the
+    common initial checkpoint (L0) and after the fit (L1). ``validity`` holds
+    the Q0 facts (backend, versions, TF32, certificates, digests); every entry
+    must be True or the verdict is INVALID. A null threshold makes its
+    criterion NOT_PREREGISTERED, which blocks PASS unless the rule marks that
+    criterion report-only. ``substantive_verdict`` is the same aggregation
+    without Q0, used for negative controls whose provenance is historical.
+    """
+    horizon = rule.get("horizon")
+    q2r = rule.get("q2", {})
+    q3r = rule.get("q3", {})
+    q4r = rule.get("q4", {})
+    q5r = rule.get("q5", {})
+    q6r = rule.get("q6", {})
+
+    train0, train1 = panel0["train"], panel1["train"]
+    l0_24h = _panel_column(train0, 24)
+    q2_thresholds = (q2r.get("clip_events_max"), q2r.get("per_visit_ratio_max"),
+                     q2r.get("epoch_onset_factor"))
+    stability = training_stability(
+        record, l0_24h,
+        horizon=int(horizon) if horizon is not None else -1,
+        clip_events_max=int(q2_thresholds[0]) if q2_thresholds[0] is not None else 0,
+        per_visit_ratio_max=float(q2_thresholds[1]) if q2_thresholds[1] is not None else 1.25,
+        epoch_onset_factor=float(q2_thresholds[2]) if q2_thresholds[2] is not None else 1.02,
+    )
+    status: Dict[str, str] = {}
+    status["Q1"] = ("NOT_PREREGISTERED" if horizon is None
+                    else "PASS" if stability["q1"]["passed"] else "FAIL")
+    status["Q2"] = ("NOT_PREREGISTERED" if any(t is None for t in q2_thresholds)
+                    else "PASS" if stability["q2"]["passed"] else "FAIL")
+
+    rec = _record_dict(record)
+    direction = per_sample_loss_direction(rec.get("losses", []), rec.get("training_issue_ids", []))
+    required = q3r.get("required_issues")
+    if required is None:
+        status["Q3"] = "NOT_PREREGISTERED"
+    else:
+        status["Q3"] = ("PASS" if direction["n_samples_with_repeats"] == int(required)
+                        == direction["n_decreased"] else "FAIL")
+
+    q4 = panel_ratio_summary(train0, train1, 24)
+    q4_t = (q4r.get("pass_max_ratio_lt"), q4r.get("pass_mean_ratio_le"),
+            q4r.get("fail_mean_ratio_gt"), q4r.get("fail_max_ratio_gt"))
+    if any(t is None for t in q4_t):
+        status["Q4"] = "NOT_PREREGISTERED"
+    elif q4["max_ratio"] < q4_t[0] and q4["mean_ratio"] <= q4_t[1]:
+        status["Q4"] = "PASS"
+    elif q4["mean_ratio"] > q4_t[2] or q4["max_ratio"] > q4_t[3]:
+        status["Q4"] = "FAIL"
+    else:
+        status["Q4"] = "INCONCLUSIVE_QUALIFICATION"
+
+    q5 = panel_ratio_summary(train0, train1, 72)
+    status["Q5"] = _guard(_le(q5["mean_ratio"], q5r.get("mean_ratio_72h_le")),
+                          bool(q5r.get("report_only", False)))
+    q6 = panel_ratio_summary(panel0["holdout"], panel1["holdout"], 24)
+    status["Q6"] = _guard(_le(q6["mean_ratio"], q6r.get("holdout_mean_ratio_24h_le")),
+                          bool(q6r.get("report_only", False)))
+    q6h = panel_ratio_summary(train0, train1, 6)
+
+    enforced = [status[k] for k in ("Q1", "Q2", "Q3", "Q4", "Q5", "Q6") if status[k] != "REPORT_ONLY"]
+    if "FAIL" in enforced:
+        substantive = "FAIL"
+    elif all(s == "PASS" for s in enforced):
+        substantive = "PASS"
+    else:
+        substantive = "INCONCLUSIVE_QUALIFICATION"
+
+    if validity is None:
+        q0 = {"status": "NOT_EVALUATED", "failed": []}
+    else:
+        failed = sorted(k for k, v in validity.items() if v is not True)
+        q0 = {"status": "PASS" if validity and not failed else "FAIL",
+              "failed": failed or ([] if validity else ["NO_VALIDITY_FACTS"]),
+              "facts": dict(validity)}
+    verdict = "INVALID" if q0["status"] != "PASS" else substantive
+    return {
+        "rule": "FS-QUAL-v1",
+        "verdict": verdict,
+        "substantive_verdict": substantive,
+        "quality_pass": verdict == "PASS",
+        "status": status,
+        "q0": q0,
+        "stability": stability,
+        "q3_per_visit": {k: direction[k] for k in
+                         ("n_samples_with_repeats", "n_decreased", "fraction_decreased")},
+        "q4_train_24h": q4,
+        "q5_train_72h": q5,
+        "q6_holdout_24h": q6,
+        "report_only_train_6h": q6h,
+    }
+
+
+def decide_lr_screen(arms: Sequence[Mapping[str, Any]], rule: Mapping[str, Any]) -> Dict[str, Any]:
+    """FS-SCREEN-v1, applied exactly. No arm is ranked by a quality number.
+
+    Each arm carries ``arm_id``, ``lr``, ``valid`` (its Q0), ``stability``
+    (`training_stability`) and ``train_panel_mean_ratio_24h``. A missing or
+    invalid arm makes the whole screen INVALID. A stable positive control means
+    the instability did not reproduce: NOT_TESTABLE. Otherwise S is every
+    candidate arm that is STABLE (Q1 and Q2) and PROGRESSING (final train-panel
+    24h mean ratio <= the threshold); empty S refutes the lr hypothesis, else
+    the highest-lr member of S is selected and the next-lower one is fallback.
+    """
+    control = str(rule["control_arm"])
+    candidates = [str(a) for a in rule["candidate_arms"]]
+    progressing_max = rule.get("progressing_mean_ratio_24h_le")
+    by_id = {str(a["arm_id"]): a for a in arms}
+    required = [control] + candidates
+    table = []
+    for arm_id in required:
+        arm = by_id.get(arm_id)
+        if arm is None:
+            continue
+        stab = arm["stability"]
+        m = arm.get("train_panel_mean_ratio_24h")
+        progressing = (progressing_max is not None and m is not None
+                       and math.isfinite(float(m)) and float(m) <= float(progressing_max))
+        onset = stab["q2"]["onset_update"]
+        table.append({
+            "arm_id": arm_id,
+            "lr": float(arm["lr"]),
+            "valid": bool(arm.get("valid")),
+            "stable": bool(stab["stable"]),
+            "q1_passed": bool(stab["q1"]["passed"]),
+            "q2_passed": bool(stab["q2"]["passed"]),
+            "progressing": bool(progressing),
+            "train_panel_mean_ratio_24h": m,
+            "clip_events": stab["q2"]["clip_events"],
+            "first_clip_update": stab["q2"]["first_clip_update"],
+            "max_per_visit_ratio": stab["q2"]["max_per_visit_ratio"],
+            "onset_epoch": stab["q2"]["onset_epoch"],
+            "onset_update": onset,
+            "lr_x_onset_update": float(arm["lr"]) * onset if onset is not None else None,
+        })
+    missing = [a for a in required if a not in by_id]
+    invalid = [row["arm_id"] for row in table if not row["valid"]]
+    result: Dict[str, Any] = {
+        "rule": "FS-SCREEN-v1",
+        "horizon": rule.get("horizon"),
+        "arms": table,
+        "missing_arms": missing,
+        "invalid_arms": invalid,
+        "S": [],
+        "selected_arm": None,
+        "selected_lr": None,
+        "fallback_arm": None,
+        "fallback_lr": None,
+    }
+    rows = {row["arm_id"]: row for row in table}
+    if missing or invalid or progressing_max is None:
+        result.update(verdict="INVALID", stop=True)
+        return result
+    if rows[control]["stable"]:
+        result.update(verdict="NOT_TESTABLE", stop=True)
+        return result
+    members = sorted((rows[a] for a in candidates if rows[a]["stable"] and rows[a]["progressing"]),
+                     key=lambda row: -row["lr"])
+    result["S"] = [row["arm_id"] for row in members]
+    if not members:
+        result.update(verdict="REFUTED", stop=True)
+        return result
+    result.update(
+        verdict="CONFIRMED",
+        stop=False,
+        selected_arm=members[0]["arm_id"],
+        selected_lr=members[0]["lr"],
+        fallback_arm=members[1]["arm_id"] if len(members) > 1 else None,
+        fallback_lr=members[1]["lr"] if len(members) > 1 else None,
+        claim_scope=(f"lr hypothesis confirmed for H={rule.get('horizon')} updates only; "
+                     "no extrapolation to a longer horizon"),
+    )
+    return result
+
+
+def decide_formal_fs(
+    replicas: Sequence[Mapping[str, Any]],
+    rule: Mapping[str, Any],
+    *,
+    designated_gates: Optional[Mapping[str, bool]] = None,
+) -> Dict[str, Any]:
+    """FS-SELECT-v1. All replicas must qualify; only the designated one can be Fs.
+
+    ``replicas`` are ``{"device_index", "qualification", "adapter_sha256"}``.
+    The designated candidate is fixed by device index before submission; a
+    witness can never be substituted, whatever its numbers. With
+    ``designated_gates`` (numerical_merge / reload / identity results of the
+    designated candidate in independent processes) the final selection is
+    decided; without them a quality PASS is only pending those gates.
+    """
+    n_required = int(rule.get("n_replicas", 4))
+    designated = int(rule.get("designated_device_index", 0))
+    by_dev: Dict[int, Mapping[str, Any]] = {}
+    duplicate = False
+    for rep in replicas:
+        idx = int(rep["device_index"])
+        duplicate = duplicate or idx in by_dev
+        by_dev[idx] = rep
+    verdicts = {idx: str(rep["qualification"]["verdict"]) for idx, rep in sorted(by_dev.items())}
+    result: Dict[str, Any] = {
+        "rule": "FS-SELECT-v1",
+        "replica_verdicts": {str(k): v for k, v in verdicts.items()},
+        "designated_device_index": designated,
+        "designated_adapter_sha256": None,
+        "substitution": "FORBIDDEN",
+        "fs_selected": False,
+    }
+    if duplicate or sorted(by_dev) != list(range(n_required)):
+        result.update(verdict="INVALID", reason="REPLICA_SET_INCOMPLETE_OR_DUPLICATED")
+        return result
+    values = list(verdicts.values())
+    if "INVALID" in values:
+        result.update(verdict="INVALID", reason="A_REPLICA_FAILED_Q0_VALIDITY")
+    elif all(v == "PASS" for v in values):
+        result["designated_adapter_sha256"] = by_dev[designated].get("adapter_sha256")
+        if designated_gates is None:
+            result.update(verdict="QUALITY_PASS_PENDING_DESIGNATED_GATES")
+        else:
+            required_gates = ("numerical_merge_pass", "reload_pass", "identity_pass")
+            failed = [g for g in required_gates if designated_gates.get(g) is not True]
+            result["designated_gates"] = dict(designated_gates)
+            if failed:
+                result.update(verdict="STOP_DESIGNATED_GATE_FAILED", failed_gates=failed)
+            else:
+                result.update(verdict="FS_SELECTED", fs_selected=True)
+    elif "FAIL" in values:
+        result.update(verdict="STOP_FITTED_FS_QUALITY",
+                      failed_replicas=[k for k, v in verdicts.items() if v == "FAIL"])
+    else:
+        result.update(verdict="INCONCLUSIVE_QUALIFICATION")
+    return result
+
+
+def load_fs_adapter(
+    path: Path | str,
+    hidden_size: int,
+    target_blocks: Sequence[int] = DEFAULT_TARGET_BLOCKS,
+    *,
+    rank_per_expert: int = 4,
+    scale: float = 1.0,
+    expected_sha256: Optional[str] = None,
+    device: Optional[torch.device | str] = None,
+) -> Tuple[Dict[int, ExpertLoRA], str]:
+    """Load a saved ``{block: state_dict}`` Fs adapter file, byte-identity first.
+
+    The file's SHA-256 is computed before it is deserialized and must equal
+    ``expected_sha256`` when one is given; blocks must match exactly and every
+    state dict loads strictly.
+    """
+    file_path = Path(path)
+    digest = hashlib.sha256()
+    with file_path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1 << 22), b""):
+            digest.update(chunk)
+    sha = digest.hexdigest()
+    if expected_sha256 is not None and sha != str(expected_sha256):
+        raise StaticAdapterViolation(
+            "FS_ADAPTER_SHA256_MISMATCH",
+            f"{file_path} has sha256 {sha}, expected {expected_sha256}.",
+            {"path": str(file_path), "actual": sha, "expected": str(expected_sha256)},
+        )
+    state = torch.load(file_path, map_location="cpu", weights_only=True)
+    blocks = tuple(int(b) for b in target_blocks)
+    stored = {int(k): v for k, v in state.items()}
+    if set(stored) != set(blocks):
+        raise StaticAdapterViolation(
+            "FS_ADAPTER_BLOCKS_MISMATCH",
+            f"{file_path} holds blocks {sorted(stored)}, expected {list(blocks)}.",
+            {"stored": sorted(stored), "expected": list(blocks)},
+        )
+    adapters: Dict[int, ExpertLoRA] = {}
+    for block in blocks:
+        lora = ExpertLoRA(hidden_size, hidden_size, num_experts=FS_NUM_EXPERTS,
+                          rank_per_expert=int(rank_per_expert), scale=float(scale))
+        lora.load_state_dict(stored[block], strict=True)
+        if device is not None:
+            lora.to(device)
+        adapters[block] = lora
+    return adapters, sha
+
+
+def build_continuation_probe_bank(
+    hidden_size: int,
+    target_blocks: Sequence[int] = DEFAULT_TARGET_BLOCKS,
+    *,
+    num_experts: int = 4,
+    rank_per_expert: int = 4,
+    seed: int = 20260921,
+    factor_std: float = 0.02,
+) -> Dict[int, ExpertLoRA]:
+    """A dynamic-bank-shaped probe whose B factors are NONZERO.
+
+    The real bank is zero-initialized in B, which would make any continuation
+    check vacuous (an all-zero edit leaves the state untouched). This probe is
+    used only to prove the continuation mechanics; it is never trained or saved.
+    """
+    generator = torch.Generator().manual_seed(int(seed))
+    bank: Dict[int, ExpertLoRA] = {}
+    for block in (int(b) for b in target_blocks):
+        lora = ExpertLoRA(hidden_size, hidden_size, num_experts=int(num_experts),
+                          rank_per_expert=int(rank_per_expert), scale=1.0)
+        with torch.no_grad():
+            for module in list(lora.down) + list(lora.up):
+                module.weight.copy_(torch.randn(module.weight.shape, generator=generator)
+                                    * float(factor_std))
+        lora.requires_grad_(False)
+        bank[block] = lora
+    return bank
+
+
+def verify_continuation_is_fs(
+    fs_bridge: WeatherStepBridge,
+    f0_bridge: WeatherStepBridge,
+    probe_bank: Mapping[int, ExpertLoRA],
+    x_norm: Tensor,
+    variables: Sequence[str],
+    *,
+    hold: int = 4,
+    total: int = 12,
+    active_expert: int = 0,
+    coefficient: float = 0.25,
+    rho: float = 0.25,
+    interval_hours: int = 6,
+    target_blocks: Sequence[int] = DEFAULT_TARGET_BLOCKS,
+) -> Dict[str, Any]:
+    """After the hold window the rollout continues as Fs FROM THE EDITED STATE.
+
+    A controlled rollout on the Fs bridge applies one probe expert for ``hold``
+    steps. Steps ``hold+1..total`` must equal, exactly, the Fs bridge's own
+    `forward_validation` continued step by step from the edited step-``hold``
+    state, and must differ from an F0 continuation from that same state. The
+    probe must be non-vacuous: nonzero B factors and an edited step-``hold``
+    state that differs from the unedited Fs one.
+    """
+    num_experts = {int(lora.num_experts) for lora in probe_bank.values()}
+    if len(num_experts) != 1:
+        raise StaticAdapterViolation("CONTINUATION_PROBE_INCONSISTENT",
+                                     "probe bank blocks disagree on num_experts.", {})
+    k = num_experts.pop()
+    nonzero_b = all(
+        float(lora._get_up(int(active_expert)).weight.detach().abs().max()) > 0.0
+        for lora in probe_bank.values()
+    )
+    if not nonzero_b:
+        raise StaticAdapterViolation(
+            "CONTINUATION_PROBE_VACUOUS",
+            "the probe bank's active expert has an all-zero B factor; the edit "
+            "would be a no-op and the continuation check would pass vacuously.",
+            {"active_expert": int(active_expert)},
+        )
+    coefficients = tuple(float(coefficient) if i == int(active_expert) else 0.0 for i in range(k))
+    plan = EditPlan(
+        plan_id="fs_continuation_probe",
+        num_experts=k,
+        coefficients=coefficients,
+        hold_steps=int(hold),
+        interval_hours=int(interval_hours),
+        continuation="reference_after_hold",
+        rho=float(rho),
+    )
+    names = list(variables)
+    with torch.no_grad(), _disable_tf32_for_identity_check():
+        trajectory = controlled_rollout(
+            fs_bridge, x_norm, names, interval=int(interval_hours), steps=int(total),
+            plan=plan, expert_loras=dict(probe_bank),
+            target_blocks=tuple(int(b) for b in target_blocks), return_trajectory=True,
+        )
+        unedited = fs_bridge.forward_validation(x_norm, names, interval=int(interval_hours),
+                                                steps=int(hold))
+        fs_state = trajectory[:, int(hold)]
+        f0_state = trajectory[:, int(hold)]
+        diffs_fs: List[float] = []
+        diffs_f0: List[float] = []
+        for step in range(int(hold) + 1, int(total) + 1):
+            fs_state = fs_bridge.forward_validation(fs_state, names, interval=int(interval_hours), steps=1)
+            f0_state = f0_bridge.forward_validation(f0_state, names, interval=int(interval_hours), steps=1)
+            diffs_fs.append(float((trajectory[:, step] - fs_state).abs().max()))
+            diffs_f0.append(float((trajectory[:, step] - f0_state).abs().max()))
+    edit_effect = float((trajectory[:, int(hold)] - unedited).abs().max())
+    exact = all(d == 0.0 for d in diffs_fs)
+    discriminating = all(d > 0.0 for d in diffs_f0)
+    return {
+        "check": "continuation_after_hold_is_fs_from_edited_state",
+        "passed": bool(exact and discriminating and edit_effect > 0.0),
+        "hold": int(hold),
+        "total": int(total),
+        "active_expert": int(active_expert),
+        "coefficient": float(coefficient),
+        "edit_effect_at_hold_max_abs": edit_effect,
+        "max_abs_diff_vs_fs_continuation_by_step": diffs_fs,
+        "max_abs_diff_vs_f0_continuation_by_step": diffs_f0,
+        "exact_fs_continuation": bool(exact),
+        "discriminates_f0": bool(discriminating),
+        "tf32_disabled_for_check": True,
+    }
 
 
 # =============================================================================
@@ -1909,19 +2697,252 @@ def load_admitted_sample(
     )
 
 
+def _utc_seconds(value: Any) -> int:
+    """Epoch seconds of a datetime64/ISO value, for exact time identity."""
+    import numpy as np
+
+    return int(np.datetime64(value, "s").astype("int64"))
+
+
+def certify_admission_for_fs(
+    admission_record: Mapping[str, Any],
+    *,
+    lead_steps: Sequence[int],
+    required_history_steps: int = 2,
+    expected_normalization_digest: Optional[str] = None,
+    expected_grid_hash: Optional[str] = None,
+    expected_variable_order_hash: Optional[str] = None,
+    reverify_content: bool = True,
+) -> Dict[str, Any]:
+    """Fail-closed consumer certification of an admission record (FP-03 Q0).
+
+    Nothing is trusted from the record's own PASS flags alone. Every failure
+    is collected and raised together as ``ADMISSION_NOT_CERTIFIED``:
+
+      * the OUTER record and the inner admission are passed, formal and
+        bank_fit, and both the B09 join and the B08 content results are True;
+      * every admitted row is formal bank_fit with >= ``required_history_steps``
+        of history and a declared lead reaching the furthest requested lead,
+        and has exactly one passed certificate for ITS issue_id, role and
+        process group, on the same store;
+      * that certificate covers history through the furthest lead:
+        ``issue_index - required_history_steps .. issue_index + max(lead_steps)``;
+      * the certificate's UTC stamps equal the store's time coordinate at those
+        indices, and the row's issue_time equals the store time at issue_index;
+      * normalization digest, grid hash and variable-order hash equal the
+        expected (consumer-side) identities;
+      * a FRESH `verify_content_subset` over the same slice reproduces the
+        stored content and identity SHA-256 byte for byte.
+    """
+    from .pilot_contract import PilotContractViolation, verify_content_subset
+
+    failures: List[Dict[str, Any]] = []
+
+    def fail(code: str, **detail: Any) -> None:
+        failures.append({"code": code, **detail})
+
+    max_step = max(int(s) for s in lead_steps)
+    max_lead_hours = max_step * 6
+    admission = admission_record.get("admission", {})
+    for scope, obj in (("outer", admission_record), ("admission", admission)):
+        if obj.get("passed") is not True:
+            fail("NOT_PASSED", scope=scope)
+        if obj.get("formal") is not True:
+            fail("NOT_FORMAL", scope=scope)
+        if obj.get("data_role") != DataRole.BANK_FIT.value:
+            fail("NOT_BANK_FIT", scope=scope, data_role=obj.get("data_role"))
+    results = admission_record.get("results") or {}
+    for key in ("b09_real_sample_admission", "b08_content_verification"):
+        if results.get(key) is not True:
+            fail("GATE_RESULT_NOT_TRUE", result=key, value=results.get(key))
+
+    rows = list(admission.get("admitted") or [])
+    if not rows:
+        fail("NO_ADMITTED_ROWS")
+    certificates = list(admission_record.get("content_certificates") or [])
+    by_issue: Dict[str, List[Mapping[str, Any]]] = {}
+    for cert in certificates:
+        by_issue.setdefault(str(cert.get("issue_id")), []).append(cert)
+
+    report_rows: List[Dict[str, Any]] = []
+    for row in rows:
+        iid = str(row.get("issue_id"))
+        if row.get("admitted") is not True or row.get("formal") is not True:
+            fail("ROW_NOT_ADMITTED_FORMAL", issue_id=iid)
+        if row.get("data_role") != DataRole.BANK_FIT.value:
+            fail("ROW_NOT_BANK_FIT", issue_id=iid, data_role=row.get("data_role"))
+        if int(row.get("interval_hours", 0)) != 6:
+            fail("ROW_INTERVAL_NOT_6H", issue_id=iid)
+        if int(row.get("history_steps", 0)) < int(required_history_steps):
+            fail("ROW_HISTORY_TOO_SHORT", issue_id=iid, history_steps=row.get("history_steps"),
+                 required=int(required_history_steps))
+        if float(row.get("lead_hours", 0)) < max_lead_hours:
+            fail("ROW_LEAD_TOO_SHORT", issue_id=iid, lead_hours=row.get("lead_hours"),
+                 required=max_lead_hours)
+        stores = {str(Path(str(row.get(k))).resolve()) for k in
+                  ("history_store", "issue_store", "target_store") if row.get(k) is not None}
+        if len(stores) != 1:
+            fail("ROW_SPANS_STORES", issue_id=iid)
+        store = str(Path(str(row.get("issue_store"))).resolve())
+        if expected_normalization_digest is not None and \
+                row.get("normalization_hash") != expected_normalization_digest:
+            fail("ROW_NORMALIZATION_MISMATCH", issue_id=iid, row=row.get("normalization_hash"),
+                 expected=expected_normalization_digest)
+        if expected_grid_hash is not None and row.get("grid_hash") != expected_grid_hash:
+            fail("ROW_GRID_MISMATCH", issue_id=iid, row=row.get("grid_hash"), expected=expected_grid_hash)
+
+        embedded = row.get("content_certificate")
+        matches = list(by_issue.get(iid, []))
+        if isinstance(embedded, Mapping):
+            matches = matches or [embedded]
+            if any(dict(m) != dict(embedded) for m in matches):
+                fail("ROW_CERTIFICATE_CONFLICT", issue_id=iid)
+        if len(matches) != 1:
+            fail("ROW_CERTIFICATE_COUNT", issue_id=iid, n=len(matches))
+            continue
+        cert = matches[0]
+        if cert.get("passed") is not True:
+            fail("CERT_NOT_PASSED", issue_id=iid)
+        if cert.get("data_role") != DataRole.BANK_FIT.value:
+            fail("CERT_NOT_BANK_FIT", issue_id=iid, data_role=cert.get("data_role"))
+        if cert.get("process_group_id") != row.get("process_group_id"):
+            fail("CERT_PROCESS_GROUP_MISMATCH", issue_id=iid)
+        if str(Path(str(cert.get("store_path"))).resolve()) != store:
+            fail("CERT_STORE_MISMATCH", issue_id=iid)
+        if cert.get("grid_hash") != row.get("grid_hash"):
+            fail("CERT_GRID_MISMATCH", issue_id=iid)
+        if expected_variable_order_hash is not None and \
+                cert.get("variable_order_hash") != expected_variable_order_hash:
+            fail("CERT_VARIABLE_ORDER_MISMATCH", issue_id=iid,
+                 cert=cert.get("variable_order_hash"), expected=expected_variable_order_hash)
+        indices = [int(i) for i in cert.get("indices") or []]
+        issue_index = int(row.get("issue_index", -1))
+        needed = list(range(issue_index - int(required_history_steps), issue_index + max_step + 1))
+        if indices != sorted(indices) or (indices and indices != list(range(indices[0], indices[-1] + 1))):
+            fail("CERT_INDICES_NOT_CONTIGUOUS", issue_id=iid)
+        if not set(needed) <= set(indices):
+            fail("CERT_DOES_NOT_COVER_WINDOW", issue_id=iid, needed=[needed[0], needed[-1]],
+                 covered=[indices[0], indices[-1]] if indices else None)
+        times = list(cert.get("times_utc") or [])
+        if len(times) != len(indices):
+            fail("CERT_TIMES_LENGTH", issue_id=iid)
+            continue
+
+        entry: Dict[str, Any] = {
+            "issue_id": iid,
+            "issue_index": issue_index,
+            "store": store,
+            "certificate_indices": [indices[0], indices[-1]] if indices else None,
+            "content_sha256": cert.get("content_sha256"),
+            "identity_sha256": cert.get("identity_sha256"),
+        }
+        try:
+            import xarray as xr
+
+            dataset = xr.open_zarr(store)
+            try:
+                store_times = dataset["time"].values
+                for index, stamp in zip(indices, times):
+                    if _utc_seconds(store_times[index]) != _utc_seconds(stamp):
+                        fail("CERT_UTC_MISMATCH", issue_id=iid, index=index, cert=stamp,
+                             store=str(store_times[index]))
+                        break
+                if _utc_seconds(store_times[issue_index]) != int(row.get("issue_time", -1)):
+                    fail("ROW_ISSUE_TIME_MISMATCH", issue_id=iid)
+            finally:
+                dataset.close()
+        except (OSError, KeyError, IndexError, ValueError) as exc:
+            fail("STORE_UNREADABLE", issue_id=iid, error=f"{type(exc).__name__}: {exc}")
+            continue
+
+        if reverify_content:
+            try:
+                fresh = verify_content_subset(
+                    store_path=Path(store),
+                    indices=indices,
+                    batch_size=int(cert.get("batch_size") or 2),
+                    expected_channels=cert.get("n_channels"),
+                    sigma_bound=float(cert.get("sigma_bound")),
+                    normalization_dir=(Path(cert["normalization_source"])
+                                       if cert.get("normalization_source") else None),
+                    require_physical_range=bool(cert.get("physical_range_checked")),
+                    data_role=cert.get("data_role"),
+                    issue_id=cert.get("issue_id"),
+                    process_group_id=cert.get("process_group_id"),
+                    strict=True,
+                )
+                entry["fresh_content_sha256"] = fresh.content_sha256
+                if fresh.content_sha256 != cert.get("content_sha256"):
+                    fail("CONTENT_SHA256_MISMATCH", issue_id=iid)
+                if fresh.identity_sha256 != cert.get("identity_sha256"):
+                    fail("IDENTITY_SHA256_MISMATCH", issue_id=iid)
+            except (PilotContractViolation, OSError, ValueError, TypeError) as exc:
+                fail("CONTENT_REVERIFY_FAILED", issue_id=iid, error=f"{type(exc).__name__}: {exc}")
+        report_rows.append(entry)
+
+    report = {
+        "check": "fs_admission_consumer_certification",
+        "passed": not failures,
+        "n_rows": len(rows),
+        "required_history_steps": int(required_history_steps),
+        "max_lead_step": max_step,
+        "expected_normalization_digest": expected_normalization_digest,
+        "expected_grid_hash": expected_grid_hash,
+        "expected_variable_order_hash": expected_variable_order_hash,
+        "content_reverified": bool(reverify_content),
+        "rows": report_rows,
+        "failures": failures,
+    }
+    if failures:
+        raise StaticAdapterViolation(
+            "ADMISSION_NOT_CERTIFIED",
+            f"admission record failed {len(failures)} consumer check(s); first: "
+            f"{failures[0]}",
+            report,
+        )
+    return report
+
+
 def load_admitted_samples(
     admission_record: Mapping[str, Any],
     bridge: WeatherStepBridge,
     *,
     lead_steps: Sequence[int],
     limit: Optional[int] = None,
+    require_certified: bool = False,
+    required_history_steps: int = 2,
+    expected_grid_hash: Optional[str] = None,
+    expected_variable_order_hash: Optional[str] = None,
+    certification_out: Optional[Dict[str, Any]] = None,
     **kwargs: Any,
 ) -> List[TrainingSample]:
     """Load every admitted row from an admission-gate JSON record.
 
     Accepts either the full gate record (`{"admission": {"admitted": [...]}}`)
     or the `AdmissionRunReport` dict directly.
+
+    With ``require_certified=True`` (every real FP-03 entry point) the whole
+    record must first pass `certify_admission_for_fs` against THIS bridge's
+    normalization digest and the canonical grid / variable-order hashes (or
+    the explicitly supplied ones); nothing is read otherwise. The report is
+    copied into ``certification_out`` when a dict is supplied.
     """
+    if require_certified:
+        if expected_grid_hash is None or expected_variable_order_hash is None:
+            from .data.pull_wb2 import grid_hash, variable_order_hash
+
+            expected_grid_hash = expected_grid_hash or grid_hash()
+            expected_variable_order_hash = expected_variable_order_hash or variable_order_hash()
+        report = certify_admission_for_fs(
+            admission_record,
+            lead_steps=lead_steps,
+            required_history_steps=required_history_steps,
+            expected_normalization_digest=bridge.normalization.digest,
+            expected_grid_hash=expected_grid_hash,
+            expected_variable_order_hash=expected_variable_order_hash,
+        )
+        if certification_out is not None:
+            certification_out.update(report)
     admission = admission_record.get("admission", admission_record)
     rows = admission.get("admitted") if isinstance(admission, Mapping) else None
     if not rows:

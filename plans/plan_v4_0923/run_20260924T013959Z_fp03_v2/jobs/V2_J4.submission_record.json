@@ -1,0 +1,21 @@
+{
+ "job": "V2-J4",
+ "job_id": "pt-gr3rrmdg",
+ "run_dir": "artifacts/round2_cci/ed-r4fs03v2j4-0924021935-be0786",
+ "label": "r4fs03v2j4",
+ "timeout_seconds": 3600,
+ "configs": [
+  "V2_J4_FREEZE (cuda:0)",
+  "V2_J4_VERIFY (cuda:1, independent process)"
+ ],
+ "argv_file": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/jobs/V2_J4.argv.json",
+ "argv_file_sha256": "9d1089ea2b426b1e703c69b39491979e2287597a10898a291435ee862f404036",
+ "invocation_sha256": "6880ae499de9d51ad87c6a6445ecd440da1a7b7fefd26452cab76d94f53d33b5",
+ "source_manifest_sha256": "488f26217ac0cd36d7b21d5dc681df920646d559f77cae9d7881e9ef9d5f9f48",
+ "protocol_sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe",
+ "formal_decision": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/decisions/V2_J3_formal_decision.json",
+ "designated_adapter_sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089",
+ "trigger": "V2-J3 decision QUALITY_PASS_PENDING_DESIGNATED_GATES (FS-BUDGET-v2 v2_j4_only_if)",
+ "budget": "GPU job 2 of max 4",
+ "recorded_utc": "2026-09-24T02:19:49.160377+00:00"
+}

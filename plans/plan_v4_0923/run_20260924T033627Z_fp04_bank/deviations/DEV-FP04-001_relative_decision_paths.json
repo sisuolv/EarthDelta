@@ -1,0 +1,50 @@
+{
+ "schema_version": "ed-fp04-deviation/1",
+ "id": "DEV-FP04-001",
+ "title": "B-J2 formal decision recorded repo-relative file paths; B-J3 assembly (GPU worker in a source snapshot) could not resolve them",
+ "class": "bookkeeping / path binding only (same class as FP-03 DEV-002); no result, rule, threshold or source change",
+ "cause": "the formal decider was invoked with a RELATIVE --job-dir (artifacts/round2_cci/ed-r4bankbj2-...) instead of the protocol template's absolute <JOB_RUN_DIR>; the decision therefore stored repo-relative expert/probe paths, which do not resolve from the B-J3 worker's cwd (<run>/source).",
+ "failed_job": {
+  "job": "B-J3",
+  "job_id": "pt-m52qwunf",
+  "run_dir": "artifacts/round2_cci/ed-r4bankbj3-0924053507-ae0123",
+  "result": "FAILED rc=1 180.2s: bank_assemble ASSEMBLY_NOT_AUTHORIZED (4 expert files 'hash to None' = not found); fail-closed; no bank.pt written; bank_verify never ran"
+ },
+ "evidence": [
+  "all 8 expert/probe files exist and re-hash exactly to the decided SHA-256s (checked by the executor and independently by the coordinator)",
+  "the certified Fs loaded and verified in the failed assemble process (merged digest 370bd3bc..., identity_pass=True)"
+ ],
+ "remedy": {
+  "original_decision": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2_formal_decision.json",
+   "sha256": "82aa9a7857079305d4baa9d2318ef1a96e46638aa092b2238cdd3000cbb17b1a",
+   "status": "kept unmodified (read-only)"
+  },
+  "r2_decision": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2_formal_decision_r2.json",
+   "sha256": "49feca4658405a4d0b3b5f20dcc22b02bc8980be51a4e6bcbb0f4ac8fad093d3",
+   "how": "the same pre-registered decider (the B-J2 job's own source snapshot, decider sha identical), same protocol sha, same raw B-J2 files, same --shortstep-decision; only --job-dir given absolute"
+  },
+  "r2_equals_original": [
+   "verdict BANK_QUAL_PASS_PENDING_ASSEMBLY",
+   "fallback_authorized False",
+   "expert_verdicts",
+   "all 4 per-expert qualification blocks (byte-identical JSON)",
+   "records",
+   "expert digests",
+   "expert/probe file sha256s",
+   "the SAME files (relative path resolved from repo root == r2 absolute path)",
+   "protocol_sha256",
+   "decider_sha256"
+  ],
+  "retry": "B-J3 resubmitted unchanged except <FORMAL_DECISION> -> the r2 decision; this uses BANK-BUDGET-v1's one infra retry (GPU job 4 of max 7)"
+ },
+ "not_done": [
+  "no code change (a pinned source file would drift)",
+  "no protocol re-freeze",
+  "no change to any expert file, rule or threshold"
+ ],
+ "future_protocol_note": "the decider should store resolved absolute paths itself instead of relying on how it is invoked",
+ "approval": "coordinator approved the 3-step fix in writing after independently confirming cause and file hashes",
+ "recorded_utc": "2026-09-24T05:40:56.366460+00:00"
+}

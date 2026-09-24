@@ -1,0 +1,34 @@
+{
+ "schema_version": "ed-fp04-bank-fit-selection-declaration/1",
+ "status": "FP-04 bank_fit admission selection rule, declared BEFORE the manifest is built and BEFORE any value of any selected row is read",
+ "written_before": "the manifest was built and before scripts/r2_admission_gate.py read any value. Only calendar arithmetic on issue times and the 2020 store's zarr metadata (1464 timesteps, chunk layout) were used to write this file.",
+ "why_a_new_admission": "The certified Fs was trained on the 8-issue FP-03 bank_fit admission (plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/admission/bank_fit_admission.json). Under the pre-declared grouping rule ed-bank-diversity/1:disjoint-calendar-month-blocks those 8 issues give expert groups of 3/2/2/1 (confirmed on the historical bank job pt-cdj1s2le), i.e. one expert fitted to a single issue. This admission widens bank_fit INSIDE the already-exposed Fs window, so it creates no new data exposure.",
+ "exposure_window_utc": ["2020-01-01T12:00:00Z", "2020-07-04T18:00:00Z"],
+ "exposure_window_source": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/task_result_fp03_v2.json open_items_for_FP04: Fs exposure covers the 2020 v1 interval 2020-01-01T12Z..2020-07-04T18Z (8 training issues + the 8-issue v1 holdout panel, each with its t-12h..t+72h certificate window). Every row selected here keeps its whole t-12h..t+72h certificate window inside that interval.",
+ "selection_rule": {
+  "n_slots": 49,
+  "targets": "t_i = 2020-01-02T00:00Z + 90h * i for i = 0..48 (t_0 = 2020-01-02T00Z, t_48 = 2020-06-30T00Z; i = 49 would put t+72h past 2020-07-04T18Z)",
+  "stride_hours": 90,
+  "rows": "the library's own build_manifest(years=[2020], lead_hours=[72], normalization_hash='3e0b216bfbf34ab0', formal=True) rows at exactly those issue times, in time order; nothing is hand-constructed",
+  "admission_command": "python3 scripts/r2_admission_gate.py --manifest <manifest> --formal --data-role bank_fit --history-steps 2 --limit 49 --verify-content --content-samples 49 --normalization-dir reference/stormer/normalization_constants --json <record> (the FP-03 admission flags; only --manifest/--limit/--content-samples differ). Certificates span t-12h..t+72h (indices t-2..t+12)."
+ },
+ "replacement_rule": {
+  "trigger": "a target row is rejected by the B09 time join or its B08 content certificate fails (integrity only: time join, finite values, physical plausibility band, non-constant channels)",
+  "replacement": "the first admissible build_manifest row among t_i+6h, t_i+12h, t_i+18h, t_i+24h (forward only, in that order) that (a) lies in the same UTC calendar month as t_i and (b) keeps its t-12h..t+72h window inside the exposure window. Admissible = passes the same admission command.",
+  "if_no_replacement": "the slot is dropped",
+  "final_admission": "one fresh run of the same admission command over the final manifest; it must PASS completely (outer passed=true, B09 and B08 true). Every replacement or drop is recorded with its reason.",
+  "why_same_month": "a forward shift must not create a calendar month that no target occupies (e.g. 2020-06-30T00Z + 24h = 2020-07-01T00Z would add a July block and change the K=4 month partition); same-month replacements leave the month set, and therefore the block partition, determined by the targets alone"
+ },
+ "stop_rule": "If more than 5 of the 49 slots need a replacement or are dropped, or if the final admission does not PASS, STOP and report before any protocol freeze. No further reselection without coordinator approval.",
+ "grouping": {
+  "rule": "ed-bank-diversity/1:disjoint-calendar-month-blocks, applied unchanged by earthdelta.bank_training.assign_diversity_groups(samples, 4, hold_steps=4) to the final admission's rows (issue_time, history_time = t-12h, valid_time = t+72h, split_id, data_role)",
+  "calendar_only_expectation_if_all_49_admit": {
+   "months": ["2020-01..2020-06 -> blocks [2020-01, 2020-02] | [2020-03, 2020-04] | [2020-05] | [2020-06]"],
+   "group_sizes": [15, 16, 7, 7],
+   "purged_group_boundary_overlap": ["2020022706", "2020050100", "2020053100", "2020063000"],
+   "note": "computed from issue times only (no data values). The pinned grouping is the one recomputed from the FINAL admission record, whatever it is."
+  }
+ },
+ "use_restriction": "No model output (Fs or bank rollout, loss, panel or response) is computed on these issues before the pre-registered FP-04 job B-J1. The admission's content verification reads raw values for integrity only (finite, physical range, hashes), as ARTIFACT_CONTRACT section 3 allows; nothing is selected on forecast skill, loss, gain or any weather statistic.",
+ "why_this_is_not_skill_selection": "Targets are a fixed calendar grid; replacements are chosen only by the admission gate's integrity result; the grouping is the pre-declared calendar rule. No model output exists for these rows when this file is written."
+}

@@ -1,0 +1,3 @@
+394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1  bank_protocol_v1.json
+frozen_utc 2026-09-24T05:10:07Z
+supersedes_unsubmitted 9d3cc646d55a9d0b7151461a055e13e11b2e2c2ea92797ed8458bf03556571da (first freeze; E2-only fallback trigger added before any FP-04 job was submitted, coordinator-approved)

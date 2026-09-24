@@ -1,0 +1,35 @@
+{
+ "schema_version": "ed-fp03-j1-findings/1",
+ "job_id": "pt-56auspj8",
+ "run_dir": "artifacts/round2_cci/ed-r4fs03diag-0923203433-4127c2",
+ "decision": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J1_diag_decision_r2.json (PASS; original STOP kept, see DEV-001)",
+ "findings": [
+  {
+   "id": "J1-F1_BACKEND_CHANGE_IS_NUMERICALLY_REAL",
+   "status": "OBSERVED",
+   "text": "The update-0 training loss (zero-init Fs == F0, issue iss_292517fb189ee1bd, bit-identical adapter state) separates three execution regimes exactly. (i) S0-certified backend (official stormer.models.hub.stormer.Stormer + xformers 0.0.27, torch 2.3.1+cu121, TF32 off; all 4 J1 arms): 0.03091372071660844. (ii) pt-e8y7ib01 (TF32 off, no certified overlay; 4 records): 0.03091372000846792, -2.3e-8 relative -- a different attention backend at the same FP32 precision, direct numerical confirmation of P1 beyond the PYTHONPATH evidence. (iii) all 25 older records (pt-w79f1y3t, pt-5ma8r7m2, pt-2v1z1p4i, pt-sgc0joda, pt-2r6tbwu7, pt-3x63g0c6, pt-cdj1s2le; TF32 enabled, no overlay): 0.03091528215244324, +5.05e-5 relative. CORRECTION: an earlier draft of this finding (and the executor's chat report) said all historical runs had value (ii); only pt-e8y7ib01 does.",
+   "sources": ["arms/A0/fs_fit_record.json losses[0]", "artifacts/round2_cci/ed-r4fsformal0923-0923180756-7b1776/experts/expert0/fs_fit_record.json losses[0]", "ledger/fs_attempts_ledger.json (all 29 paths)"]
+  },
+  {
+   "id": "J1-F2_PANEL_ALONE_WOULD_ACCEPT_A_DESTABILIZED_ADAPTER",
+   "status": "OBSERVED",
+   "text": "Negative control NC3 = pt-e8y7ib01/expert0, the replica the old per-visit gate declared ELIGIBLE (8/8 improved) despite a mid-run blow-up (28 clip events, max per-visit ratio 137). On the fixed 24h train panel it looks like an improvement: m24 = 0.9848, max r_i = 0.9911, so FS-QUAL-v1 Q4 PASSES. It is rejected only by Q2 (training instability: clip events, per-visit ratio, epoch-mean onset), Q5 (72h guard m72 = 1.0599 > 1.01) and Q6 (holdout 24h mean ratio 1.0341 > 1.02). Neither the historical per-visit check nor a 24h-panel-only check would have rejected it; the richer gate (stability + 72h guard + holdout) is necessary.",
+   "sources": ["decisions/J1_diag_decision_r2.json negative_controls[3]", "negctl/NC3/fs_panels.json"]
+  },
+  {
+   "id": "J1-F3_OTHER_NEGATIVE_CONTROLS",
+   "status": "OBSERVED",
+   "text": "NC0 (pt-3x63g0c6/expert1) m24 4.6449, m72 5.7995, holdout 4.6473; NC1 (pt-cdj1s2le/expert2) m24 4.0668, m72 4.9113, holdout 4.0957; NC2 (pt-e8y7ib01/expert1) m24 1.0267, m72 1.1058, holdout 1.0735. Each fails Q2..Q6."
+  },
+  {
+   "id": "J1-F4_CROSS_GPU_FORWARD_DETERMINISM",
+   "status": "OBSERVED",
+   "text": "The F0 train and holdout panels of all 8 J1 processes on cuda:0..3 are bitwise identical to the A0 reference (max relative difference 0.0); the pre-registered 1e-6 fallback was not needed. The training forward at update 0 equals the no-grad panel L0 24h value of the same issue bitwise."
+  },
+  {
+   "id": "J1-F5_ARM_BEHAVIOUR_AT_32_UPDATES",
+   "status": "OBSERVED",
+   "text": "All four lr arms at 32 updates: 8/8 issues improved, 0 clip events, stable; 24h train-panel mean ratio A0 (1e-2) 0.9694, A1 (5e-3) 0.9661, A2 (2.5e-3) 0.9741, A3 (1.25e-3) 0.9839. A-grad exactly 0 at update 0 and > 0 from update 1; B-grad > 0 at update 0. Diagnostic only (gradient_check mode); not a screen result."
+  }
+ ]
+}

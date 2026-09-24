@@ -1,0 +1,921 @@
+{
+ "rule": "FS-SELECT-v1",
+ "replica_verdicts": {
+  "0": "FAIL",
+  "1": "FAIL",
+  "2": "FAIL",
+  "3": "FAIL"
+ },
+ "designated_device_index": 0,
+ "designated_adapter_sha256": null,
+ "substitution": "FORBIDDEN",
+ "fs_selected": false,
+ "verdict": "STOP_FITTED_FS_QUALITY",
+ "failed_replicas": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "kind": "formal",
+ "job": "J3",
+ "horizon": 256,
+ "details": [
+  {
+   "config_id": "J3",
+   "device_index": 0,
+   "dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica0",
+   "files": {
+    "fs_fit_record.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica0/fs_fit_record.json",
+     "sha256": "d8af78e865beaf5b0e8910941266f8b1a3ae8f2e6b94aacbffd7a8a3b70053d6"
+    },
+    "fs_panels.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica0/fs_panels.json",
+     "sha256": "c09bd3eef4ae639038dc4bd174b437ebb4d3ad9d45b8852631da1f521979d6b3"
+    },
+    "fs_diagnostics.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica0/fs_diagnostics.json",
+     "sha256": "097e8152e073dfd5c24362dbd695aad9ea592fdebabe78af798001a80886843a"
+    },
+    "run_record.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica0/run_record.json",
+     "sha256": "d019e6f301fcffaefb41c3f9d5ce2f7b16c08203c0a100b26fd083840959052d"
+    },
+    "provenance.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica0/provenance.json",
+     "sha256": "39fcefe0361ab54c0b358e0fc6693a71d4e494002743c61a20b8cc77fa69234b"
+    },
+    "fs_panel_record.json": null,
+    "binding_refused.json": null,
+    "stdout.log": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica0/stdout.log",
+     "sha256": "38c549d2ef252324ad9ae84dddb4672ea06e2fe2ad2ecda2266bc37868bb9cce"
+    },
+    "fs_adapter.pt": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica0/fs_adapter.pt",
+     "sha256": "172cbfddd281eb38bb3819a78e71666b2137dffe189d39ddf373b31ac7a5b16e"
+    }
+   },
+   "record": {
+    "mode": "formal",
+    "n_updates": 256,
+    "config_id": "J3"
+   },
+   "qualification": {
+    "rule": "FS-QUAL-v1",
+    "verdict": "FAIL",
+    "substantive_verdict": "FAIL",
+    "quality_pass": false,
+    "status": {
+     "Q1": "PASS",
+     "Q2": "PASS",
+     "Q3": "PASS",
+     "Q4": "PASS",
+     "Q5": "PASS",
+     "Q6": "FAIL"
+    },
+    "q0": {
+     "status": "PASS",
+     "failed": [],
+     "facts": {
+      "official_backend": true,
+      "torch_version": true,
+      "xformers_version": true,
+      "tf32_off": true,
+      "s0_certificate_consumed": true,
+      "admission_consumer_pass": true,
+      "protocol_sha256_match": true,
+      "config_id_match": true,
+      "init_digest_match": true,
+      "L0_equals_F0_bitwise": true,
+      "issue_order_match": true,
+      "holdout_panel_match": true,
+      "f0_panel_matches_reference": true,
+      "record_is_formal_full_horizon": true
+     }
+    },
+    "stability": {
+     "q1": {
+      "all_losses_finite": true,
+      "all_grad_norms_finite": true,
+      "n_updates": 256,
+      "required_n_updates": 256,
+      "trace_lengths_consistent": true,
+      "passed": true
+     },
+     "q2": {
+      "clip_events": 0,
+      "clip_events_from_trace": 0,
+      "clip_events_max": 0,
+      "first_clip_update": null,
+      "clip_ok": true,
+      "max_per_visit_ratio": 1.0,
+      "argmax_update": 0,
+      "argmax_issue": "iss_292517fb189ee1bd",
+      "per_visit_ratio_max": 1.25,
+      "ratio_ok": true,
+      "epoch_means": [
+       0.03185470771364102,
+       0.031624584494004696,
+       0.03139861392299559,
+       0.031195929106128593,
+       0.031009792219788924,
+       0.030838326485049666,
+       0.030684993010054652,
+       0.030557113850443417,
+       0.030492328515080627,
+       0.030686248931151027,
+       0.030430164948708174,
+       0.030392947753489254,
+       0.03023348983650648,
+       0.030064727767270573,
+       0.029959897331794424,
+       0.029869515289574187,
+       0.029785781107650303,
+       0.02972182765897215,
+       0.029658963073141885,
+       0.0296533489755402,
+       0.029591489562232662,
+       0.029584701050837086,
+       0.02949051300350824,
+       0.02941924644340405,
+       0.02934908516780889,
+       0.029294856913583876,
+       0.029239300873593575,
+       0.02920668949600197,
+       0.02913882742933004,
+       0.029093926485092753,
+       0.029061896376318837,
+       0.029020149231816436
+      ],
+      "epoch_onset_factor": 1.02,
+      "onset_epoch": null,
+      "onset_update": null,
+      "epoch_ok": true,
+      "passed": true
+     },
+     "stable": true
+    },
+    "q3_per_visit": {
+     "n_samples_with_repeats": 8,
+     "n_decreased": 8,
+     "fraction_decreased": 1.0
+    },
+    "q4_train_24h": {
+     "lead_hours": 24,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_041643c6650bb160": 0.9045401091066696,
+      "iss_292517fb189ee1bd": 0.9231471182535584,
+      "iss_4d2909814aeeb0a5": 0.9153389500600729,
+      "iss_6b3c576c6b5558b5": 0.9246079291702195,
+      "iss_96bdbf1fa8455a7f": 0.9115303667791753,
+      "iss_cc158228e7e29baf": 0.9054723384127107,
+      "iss_d8ff9d3ce61a2f46": 0.8964235782674536,
+      "iss_ec3977fe8a715192": 0.9059331539254362
+     },
+     "max_ratio": 0.9246079291702195,
+     "min_ratio": 0.8964235782674536,
+     "mean_initial": 0.03187907820466652,
+     "mean_final": 0.029026476298660148,
+     "mean_ratio": 0.9105180555192841
+    },
+    "q5_train_72h": {
+     "lead_hours": 72,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_041643c6650bb160": 0.9898312979406797,
+      "iss_292517fb189ee1bd": 0.9910708404618513,
+      "iss_4d2909814aeeb0a5": 1.0358815414382239,
+      "iss_6b3c576c6b5558b5": 1.0214923992462515,
+      "iss_96bdbf1fa8455a7f": 0.9842046906735289,
+      "iss_cc158228e7e29baf": 0.9887687521413443,
+      "iss_d8ff9d3ce61a2f46": 0.9935633954026984,
+      "iss_ec3977fe8a715192": 1.005062182280432
+     },
+     "max_ratio": 1.0358815414382239,
+     "min_ratio": 0.9842046906735289,
+     "mean_initial": 0.07412226023463403,
+     "mean_final": 0.07419151555619351,
+     "mean_ratio": 1.0009343390412038
+    },
+    "q6_holdout_24h": {
+     "lead_hours": 24,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_0e07278c12101867": 1.03976744696063,
+      "iss_31f34a49438f2ede": 1.0355556162082609,
+      "iss_4ea182f8369adc22": 1.0424860202247608,
+      "iss_73bd28799b31635b": 1.0343911596118005,
+      "iss_ae1e77197955e6fa": 1.036888212618487,
+      "iss_b908290e11c4fe93": 1.0355138082524238,
+      "iss_dd5a738445216b6d": 1.0286619151673537,
+      "iss_de693d8dabf93eb2": 1.0578091103963696
+     },
+     "max_ratio": 1.0578091103963696,
+     "min_ratio": 1.0286619151673537,
+     "mean_initial": 0.03171388094537728,
+     "mean_final": 0.032948351873994475,
+     "mean_ratio": 1.0389252558128534
+    },
+    "report_only_train_6h": {
+     "lead_hours": 6,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_041643c6650bb160": 1.034189846085331,
+      "iss_292517fb189ee1bd": 1.0331803325957953,
+      "iss_4d2909814aeeb0a5": 1.0436158479115665,
+      "iss_6b3c576c6b5558b5": 1.0384346953549313,
+      "iss_96bdbf1fa8455a7f": 1.0384258884494932,
+      "iss_cc158228e7e29baf": 1.0245713556142602,
+      "iss_d8ff9d3ce61a2f46": 1.0241701538122945,
+      "iss_ec3977fe8a715192": 1.0268183492349008
+     },
+     "max_ratio": 1.0436158479115665,
+     "min_ratio": 1.0241701538122945,
+     "mean_initial": 0.01469351277056305,
+     "mean_final": 0.01516563857042323,
+     "mean_ratio": 1.032131581278919
+    }
+   }
+  },
+  {
+   "config_id": "J3",
+   "device_index": 1,
+   "dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica1",
+   "files": {
+    "fs_fit_record.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica1/fs_fit_record.json",
+     "sha256": "0fb99576543730d2bac44cb17e9ac8834a2fee9ddbd12c8e1a15c4223dbfec15"
+    },
+    "fs_panels.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica1/fs_panels.json",
+     "sha256": "c09bd3eef4ae639038dc4bd174b437ebb4d3ad9d45b8852631da1f521979d6b3"
+    },
+    "fs_diagnostics.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica1/fs_diagnostics.json",
+     "sha256": "097e8152e073dfd5c24362dbd695aad9ea592fdebabe78af798001a80886843a"
+    },
+    "run_record.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica1/run_record.json",
+     "sha256": "8f6d2ff40233f44ca661f1dc08a1fedc2ed27a7dbce285f14952ffc8bfc1d49e"
+    },
+    "provenance.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica1/provenance.json",
+     "sha256": "0dc5a0c641038f8c98d4362db45d1bca4cc8d005e4249af4c3f07549287ebbd2"
+    },
+    "fs_panel_record.json": null,
+    "binding_refused.json": null,
+    "stdout.log": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica1/stdout.log",
+     "sha256": "356d4288b91be75892cdc226dc8430cf5f4a65861e459f99f6932451cdad8116"
+    },
+    "fs_adapter.pt": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica1/fs_adapter.pt",
+     "sha256": "172cbfddd281eb38bb3819a78e71666b2137dffe189d39ddf373b31ac7a5b16e"
+    }
+   },
+   "record": {
+    "mode": "formal",
+    "n_updates": 256,
+    "config_id": "J3"
+   },
+   "qualification": {
+    "rule": "FS-QUAL-v1",
+    "verdict": "FAIL",
+    "substantive_verdict": "FAIL",
+    "quality_pass": false,
+    "status": {
+     "Q1": "PASS",
+     "Q2": "PASS",
+     "Q3": "PASS",
+     "Q4": "PASS",
+     "Q5": "PASS",
+     "Q6": "FAIL"
+    },
+    "q0": {
+     "status": "PASS",
+     "failed": [],
+     "facts": {
+      "official_backend": true,
+      "torch_version": true,
+      "xformers_version": true,
+      "tf32_off": true,
+      "s0_certificate_consumed": true,
+      "admission_consumer_pass": true,
+      "protocol_sha256_match": true,
+      "config_id_match": true,
+      "init_digest_match": true,
+      "L0_equals_F0_bitwise": true,
+      "issue_order_match": true,
+      "holdout_panel_match": true,
+      "f0_panel_matches_reference": true,
+      "record_is_formal_full_horizon": true
+     }
+    },
+    "stability": {
+     "q1": {
+      "all_losses_finite": true,
+      "all_grad_norms_finite": true,
+      "n_updates": 256,
+      "required_n_updates": 256,
+      "trace_lengths_consistent": true,
+      "passed": true
+     },
+     "q2": {
+      "clip_events": 0,
+      "clip_events_from_trace": 0,
+      "clip_events_max": 0,
+      "first_clip_update": null,
+      "clip_ok": true,
+      "max_per_visit_ratio": 1.0,
+      "argmax_update": 0,
+      "argmax_issue": "iss_292517fb189ee1bd",
+      "per_visit_ratio_max": 1.25,
+      "ratio_ok": true,
+      "epoch_means": [
+       0.03185470771364102,
+       0.031624584494004696,
+       0.03139861392299559,
+       0.031195929106128593,
+       0.031009792219788924,
+       0.030838326485049666,
+       0.030684993010054652,
+       0.030557113850443417,
+       0.030492328515080627,
+       0.030686248931151027,
+       0.030430164948708174,
+       0.030392947753489254,
+       0.03023348983650648,
+       0.030064727767270573,
+       0.029959897331794424,
+       0.029869515289574187,
+       0.029785781107650303,
+       0.02972182765897215,
+       0.029658963073141885,
+       0.0296533489755402,
+       0.029591489562232662,
+       0.029584701050837086,
+       0.02949051300350824,
+       0.02941924644340405,
+       0.02934908516780889,
+       0.029294856913583876,
+       0.029239300873593575,
+       0.02920668949600197,
+       0.02913882742933004,
+       0.029093926485092753,
+       0.029061896376318837,
+       0.029020149231816436
+      ],
+      "epoch_onset_factor": 1.02,
+      "onset_epoch": null,
+      "onset_update": null,
+      "epoch_ok": true,
+      "passed": true
+     },
+     "stable": true
+    },
+    "q3_per_visit": {
+     "n_samples_with_repeats": 8,
+     "n_decreased": 8,
+     "fraction_decreased": 1.0
+    },
+    "q4_train_24h": {
+     "lead_hours": 24,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_041643c6650bb160": 0.9045401091066696,
+      "iss_292517fb189ee1bd": 0.9231471182535584,
+      "iss_4d2909814aeeb0a5": 0.9153389500600729,
+      "iss_6b3c576c6b5558b5": 0.9246079291702195,
+      "iss_96bdbf1fa8455a7f": 0.9115303667791753,
+      "iss_cc158228e7e29baf": 0.9054723384127107,
+      "iss_d8ff9d3ce61a2f46": 0.8964235782674536,
+      "iss_ec3977fe8a715192": 0.9059331539254362
+     },
+     "max_ratio": 0.9246079291702195,
+     "min_ratio": 0.8964235782674536,
+     "mean_initial": 0.03187907820466652,
+     "mean_final": 0.029026476298660148,
+     "mean_ratio": 0.9105180555192841
+    },
+    "q5_train_72h": {
+     "lead_hours": 72,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_041643c6650bb160": 0.9898312979406797,
+      "iss_292517fb189ee1bd": 0.9910708404618513,
+      "iss_4d2909814aeeb0a5": 1.0358815414382239,
+      "iss_6b3c576c6b5558b5": 1.0214923992462515,
+      "iss_96bdbf1fa8455a7f": 0.9842046906735289,
+      "iss_cc158228e7e29baf": 0.9887687521413443,
+      "iss_d8ff9d3ce61a2f46": 0.9935633954026984,
+      "iss_ec3977fe8a715192": 1.005062182280432
+     },
+     "max_ratio": 1.0358815414382239,
+     "min_ratio": 0.9842046906735289,
+     "mean_initial": 0.07412226023463403,
+     "mean_final": 0.07419151555619351,
+     "mean_ratio": 1.0009343390412038
+    },
+    "q6_holdout_24h": {
+     "lead_hours": 24,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_0e07278c12101867": 1.03976744696063,
+      "iss_31f34a49438f2ede": 1.0355556162082609,
+      "iss_4ea182f8369adc22": 1.0424860202247608,
+      "iss_73bd28799b31635b": 1.0343911596118005,
+      "iss_ae1e77197955e6fa": 1.036888212618487,
+      "iss_b908290e11c4fe93": 1.0355138082524238,
+      "iss_dd5a738445216b6d": 1.0286619151673537,
+      "iss_de693d8dabf93eb2": 1.0578091103963696
+     },
+     "max_ratio": 1.0578091103963696,
+     "min_ratio": 1.0286619151673537,
+     "mean_initial": 0.03171388094537728,
+     "mean_final": 0.032948351873994475,
+     "mean_ratio": 1.0389252558128534
+    },
+    "report_only_train_6h": {
+     "lead_hours": 6,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_041643c6650bb160": 1.034189846085331,
+      "iss_292517fb189ee1bd": 1.0331803325957953,
+      "iss_4d2909814aeeb0a5": 1.0436158479115665,
+      "iss_6b3c576c6b5558b5": 1.0384346953549313,
+      "iss_96bdbf1fa8455a7f": 1.0384258884494932,
+      "iss_cc158228e7e29baf": 1.0245713556142602,
+      "iss_d8ff9d3ce61a2f46": 1.0241701538122945,
+      "iss_ec3977fe8a715192": 1.0268183492349008
+     },
+     "max_ratio": 1.0436158479115665,
+     "min_ratio": 1.0241701538122945,
+     "mean_initial": 0.01469351277056305,
+     "mean_final": 0.01516563857042323,
+     "mean_ratio": 1.032131581278919
+    }
+   }
+  },
+  {
+   "config_id": "J3",
+   "device_index": 2,
+   "dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica2",
+   "files": {
+    "fs_fit_record.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica2/fs_fit_record.json",
+     "sha256": "4c127e97859b50a38d984f0e9450ca7e2d4ad12b008e2c20254bfc27be1ae1e1"
+    },
+    "fs_panels.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica2/fs_panels.json",
+     "sha256": "c09bd3eef4ae639038dc4bd174b437ebb4d3ad9d45b8852631da1f521979d6b3"
+    },
+    "fs_diagnostics.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica2/fs_diagnostics.json",
+     "sha256": "097e8152e073dfd5c24362dbd695aad9ea592fdebabe78af798001a80886843a"
+    },
+    "run_record.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica2/run_record.json",
+     "sha256": "b025dcfb28faf623073a89397ca1ccda7c814f474ea282d4f997df24825b02dc"
+    },
+    "provenance.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica2/provenance.json",
+     "sha256": "983f394890f61e11e2eea14b2f4bb75a8c2df5e1db0a9ccaf59b6dd47ac349fe"
+    },
+    "fs_panel_record.json": null,
+    "binding_refused.json": null,
+    "stdout.log": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica2/stdout.log",
+     "sha256": "08e1f8f3676f4013b7dc02d6ffcdcf19f297a32b54ca6370d615636b163c2c49"
+    },
+    "fs_adapter.pt": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica2/fs_adapter.pt",
+     "sha256": "172cbfddd281eb38bb3819a78e71666b2137dffe189d39ddf373b31ac7a5b16e"
+    }
+   },
+   "record": {
+    "mode": "formal",
+    "n_updates": 256,
+    "config_id": "J3"
+   },
+   "qualification": {
+    "rule": "FS-QUAL-v1",
+    "verdict": "FAIL",
+    "substantive_verdict": "FAIL",
+    "quality_pass": false,
+    "status": {
+     "Q1": "PASS",
+     "Q2": "PASS",
+     "Q3": "PASS",
+     "Q4": "PASS",
+     "Q5": "PASS",
+     "Q6": "FAIL"
+    },
+    "q0": {
+     "status": "PASS",
+     "failed": [],
+     "facts": {
+      "official_backend": true,
+      "torch_version": true,
+      "xformers_version": true,
+      "tf32_off": true,
+      "s0_certificate_consumed": true,
+      "admission_consumer_pass": true,
+      "protocol_sha256_match": true,
+      "config_id_match": true,
+      "init_digest_match": true,
+      "L0_equals_F0_bitwise": true,
+      "issue_order_match": true,
+      "holdout_panel_match": true,
+      "f0_panel_matches_reference": true,
+      "record_is_formal_full_horizon": true
+     }
+    },
+    "stability": {
+     "q1": {
+      "all_losses_finite": true,
+      "all_grad_norms_finite": true,
+      "n_updates": 256,
+      "required_n_updates": 256,
+      "trace_lengths_consistent": true,
+      "passed": true
+     },
+     "q2": {
+      "clip_events": 0,
+      "clip_events_from_trace": 0,
+      "clip_events_max": 0,
+      "first_clip_update": null,
+      "clip_ok": true,
+      "max_per_visit_ratio": 1.0,
+      "argmax_update": 0,
+      "argmax_issue": "iss_292517fb189ee1bd",
+      "per_visit_ratio_max": 1.25,
+      "ratio_ok": true,
+      "epoch_means": [
+       0.03185470771364102,
+       0.031624584494004696,
+       0.03139861392299559,
+       0.031195929106128593,
+       0.031009792219788924,
+       0.030838326485049666,
+       0.030684993010054652,
+       0.030557113850443417,
+       0.030492328515080627,
+       0.030686248931151027,
+       0.030430164948708174,
+       0.030392947753489254,
+       0.03023348983650648,
+       0.030064727767270573,
+       0.029959897331794424,
+       0.029869515289574187,
+       0.029785781107650303,
+       0.02972182765897215,
+       0.029658963073141885,
+       0.0296533489755402,
+       0.029591489562232662,
+       0.029584701050837086,
+       0.02949051300350824,
+       0.02941924644340405,
+       0.02934908516780889,
+       0.029294856913583876,
+       0.029239300873593575,
+       0.02920668949600197,
+       0.02913882742933004,
+       0.029093926485092753,
+       0.029061896376318837,
+       0.029020149231816436
+      ],
+      "epoch_onset_factor": 1.02,
+      "onset_epoch": null,
+      "onset_update": null,
+      "epoch_ok": true,
+      "passed": true
+     },
+     "stable": true
+    },
+    "q3_per_visit": {
+     "n_samples_with_repeats": 8,
+     "n_decreased": 8,
+     "fraction_decreased": 1.0
+    },
+    "q4_train_24h": {
+     "lead_hours": 24,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_041643c6650bb160": 0.9045401091066696,
+      "iss_292517fb189ee1bd": 0.9231471182535584,
+      "iss_4d2909814aeeb0a5": 0.9153389500600729,
+      "iss_6b3c576c6b5558b5": 0.9246079291702195,
+      "iss_96bdbf1fa8455a7f": 0.9115303667791753,
+      "iss_cc158228e7e29baf": 0.9054723384127107,
+      "iss_d8ff9d3ce61a2f46": 0.8964235782674536,
+      "iss_ec3977fe8a715192": 0.9059331539254362
+     },
+     "max_ratio": 0.9246079291702195,
+     "min_ratio": 0.8964235782674536,
+     "mean_initial": 0.03187907820466652,
+     "mean_final": 0.029026476298660148,
+     "mean_ratio": 0.9105180555192841
+    },
+    "q5_train_72h": {
+     "lead_hours": 72,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_041643c6650bb160": 0.9898312979406797,
+      "iss_292517fb189ee1bd": 0.9910708404618513,
+      "iss_4d2909814aeeb0a5": 1.0358815414382239,
+      "iss_6b3c576c6b5558b5": 1.0214923992462515,
+      "iss_96bdbf1fa8455a7f": 0.9842046906735289,
+      "iss_cc158228e7e29baf": 0.9887687521413443,
+      "iss_d8ff9d3ce61a2f46": 0.9935633954026984,
+      "iss_ec3977fe8a715192": 1.005062182280432
+     },
+     "max_ratio": 1.0358815414382239,
+     "min_ratio": 0.9842046906735289,
+     "mean_initial": 0.07412226023463403,
+     "mean_final": 0.07419151555619351,
+     "mean_ratio": 1.0009343390412038
+    },
+    "q6_holdout_24h": {
+     "lead_hours": 24,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_0e07278c12101867": 1.03976744696063,
+      "iss_31f34a49438f2ede": 1.0355556162082609,
+      "iss_4ea182f8369adc22": 1.0424860202247608,
+      "iss_73bd28799b31635b": 1.0343911596118005,
+      "iss_ae1e77197955e6fa": 1.036888212618487,
+      "iss_b908290e11c4fe93": 1.0355138082524238,
+      "iss_dd5a738445216b6d": 1.0286619151673537,
+      "iss_de693d8dabf93eb2": 1.0578091103963696
+     },
+     "max_ratio": 1.0578091103963696,
+     "min_ratio": 1.0286619151673537,
+     "mean_initial": 0.03171388094537728,
+     "mean_final": 0.032948351873994475,
+     "mean_ratio": 1.0389252558128534
+    },
+    "report_only_train_6h": {
+     "lead_hours": 6,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_041643c6650bb160": 1.034189846085331,
+      "iss_292517fb189ee1bd": 1.0331803325957953,
+      "iss_4d2909814aeeb0a5": 1.0436158479115665,
+      "iss_6b3c576c6b5558b5": 1.0384346953549313,
+      "iss_96bdbf1fa8455a7f": 1.0384258884494932,
+      "iss_cc158228e7e29baf": 1.0245713556142602,
+      "iss_d8ff9d3ce61a2f46": 1.0241701538122945,
+      "iss_ec3977fe8a715192": 1.0268183492349008
+     },
+     "max_ratio": 1.0436158479115665,
+     "min_ratio": 1.0241701538122945,
+     "mean_initial": 0.01469351277056305,
+     "mean_final": 0.01516563857042323,
+     "mean_ratio": 1.032131581278919
+    }
+   }
+  },
+  {
+   "config_id": "J3",
+   "device_index": 3,
+   "dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica3",
+   "files": {
+    "fs_fit_record.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica3/fs_fit_record.json",
+     "sha256": "fcda55f961f37daeafa1bdfcfe5d029056db79a3d098bc9cd46d08e701ee0d5e"
+    },
+    "fs_panels.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica3/fs_panels.json",
+     "sha256": "c09bd3eef4ae639038dc4bd174b437ebb4d3ad9d45b8852631da1f521979d6b3"
+    },
+    "fs_diagnostics.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica3/fs_diagnostics.json",
+     "sha256": "097e8152e073dfd5c24362dbd695aad9ea592fdebabe78af798001a80886843a"
+    },
+    "run_record.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica3/run_record.json",
+     "sha256": "aa3aef5ff69ca8def4033892fe9bf3869652c4365ecef343f6da5def354bd875"
+    },
+    "provenance.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica3/provenance.json",
+     "sha256": "0dc92fdb0f2cfbf0863a2902e10546b722e81eec13dc56e28faa51794a168712"
+    },
+    "fs_panel_record.json": null,
+    "binding_refused.json": null,
+    "stdout.log": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica3/stdout.log",
+     "sha256": "294464f67785f98e1650cf45a0e08f4000808f52bca6c967e2aef6080f133233"
+    },
+    "fs_adapter.pt": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/replica3/fs_adapter.pt",
+     "sha256": "172cbfddd281eb38bb3819a78e71666b2137dffe189d39ddf373b31ac7a5b16e"
+    }
+   },
+   "record": {
+    "mode": "formal",
+    "n_updates": 256,
+    "config_id": "J3"
+   },
+   "qualification": {
+    "rule": "FS-QUAL-v1",
+    "verdict": "FAIL",
+    "substantive_verdict": "FAIL",
+    "quality_pass": false,
+    "status": {
+     "Q1": "PASS",
+     "Q2": "PASS",
+     "Q3": "PASS",
+     "Q4": "PASS",
+     "Q5": "PASS",
+     "Q6": "FAIL"
+    },
+    "q0": {
+     "status": "PASS",
+     "failed": [],
+     "facts": {
+      "official_backend": true,
+      "torch_version": true,
+      "xformers_version": true,
+      "tf32_off": true,
+      "s0_certificate_consumed": true,
+      "admission_consumer_pass": true,
+      "protocol_sha256_match": true,
+      "config_id_match": true,
+      "init_digest_match": true,
+      "L0_equals_F0_bitwise": true,
+      "issue_order_match": true,
+      "holdout_panel_match": true,
+      "f0_panel_matches_reference": true,
+      "record_is_formal_full_horizon": true
+     }
+    },
+    "stability": {
+     "q1": {
+      "all_losses_finite": true,
+      "all_grad_norms_finite": true,
+      "n_updates": 256,
+      "required_n_updates": 256,
+      "trace_lengths_consistent": true,
+      "passed": true
+     },
+     "q2": {
+      "clip_events": 0,
+      "clip_events_from_trace": 0,
+      "clip_events_max": 0,
+      "first_clip_update": null,
+      "clip_ok": true,
+      "max_per_visit_ratio": 1.0,
+      "argmax_update": 0,
+      "argmax_issue": "iss_292517fb189ee1bd",
+      "per_visit_ratio_max": 1.25,
+      "ratio_ok": true,
+      "epoch_means": [
+       0.03185470771364102,
+       0.031624584494004696,
+       0.03139861392299559,
+       0.031195929106128593,
+       0.031009792219788924,
+       0.030838326485049666,
+       0.030684993010054652,
+       0.030557113850443417,
+       0.030492328515080627,
+       0.030686248931151027,
+       0.030430164948708174,
+       0.030392947753489254,
+       0.03023348983650648,
+       0.030064727767270573,
+       0.029959897331794424,
+       0.029869515289574187,
+       0.029785781107650303,
+       0.02972182765897215,
+       0.029658963073141885,
+       0.0296533489755402,
+       0.029591489562232662,
+       0.029584701050837086,
+       0.02949051300350824,
+       0.02941924644340405,
+       0.02934908516780889,
+       0.029294856913583876,
+       0.029239300873593575,
+       0.02920668949600197,
+       0.02913882742933004,
+       0.029093926485092753,
+       0.029061896376318837,
+       0.029020149231816436
+      ],
+      "epoch_onset_factor": 1.02,
+      "onset_epoch": null,
+      "onset_update": null,
+      "epoch_ok": true,
+      "passed": true
+     },
+     "stable": true
+    },
+    "q3_per_visit": {
+     "n_samples_with_repeats": 8,
+     "n_decreased": 8,
+     "fraction_decreased": 1.0
+    },
+    "q4_train_24h": {
+     "lead_hours": 24,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_041643c6650bb160": 0.9045401091066696,
+      "iss_292517fb189ee1bd": 0.9231471182535584,
+      "iss_4d2909814aeeb0a5": 0.9153389500600729,
+      "iss_6b3c576c6b5558b5": 0.9246079291702195,
+      "iss_96bdbf1fa8455a7f": 0.9115303667791753,
+      "iss_cc158228e7e29baf": 0.9054723384127107,
+      "iss_d8ff9d3ce61a2f46": 0.8964235782674536,
+      "iss_ec3977fe8a715192": 0.9059331539254362
+     },
+     "max_ratio": 0.9246079291702195,
+     "min_ratio": 0.8964235782674536,
+     "mean_initial": 0.03187907820466652,
+     "mean_final": 0.029026476298660148,
+     "mean_ratio": 0.9105180555192841
+    },
+    "q5_train_72h": {
+     "lead_hours": 72,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_041643c6650bb160": 0.9898312979406797,
+      "iss_292517fb189ee1bd": 0.9910708404618513,
+      "iss_4d2909814aeeb0a5": 1.0358815414382239,
+      "iss_6b3c576c6b5558b5": 1.0214923992462515,
+      "iss_96bdbf1fa8455a7f": 0.9842046906735289,
+      "iss_cc158228e7e29baf": 0.9887687521413443,
+      "iss_d8ff9d3ce61a2f46": 0.9935633954026984,
+      "iss_ec3977fe8a715192": 1.005062182280432
+     },
+     "max_ratio": 1.0358815414382239,
+     "min_ratio": 0.9842046906735289,
+     "mean_initial": 0.07412226023463403,
+     "mean_final": 0.07419151555619351,
+     "mean_ratio": 1.0009343390412038
+    },
+    "q6_holdout_24h": {
+     "lead_hours": 24,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_0e07278c12101867": 1.03976744696063,
+      "iss_31f34a49438f2ede": 1.0355556162082609,
+      "iss_4ea182f8369adc22": 1.0424860202247608,
+      "iss_73bd28799b31635b": 1.0343911596118005,
+      "iss_ae1e77197955e6fa": 1.036888212618487,
+      "iss_b908290e11c4fe93": 1.0355138082524238,
+      "iss_dd5a738445216b6d": 1.0286619151673537,
+      "iss_de693d8dabf93eb2": 1.0578091103963696
+     },
+     "max_ratio": 1.0578091103963696,
+     "min_ratio": 1.0286619151673537,
+     "mean_initial": 0.03171388094537728,
+     "mean_final": 0.032948351873994475,
+     "mean_ratio": 1.0389252558128534
+    },
+    "report_only_train_6h": {
+     "lead_hours": 6,
+     "n_issues": 8,
+     "per_issue_ratio": {
+      "iss_041643c6650bb160": 1.034189846085331,
+      "iss_292517fb189ee1bd": 1.0331803325957953,
+      "iss_4d2909814aeeb0a5": 1.0436158479115665,
+      "iss_6b3c576c6b5558b5": 1.0384346953549313,
+      "iss_96bdbf1fa8455a7f": 1.0384258884494932,
+      "iss_cc158228e7e29baf": 1.0245713556142602,
+      "iss_d8ff9d3ce61a2f46": 1.0241701538122945,
+      "iss_ec3977fe8a715192": 1.0268183492349008
+     },
+     "max_ratio": 1.0436158479115665,
+     "min_ratio": 1.0241701538122945,
+     "mean_initial": 0.01469351277056305,
+     "mean_final": 0.01516563857042323,
+     "mean_ratio": 1.032131581278919
+    }
+   }
+  }
+ ],
+ "designated_record": {
+  "mode": "formal",
+  "n_updates": 256,
+  "config_id": "J3"
+ },
+ "argv_identical_except_device_output": true,
+ "protocol_sha256": "3c143bd7c405c9fc70edfd186c3432fce88845820f8d7fd892a4be0744a2b7af",
+ "inputs": {
+  "protocol": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/protocol/fs_protocol_v1.json",
+   "sha256": "3c143bd7c405c9fc70edfd186c3432fce88845820f8d7fd892a4be0744a2b7af"
+  },
+  "diag_decision": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J1_diag_decision_r2.json",
+   "sha256": "3ad6de6a501b78c91acb23ece290808b30c52a01006c23639c5e03c317ed3c2c"
+  }
+ },
+ "job_dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03formal-0923212136-800630",
+ "decided_utc": "2026-09-23T21:34:35.697350+00:00",
+ "decider_sha256": "a2e09670894ed6c78c7535d2e0aadbea8a89809f062952b51abf3557fe732a0a"
+}

@@ -1,0 +1,24 @@
+{
+ "job": "B-J2",
+ "job_id": "pt-vt003lhm",
+ "run_dir": "artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d",
+ "label": "r4bankbj2",
+ "timeout_seconds": 3600,
+ "configs": [
+  "BJ2_E0..E3 (cuda:0..3, formal, H=32, lr 2.5e-3)"
+ ],
+ "argv_file": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/jobs/B-J2.argv.json",
+ "argv_file_sha256": "43f079920ca5f2b56e914efeb89de1dc98b360a0a95f7165d90f58f764815bec",
+ "invocation_sha256": "7057b5571df35ae32be01b28c7a4c345b2aa11927ccbbe0f095ff0bc2a7acb59",
+ "source_manifest_sha256": "a9ba6ef05f0bdc61a8a96bcf778bb492df21fd675d0ccc778f737271b86dcb72",
+ "protocol_sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1",
+ "trigger": "B-J1 shortstep decision PASS (BANK-BUDGET-v1 b_j2_only_if)",
+ "shortstep_decision": {
+  "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ1_shortstep_decision.json",
+  "sha256": "9b441507384571b1468829e9dfff46c63a6a59a9d0f0c7818527ccdad82a5ab1"
+ },
+ "go_ahead": "coordinator explicit go-ahead after verifying B-J1",
+ "budget": "GPU job 2 of max 7",
+ "dry_run_dir_not_submitted": "artifacts/round2_cci/DRYRUN_NOT_SUBMITTED_ed-r4bankbj2-0924052615-4a9651",
+ "recorded_utc": "2026-09-24T05:26:37.398534+00:00"
+}

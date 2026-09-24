@@ -1,0 +1,1437 @@
+{
+ "schema_version": "ed-fs-protocol/1",
+ "protocol_kind": "bank",
+ "protocol_id": "FP04-BANK-v1",
+ "status": "PREREGISTERED_BEFORE_FP04_JOBS",
+ "created_utc": "2026-09-24T05:10:07.539061+00:00",
+ "run_dir": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank",
+ "self_reference": "This file's SHA-256 is every FP-04 job's --protocol-sha256 (placeholder <PROTOCOL_SHA256> in jobs.*.argv_template); it cannot be stored inside.",
+ "rules_verbatim": {
+  "BANK-QUAL-v1_BANK-SELECT-v1_BANK-SHORTSTEP-v1_BANK-CERTIFY-v1_BANK-BUDGET-v1": "BANK-QUAL-v1 (per formal expert k; own training group G_k; Fs = pure certified Fs panel, L0 =\nuntrained singleton k (B == 0), L1 = trained singleton k (a0 = 0.25 for the 4-step hold, then Fs);\nper issue, per lead 6/24/72h; float64 objective, no-grad 12-step rollout; epoch = |G_k| updates)\n E0 validity (else INVALID): official backend + torch 2.3.1+cu121 + xformers 0.0.27, TF32 off\n    (effective getters), S0 certificate consumed, admission consumer PASS, protocol/config-id\n    match, no source drift vs source_at_preregistration, certified Fs authorized by hash AND\n    loaded digests (merged/base/static-adapter/version) equal the pins, initial bank digest and\n    initial expert digest equal the pins, grouping equals the pin, training order = pinned group,\n    record = declared (mode/lr/updates), expert file is the trained expert, L0 == Fs BITWISE on\n    every issue and lead of G_k.\n E1 numerics: n_updates == 32; every loss, total grad norm, A and B grad norm finite; traces\n    consistent; eligible (ELIGIBILITY_RULES).\n E2 stability: clip_events == 0; every training loss <= 1.25 x that issue's Fs 24h loss; for\n    every full epoch k >= 1: E_k <= 1.02 x min(E_0..E_{k-1}).\n E3 own-group direction (HARD): mean_{G_k} L1_24h / mean_{G_k} Fs_24h < 1.00 (strict).\n E4 nonzero response: response at a0 is nonzero, B no longer zero, the expert digest moved, and the\n    L1 panel differs from the L0 panel.\n E5 reload: expert_k.pt re-hashes; a FRESH seed bank with expert_k.pt installed has the trained\n    digest and reproduces the probe states at steps 1/4/12 exactly (max |diff| == 0.0); the saved\n    probe file round-trips exactly.\n E6 isolation: the 3 other experts' digests unchanged and gradient-free; backbone digest\n    unchanged (and == certified merged Fs); no leftover hooks.\n Verdict: INVALID if E0 fails or a threshold is missing; else FAIL if any of E1..E6 fails;\n else PASS. REPORT-ONLY (never a gate): own-group 6h and 72h ratios, per-issue 24h ratios,\n per-visit first/last direction, the first-16-update replay of B-J1. No out-of-sample gate.\n\nBANK-SELECT-v1. The formal bank of ONE job (one lr) is selected for assembly iff all 4 experts\nare PASS with 4 distinct expert digests and 4 distinct files: BANK_QUAL_PASS_PENDING_ASSEMBLY.\nAny FAIL -> STOP_CURRENT_BANK (the whole batch; the passing experts are not kept, not assembled\nas a smaller bank, not re-indexed). Any INVALID / missing / duplicated expert -> INVALID. No\nsubstitution, no cross-batch mixing (a B-J2 expert never joins a B-J2F bank). A BANK-QUAL-v1\nfailure is never an exclusion reason; FORBIDDEN_EXCLUSION_REASONS stay refused. A\nSTOP_CURRENT_BANK records fallback_authorized = True iff EVERY failed expert has E2 = FAIL\n(other criteria may fail alongside E2); otherwise False.\n\nBANK-SHORTSTEP-v1 (B-J1, machinery only). Per worker: E0-style validity, n_updates == 16,\nfinite, A grad exactly 0 and B grad > 0 at update 0, A grad > 0 for every later update, L0 ==\nFs bitwise, expert moved, nonzero response, isolation (E6), exact reload (E5). Across workers:\nall 4 present, ONE certified Fs digest set, ONE initial bank, ONE grouping. Profile: real CUDA\nprofile of K=4/rank=4, no error, decision keeps K=4/rank=4 (no shrink). Horizon: the full\n4-step hold is differentiable, no activation checkpointing, no fallback. Both measurements\nleave the bank digest unchanged (they run on a deep copy). No loss trend and no L1/Fs ratio is\nread from B-J1. PASS or STOP.\n\nBANK-CERTIFY-v1 (B-J3; assembly A1-A5, all EXACT, max |diff| == 0.0, no tolerance)\n A1 each assembled singleton k == the same-process source bank (seed bank + only expert k)\n    at probe steps 1/4/12;\n A2 each assembled singleton k == the probe states the training process saved;\n A3 whole-bank zero edit == Fs exactly, and != F0 (discriminating);\n A4 per expert: after the 4-step hold the rollout equals Fs continued from the edited state\n    at every step to 12, differs from an F0 continuation at every step, nonzero edit at hold;\n A5 the reloaded bank.pt file sha256, bank digest and expert digests equal the assembly\n    record's, and the expert digests equal the formal decision's.\n Justification for exactness: ExpertLoRA.forward_dense adds expert_out * coefficients[:, k],\n an exact float zero for an inactive expert. Plus: bank.pt re-hashes and reloads to the\n recorded digests, each bank slice == its expert file, the registry validates and binds\n Fs/bank/normalization/inputs/protocol/source hashes, and registry.verify_bank_bundle PASSES\n on the bundle BEFORE it is published. Else STOP_ASSEMBLY.\n\nBANK-BUDGET-v1. GPU jobs: B-J1 (4 short-step workers, 16 updates, lr 2.5e-3, then profile on\ncuda:0 and horizon check on cuda:1); B-J2 (formal, H=32, lr 2.5e-3, 4 workers; only after\nB-J1 PASS); B-J2F (formal, H=32, lr 1.25e-3, all 4 experts retrained together; only if the B-J2\ndecision is STOP_CURRENT_BANK with fallback_authorized, i.e. EVERY failed expert failed E2\nstability; never after INVALID, never after a STOP with any E3-only / E4 / E5 / E6-only\nfailure, and no other fallback of any kind); B-J3 (bank_assemble on cuda:0, then bank_verify on\ncuda:1 in an independent process; only after BANK_QUAL_PASS_PENDING_ASSEMBLY); at most 1 infra\nretry in total. Cap 7 GPU jobs; expected 3 (B-J1, B-J2, B-J3). Stops: B-J1 STOP -> BLOCKED;\nB-J2 INVALID -> BLOCKED; B-J2 STOP_CURRENT_BANK without fallback_authorization (e.g. an E3\nfailure) -> final STOP_CURRENT_BANK (no B-J2F, no more updates, no other fallback); B-J2 and\nB-J2F both STOP_CURRENT_BANK -> STOP_CURRENT_BANK (no third lr, no per-expert retry); B-J3 STOP_ASSEMBLY -> STOP_ASSEMBLY. No further job without the\ncoordinator."
+ },
+ "design": {
+  "num_experts": 4,
+  "rank_per_expert": 4,
+  "a0": 0.25,
+  "rho": 0.25,
+  "max_active": 1,
+  "hold_steps": 4,
+  "target_blocks": [
+   18,
+   19,
+   20,
+   21,
+   22,
+   23
+  ],
+  "train_steps": 4,
+  "objective_lead_steps": [
+   4
+  ],
+  "optimizer": "Adam defaults, grad clip 1.0, constant lr, seed 20260921 + expert_index",
+  "diversity_rule": "ed-bank-diversity/1:disjoint-calendar-month-blocks"
+ },
+ "qualification_rule": {
+  "rule": "BANK-QUAL-v1",
+  "horizon": 32,
+  "e0": {
+   "torch_version": "2.3.1+cu121",
+   "xformers_version": "0.0.27",
+   "require_official_backend": true,
+   "tf32": "off (effective getters)"
+  },
+  "e2": {
+   "clip_events_max": 0,
+   "per_visit_ratio_max": 1.25,
+   "epoch_onset_factor": 1.02,
+   "epoch_size": "group_size"
+  },
+  "e3": {
+   "own_group_mean_ratio_24h_lt": 1.0
+  },
+  "report_only": [
+   "own_group_6h",
+   "own_group_72h",
+   "own_group_24h_per_issue",
+   "per_visit_direction",
+   "prefix_equals_shortstep"
+  ],
+  "implementation": "earthdelta.bank_training.evaluate_bank_expert_qualification"
+ },
+ "shortstep_rule": {
+  "rule": "BANK-SHORTSTEP-v1",
+  "horizon": 16,
+  "n_workers": 4,
+  "require_real_cuda_profile": true,
+  "implementation": "scripts/r4_bank_decide.py decide_shortstep"
+ },
+ "selection_rule": {
+  "rule": "BANK-SELECT-v1",
+  "num_experts": 4,
+  "fallback": {
+   "job": "B-J2F",
+   "after_job": "B-J2",
+   "requires_failed_criterion": "E2",
+   "scope": "every failed expert has E2 == FAIL (other criteria may fail alongside); else no fallback"
+  },
+  "implementation": "earthdelta.bank_training.decide_bank_formal"
+ },
+ "assembly_rule": {
+  "rule": "BANK-CERTIFY-v1",
+  "tolerance": 0.0,
+  "probe_steps": [
+   1,
+   4,
+   12
+  ],
+  "continuation_total_steps": 12,
+  "implementation": "earthdelta.bank_training.evaluate_bank_assembly + earthdelta.registry.verify_bank_bundle"
+ },
+ "budget": {
+  "rule": "BANK-BUDGET-v1",
+  "jobs": [
+   "B-J1",
+   "B-J2",
+   "B-J2F",
+   "B-J3"
+  ],
+  "max_gpu_jobs": 7,
+  "expected_gpu_jobs": 3,
+  "infra_retries_total": 1,
+  "b_j2_only_if": "B-J1 shortstep decision PASS",
+  "b_j2f_only_if": "B-J2 formal decision STOP_CURRENT_BANK with fallback_authorized (every failed expert failed E2); never after INVALID; a STOP with any non-E2 failed expert (e.g. E3 only) is final, no fallback",
+  "fallback_refinement": "E2-only fallback trigger approved by the coordinator before this freeze, while no FP-04 job had been submitted",
+  "b_j3_only_if": "a formal decision BANK_QUAL_PASS_PENDING_ASSEMBLY",
+  "stop": "no further job without the coordinator"
+ },
+ "inputs": {
+  "gate_config": {
+   "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+   "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+  },
+  "s0_certificate": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+   "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+  },
+  "admission": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+   "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+  },
+  "admission_declaration": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_selection_declaration.json",
+   "sha256": "2b15f80e7a42d7a7dc43130e3f148ebfe13ff9bbd6ed7c8fb438b91df961418d"
+  },
+  "admission_attempt1": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission_attempt1.json",
+   "sha256": "3d2f1343d7af013bc4861609602842eda64d11082abe43683b73ee6e799d1844"
+  },
+  "admission_slot47_candidates": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/replacement_candidates_slot47_admission.json",
+   "sha256": "d64b099c0129210785b63593b0fa096642e42d9b10c30aebe83c57c8171dfbcd"
+  },
+  "admission_consumer_check": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/admission_consumer_check.json",
+   "sha256": "5201fd13eeb725f3c8287b1a8f5a7691b2c2a8ce613ac479dbfd658b51628298"
+  },
+  "grouping": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_grouping.json",
+   "sha256": "ede23fb9859971b1a06c8fa1df27facdc21a6a5e7ff4e4355c0822d871cefe25"
+  },
+  "cpu_pins_and_fs_dryrun": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/analysis/cpu_pins_and_fs_dryrun.json",
+   "sha256": "fe7f5445525a699b4a057786eda114742f3b727d0bfce63f2dbb97cbc19cae5d"
+  },
+  "checkpoint_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+  "normalization_identity": "ed-norm-identity/1:3e0b216bfbf34ab0",
+  "certified_overlay": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/cuda_site",
+  "fs_reference": {
+   "reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   },
+   "fs_protocol_sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe",
+   "fs_protocol": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/fs_protocol_v2.json",
+    "sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe"
+   },
+   "digests": {
+    "merged_backbone_digest": "370bd3bcc7545755bcdb60e482e1ce1ebc201302dc710f7992a4d76c4915bb97",
+    "base_backbone_digest": "bf1eca9d48dbed9e2752678500b2a0cc1488d84627d68de33367492926aa898d",
+    "static_adapter_digest": "566d5dc116771cf96928cb5618404334a78f2a46e7aeb821bb9e141b3695d57f",
+    "artifact_version_digest": "33fcd3b3c34df722e75221c4941b8a716ff277f06f229b3b8c0a7181612c446b"
+   }
+  },
+  "bank": {
+   "initial_bank_digest": "78e78848e97e15e680cdd5ceb57f4ea6fb4650e62121a3cd97b33231bb262f7c",
+   "initial_expert_digests": [
+    "68ff1130b416b761c6a8512be5bf2d62de9477021d84636bfd53c15dc0469eca",
+    "acba60785186f99a66c8e1cbc26b19eae25eb3cdfe7e65bcde6302aff120222d",
+    "a13fff793eb4226e046968716ee52abac222c8deaa8abb6378894c8d19515b78",
+    "35ca15c89a95e5de7dfd2be651830e11af3ba1ef91ce675e3ebe29bcbb9baa09"
+   ],
+   "initial_bank_call": "build_dynamic_bank(1024, (18..23), num_experts=4, rank_per_expert=4, seed=20260921)",
+   "grouping": {
+    "0": [
+     "iss_292517fb189ee1bd",
+     "iss_b83cbb00e6cb5eb3",
+     "iss_00764efdd9468778",
+     "iss_d2871a74548df0f1",
+     "iss_bcf27964e77c54b3",
+     "iss_6e4faae20c3f33f0",
+     "iss_d93bbfd8a1387d02",
+     "iss_0f0a37e8393048e2",
+     "iss_475192a76d40e894",
+     "iss_18d8c1b619a302e6",
+     "iss_48db9e7d6b34ef39",
+     "iss_765fa161b1b1e581",
+     "iss_d574995f92709e85",
+     "iss_fd1097836dbd4da8",
+     "iss_039add2d41f5c08a"
+    ],
+    "1": [
+     "iss_4f2b54d7e8953451",
+     "iss_0385d2c288807351",
+     "iss_b9770dd8b6aaa215",
+     "iss_0dcd1c194c0f2001",
+     "iss_b602673ed527ee65",
+     "iss_395368a523eef01e",
+     "iss_9f5c84e9feaac58a",
+     "iss_9f1b600cc88b7d0b",
+     "iss_c9262546e63a96f0",
+     "iss_1b2a9b2659e92e32",
+     "iss_3f121b796ed3792d",
+     "iss_7c410dbdd2c331c8",
+     "iss_f14ddf0d753a686d",
+     "iss_d30654bc90d6cc68",
+     "iss_2b8803810786f267",
+     "iss_6361e4cdd8050ae3"
+    ],
+    "2": [
+     "iss_32d48efebee12be2",
+     "iss_4cef9a9654f92229",
+     "iss_658520ec80cc7e3e",
+     "iss_342bd18e13bd60b8",
+     "iss_c91b65e1183c905e",
+     "iss_498e78935151da92",
+     "iss_bbd4e6e2ec71d9ca"
+    ],
+    "3": [
+     "iss_04eb8e8d56c68faa",
+     "iss_4ea182f8369adc22",
+     "iss_6ea3c5d0ec7f926e",
+     "iss_053f08aae32d5ad8",
+     "iss_3b86043db1bbf33d",
+     "iss_b42c91ed1b555939"
+    ]
+   },
+   "probe_issue_id": "iss_292517fb189ee1bd"
+  },
+  "train_issue_ids": [
+   "iss_292517fb189ee1bd",
+   "iss_b83cbb00e6cb5eb3",
+   "iss_00764efdd9468778",
+   "iss_d2871a74548df0f1",
+   "iss_bcf27964e77c54b3",
+   "iss_6e4faae20c3f33f0",
+   "iss_d93bbfd8a1387d02",
+   "iss_0f0a37e8393048e2",
+   "iss_475192a76d40e894",
+   "iss_18d8c1b619a302e6",
+   "iss_48db9e7d6b34ef39",
+   "iss_765fa161b1b1e581",
+   "iss_d574995f92709e85",
+   "iss_fd1097836dbd4da8",
+   "iss_039add2d41f5c08a",
+   "iss_bda1ac1be4bd5615",
+   "iss_4f2b54d7e8953451",
+   "iss_0385d2c288807351",
+   "iss_b9770dd8b6aaa215",
+   "iss_0dcd1c194c0f2001",
+   "iss_b602673ed527ee65",
+   "iss_395368a523eef01e",
+   "iss_9f5c84e9feaac58a",
+   "iss_9f1b600cc88b7d0b",
+   "iss_c9262546e63a96f0",
+   "iss_1b2a9b2659e92e32",
+   "iss_3f121b796ed3792d",
+   "iss_7c410dbdd2c331c8",
+   "iss_f14ddf0d753a686d",
+   "iss_d30654bc90d6cc68",
+   "iss_2b8803810786f267",
+   "iss_6361e4cdd8050ae3",
+   "iss_e99490eb752f38be",
+   "iss_32d48efebee12be2",
+   "iss_4cef9a9654f92229",
+   "iss_658520ec80cc7e3e",
+   "iss_342bd18e13bd60b8",
+   "iss_c91b65e1183c905e",
+   "iss_498e78935151da92",
+   "iss_bbd4e6e2ec71d9ca",
+   "iss_19c90e3849fe555f",
+   "iss_04eb8e8d56c68faa",
+   "iss_4ea182f8369adc22",
+   "iss_6ea3c5d0ec7f926e",
+   "iss_053f08aae32d5ad8",
+   "iss_3b86043db1bbf33d",
+   "iss_b42c91ed1b555939",
+   "iss_703b354be6d94c63"
+  ],
+  "train_issue_times_utc": [
+   "2020-01-02T00:00:00Z",
+   "2020-01-05T18:00:00Z",
+   "2020-01-09T12:00:00Z",
+   "2020-01-13T06:00:00Z",
+   "2020-01-17T00:00:00Z",
+   "2020-01-20T18:00:00Z",
+   "2020-01-24T12:00:00Z",
+   "2020-01-28T06:00:00Z",
+   "2020-02-01T00:00:00Z",
+   "2020-02-04T18:00:00Z",
+   "2020-02-08T12:00:00Z",
+   "2020-02-12T06:00:00Z",
+   "2020-02-16T00:00:00Z",
+   "2020-02-19T18:00:00Z",
+   "2020-02-23T12:00:00Z",
+   "2020-02-27T06:00:00Z",
+   "2020-03-02T00:00:00Z",
+   "2020-03-05T18:00:00Z",
+   "2020-03-09T12:00:00Z",
+   "2020-03-13T06:00:00Z",
+   "2020-03-17T00:00:00Z",
+   "2020-03-20T18:00:00Z",
+   "2020-03-24T12:00:00Z",
+   "2020-03-28T06:00:00Z",
+   "2020-04-01T00:00:00Z",
+   "2020-04-04T18:00:00Z",
+   "2020-04-08T12:00:00Z",
+   "2020-04-12T06:00:00Z",
+   "2020-04-16T00:00:00Z",
+   "2020-04-19T18:00:00Z",
+   "2020-04-23T12:00:00Z",
+   "2020-04-27T06:00:00Z",
+   "2020-05-01T00:00:00Z",
+   "2020-05-04T18:00:00Z",
+   "2020-05-08T12:00:00Z",
+   "2020-05-12T06:00:00Z",
+   "2020-05-16T00:00:00Z",
+   "2020-05-19T18:00:00Z",
+   "2020-05-23T12:00:00Z",
+   "2020-05-27T06:00:00Z",
+   "2020-05-31T00:00:00Z",
+   "2020-06-03T18:00:00Z",
+   "2020-06-07T12:00:00Z",
+   "2020-06-11T06:00:00Z",
+   "2020-06-15T00:00:00Z",
+   "2020-06-18T18:00:00Z",
+   "2020-06-22T12:00:00Z",
+   "2020-06-30T00:00:00Z"
+  ],
+  "exposure_window_utc": [
+   "2020-01-01T12:00:00Z",
+   "2020-07-04T18:00:00Z"
+  ]
+ },
+ "configs": {
+  "BJ1_E0": {
+   "job": "B-J1",
+   "stage": "bank_train",
+   "mode": "gradient_check",
+   "max_updates": 16,
+   "learning_rate": 0.0025,
+   "expert_index": 0,
+   "device": "cuda:0",
+   "_output_subdir": "expert0",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  },
+  "BJ2_E0": {
+   "job": "B-J2",
+   "stage": "bank_train",
+   "mode": "formal",
+   "max_updates": 32,
+   "learning_rate": 0.0025,
+   "expert_index": 0,
+   "device": "cuda:0",
+   "_output_subdir": "expert0",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  },
+  "BJ2F_E0": {
+   "job": "B-J2F",
+   "stage": "bank_train",
+   "mode": "formal",
+   "max_updates": 32,
+   "learning_rate": 0.00125,
+   "expert_index": 0,
+   "device": "cuda:0",
+   "_output_subdir": "expert0",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  },
+  "BJ1_E1": {
+   "job": "B-J1",
+   "stage": "bank_train",
+   "mode": "gradient_check",
+   "max_updates": 16,
+   "learning_rate": 0.0025,
+   "expert_index": 1,
+   "device": "cuda:1",
+   "_output_subdir": "expert1",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  },
+  "BJ2_E1": {
+   "job": "B-J2",
+   "stage": "bank_train",
+   "mode": "formal",
+   "max_updates": 32,
+   "learning_rate": 0.0025,
+   "expert_index": 1,
+   "device": "cuda:1",
+   "_output_subdir": "expert1",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  },
+  "BJ2F_E1": {
+   "job": "B-J2F",
+   "stage": "bank_train",
+   "mode": "formal",
+   "max_updates": 32,
+   "learning_rate": 0.00125,
+   "expert_index": 1,
+   "device": "cuda:1",
+   "_output_subdir": "expert1",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  },
+  "BJ1_E2": {
+   "job": "B-J1",
+   "stage": "bank_train",
+   "mode": "gradient_check",
+   "max_updates": 16,
+   "learning_rate": 0.0025,
+   "expert_index": 2,
+   "device": "cuda:2",
+   "_output_subdir": "expert2",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  },
+  "BJ2_E2": {
+   "job": "B-J2",
+   "stage": "bank_train",
+   "mode": "formal",
+   "max_updates": 32,
+   "learning_rate": 0.0025,
+   "expert_index": 2,
+   "device": "cuda:2",
+   "_output_subdir": "expert2",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  },
+  "BJ2F_E2": {
+   "job": "B-J2F",
+   "stage": "bank_train",
+   "mode": "formal",
+   "max_updates": 32,
+   "learning_rate": 0.00125,
+   "expert_index": 2,
+   "device": "cuda:2",
+   "_output_subdir": "expert2",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  },
+  "BJ1_E3": {
+   "job": "B-J1",
+   "stage": "bank_train",
+   "mode": "gradient_check",
+   "max_updates": 16,
+   "learning_rate": 0.0025,
+   "expert_index": 3,
+   "device": "cuda:3",
+   "_output_subdir": "expert3",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  },
+  "BJ2_E3": {
+   "job": "B-J2",
+   "stage": "bank_train",
+   "mode": "formal",
+   "max_updates": 32,
+   "learning_rate": 0.0025,
+   "expert_index": 3,
+   "device": "cuda:3",
+   "_output_subdir": "expert3",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  },
+  "BJ2F_E3": {
+   "job": "B-J2F",
+   "stage": "bank_train",
+   "mode": "formal",
+   "max_updates": 32,
+   "learning_rate": 0.00125,
+   "expert_index": 3,
+   "device": "cuda:3",
+   "_output_subdir": "expert3",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  },
+  "BJ1_PROFILE": {
+   "job": "B-J1",
+   "stage": "profile",
+   "mode": "gradient_check",
+   "max_updates": 16,
+   "learning_rate": 0.0025,
+   "expert_index": 0,
+   "device": "cuda:0",
+   "_output_subdir": "profile",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   },
+   "profile_steps": 3,
+   "profile_warmup": 1,
+   "memory_budget_gib": 80.0,
+   "memory_safety_fraction": 0.8,
+   "max_seconds_per_update": 30.0
+  },
+  "BJ1_HORIZON": {
+   "job": "B-J1",
+   "stage": "horizon_check",
+   "mode": "gradient_check",
+   "max_updates": 16,
+   "learning_rate": 0.0025,
+   "expert_index": 0,
+   "max_differentiable_steps": null,
+   "device": "cuda:1",
+   "_output_subdir": "horizon",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   },
+   "profile_steps": 3,
+   "profile_warmup": 1,
+   "memory_budget_gib": 80.0,
+   "memory_safety_fraction": 0.8,
+   "max_seconds_per_update": 30.0
+  },
+  "BJ3_ASSEMBLE": {
+   "job": "B-J3",
+   "stage": "bank_assemble",
+   "device": "cuda:0",
+   "_output_subdir": "assemble",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  },
+  "BJ3_VERIFY": {
+   "job": "B-J3",
+   "stage": "bank_verify",
+   "device": "cuda:1",
+   "_output_subdir": "verify",
+   "seed": 20260921,
+   "rank_per_expert": 4,
+   "num_experts": 4,
+   "target_blocks": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "hold_steps": 4,
+   "train_steps": 4,
+   "lead_steps": [
+    4
+   ],
+   "panel_lead_steps": [
+    1,
+    4,
+    12
+   ],
+   "a0": 0.25,
+   "rho": 0.25,
+   "data_role": "bank_fit",
+   "limit": null,
+   "config": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+    "sha256": "f4a2555243d5f7401eb14a9fbec6a11b288f027042d3a969ef83809a8aa60992"
+   },
+   "admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+   },
+   "s0_certificate": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "fs_reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "fs_certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   }
+  }
+ },
+ "jobs": {
+  "B-J1": {
+   "label": "r4bankbj1",
+   "timeout_seconds": 3600,
+   "argv_template": [
+    "bash",
+    "-lc",
+    "set -u; export PYTHONPATH=\"/mnt/afs/260010168/EarthDelta/.pydeps:/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/cuda_site:${PYTHONPATH:-}\"; export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python; echo \"== FP-04 BANK PROTOCOL V1\"; sha256sum \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt\"; python3 -c \"import torch, xformers; print('env torch', torch.__version__, 'xformers', xformers.__version__, 'gpus', torch.cuda.device_count())\"; status=0; pids=(); for i in 0 1 2 3; do D=@OUTPUT@/expert$i; mkdir -p $D; python3 -u @SNAPSHOT@/scripts/r2_fs_bank_train.py --stage bank_train --expert-index $i --mode gradient_check --max-updates 16 --learning-rate 0.0025 --config-id BJ1_E$i --device cuda:$i --seed 20260921 --rank-per-expert 4 --num-experts 4 --target-blocks 18 19 20 21 22 23 --hold-steps 4 --train-steps 4 --lead-steps 4 --panel-lead-steps 1 4 12 --a0 0.25 --rho 0.25 --data-role bank_fit --config /mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json --admission /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json --s0-certificate /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json --protocol /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json --protocol-sha256 <PROTOCOL_SHA256> --fs-reference-manifest /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json --fs-reference-manifest-sha256 45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972 --fs-certify-decision /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json --fs-adapter /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt --fs-merged-backbone /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt --output-dir $D > $D/stdout.log 2>&1 & pids+=($!); done; for i in 0 1 2 3; do if wait ${pids[$i]}; then echo \"BJ1_E$i rc=0\"; else rc=$?; echo \"BJ1_E$i rc=$rc\"; status=1; fi; done; mkdir -p @OUTPUT@/profile @OUTPUT@/horizon; python3 -u @SNAPSHOT@/scripts/r2_fs_bank_train.py --stage profile --expert-index 0 --mode gradient_check --max-updates 16 --learning-rate 0.0025 --config-id BJ1_PROFILE --device cuda:0 --seed 20260921 --rank-per-expert 4 --num-experts 4 --target-blocks 18 19 20 21 22 23 --hold-steps 4 --train-steps 4 --lead-steps 4 --panel-lead-steps 1 4 12 --a0 0.25 --rho 0.25 --data-role bank_fit --config /mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json --admission /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json --s0-certificate /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json --protocol /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json --protocol-sha256 <PROTOCOL_SHA256> --fs-reference-manifest /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json --fs-reference-manifest-sha256 45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972 --fs-certify-decision /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json --fs-adapter /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt --fs-merged-backbone /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt --profile-steps 3 --profile-warmup 1 --memory-budget-gib 80.0 --memory-safety-fraction 0.8 --max-seconds-per-update 30.0 --output-dir @OUTPUT@/profile > @OUTPUT@/profile/stdout.log 2>&1 & p1=$!; python3 -u @SNAPSHOT@/scripts/r2_fs_bank_train.py --stage horizon_check --expert-index 0 --mode gradient_check --max-updates 16 --learning-rate 0.0025 --config-id BJ1_HORIZON --device cuda:1 --seed 20260921 --rank-per-expert 4 --num-experts 4 --target-blocks 18 19 20 21 22 23 --hold-steps 4 --train-steps 4 --lead-steps 4 --panel-lead-steps 1 4 12 --a0 0.25 --rho 0.25 --data-role bank_fit --config /mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json --admission /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json --s0-certificate /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json --protocol /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json --protocol-sha256 <PROTOCOL_SHA256> --fs-reference-manifest /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json --fs-reference-manifest-sha256 45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972 --fs-certify-decision /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json --fs-adapter /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt --fs-merged-backbone /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt --profile-steps 3 --profile-warmup 1 --memory-budget-gib 80.0 --memory-safety-fraction 0.8 --max-seconds-per-update 30.0 --output-dir @OUTPUT@/horizon > @OUTPUT@/horizon/stdout.log 2>&1 & p2=$!; if wait $p1; then echo \"BJ1_PROFILE rc=0\"; else echo \"BJ1_PROFILE rc=$?\"; status=1; fi; if wait $p2; then echo \"BJ1_HORIZON rc=0\"; else echo \"BJ1_HORIZON rc=$?\"; status=1; fi; exit $status"
+   ],
+   "decision": "python3 <JOB_RUN_DIR>/source/scripts/r4_bank_decide.py --kind shortstep --job B-J1 --protocol /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json --protocol-sha256 <PROTOCOL_SHA256> --job-dir <JOB_RUN_DIR> --out /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ1_shortstep_decision.json"
+  },
+  "B-J2": {
+   "label": "r4bankbj2",
+   "timeout_seconds": 3600,
+   "argv_template": [
+    "bash",
+    "-lc",
+    "set -u; export PYTHONPATH=\"/mnt/afs/260010168/EarthDelta/.pydeps:/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/cuda_site:${PYTHONPATH:-}\"; export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python; echo \"== FP-04 BANK PROTOCOL V1\"; sha256sum \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt\"; python3 -c \"import torch, xformers; print('env torch', torch.__version__, 'xformers', xformers.__version__, 'gpus', torch.cuda.device_count())\"; status=0; pids=(); for i in 0 1 2 3; do D=@OUTPUT@/expert$i; mkdir -p $D; python3 -u @SNAPSHOT@/scripts/r2_fs_bank_train.py --stage bank_train --expert-index $i --mode formal --max-updates 32 --learning-rate 0.0025 --config-id BJ2_E$i --device cuda:$i --seed 20260921 --rank-per-expert 4 --num-experts 4 --target-blocks 18 19 20 21 22 23 --hold-steps 4 --train-steps 4 --lead-steps 4 --panel-lead-steps 1 4 12 --a0 0.25 --rho 0.25 --data-role bank_fit --config /mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json --admission /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json --s0-certificate /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json --protocol /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json --protocol-sha256 <PROTOCOL_SHA256> --fs-reference-manifest /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json --fs-reference-manifest-sha256 45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972 --fs-certify-decision /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json --fs-adapter /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt --fs-merged-backbone /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt --output-dir $D > $D/stdout.log 2>&1 & pids+=($!); done; for i in 0 1 2 3; do if wait ${pids[$i]}; then echo \"BJ2_E$i rc=0\"; else rc=$?; echo \"BJ2_E$i rc=$rc\"; status=1; fi; done; exit $status"
+   ],
+   "decision": "python3 <JOB_RUN_DIR>/source/scripts/r4_bank_decide.py --kind formal --job B-J2 --protocol /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json --protocol-sha256 <PROTOCOL_SHA256> --job-dir <JOB_RUN_DIR> --shortstep-decision /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ1_shortstep_decision.json --out /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2_formal_decision.json"
+  },
+  "B-J2F": {
+   "label": "r4bankbj2f",
+   "timeout_seconds": 3600,
+   "argv_template": [
+    "bash",
+    "-lc",
+    "set -u; export PYTHONPATH=\"/mnt/afs/260010168/EarthDelta/.pydeps:/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/cuda_site:${PYTHONPATH:-}\"; export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python; echo \"== FP-04 BANK PROTOCOL V1\"; sha256sum \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt\"; python3 -c \"import torch, xformers; print('env torch', torch.__version__, 'xformers', xformers.__version__, 'gpus', torch.cuda.device_count())\"; status=0; pids=(); for i in 0 1 2 3; do D=@OUTPUT@/expert$i; mkdir -p $D; python3 -u @SNAPSHOT@/scripts/r2_fs_bank_train.py --stage bank_train --expert-index $i --mode formal --max-updates 32 --learning-rate 0.00125 --config-id BJ2F_E$i --device cuda:$i --seed 20260921 --rank-per-expert 4 --num-experts 4 --target-blocks 18 19 20 21 22 23 --hold-steps 4 --train-steps 4 --lead-steps 4 --panel-lead-steps 1 4 12 --a0 0.25 --rho 0.25 --data-role bank_fit --config /mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json --admission /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json --s0-certificate /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json --protocol /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json --protocol-sha256 <PROTOCOL_SHA256> --fs-reference-manifest /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json --fs-reference-manifest-sha256 45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972 --fs-certify-decision /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json --fs-adapter /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt --fs-merged-backbone /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt --output-dir $D > $D/stdout.log 2>&1 & pids+=($!); done; for i in 0 1 2 3; do if wait ${pids[$i]}; then echo \"BJ2F_E$i rc=0\"; else rc=$?; echo \"BJ2F_E$i rc=$rc\"; status=1; fi; done; exit $status"
+   ],
+   "decision": "python3 <JOB_RUN_DIR>/source/scripts/r4_bank_decide.py --kind formal --job B-J2F --protocol /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json --protocol-sha256 <PROTOCOL_SHA256> --job-dir <JOB_RUN_DIR> --prior-formal-decision /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2_formal_decision.json --out /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2F_formal_decision.json"
+  },
+  "B-J3": {
+   "label": "r4bankbj3",
+   "timeout_seconds": 3600,
+   "argv_template": [
+    "bash",
+    "-lc",
+    "set -u; export PYTHONPATH=\"/mnt/afs/260010168/EarthDelta/.pydeps:/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/cuda_site:${PYTHONPATH:-}\"; export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python; echo \"== FP-04 BANK PROTOCOL V1\"; sha256sum \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json\" \"/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt\"; python3 -c \"import torch, xformers; print('env torch', torch.__version__, 'xformers', xformers.__version__, 'gpus', torch.cuda.device_count())\"; mkdir -p @OUTPUT@/assemble @OUTPUT@/verify; python3 -u @SNAPSHOT@/scripts/r2_fs_bank_train.py --stage bank_assemble --config-id BJ3_ASSEMBLE --device cuda:0 --seed 20260921 --rank-per-expert 4 --num-experts 4 --target-blocks 18 19 20 21 22 23 --hold-steps 4 --train-steps 4 --lead-steps 4 --panel-lead-steps 1 4 12 --a0 0.25 --rho 0.25 --data-role bank_fit --config /mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json --admission /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json --s0-certificate /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json --protocol /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json --protocol-sha256 <PROTOCOL_SHA256> --fs-reference-manifest /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json --fs-reference-manifest-sha256 45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972 --fs-certify-decision /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json --fs-adapter /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt --fs-merged-backbone /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt --bank-decision <FORMAL_DECISION> --output-dir @OUTPUT@/assemble > @OUTPUT@/assemble/stdout.log 2>&1; rc=$?; echo \"BJ3_ASSEMBLE rc=$rc\"; if [ $rc -ne 0 ]; then exit $rc; fi; python3 -u @SNAPSHOT@/scripts/r2_fs_bank_train.py --stage bank_verify --config-id BJ3_VERIFY --device cuda:1 --seed 20260921 --rank-per-expert 4 --num-experts 4 --target-blocks 18 19 20 21 22 23 --hold-steps 4 --train-steps 4 --lead-steps 4 --panel-lead-steps 1 4 12 --a0 0.25 --rho 0.25 --data-role bank_fit --config /mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json --admission /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json --s0-certificate /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json --protocol /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json --protocol-sha256 <PROTOCOL_SHA256> --fs-reference-manifest /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json --fs-reference-manifest-sha256 45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972 --fs-certify-decision /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json --fs-adapter /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt --fs-merged-backbone /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt --bank-decision <FORMAL_DECISION> --bank-assembly @OUTPUT@/assemble/bank_assembly.json --output-dir @OUTPUT@/verify > @OUTPUT@/verify/stdout.log 2>&1; rc=$?; echo \"BJ3_VERIFY rc=$rc\"; exit $rc"
+   ],
+   "placeholders": {
+    "<FORMAL_DECISION>": "the BANK_QUAL_PASS_PENDING_ASSEMBLY formal decision"
+   },
+   "certify": "python3 <JOB_RUN_DIR>/source/scripts/r4_bank_decide.py --kind certify --protocol /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json --protocol-sha256 <PROTOCOL_SHA256> --formal-decision <FORMAL_DECISION> --assemble-dir <JOB_RUN_DIR>/assemble --verify-dir <JOB_RUN_DIR>/verify --out /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/BJ3_certify_decision.json (publishes /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/ only on BANK_CERTIFIED)"
+  }
+ },
+ "historical_bank_jobs_ledger_only": {
+  "pt-cdj1s2le": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12: 4 workers each re-fit their own Fs (fs_backbone_digest fa7c2871/701387a5/0c7fbcd3/b64a26d9), groups 3/2/2/1 of the old 8 issues, lr 1e-2, 500 updates, expert 2 clipped 17x. Protocol violation; ledger only; never evidence for FP-04."
+ },
+ "limitations": [
+  "The 48 bank_fit issues lie inside the already Fs-exposed 2020 window; they and the 2019 FP-03 holdout must be purged from any policy_dev/confirm use.",
+  "2020 rows carry split_id 'test' while admitted as bank_fit (as in FP-03).",
+  "2020 store index 712 (2020-06-27T00Z) has a specific_humidity_100 slab at 102 sigma; slot 47 was dropped by the declared rule; any later window containing that step must re-certify content.",
+  "S0 certifies the forward pass only; the training backward is exercised, not certified.",
+  "FP-04 PASS = a qualified, exactly-assembled, registry-certified K=4 bank exists; not usefulness (delta_min not pre-registered; out-of-sample evaluation is FP-05)."
+ ],
+ "source_at_preregistration": {
+  "earthdelta/bank_training.py": "e0de5ec5403c139dc365225695892ef66bef35360107fb37dcd82f1a1b20a8c9",
+  "earthdelta/registry.py": "42a1f064942a6c327bb5f0ce50856ea130970d601878d5ee43f114f399bd99af",
+  "earthdelta/static_adapter.py": "8a3154c8587d5d7dde4844f38892eb3503e7d4227957f7c7ffb1ae9dbc457e46",
+  "earthdelta/fs_protocol.py": "2b3116a1f87951d3d5549a08fd52244f23a6e2784d8378894f8736e25fdb39a2",
+  "earthdelta/metrics_contract.py": "7bd91cf4f244fed07afd3a66aaa4917151cf7893fad5df5bc146d1aeb871b199",
+  "earthdelta/pilot_contract.py": "506b72e26d783fddae4411ff1dadbf8cc071bcb34b7167b3098b9b00805f62c0",
+  "earthdelta/data/make_splits.py": "e859e60fb07f026747c4cf6e07fe837e95f65bc3f19416dfcaffc93b7c48fd32",
+  "scripts/r2_fs_bank_train.py": "b0283f6ec0ec9bbc98ecc8d82ec0c1907e43b255848c6e303260fdda1447606a",
+  "scripts/r4_bank_decide.py": "3aae47105e235779c01ca88d4030873e9a5989071208167fda418703dea81445",
+  "tests/test_fitted_fs_bank_roundtrip.py": "1feb88aa024610b7e1b3a8dd4c118ca1f5b52e5b4f643a5dba80a5df812393d5",
+  "tests/test_bank_quality_gate.py": "aa8ec0cf262989697acc9e5ab5d8f6c782aebe92c6d7434015a6ece5829dd48b",
+  "tests/test_profile_immutability.py": "ac90e0066e1ae407d874ca87720bf2c0947ee4b589ad07ca1fdd8b0c976d2659",
+  "tests/test_plan_gate_chain.py": "a2d9424453b2c323375723de9fc1b2cf121321112cc4930033038dfb8f7617f2",
+  "earthdelta/contracts.py": "9e711ca45077349433a64b5b9321315272e8758ed9467c2650e01b786e39589d",
+  "earthdelta/bridge/stormer_bridge.py": "03e9659db1416de3b2b6cade08c0f245826119ce70bb25c8594523ac8f2652c3",
+  "earthdelta/bridge/stormer_arch.py": "366f9a9ffd03258b942b44de300a86820ecede588d94dd0d81f7c54a3a510f9e",
+  "earthdelta/lowrank.py": "20fd93e6c8f922215df83b8b0a6b4604002b3dc7bfa3575eb5e078f0e77adec3"
+ },
+ "preregistration_md": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/PREREGISTRATION.md",
+  "sha256": "231bb6539d8f7e796a824edf98632230820908cda8c8a38197ccc8966fcf87c4"
+ }
+}

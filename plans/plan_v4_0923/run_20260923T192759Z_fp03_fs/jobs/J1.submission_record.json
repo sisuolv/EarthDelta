@@ -1,0 +1,14 @@
+{
+ "job": "J1",
+ "job_id": "pt-56auspj8",
+ "run_dir": "artifacts/round2_cci/ed-r4fs03diag-0923203433-4127c2",
+ "label": "r4fs03diag",
+ "timeout_seconds": 1800,
+ "argv_file": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/jobs/J1.argv.json",
+ "argv_file_sha256": "5a86363a047fce014966e5ee16ae6c1fda9b36f4971fc067490a90eee63de967",
+ "invocation_sha256": "5891c278ffde47c354c57f7d15e7926cc19d96248f16864d5011aa51612969ae",
+ "source_manifest_sha256": "7d25757f53e31eb214d0d8125cbad6764c9b3d075f848e88184a54bd3d72265f",
+ "protocol_sha256": "3c143bd7c405c9fc70edfd186c3432fce88845820f8d7fd892a4be0744a2b7af",
+ "coordinator_go_ahead": "received before submission (message after protocol freeze 2026-09-23T20:24:43Z)",
+ "recorded_utc": "2026-09-23T20:34:50.611099+00:00"
+}

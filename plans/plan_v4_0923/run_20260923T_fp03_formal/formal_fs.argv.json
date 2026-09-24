@@ -1,0 +1,5 @@
+[
+  "bash",
+  "-lc",
+  "export PYTHONPATH=\"/mnt/afs/260010168/EarthDelta/.pydeps:${PYTHONPATH:-}\"; export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python; CONFIG=/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json; ADMISSION=/mnt/afs/260010168/EarthDelta/artifacts/round2_next/20260921T170142Z_r3p001_10h/j3_fs_bank/admission_record.json; OUT=@OUTPUT@/experts; mkdir -p \"$OUT\"; pids=(); for i in 0 1 2 3; do mkdir -p \"$OUT/expert$i\"; python3 -u @SNAPSHOT@/scripts/r2_fs_bank_train.py --stage fs_fit --mode formal --data-role bank_fit --target-blocks 18 19 20 21 22 23 --num-experts 4 --rank-per-expert 4 --seed 20260921 --config \"$CONFIG\" --admission \"$ADMISSION\" --device cuda:$i --output-dir \"$OUT/expert$i\" --json \"$OUT/expert$i/run_record.json\" > \"$OUT/expert$i/stdout.log\" 2>&1 & pids+=($!); done; status=0; for i in 0 1 2 3; do if ! wait ${pids[$i]}; then echo \"expert $i FAILED\"; status=1; else echo \"expert $i OK\"; fi; done; exit $status"
+]

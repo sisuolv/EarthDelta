@@ -1,0 +1,33 @@
+{
+ "rule": "FS-SELECT-v1",
+ "replica_verdicts": {
+  "0": "PASS",
+  "1": "PASS",
+  "2": "PASS",
+  "3": "PASS"
+ },
+ "designated_device_index": 0,
+ "designated_adapter_sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089",
+ "substitution": "FORBIDDEN",
+ "fs_selected": true,
+ "designated_gates": {
+  "numerical_merge_pass": true,
+  "reload_pass": true,
+  "identity_pass": true
+ },
+ "verdict": "FS_SELECTED",
+ "kind": "certify",
+ "formal_decision": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/decisions/V2_J3_formal_decision.json",
+ "formal_decision_sha256": "201c3b50ba4364160c771abf3875e3e1692ea6fb885f69a99cfd05984eb29228",
+ "fs_bundle": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs",
+ "protocol_sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe",
+ "inputs": {
+  "protocol": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/fs_protocol_v2.json",
+   "sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe"
+  }
+ },
+ "job_dir": null,
+ "decided_utc": "2026-09-24T02:25:38.091531+00:00",
+ "decider_sha256": "adeb1043519d4ea62460e93680f0a9c24da54be58373dd8ca2ff370dc08dca84"
+}

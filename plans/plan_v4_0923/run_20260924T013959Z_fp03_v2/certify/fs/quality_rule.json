@@ -1,0 +1,44 @@
+{
+ "rule": "FS-QUAL-v2",
+ "horizon": 32,
+ "q0": {
+  "torch_version": "2.3.1+cu121",
+  "xformers_version": "0.0.27",
+  "official_model": "stormer.models.hub.stormer.Stormer",
+  "tf32": "off (effective getters, DEV-001)",
+  "f0_reference_groups": [
+   "train"
+  ],
+  "f0_reference": "v1 J1 arm A0 train F0 panel, carried by the pinned inputs.f0_reference_decision",
+  "holdout_f0_cross_replica_bitwise": true,
+  "f0_panel_rel_tol": 1e-06
+ },
+ "q2": {
+  "clip_events_max": 0,
+  "per_visit_ratio_max": 1.25,
+  "epoch_onset_factor": 1.02,
+  "epoch_size": 8
+ },
+ "q3": {
+  "required_issues": 8
+ },
+ "q4": {
+  "pass_max_ratio_lt": 1.0,
+  "pass_mean_ratio_le": 0.99,
+  "fail_mean_ratio_gt": 1.0,
+  "fail_max_ratio_gt": 1.02
+ },
+ "q5": {
+  "mean_ratio_72h_le": 1.01,
+  "report_only": false
+ },
+ "q6": {
+  "holdout_mean_ratio_24h_le": 1.02,
+  "report_only": false,
+  "panel": "fresh 2019 holdout (16 issues)"
+ },
+ "report_only_leads_hours": [
+  6
+ ],
+ "implementation": "earthdelta.static_adapter.evaluate_fs_qualification"
+}

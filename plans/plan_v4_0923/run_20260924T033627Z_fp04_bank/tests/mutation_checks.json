@@ -1,0 +1,9 @@
+{
+ "note": "Temporary in-place mutations, restored byte-identically before the protocol freeze (sha256 compared).",
+ "mutants": [
+  {"file": "earthdelta/bank_training.py", "mutation": "_exact_zero: float(v) == 0.0 -> abs(float(v)) <= 1e-6 (assembly A1/A2/A4 given a tolerance)",
+   "tests": "tests/test_bank_quality_gate.py", "result": "2 failed, 53 passed (KILLED)"},
+  {"file": "scripts/r2_fs_bank_train.py", "mutation": "authorize_certified_fs: reference manifest SHA-256 no longer compared",
+   "tests": "tests/test_plan_gate_chain.py", "result": "5 failed, 10 passed (KILLED: all 5 post-Fs stages)"}
+ ]
+}

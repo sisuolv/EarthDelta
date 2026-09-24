@@ -1,0 +1,30 @@
+{
+ "schema_version": "ed-fp03-j2-findings/1",
+ "job_id": "pt-z07uway9",
+ "run_dir": "artifacts/round2_cci/ed-r4fs03scrn-0923210334-9fca4b",
+ "decision": {
+  "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J2_screen_decision.json",
+  "rule": "FS-SCREEN-v1",
+  "verdict": "CONFIRMED (for H=256 only)",
+  "S": ["A2", "A3"],
+  "selected": {"arm": "A2", "lr": 0.0025},
+  "fallback": {"arm": "A3", "lr": 0.00125},
+  "decider": "J2 snapshot scripts/r4_fs_decide.py; F0 reference from decisions/J1_diag_decision_r2.json (DEV-001; the protocol's command template names the original J1_diag_decision.json, which is STOP and kept)"
+ },
+ "status_note": "Everything below is REPORT-ONLY. None of it entered the FS-SCREEN-v1 decision, which uses STABLE (Q1+Q2) and PROGRESSING (train-panel 24h mean ratio) only.",
+ "findings": [
+  {
+   "id": "J2-F1_HOLDOUT_DEGRADES_AT_EVERY_LEAD",
+   "text": "The stable arms improve the TRAINING issues only at the trained 24h lead and are worse on the HELD-OUT issues at every lead. Mean L1/L0 ratios (train 6h / 24h / 72h | holdout 6h / 24h / 72h): A2 (lr 2.5e-3) 1.0321 / 0.9105 / 1.0009 | 1.0392 / 1.0389 / 1.0992; A3 (lr 1.25e-3) 1.0170 / 0.9294 / 0.9952 | 1.0227 / 1.0204 / 1.0618; A1 (lr 5e-3) 1.0309 / 0.9074 / 1.0119 | 1.0378 / 1.0372 / 1.1077. For A2 every one of the 8 holdout issues is worse at 24h (per-issue ratios 1.029-1.058). With 8 training issues, a 24h-only objective and 49,152 trainable parameters, the static adapter fits the training issues' 24h targets rather than generalizing.",
+   "implication_for_J3": "FS-QUAL-v1 Q6 requires holdout 24h mean ratio <= 1.02. The J2 values at the selected lr (A2: 1.0389) and the fallback lr (A3: 1.0204) both exceed it. J3 at lr 2.5e-3 differs from J2 arm A2 only in --mode (which does not change training), so J3 is predicted to FAIL Q6; J3b at 1.25e-3 is predicted to fail Q6 narrowly. This is a prediction from report-only screen data, not a decision."
+  },
+  {
+   "id": "J2-F2_POSITIVE_CONTROL",
+   "text": "A0 (lr 1e-2) reproduced the instability: epoch-mean onset at epoch 10 (update 80, exactly as in all 12 historical formal replicas), first clip at update 119, 110 clip events, max per-visit ratio 1069 (issue iss_cc158228e7e29baf at update 183), final epoch mean 0.840 vs best 0.0306; final 24h panel mean ratio 7.54 (train) / 7.42 (holdout)."
+  },
+  {
+   "id": "J2-F3_A1_ONSET_AND_DISPLACEMENT",
+   "text": "A1 (lr 5e-3) had no clip event and max per-visit ratio 1.088 (below 1.25), but its epoch mean rose more than 2% above the running minimum at epoch 13 (update 104), so it is not STABLE. lr x onset_update: A0 0.80, A1 0.52. A pure Adam-displacement model predicts a constant product (A1 onset near update 160), so the onset at lower lr came EARLIER in displacement units than that model predicts; A2 and A3 show no onset within 256 updates (their last epoch is their best). This does not establish stability beyond 256 updates (DELAY_NOT_FIX limitation stands)."
+  }
+ ]
+}

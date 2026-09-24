@@ -1,0 +1,15 @@
+{
+ "status": "EXPLORATORY_X1 - not FS-QUAL-v1, not pre-registered, cannot select/freeze/certify an Fs",
+ "job": "X1_N32",
+ "job_id": "pt-jbhf3z73",
+ "run_dir": "artifacts/round2_cci/ed-r4fs03x1n32-0924005248-503e5b",
+ "label": "r4fs03x1n32",
+ "timeout_seconds": 5400,
+ "argv_file": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/jobs/X1_N32.argv.json",
+ "argv_file_sha256": "b13ea4a819ecbad869072f9962eae3bacd4d52f22ae4624cbdab92ee6a4cd16c",
+ "invocation_sha256": "94a09adbd1e074788da563b5a8718e0b02435ddf9b1b45ea7874eae9fbe253bd",
+ "source_manifest_sha256": "e0b120f215f833077b5092dffba01f315921cf8e0d0129bf67269c07115ba9dd",
+ "x1_config_sha256": "5b8244f45407238b622d5d3d624494767032580d6dff0d7acc627700447d782b",
+ "authorization": "coordinator relayed user direction: bounded exploratory N diagnostic, certified backend, <=3 jobs",
+ "recorded_utc": "2026-09-24T00:53:02.838884+00:00"
+}

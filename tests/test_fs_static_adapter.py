@@ -26,6 +26,7 @@ config object rather than by convention.
 from __future__ import annotations
 
 import inspect
+import json
 import math
 import sys
 from pathlib import Path
@@ -233,6 +234,31 @@ def test_loss_direction_is_per_sample_not_first_vs_last_update():
     single = sa.per_sample_loss_direction([1.0], ["A"])
     assert single["n_samples_with_repeats"] == 0
     assert single["fraction_decreased"] is None
+
+
+def test_formal_fs_quality_gate_rejects_repeated_sample_regression():
+    record = sa.FsFitRecord(
+        mode="formal",
+        losses=[1.0, 2.0, 1.2, 2.5],
+        training_issue_ids=["A", "B", "A", "B"],
+        n_updates=4,
+    )
+    quality = sa.evaluate_fs_quality(record)
+    assert quality["passed"] is False
+    assert quality["reason"] == "FORMAL_LOSS_DIRECTION_REGRESSION"
+    assert quality["n_decreased"] == 0
+
+
+def test_gradient_check_fs_quality_gate_is_diagnostic_only():
+    record = sa.FsFitRecord(
+        mode="gradient_check",
+        losses=[1.0, 2.0, 1.2, 2.5],
+        training_issue_ids=["A", "B", "A", "B"],
+        n_updates=4,
+    )
+    quality = sa.evaluate_fs_quality(record)
+    assert quality["passed"] is True
+    assert quality["reason"] == "DIAGNOSTIC_ONLY_NON_FORMAL_MODE"
 
 
 def test_fs_fit_refuses_samples_that_are_not_bank_fit(bridge, samples, objective):
@@ -901,3 +927,73 @@ def test_stage_fs_freeze_moves_every_bank_lora_onto_the_backbone_device(
     # invariant the re-home loop exists to establish.
     for lora in bank.values():
         assert next(lora.parameters()).device == fs_device
+
+
+# =============================================================================
+# FP-03: optimizer-side trajectory and the bounded formal diagnostic CLI path
+# =============================================================================
+
+def _fs_param_norm(adapters: Dict[int, ExpertLoRA]) -> float:
+    return math.sqrt(sum(
+        float(p.detach().double().pow(2).sum())
+        for lora in adapters.values() for p in lora.parameters()
+    ))
+
+
+def test_fs_fit_records_the_parameter_trajectory_it_actually_applied(
+    bridge, samples, objective
+):
+    """`param_norms` / `update_norms` describe the real factors, per update.
+
+    ARTIFACT_CONTRACT section 4 asks the Fs record for the optimizer/update
+    trajectory, not only losses. The recorded numbers must be the norms of the
+    tensors the fit really produced: the last `param_norms` entry equals the
+    returned adapters' norm, `initial_param_norm` equals an identically seeded
+    fresh adapter's norm, and every step obeys the triangle inequality.
+    """
+    fresh = sa.build_fs_adapter(
+        HIDDEN, TARGET_BLOCKS, rank_per_expert=FS_RANK, seed=20260921
+    )
+    adapters, record = _trained_fs(bridge, samples, objective)
+
+    assert len(record.param_norms) == record.n_updates == 14
+    assert len(record.update_norms) == record.n_updates
+    assert record.initial_param_norm == pytest.approx(_fs_param_norm(fresh), rel=1e-12)
+    assert record.param_norms[-1] == pytest.approx(_fs_param_norm(adapters), rel=1e-12)
+    assert all(math.isfinite(v) and v > 0 for v in record.update_norms)
+    previous = record.initial_param_norm
+    for norm, step in zip(record.param_norms, record.update_norms):
+        assert abs(norm - previous) <= step * (1 + 1e-9) + 1e-12
+        previous = norm
+
+    payload = record.to_dict()
+    assert payload["param_norms"] == record.param_norms
+    assert payload["update_norms"] == record.update_norms
+    assert payload["initial_param_norm"] == record.initial_param_norm
+
+
+def test_cli_formal_mode_below_the_cap_runs_the_formal_gate(tmp_path):
+    """`--mode formal --max-updates N` (N < 500) is a real formal fit.
+
+    The FP-03 learning-rate diagnostic relies on this: the update count and
+    learning rate are the requested ones, and the formal loss-direction gate
+    is evaluated rather than the gradient-check "diagnostic only" bypass.
+    """
+    out = tmp_path / "fs"
+    code = r2_cli.main([
+        "--stage", "fs_fit", "--synthetic", "--device", "cpu",
+        "--mode", "formal", "--max-updates", "6", "--learning-rate", "0.003",
+        "--output-dir", str(out),
+    ])
+    record = json.loads((out / "fs_fit_record.json").read_text())
+    assert record["mode"] == "formal"
+    assert record["n_updates"] == 6
+    assert record["config"]["max_updates"] == 6
+    assert record["config"]["update_cap_for_mode"] == 500
+    assert record["config"]["learning_rate"] == 0.003
+    assert record["quality_gate"]["mode"] == "formal"
+    assert record["quality_gate"]["reason"] != "DIAGNOSTIC_ONLY_NON_FORMAL_MODE"
+    assert record["quality_gate"]["n_samples_with_repeats"] == 2
+    assert len(record["param_norms"]) == len(record["update_norms"]) == 6
+    # The exit code is the formal gate's verdict, not a constant.
+    assert code == (0 if record["eligible"] else 1)

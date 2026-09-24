@@ -1,0 +1,54 @@
+--- artifacts/round2_cci/ed-r4fs03diag-0923203433-4127c2/source/tests/test_fs_quality_gate.py	2026-09-23 19:59:09.695712914 +0000
++++ tests/test_fs_quality_gate.py	2026-09-23 20:55:13.325359402 +0000
+@@ -456,6 +456,51 @@
+     assert excinfo.value.detail["model_class"]["module"] != fp.OFFICIAL_MODEL_MODULE
+ 
+ 
++def test_tf32_fact_uses_the_effective_state_not_the_image_env_default():
++    """J1 (pt-56auspj8) regression: the ACP image exports
++    TORCH_ALLOW_TF32_CUBLAS_OVERRIDE=1, which in torch 2.3.1 only initializes
++    float32_matmul_precision; the process's explicit allow_tf32=False wins and
++    the recorded getters are False. That is TF32 OFF. Any effective TF32 --
++    either getter True, or a recorded precision other than "highest" -- is not."""
++    j1_like = {"tf32": {"cuda_matmul_allow_tf32": False, "cudnn_allow_tf32": False,
++                        "env": {"TORCH_ALLOW_TF32_CUBLAS_OVERRIDE": "1", "NVIDIA_TF32_OVERRIDE": None}}}
++    assert fp.tf32_is_off(j1_like) is True
++    assert fp.tf32_is_off({"tf32": {**j1_like["tf32"], "float32_matmul_precision": "highest"}}) is True
++    assert fp.tf32_is_off({"tf32": {**j1_like["tf32"], "float32_matmul_precision": "high"}}) is False
++    assert fp.tf32_is_off({"tf32": {**j1_like["tf32"], "cuda_matmul_allow_tf32": True}}) is False
++    assert fp.tf32_is_off({"tf32": {**j1_like["tf32"], "cudnn_allow_tf32": True}}) is False
++    assert fp.tf32_is_off({}) is False
++    # This process (the Fs CLI module is imported above) really runs TF32 off.
++    prov = fp.collect_provenance(argv=[], device="cpu", source_roots=[])
++    assert prov["tf32"]["float32_matmul_precision"] == "highest"
++    assert fp.tf32_is_off(prov) is True
++
++
++@pytest.mark.parametrize("set_flags, expected_off", [(True, True), (False, False)])
++def test_tf32_fact_live_with_the_image_env_override(set_flags, expected_off):
++    """Fresh interpreter with TORCH_ALLOW_TF32_CUBLAS_OVERRIDE=1 (as the ACP
++    image exports): with the explicit setters the Fs entry points issue at
++    import, TF32 is effectively off and the fact says so; without them the env
++    initializer leaks through (and cuDNN TF32 is on by default) and the fact
++    must say NOT off."""
++    import os
++    import subprocess
++
++    setter = ("torch.backends.cuda.matmul.allow_tf32 = False; "
++              "torch.backends.cudnn.allow_tf32 = False; ") if set_flags else ""
++    code = ("import torch; " + setter +
++            "from earthdelta import fs_protocol as fp; "
++            "p = fp.collect_provenance(argv=[], device='cpu', source_roots=[]); "
++            "print('TF32_OFF', fp.tf32_is_off(p), p['tf32']['float32_matmul_precision'])")
++    env = dict(os.environ, TORCH_ALLOW_TF32_CUBLAS_OVERRIDE="1",
++               PYTHONPATH=os.pathsep.join([str(REPO_ROOT), os.environ.get("PYTHONPATH", "")]))
++    out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=env,
++                         timeout=300)
++    line = [ln for ln in out.stdout.splitlines() if ln.startswith("TF32_OFF")]
++    assert line, out.stderr[-2000:]
++    assert line[0].split()[1] == str(expected_off)
++
++
+ def test_backend_precondition_refuses_a_wrong_or_missing_xformers():
+     with pytest.raises(fp.ProtocolViolation) as excinfo:
+         fp.official_backend_precondition(expected_xformers="0.0.27-never-installed")

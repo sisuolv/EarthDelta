@@ -1,0 +1,707 @@
+{
+  "overall_verdict": "PARTIALLY_EXECUTED",
+  "baseline": {
+    "planned_source": "plans/plans_v3_0922（附件source_plan同内容）",
+    "implementation_commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+    "comparison_base": "d749a1c62521226df857587e08f7d067b0f15355"
+  },
+  "plan_items": [
+    {
+      "id": "B05",
+      "planned_requirement": "负/非有限权重、非正scale和每个实际目标的零分母必须拒绝。",
+      "implementation_status": "PARTIAL",
+      "code_evidence": [
+        {
+          "file": "earthdelta/metrics_contract.py",
+          "line": 100,
+          "end_line": 160
+        },
+        {
+          "file": "earthdelta/metrics_contract.py",
+          "line": 199,
+          "end_line": 215
+        },
+        {
+          "file": "earthdelta/metrics_contract.py",
+          "line": 557,
+          "end_line": 617
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: Round4 两组原始 pytest 日志为 307 passed / 127 passed；当时是 d749a1c 上的工作区快照，不是本次重跑，也不认证最新 HEAD 的所有测试。"
+      ],
+      "execution_evidence": [],
+      "goal_status": "PARTIALLY_ACHIEVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "gap_or_risk": "native目标路径已有校验；legacy quadratic_gain 仍先验全局权重和、再除逐F切片和，零切片仍可能NaN。主pilot禁止使用该legacy评分，非主路径残留不等于天气结果已被污染。"
+    },
+    {
+      "id": "B06",
+      "planned_requirement": "全H/V/Lat/Lon的Q_eff只归一化一次；保留B/K；解析gain与校准分开。",
+      "implementation_status": "PARTIAL",
+      "code_evidence": [
+        {
+          "file": "earthdelta/metrics_contract.py",
+          "line": 652,
+          "end_line": 833
+        },
+        {
+          "file": "earthdelta/static_adapter.py",
+          "line": 948,
+          "end_line": 954
+        },
+        {
+          "file": "earthdelta/value_pilot.py",
+          "line": 170,
+          "end_line": 183
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: Round4 两组原始 pytest 日志为 307 passed / 127 passed；当时是 d749a1c 上的工作区快照，不是本次重跑，也不认证最新 HEAD 的所有测试。"
+      ],
+      "execution_evidence": [
+        "OBSERVED: 历史Fs训练确实调用native目标，但未形成完整策略评分证据。"
+      ],
+      "goal_status": "PARTIALLY_ACHIEVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "gap_or_risk": "full_objective_loss/gain实现并进入训练；旧head端到端原生目标尚未闭合。shared-F0 component_gains在进入double scorer前先作FP32差分，须单独修复；不要机械归咎native reducer。"
+    },
+    {
+      "id": "B08",
+      "planned_requirement": "实际读取所有训练/评分所需切片，内容证书由消费者验证，而非只看marker。",
+      "implementation_status": "PARTIAL",
+      "code_evidence": [
+        {
+          "file": "scripts/r2_admission_gate.py",
+          "line": 176,
+          "end_line": 216
+        },
+        {
+          "file": "earthdelta/static_adapter.py",
+          "line": 1809,
+          "end_line": 1939
+        },
+        {
+          "file": "earthdelta/value_pilot.py",
+          "line": 79,
+          "end_line": 151
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: Round4 两组原始 pytest 日志为 307 passed / 127 passed；当时是 d749a1c 上的工作区快照，不是本次重跑，也不认证最新 HEAD 的所有测试。"
+      ],
+      "execution_evidence": [
+        "OBSERVED: artifact_crosschecks.json旧admission有8行、仅2份content certificates；最新616行PASS只有提交内摘要，原admission未提供。"
+      ],
+      "goal_status": "PARTIALLY_ACHIEVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "gap_or_risk": "旧入口可只抽样验内容；load_admitted_samples不强制消费外层PASS/每行证书。新F0有更严格再读hash，但不是旧Fs入口自动修复。"
+    },
+    {
+      "id": "B09",
+      "planned_requirement": "按真实UTC索引核验历史/当前/全部目标并purge，训练再次绑定同一被准入样本。",
+      "implementation_status": "PARTIAL",
+      "code_evidence": [
+        {
+          "file": "scripts/r2_admission_gate.py",
+          "line": 276,
+          "end_line": 311
+        },
+        {
+          "file": "earthdelta/static_adapter.py",
+          "line": 1850,
+          "end_line": 1913
+        },
+        {
+          "file": "scripts/r4_freeze_sprint.py",
+          "line": 57,
+          "end_line": 107
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: Round4 两组原始 pytest 日志为 307 passed / 127 passed；当时是 d749a1c 上的工作区快照，不是本次重跑，也不认证最新 HEAD 的所有测试。"
+      ],
+      "execution_evidence": [
+        "OBSERVED: 旧准入记录declared lead=6h、actual_train_hours=24；见artifact_crosschecks.json/admission。"
+      ],
+      "goal_status": "PARTIALLY_ACHIEVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "gap_or_risk": "producer真实time join存在；旧loader按保存index再取目标，未完整核验外层合同/绝对时次/证书。原计划t-12,t-6,t三帧不能被新F0只读t-6,t悄悄替代。"
+    },
+    {
+      "id": "B12",
+      "planned_requirement": "仅串行独立进程；拒绝共享模型并发和activation-checkpoint replay。",
+      "implementation_status": "PARTIAL",
+      "code_evidence": [
+        {
+          "file": "earthdelta/bridge/stormer_bridge.py",
+          "line": 848,
+          "end_line": 881
+        },
+        {
+          "file": "earthdelta/bridge/stormer_bridge.py",
+          "line": 889,
+          "end_line": 1057
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: Round4 两组原始 pytest 日志为 307 passed / 127 passed；当时是 d749a1c 上的工作区快照，不是本次重跑，也不认证最新 HEAD 的所有测试。"
+      ],
+      "execution_evidence": [],
+      "goal_status": "PARTIALLY_ACHIEVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "gap_or_risk": "controlled_rollout已有模型级进程内互斥与标志检查；普通forward_validation不进入同一锁。当前严格串行路线可用，不应宣称通用并发安全，也不需要先扩建并发框架。"
+    },
+    {
+      "id": "B13",
+      "planned_requirement": "必要计算/绑定完成后才提交PASS；晚期关键异常撤销，非关键cleanup独立记录。",
+      "implementation_status": "COMPLETE",
+      "code_evidence": [
+        {
+          "file": "scripts/s0_gate.py",
+          "line": 2407,
+          "end_line": 2470
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: Round4 两组原始 pytest 日志为 307 passed / 127 passed；当时是 d749a1c 上的工作区快照，不是本次重跑，也不认证最新 HEAD 的所有测试。"
+      ],
+      "execution_evidence": [
+        "OBSERVED: 历史失败S0记录s0_gate_pass=false、verdict_committed=false；最新完整发布产物未取得。"
+      ],
+      "goal_status": "PARTIALLY_ACHIEVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "gap_or_risk": "原代码缺陷已对症修复，不能继续照抄旧finding；整个S0真实发布成功仍未成立。"
+    },
+    {
+      "id": "B14",
+      "planned_requirement": "缺失/非有限数值报告不得因格式化抛异常而毁坏结果。",
+      "implementation_status": "COMPLETE",
+      "code_evidence": [
+        {
+          "file": "scripts/s0_gate.py",
+          "line": 2470,
+          "end_line": 2515
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: Round4 两组原始 pytest 日志为 307 passed / 127 passed；当时是 d749a1c 上的工作区快照，不是本次重跑，也不认证最新 HEAD 的所有测试。"
+      ],
+      "execution_evidence": [],
+      "goal_status": "PARTIALLY_ACHIEVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "gap_or_risk": "format_finite及generate_report真实调用已存在；报告可生成不是官方parity或科学目标通过。"
+    },
+    {
+      "id": "B15",
+      "planned_requirement": "非空实数有限候选、唯一ID、显式no-edit、幅度/支持/窗口与实际artifact绑定。",
+      "implementation_status": "PARTIAL",
+      "code_evidence": [
+        {
+          "file": "scripts/r2_admission_gate.py",
+          "line": 220,
+          "end_line": 250
+        },
+        {
+          "file": "earthdelta/selection.py",
+          "line": 365,
+          "end_line": 395
+        },
+        {
+          "file": "scripts/r2_fs_bank_train.py",
+          "line": 545,
+          "end_line": 581
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: Round4 两组原始 pytest 日志为 307 passed / 127 passed；当时是 d749a1c 上的工作区快照，不是本次重跑，也不认证最新 HEAD 的所有测试。"
+      ],
+      "execution_evidence": [
+        "OBSERVED: 历史bank_train记录含registry，但动态权重文件未列在产物清单。"
+      ],
+      "goal_status": "PARTIALLY_ACHIEVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "gap_or_risk": "registry值域验证和选择入口存在；旧流程没有合格共同Fs/动态checkpoint的完整消费链。近零候选映射问题只在相应值域触发，固定0.25不是它的实际反例。"
+    },
+    {
+      "id": "ENV",
+      "planned_requirement": "真实H100/Torch/xformers执行证据，不用SDPA冒充官方实现。",
+      "implementation_status": "PARTIAL",
+      "code_evidence": [
+        {
+          "file": "scripts/r4_prepare_environment.py",
+          "line": 1
+        },
+        {
+          "file": "scripts/r4_run_strict_fp32.py",
+          "line": 1
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: 历史GPU任务确实执行；最新66 passed/3 skipped仅CURRENT_STATUS自述，原日志MISSING。"
+      ],
+      "execution_evidence": [
+        "OBSERVED: 历史 GPU 记录集合 gpu_records_recomputed.json 内含 job_result、逐 worker 记录和原始路径/hash；本次未重新执行 GPU 或加载大型 checkpoint。",
+        "OBSERVED（摘要级）: SPRINT_8H_RESULTS称最新H100 xformers前反向有限；本次未取得该probe原始日志。"
+      ],
+      "goal_status": "PARTIALLY_ACHIEVED",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "gap_or_risk": "历史GPU可运行已支持；最新official环境细节不能由旧SDPA训练任务或自述替代。环境可运行不等于S0通过。"
+    },
+    {
+      "id": "S0",
+      "planned_requirement": "同ps4/checkpoint/config/input/normalization/source下独立官方1/4/12步parity≤1e-5。",
+      "implementation_status": "BLOCKED",
+      "code_evidence": [
+        {
+          "file": "scripts/s0_gate.py",
+          "line": 2334,
+          "end_line": 2382
+        },
+        {
+          "file": "earthdelta/bridge/stormer_bridge.py",
+          "line": 236,
+          "end_line": 370
+        },
+        {
+          "file": "scripts/r4_s0_parity_diagnose.py",
+          "line": 112,
+          "end_line": 148
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: Round4 两组原始 pytest 日志为 307 passed / 127 passed；当时是 d749a1c 上的工作区快照，不是本次重跑，也不认证最新 HEAD 的所有测试。"
+      ],
+      "execution_evidence": [
+        "OBSERVED（摘要级）: SPRINT_8H_DECISION.json 记录 pt-7ant09uv 1-step=5.9604644775390625e-6、4-step=3.933906555175781e-5、12-step=1.3911724090576172e-4；冻结容差1e-5。最新原始 s0_gate_result/job_result/tensors 未提供。"
+      ],
+      "goal_status": "PARTIALLY_ACHIEVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "gap_or_risk": "真实身份比较/raw-normalized绑定/多步入口已实现，旧Stage1A自比较不能再照搬。最新多步记录FAIL；input inverse源精度是假设，未取得完整GPU trace不能宣称唯一根因。"
+    },
+    {
+      "id": "FS_FIT",
+      "planned_requirement": "先小步诊断，再训练/资格化一份Fs；500只是上限，明显退化不能放行。",
+      "implementation_status": "BLOCKED",
+      "code_evidence": [
+        {
+          "file": "earthdelta/static_adapter.py",
+          "line": 891,
+          "end_line": 994
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: Round4 两组原始 pytest 日志为 307 passed / 127 passed；当时是 d749a1c 上的工作区快照，不是本次重跑，也不认证最新 HEAD 的所有测试。"
+      ],
+      "execution_evidence": [
+        "OBSERVED: 历史 GPU 记录集合 gpu_records_recomputed.json 内含 job_result、逐 worker 记录和原始路径/hash；本次未重新执行 GPU 或加载大型 checkpoint。",
+        "OBSERVED: pt-3x63g0c6 expert1/3及pt-cdj1s2le expert2/3各0/8改善；记录仍eligible=true。"
+      ],
+      "goal_status": "PARTIALLY_ACHIEVED",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "gap_or_risk": "真实训练发生，但fit仍仅以有限loss/grad及updates判eligible。历史8/8退化未关闭；同面板最终Fs/F0亦恶化，不能用合并数值一致性替代训练质量。"
+    },
+    {
+      "id": "COMMON_FS_BANK",
+      "planned_requirement": "所有K=4/rank=4专家共享同一合格Fs；保存动态checkpoint、独立重载、资格化并冻结registry。",
+      "implementation_status": "BLOCKED",
+      "code_evidence": [
+        {
+          "file": "scripts/r2_fs_bank_train.py",
+          "line": 298,
+          "end_line": 349
+        },
+        {
+          "file": "scripts/r2_fs_bank_train.py",
+          "line": 520,
+          "end_line": 624
+        },
+        {
+          "file": "earthdelta/bank_training.py",
+          "line": 1297,
+          "end_line": 1355
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: Round4 两组原始 pytest 日志为 307 passed / 127 passed；当时是 d749a1c 上的工作区快照，不是本次重跑，也不认证最新 HEAD 的所有测试。"
+      ],
+      "execution_evidence": [
+        "OBSERVED: 历史 GPU 记录集合 gpu_records_recomputed.json 内含 job_result、逐 worker 记录和原始路径/hash；本次未重新执行 GPU 或加载大型 checkpoint。",
+        "OBSERVED: artifact_crosschecks.json每个历史四worker作业均有4个不同Fs digest；旧产物清单缺dynamic checkpoint。"
+      ],
+      "goal_status": "PARTIALLY_ACHIEVED",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "gap_or_risk": "K4/rank4模块与GPU更新存在，但不是共同参考的可重载合格bank；profile会在训练后的同bank上optimizer.step，训练记录与后续参数可能错位。"
+    },
+    {
+      "id": "STAGE4_CACHE",
+      "planned_requirement": "合格Fs/bank后先8exposed，冻结开发规模后逐issue全部5候选，完整失败分母与成本。",
+      "implementation_status": "PARTIAL",
+      "code_evidence": [
+        {
+          "file": "scripts/r4_value_pilot.py",
+          "line": 319,
+          "end_line": 446
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: test_value_pilot.py定义覆盖/重复/身份测试；当前新路径实际测试原日志未提供。"
+      ],
+      "execution_evidence": [
+        "MISSING: 未取得对应正式执行 artifact；不得把代码、测试定义或准备命令视为已运行。"
+      ],
+      "goal_status": "NOT_ESTABLISHED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "gap_or_risk": "新shared-F0 cache/merge代码存在但正式产物未运行，且动作与参考协议不同；不能认作原Fs五候选缓存完成。"
+    },
+    {
+      "id": "STAGE4_POLICY_DEV",
+      "planned_requirement": "固定/ regime /ridge direct-gain/完整oracle的时间隔离OOF开发表。",
+      "implementation_status": "NOT_STARTED",
+      "code_evidence": [
+        {
+          "file": "scripts/r4_value_pilot.py",
+          "line": 449,
+          "end_line": 493
+        },
+        {
+          "file": "plans/plans_v3_0922/NEXT_STEPS_10H_PLAN.md",
+          "line": 259,
+          "end_line": 274
+        }
+      ],
+      "test_evidence": [],
+      "execution_evidence": [
+        "MISSING: 未取得对应正式执行 artifact；不得把代码、测试定义或准备命令视为已运行。"
+      ],
+      "goal_status": "NOT_ESTABLISHED",
+      "evidence_status": "MISSING",
+      "gap_or_risk": "已有head原语不等于fit/prediction-freeze/evaluation CLI；未见拟合权重、OOF predictions、结果表与成本。"
+    },
+    {
+      "id": "DEFERRED_HOLDOUT",
+      "planned_requirement": "原窗口不读取confirm；dual-head、E3纠错和确认集明确暂缓。",
+      "implementation_status": "NOT_APPLICABLE",
+      "code_evidence": [
+        {
+          "file": "plans/plans_v3_0922/NEXT_STEPS_10H_PLAN.md",
+          "line": 235,
+          "end_line": 237
+        }
+      ],
+      "test_evidence": [],
+      "execution_evidence": [
+        "OBSERVED（摘要级）: 新sprint holdout evaluation NOT_STARTED。独立访问审计日志未提供。"
+      ],
+      "goal_status": "NOT_ESTABLISHED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "gap_or_risk": "未做这些延期项目本身不违反原计划。也不能反向宣称已证明holdout无泄漏；本包仍不解锁确认集。"
+    },
+    {
+      "id": "GATE_CHAIN",
+      "planned_requirement": "任何前驱失败/缺证，不得启动依赖阶段；证据必须匹配实际source与artifact。",
+      "implementation_status": "PARTIAL",
+      "code_evidence": [
+        {
+          "file": "scripts/r2_fs_bank_train.py",
+          "line": 963,
+          "end_line": 1005
+        },
+        {
+          "file": "scripts/s0_gate.py",
+          "line": 1865,
+          "end_line": 1946
+        },
+        {
+          "file": "scripts/r4_value_pilot.py",
+          "line": 59,
+          "end_line": 77
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: Round4 两组原始 pytest 日志为 307 passed / 127 passed；当时是 d749a1c 上的工作区快照，不是本次重跑，也不认证最新 HEAD 的所有测试。"
+      ],
+      "execution_evidence": [
+        "OBSERVED: 最新sprint摘要明确在S0失败后停止；旧stage-all调用链和历史结果记录则未保证前驱FAIL即停止。"
+      ],
+      "goal_status": "PARTIALLY_ACHIEVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "gap_or_risk": "旧runner仅在末尾all(results)，中途继续调用；新路线停住不修复旧入口。source hash记录未完整作为消费者准入合同核验。"
+    },
+    {
+      "id": "F0_AMENDMENT",
+      "planned_requirement": "区分原Fs计划与后续shared-F0新实验；不得静默换参考/候选/历史帧。",
+      "implementation_status": "PARTIAL",
+      "code_evidence": [
+        {
+          "file": "plans/plans_v3_0922/NEXT_STEPS_10H_PLAN.md",
+          "line": 229,
+          "end_line": 239
+        },
+        {
+          "file": "scripts/r4_value_pilot.py",
+          "line": 109,
+          "end_line": 145
+        },
+        {
+          "file": "scripts/r4_freeze_sprint.py",
+          "line": 92,
+          "end_line": 123
+        }
+      ],
+      "test_evidence": [
+        "OBSERVED: 新checkpoint测试定义包含跨进程重载，但不等于真实天气qualification已运行。"
+      ],
+      "execution_evidence": [
+        "OBSERVED（摘要级）: 新路线expert/cache/eval全部NOT_STARTED。"
+      ],
+      "goal_status": "NOT_ESTABLISHED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "gap_or_risk": "shared-F0是公开另案，不应机械套用旧worker-Fs缺陷；但F0参考、9/13候选、两帧历史不是原计划完成，原Fs阻塞不能被它清账。"
+    },
+    {
+      "id": "SCIENCE",
+      "planned_requirement": "工程/数值/训练/策略/novelty-weather utility逐级分离。",
+      "implementation_status": "NOT_STARTED",
+      "code_evidence": [
+        {
+          "file": "plans/plans_v3_0922/NEXT_STEPS_10H_PLAN.md",
+          "line": 278,
+          "end_line": 288
+        },
+        {
+          "file": "plans/novelty_review_20260922/SPRINT_8H_DECISION.json",
+          "line": 1
+        }
+      ],
+      "test_evidence": [],
+      "execution_evidence": [
+        "MISSING: 未取得对应正式执行 artifact；不得把代码、测试定义或准备命令视为已运行。"
+      ],
+      "goal_status": "NOT_ESTABLISHED",
+      "evidence_status": "MISSING",
+      "gap_or_risk": "没有合格共同参考bank上的完整合法策略结果；novelty与weather utility均INCONCLUSIVE。此处不重新评估文献价值。"
+    }
+  ],
+  "special_verdicts": {
+    "s0_parity_verdict": "BLOCKED_MULTISTEP: submitted record 1-step PASS, 4/12-step FAIL at 1e-5; latest raw job artifacts MISSING",
+    "fs_fit_divergence_verdict": "UNRESOLVED_MUST_FIX_BEFORE_STAGE4",
+    "stage4_readiness": "BLOCKED_BY_S0_AND_QUALIFIED_COMMON_FS_BANK",
+    "novelty_claim_status": "INCONCLUSIVE_NOT_EXPERIMENTALLY_ESTABLISHED",
+    "weather_utility_claim_status": "INCONCLUSIVE_NOT_EXPERIMENTALLY_ESTABLISHED"
+  },
+  "blocking_findings": [
+    {
+      "id": "PA-01",
+      "priority": "P0",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED",
+      "title": "S0最新提交记录多步失败，原始最新证书缺失",
+      "evidence": [
+        {
+          "file": "plans/novelty_review_20260922/SPRINT_8H_DECISION.json",
+          "line": 10,
+          "end_line": 23
+        }
+      ],
+      "impact": "BLOCKED；不能认证official rollout或解锁训练。",
+      "minimum_action": "补齐pt-7ant09uv原始bundle；四臂逐步定位，不放宽1e-5；新source重新导出并复验。"
+    },
+    {
+      "id": "PA-02",
+      "priority": "P0",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED",
+      "title": "Fs质量信号未进入eligible/冻结准入",
+      "evidence": [
+        {
+          "file": "earthdelta/static_adapter.py",
+          "line": 891,
+          "end_line": 994
+        },
+        "gpu_records_recomputed.json: pt-3x63g0c6/expert1,expert3; pt-cdj1s2le/expert2,expert3"
+      ],
+      "impact": "旧Fs-fit divergence仍UNRESOLVED。",
+      "minimum_action": "固定初始/候选终态与共同bank_fit面板；冻结训练侧资格规则，差的Fs禁止发布及后续使用。"
+    },
+    {
+      "id": "PA-03",
+      "priority": "P0",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED",
+      "title": "stage-all失败不阻断依赖阶段",
+      "evidence": [
+        {
+          "file": "scripts/r2_fs_bank_train.py",
+          "line": 963,
+          "end_line": 1005
+        },
+        {
+          "file": "plans/plans_v3_0922/NEXT_STEPS_10H_PLAN.md",
+          "line": 180
+        }
+      ],
+      "impact": "局部FAILED_PLAN_COMPLIANCE；最终returncode非零不足以撤销已经执行的训练。",
+      "minimum_action": "每阶段读取前驱证据；False/exception/MISSING则后继BLOCKED未调用；单阶段入口同样强制检查。"
+    },
+    {
+      "id": "PA-04",
+      "priority": "P0",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "status": "OBSERVED",
+      "title": "历史四worker未共享同一个Fs",
+      "evidence": [
+        "codex_audit_round4/evidence/artifact_crosschecks.json: distinct_fs_digests",
+        {
+          "file": "scripts/r2_fs_bank_train.py",
+          "line": 298,
+          "end_line": 447
+        }
+      ],
+      "impact": "不构成common-reference bank。",
+      "minimum_action": "只拟合/资格化/冻结一次Fs，所有worker加载并核对该状态内容hash。"
+    },
+    {
+      "id": "PA-05",
+      "priority": "P0",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED",
+      "title": "admission producer与training consumer未闭环",
+      "evidence": [
+        {
+          "file": "scripts/r2_admission_gate.py",
+          "line": 176,
+          "end_line": 216
+        },
+        {
+          "file": "earthdelta/static_adapter.py",
+          "line": 1809,
+          "end_line": 1939
+        }
+      ],
+      "impact": "6h准入可被24h训练消费，抽样证书不能覆盖全部训练行。",
+      "minimum_action": "校验外层PASS及spec/source/normalization/实际时次/全部历史和目标切片hash；任何未证端点拒绝。"
+    },
+    {
+      "id": "PA-06",
+      "priority": "P1",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED",
+      "title": "旧动态权重未落盘且profile改变训练后bank",
+      "evidence": [
+        {
+          "file": "scripts/r2_fs_bank_train.py",
+          "line": 541,
+          "end_line": 624
+        },
+        {
+          "file": "earthdelta/bank_training.py",
+          "line": 1297,
+          "end_line": 1355
+        }
+      ],
+      "impact": "无法独立恢复评分所用bank，记录可能与实际权重错位。",
+      "minimum_action": "复用现有dynamic序列化形成fitted-Fs身份版本；profile克隆/恢复且前后hash一致，组装后逐expert行为等价。"
+    },
+    {
+      "id": "PA-07",
+      "priority": "P1",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED",
+      "title": "source身份记录尚不是完整准入约束",
+      "evidence": [
+        {
+          "file": "scripts/s0_gate.py",
+          "line": 1865,
+          "end_line": 1946
+        },
+        {
+          "file": "scripts/r4_value_pilot.py",
+          "line": 30,
+          "end_line": 77
+        }
+      ],
+      "impact": "不能只凭pinned字符串/同config给修改后源码延续旧证书。",
+      "minimum_action": "核验实际导入文件的冻结hash和环境；改变bridge/norm/rollout时重新签发S0，消费者复核证书链。"
+    },
+    {
+      "id": "PA-08",
+      "priority": "P1",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED",
+      "title": "原生评分修复不覆盖所有旧调用及新FP32端点差分",
+      "evidence": [
+        {
+          "file": "earthdelta/metrics_contract.py",
+          "line": 199,
+          "end_line": 215
+        },
+        {
+          "file": "earthdelta/metrics_contract.py",
+          "line": 652,
+          "end_line": 833
+        },
+        {
+          "file": "earthdelta/value_pilot.py",
+          "line": 170,
+          "end_line": 183
+        }
+      ],
+      "impact": "不能由native reducer正确推断全部heads/cache gain正确。",
+      "minimum_action": "主路径只用共同Q；端点先double再差分；legacy零切片拒绝；校准独立保存且默认关闭。"
+    },
+    {
+      "id": "PA-09",
+      "priority": "P1",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED",
+      "title": "新F0路线不能冲抵原Fs计划与Stage4交付缺口",
+      "evidence": [
+        {
+          "file": "plans/plans_v3_0922/NEXT_STEPS_10H_PLAN.md",
+          "line": 229,
+          "end_line": 239
+        },
+        {
+          "file": "scripts/r4_value_pilot.py",
+          "line": 449,
+          "end_line": 493
+        }
+      ],
+      "impact": "存在新实现进展，但原Fs完整cache/OOF决策表仍缺。",
+      "minimum_action": "本包固定原计划；若另选F0必须独立协议/身份/授权，不得报告原计划完成。"
+    },
+    {
+      "id": "PA-10",
+      "priority": "P0",
+      "evidence_status": "MISSING",
+      "status": "MISSING",
+      "title": "无可支持科学目标的最终产物",
+      "evidence": [
+        "required: qualified_fs + common_fs_bank + complete_5_candidate_cache + OOF_predictions + native_results + costs"
+      ],
+      "impact": "novelty/weather utility=INCONCLUSIVE。",
+      "minimum_action": "保持阻塞；不能先写新颖性胜利或收益结论。"
+    }
+  ],
+  "required_next_actions": [
+    "FP-00 冻结身份并补齐原始证据",
+    "FP-01 S0归因和独立官方复验",
+    "FP-02 入口准入/评分/STOP闭环",
+    "FP-03 单一Fs质量门、稳定训练与冻结",
+    "FP-04 共同Fs专家库持久化和qualification",
+    "FP-05 条件性完整缓存与廉价OOF开发表",
+    "FP-06 独立验证与结果决策；确认集仍锁定"
+  ],
+  "claims_that_must_not_be_made": [
+    "不能声称plans_v3_0922全部执行或目标全部实现。",
+    "不能把历史307/127两组测试或CURRENT_STATUS的66/3宣称为本次完整HEAD测试。",
+    "不能声称官方Stormer 4-step/12-step parity已通过。",
+    "不能把job SUCCEEDED、finite或合并一致性称为Fs训练质量达标。",
+    "不能声称旧四worker构成共同Fs上的合格K4专家库。",
+    "不能声称Stage4 cache、policy fitting、OOF/holdout evaluation已完成。",
+    "不能用shared-F0代码代替原计划的fitted-Fs完成证明。",
+    "不能声称双头/响应表征具有novelty收益或提高weather utility；目前无合格实验。",
+    "不能说本次独立重跑GPU/训练/全仓测试；本次仅进行了材料、代码和交付检查。"
+  ]
+}

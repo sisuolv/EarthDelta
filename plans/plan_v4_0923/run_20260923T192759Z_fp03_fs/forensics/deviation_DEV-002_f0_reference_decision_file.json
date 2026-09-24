@@ -1,0 +1,36 @@
+{
+ "schema_version": "ed-fp03-deviation/1",
+ "deviation_id": "DEV-002",
+ "relates_to": "DEV-001",
+ "title": "Decisions after J1 read the F0 reference panel from J1_diag_decision_r2.json, not the J1_diag_decision.json file named in the protocol text",
+ "kind": "CARRIER_FILENAME_ONLY (consequence of DEV-001)",
+ "rule_text_changed": false,
+ "thresholds_changed": false,
+ "experimental_argv_changed": false,
+ "reference_content_changed": false,
+ "protocol": {
+  "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/protocol/fs_protocol_v1.json",
+  "sha256": "3c143bd7c405c9fc70edfd186c3432fce88845820f8d7fd892a4be0744a2b7af",
+  "unchanged": true
+ },
+ "what_the_protocol_text_says": [
+  "jobs.J2.decision command template: --diag-decision .../decisions/J1_diag_decision.json",
+  "qualification_rule.q0.f0_panel_reference: 'J1 arm A0 (cuda:0) F0 train+holdout panels, carried in decisions/J1_diag_decision.json'"
+ ],
+ "what_actually_ran": {
+  "J2 (pt-z07uway9) screen decision": "--diag-decision plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J1_diag_decision_r2.json",
+  "J3 / J3b formal decisions": "same file, J1_diag_decision_r2.json"
+ },
+ "why": [
+  "J1_diag_decision.json has verdict STOP (DEV-001: the tf32_off checker bug). r4_fs_decide.py refuses any diag decision whose verdict is not PASS as a reference, so the J2 decision could not be produced from the original file.",
+  "J1_diag_decision_r2.json (verdict PASS) is the coordinator-approved re-decision of the SAME J1 run (pt-56auspj8) under DEV-001."
+ ],
+ "reference_panel_identity": {
+  "both_files_reference_config_id": "J1_A0",
+  "reference_f0_panel_identical_in_both_files": true,
+  "source_of_panel": "artifacts/round2_cci/ed-r4fs03diag-0923203433-4127c2/arms/A0/fs_panels.json (F0 train + holdout)",
+  "J1_diag_decision.json_sha256": "ed214ab0242ac66f1d88b6c30d010e6d3f8b5a43138709e149abfab8c0606acb",
+  "J1_diag_decision_r2.json_sha256_prefix": "3ad6de6a501b78c9"
+ },
+ "effect": "None on any number: the reference F0 panel content is byte-for-byte the same J1 arm A0 panel; only the file carrying it differs from the protocol text. Each decision records the file it used, with its sha256, under inputs.diag_decision."
+}

@@ -1,0 +1,1144 @@
+{
+ "schema_version": "ed-fp03-historical-fs-forensics/1",
+ "created_utc": "2026-09-23T19:35:40.913964+00:00",
+ "status": "OBSERVED",
+ "scope": "read-only; no artifact modified",
+ "builder": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/build_forensics.py",
+ "builder_sha256": "6069bdc5722c2542777f5873a0bc03631c97432e6c7949745cef3280ef52f773",
+ "jobs": {
+  "pt-3x63g0c6": {
+   "run_dir": "artifacts/round2_cci/ed-r3-j4-bank-formal500-0922004700-0a3c68",
+   "top_level_sha256": {
+    "job-id.txt": "1ce7c59c43c4fbccf85ba295db44caf11f6b628a0da592a01b4784b067d63e6a",
+    "job_result.json": "acfe62a62a94625dabdecbaa86a6e999e130f90dddd061f6776b7a3b658e54f4",
+    "invocation.json": "bddbe9684d0e87467dca4c3a85b6579bf5f5f88d062ef503c4f1d325357d0103",
+    "create_argv.json": "664669f4eefc0f31801af73f2aaf98e31af64d7ebbafb0c9a0812d62174c8cc3",
+    "submission.json": "6031b2b1d906965280e96437affd9dcfd34dcb7434b169eed982e0eb9a397867",
+    "source_manifest.json": "8136e75e6cdb168fdfbe0e55ccfdb4399812f7634220282937cf038b95bfbdb0",
+    "worker.log": "dcd831d1f4dc780e35ded6b04b87622f46b143df6022faac4849fbec7ed0ea04"
+   },
+   "replicas": {
+    "replica0": {
+     "dir": "artifacts/round2_cci/ed-r3-j4-bank-formal500-0922004700-0a3c68/expert0",
+     "device": "cuda:0",
+     "files": {
+      "bank_training_expert0.json": {
+       "sha256": "f85a6b3c12010ab6632fe08b33ec60f0b2164e093719cac1d9bf045539e116ed",
+       "bytes": 78984
+      },
+      "capacity_profile.json": {
+       "sha256": "a987c9936c966d1d15b68d21a290c2a288a2afdc4f0ac12f269b929db9ee2205",
+       "bytes": 3071
+      },
+      "fs_adapter.pt": {
+       "sha256": "7ebb393d0811c6c964ad734ecaaab0c856b136b41a747a3d081a7e42cd0ecc7d",
+       "bytes": 201570
+      },
+      "fs_fit_record.json": {
+       "sha256": "16674fb9839a0e5285740c2f158fc13bb2de3b933ab3240be503bedaf3f35839",
+       "bytes": 62219
+      },
+      "fs_merged_backbone.pt": {
+       "sha256": "cde9a8648f3495813eaca906e0161101b492038e6adead7575ebb94ec611d05b",
+       "bytes": 1856789295
+      },
+      "fs_post_freeze.json": {
+       "sha256": "776acba29f288bd66aa8923fe595e8ef760fcf7a85428cc169704040c37d477f",
+       "bytes": 4207
+      },
+      "horizon_feasibility.json": {
+       "sha256": "11faae421ec7d85b0fe524595f1a6eac76178d07c2f360f07830b0c3208e6e63",
+       "bytes": 1867
+      },
+      "run_record.json": {
+       "sha256": "71ee09c119cf8ab0217581548712530ed8ecb9843c8225c4baf6ddf287751bec",
+       "bytes": 161415
+      },
+      "stdout.log": {
+       "sha256": "d6a47e2d127241da8b86fcef737b37a51fe4a2249e233c5ec953aa7914ba310c",
+       "bytes": 3101
+      }
+     },
+     "fs_adapter_norms": {
+      "18": {
+       "B_fro": 10.987541129728703,
+       "A_fro": 11.54702157518879,
+       "dW_fro": 64.2169251175514
+      },
+      "19": {
+       "B_fro": 9.537981224497024,
+       "A_fro": 9.709696536254027,
+       "dW_fro": 47.136039358052045
+      },
+      "20": {
+       "B_fro": 8.971930285414139,
+       "A_fro": 8.306146245259143,
+       "dW_fro": 37.72952493627461
+      },
+      "21": {
+       "B_fro": 6.80346054787601,
+       "A_fro": 7.200316963659445,
+       "dW_fro": 24.331301227161646
+      },
+      "22": {
+       "B_fro": 6.220203238580355,
+       "A_fro": 5.41031988060576,
+       "dW_fro": 16.965993044211306
+      },
+      "23": {
+       "B_fro": 6.418775911932052,
+       "A_fro": 5.659755071245057,
+       "dW_fro": 18.35790434067007
+      }
+     },
+     "max_sliding8_mean": 0.03255561134175264,
+     "max_sliding8_over_losses0": 1.0530588458232706,
+     "argmax_sliding8_start": 129,
+     "recorded_eligible": true,
+     "per_visit_n_decreased": 8
+    },
+    "replica1": {
+     "dir": "artifacts/round2_cci/ed-r3-j4-bank-formal500-0922004700-0a3c68/expert1",
+     "device": "cuda:1",
+     "files": {
+      "bank_training_expert1.json": {
+       "sha256": "8e80872b75a6f76be26d0b20967f5c94f7d480612863cccdec2d1fb82a524456",
+       "bytes": 77695
+      },
+      "capacity_profile.json": {
+       "sha256": "1651eec4699622a7cc21133abe40126bf73b5dedf975f58530cfad2963d2de11",
+       "bytes": 3075
+      },
+      "fs_adapter.pt": {
+       "sha256": "4b84603fb057e6cb0c0f8533c99e9bac3e4b832e3e4e1fae7be722b9f5bdb996",
+       "bytes": 201570
+      },
+      "fs_fit_record.json": {
+       "sha256": "d7a5f7b0a54f78e2336118cfac392056277bc6f14163c27d9bdcfc4e76661b37",
+       "bytes": 61261
+      },
+      "fs_merged_backbone.pt": {
+       "sha256": "cfa671c26a56a9ae7f3cb76a1f044b45dbb3e9a0d14631d1786628857945566f",
+       "bytes": 1856789295
+      },
+      "fs_post_freeze.json": {
+       "sha256": "f11665659b1df21fcb5a9f16473dac012daaad791e1c6eaf62c23774e37d2ea5",
+       "bytes": 4205
+      },
+      "horizon_feasibility.json": {
+       "sha256": "da25f5d68d0b386f6db362a3c467c731061eef4eb2bbdf84959f7034f942668e",
+       "bytes": 1869
+      },
+      "run_record.json": {
+       "sha256": "2227ab826ec93df016ca91cd5936c8e68c0e64655af80338275a015f67ae5f17",
+       "bytes": 159156
+      },
+      "stdout.log": {
+       "sha256": "fab41fa701d65238fa6c5190a94d01048349303a3c989ced07dc85bc5d3dea79",
+       "bytes": 3098
+      }
+     },
+     "fs_adapter_norms": {
+      "18": {
+       "B_fro": 14.150576572984509,
+       "A_fro": 13.978932836359647,
+       "dW_fro": 112.22914178462331
+      },
+      "19": {
+       "B_fro": 12.088701039267706,
+       "A_fro": 10.961595176333855,
+       "dW_fro": 79.19668127594396
+      },
+      "20": {
+       "B_fro": 10.962021102015816,
+       "A_fro": 8.101572077526152,
+       "dW_fro": 46.74421551205742
+      },
+      "21": {
+       "B_fro": 11.530666230689459,
+       "A_fro": 7.606921893693299,
+       "dW_fro": 46.12184285540205
+      },
+      "22": {
+       "B_fro": 9.40979096440436,
+       "A_fro": 7.538796062485518,
+       "dW_fro": 37.509368895844474
+      },
+      "23": {
+       "B_fro": 9.829197332391738,
+       "A_fro": 8.00455701518213,
+       "dW_fro": 44.11104275329656
+      }
+     },
+     "max_sliding8_mean": 13.57253620528627,
+     "max_sliding8_over_losses0": 439.02352688745003,
+     "argmax_sliding8_start": 254,
+     "recorded_eligible": true,
+     "per_visit_n_decreased": 0
+    },
+    "replica2": {
+     "dir": "artifacts/round2_cci/ed-r3-j4-bank-formal500-0922004700-0a3c68/expert2",
+     "device": "cuda:2",
+     "files": {
+      "bank_training_expert2.json": {
+       "sha256": "4627538441bf1094e46ec7721fa6ea33d857d86f5f9818ce71cfbcd31eb2e90e",
+       "bytes": 78612
+      },
+      "capacity_profile.json": {
+       "sha256": "4d8801eba8435711c1d2e343f59e9a119e55427b3079cfb434479133445d0fba",
+       "bytes": 3071
+      },
+      "fs_adapter.pt": {
+       "sha256": "790496d8f0889be6d5c2cb1293142ecee909d2e540a04ba35d07152cfacfde76",
+       "bytes": 201570
+      },
+      "fs_fit_record.json": {
+       "sha256": "0480fe1a38ae01a36a1250b855a5abe163b391083ed0b4110f739bbd391f63f5",
+       "bytes": 62168
+      },
+      "fs_merged_backbone.pt": {
+       "sha256": "91c1030289bc2ae31ed511e7de972cd74efdc79a106b6aee081548a5f8afe56a",
+       "bytes": 1856789295
+      },
+      "fs_post_freeze.json": {
+       "sha256": "0e0b26bb19cb12c3776c47268da3c08b7e6968defd80e6523680c7d2f9227bef",
+       "bytes": 4210
+      },
+      "horizon_feasibility.json": {
+       "sha256": "22af9a2f48d5cff1cf4aeebfd812383344ea255d38f640edae99ac022af1085c",
+       "bytes": 1864
+      },
+      "run_record.json": {
+       "sha256": "f3cd65022cbc9238890bffb7ed157c25b0e9cb9e4638cf33e2d32d9d6f069991",
+       "bytes": 160974
+      },
+      "stdout.log": {
+       "sha256": "54352c32428df29aa7bc5d08087c08b3ac5331988a66d2ecee2baea34a531a3a",
+       "bytes": 3103
+      }
+     },
+     "fs_adapter_norms": {
+      "18": {
+       "B_fro": 9.111471728783231,
+       "A_fro": 9.250113261651837,
+       "dW_fro": 42.6167537820065
+      },
+      "19": {
+       "B_fro": 7.590399432991396,
+       "A_fro": 7.516432211078404,
+       "dW_fro": 28.902412160134418
+      },
+      "20": {
+       "B_fro": 6.871188008478861,
+       "A_fro": 6.398374722843029,
+       "dW_fro": 21.832893261815524
+      },
+      "21": {
+       "B_fro": 6.122424395381366,
+       "A_fro": 6.07247655047248,
+       "dW_fro": 18.655985073146315
+      },
+      "22": {
+       "B_fro": 5.439668328329941,
+       "A_fro": 5.2744978921181715,
+       "dW_fro": 14.457539357074916
+      },
+      "23": {
+       "B_fro": 5.2909587190936795,
+       "A_fro": 4.9808461960854356,
+       "dW_fro": 14.33375973758646
+      }
+     },
+     "max_sliding8_mean": 0.03794831587835881,
+     "max_sliding8_over_losses0": 1.2274937583048955,
+     "argmax_sliding8_start": 119,
+     "recorded_eligible": true,
+     "per_visit_n_decreased": 8
+    },
+    "replica3": {
+     "dir": "artifacts/round2_cci/ed-r3-j4-bank-formal500-0922004700-0a3c68/expert3",
+     "device": "cuda:3",
+     "files": {
+      "bank_training_expert3.json": {
+       "sha256": "cbe6193a6d55281985bf29f74711a89bc1063c28d7fc6d5f6209c5bc58f8e44b",
+       "bytes": 78257
+      },
+      "capacity_profile.json": {
+       "sha256": "073807be7e5027b241e7cbe64353c1e19a1efe0f530fdadea62ec68d57cbce70",
+       "bytes": 3073
+      },
+      "fs_adapter.pt": {
+       "sha256": "2f89acdecef66ad4f7d98005305f19940f9c5ea7373bab0154541c90643ca024",
+       "bytes": 201570
+      },
+      "fs_fit_record.json": {
+       "sha256": "38ce3c90e7a4096204bf26065b6986c495da864a71134401f16aa3e9e1e9d7ff",
+       "bytes": 61127
+      },
+      "fs_merged_backbone.pt": {
+       "sha256": "25037f303cf933b3f95269d01985c8e846bc9a260a150b8b80dcb4d2a4e3fc3a",
+       "bytes": 1856789295
+      },
+      "fs_post_freeze.json": {
+       "sha256": "ff620fdf11d6f950214e4096c0aac30b45aca4310487fad72e45db3d3d3371cd",
+       "bytes": 4208
+      },
+      "horizon_feasibility.json": {
+       "sha256": "1baa1acf399603a8588735617a1c6ec882356c9a92f88bbc43fd397da8e7f89d",
+       "bytes": 1874
+      },
+      "run_record.json": {
+       "sha256": "d5118dc95883cc262a5f9be42ece782ed171304d8abf7ec5dd0c43f841c4bb57",
+       "bytes": 159572
+      },
+      "stdout.log": {
+       "sha256": "a224bd9286fbf94bba5c46c842e3f0898d6b50ca38179f44cadd292122802643",
+       "bytes": 3101
+      }
+     },
+     "fs_adapter_norms": {
+      "18": {
+       "B_fro": 11.156086310986026,
+       "A_fro": 11.297393760233058,
+       "dW_fro": 64.86982913017856
+      },
+      "19": {
+       "B_fro": 9.573846245186159,
+       "A_fro": 8.093524226156203,
+       "dW_fro": 40.84359889932287
+      },
+      "20": {
+       "B_fro": 8.958766925680935,
+       "A_fro": 6.947787396860015,
+       "dW_fro": 32.3433495615146
+      },
+      "21": {
+       "B_fro": 8.119180722868673,
+       "A_fro": 6.083115540576721,
+       "dW_fro": 25.255277642307636
+      },
+      "22": {
+       "B_fro": 7.867086656888761,
+       "A_fro": 6.202924634169771,
+       "dW_fro": 24.58962814287762
+      },
+      "23": {
+       "B_fro": 7.246532887677498,
+       "A_fro": 6.280353500483878,
+       "dW_fro": 26.24123559164992
+      }
+     },
+     "max_sliding8_mean": 3.219856225433391,
+     "max_sliding8_over_losses0": 104.15095710775925,
+     "argmax_sliding8_start": 156,
+     "recorded_eligible": true,
+     "per_visit_n_decreased": 0
+    }
+   }
+  },
+  "pt-cdj1s2le": {
+   "run_dir": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12",
+   "top_level_sha256": {
+    "job-id.txt": "2ffff57ba1bf91e3d2adf6aeb9bf8afab77c5c8e39addb490147cf67ec0bb2ce",
+    "job_result.json": "910d6ecd88454f91aaf57749701ea85f4055cf078bc20ab2dd0407821cf544b4",
+    "invocation.json": "6104a80bd9c810d32a75606ab4aa01813f286bcda3fc2566bb074a087df3df09",
+    "create_argv.json": "51e696967b1040fb25b1494da09ac957d6f3a525065ff7ae7f7c2122002f22a3",
+    "submission.json": "9808336baa07a6ce84163b6e95103235328b82416b2eaa4b772124f913c36899",
+    "source_manifest.json": "127fe9c54b012f05196a6b47c7f4b01604220e96603b66825c09763db9ae5efa",
+    "worker.log": "c007df781caca109e393755317e6439c3e49588e8f95e05c12a3321ec08ffa7c"
+   },
+   "replicas": {
+    "replica0": {
+     "dir": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12/expert0",
+     "device": "cuda:0",
+     "files": {
+      "bank_training_expert0.json": {
+       "sha256": "f3d3778f929c92c796ad410386329308ff1e3e4ceb393ed601215aff9840781c",
+       "bytes": 78946
+      },
+      "capacity_profile.json": {
+       "sha256": "fbd263b234d254a3005e87dedc419a252c477023f20d2c37deb605bedb1ecbba",
+       "bytes": 3073
+      },
+      "fs_adapter.pt": {
+       "sha256": "9f6584f9617d3763851790c7d71702271d581ce22418295b454d1ba3d37dd59f",
+       "bytes": 201570
+      },
+      "fs_fit_record.json": {
+       "sha256": "10dad923bf86007560a296634620be287320ac4a43b3096c89e591a90f17f170",
+       "bytes": 61989
+      },
+      "fs_merged_backbone.pt": {
+       "sha256": "0d0bcc6810cae034bbc8fcacab3d06e3e5fe146bba29b0918025cdb549268df8",
+       "bytes": 1856789295
+      },
+      "fs_post_freeze.json": {
+       "sha256": "0356fc24a7171f480a54c33df3994d31fa074630baddaa521460d2508cf15f9e",
+       "bytes": 4223
+      },
+      "horizon_feasibility.json": {
+       "sha256": "0fc5c1b372b628262a86dc090f5c6f7c9372e349b45efed15ea8e6b77a98e28d",
+       "bytes": 1869
+      },
+      "run_record.json": {
+       "sha256": "9da3ba8cb15257e987a9048deaf55d80634f124055cfaefe8b5724d289b3a4c2",
+       "bytes": 161165
+      },
+      "stdout.log": {
+       "sha256": "f78b4de3e9d45975b989ef2230492c5cf00c42f4e32d1fd85a587224e58b10a6",
+       "bytes": 3102
+      }
+     },
+     "fs_adapter_norms": {
+      "18": {
+       "B_fro": 8.17541102196142,
+       "A_fro": 8.490629847717056,
+       "dW_fro": 34.67127996824819
+      },
+      "19": {
+       "B_fro": 7.106213534559681,
+       "A_fro": 7.2175113968004325,
+       "dW_fro": 26.092446672551315
+      },
+      "20": {
+       "B_fro": 6.592356967661209,
+       "A_fro": 6.438177155321938,
+       "dW_fro": 21.373106330099105
+      },
+      "21": {
+       "B_fro": 6.265487868849024,
+       "A_fro": 5.515967254455039,
+       "dW_fro": 17.250144947626207
+      },
+      "22": {
+       "B_fro": 6.003373920692426,
+       "A_fro": 5.681452746255148,
+       "dW_fro": 18.064118501764533
+      },
+      "23": {
+       "B_fro": 5.84319443965708,
+       "A_fro": 5.722733729126755,
+       "dW_fro": 17.0026131111647
+      }
+     },
+     "max_sliding8_mean": 0.2707085588368506,
+     "max_sliding8_over_losses0": 8.756464117066336,
+     "argmax_sliding8_start": 124,
+     "recorded_eligible": true,
+     "per_visit_n_decreased": 8
+    },
+    "replica1": {
+     "dir": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12/expert1",
+     "device": "cuda:1",
+     "files": {
+      "bank_training_expert1.json": {
+       "sha256": "5b545bdaaa6420f3e0a2f2fd2ead2e4406aff5f2a8a9f29b1f015c1496211239",
+       "bytes": 78624
+      },
+      "capacity_profile.json": {
+       "sha256": "d8e46a8f905f14a29e54755db7ff173d20535587124e5b63d774cb53dda06578",
+       "bytes": 3071
+      },
+      "fs_adapter.pt": {
+       "sha256": "66af791861b0b59eb0e009814570e76baa086797296ca63c349f11b0603c5166",
+       "bytes": 201570
+      },
+      "fs_fit_record.json": {
+       "sha256": "a35477e2094f700a8aeb00aa6d44e66324b23b558c03d960dbed23672b92404e",
+       "bytes": 61875
+      },
+      "fs_merged_backbone.pt": {
+       "sha256": "162a926152250db0f0f117c085b97e2495c00e467bcfac49ae911b85a0b9e13b",
+       "bytes": 1856789295
+      },
+      "fs_post_freeze.json": {
+       "sha256": "a4b83cc8d488990bef1bec392607f2dd36ea25153b2a78caa4c9dc1832841338",
+       "bytes": 4222
+      },
+      "horizon_feasibility.json": {
+       "sha256": "c6b8199ddd209a33b1f44ebe8f099321a8c57b02adcce04ecb375d34afae9db2",
+       "bytes": 1873
+      },
+      "run_record.json": {
+       "sha256": "26b3950747cfe5742e85483886435a1a6cd2ef0cfe1495ad0e650498201a1ab1",
+       "bytes": 160714
+      },
+      "stdout.log": {
+       "sha256": "47f141741285faeb5d9b71e8cbc95cc419268c6d1a0b28e34f35ff3abea3e46c",
+       "bytes": 3101
+      }
+     },
+     "fs_adapter_norms": {
+      "18": {
+       "B_fro": 8.821015045816468,
+       "A_fro": 8.962569382513596,
+       "dW_fro": 39.83907922228503
+      },
+      "19": {
+       "B_fro": 7.4368775918042145,
+       "A_fro": 7.6150321882169125,
+       "dW_fro": 29.013147053293338
+      },
+      "20": {
+       "B_fro": 7.072763930486364,
+       "A_fro": 6.248101321913387,
+       "dW_fro": 22.22661916201001
+      },
+      "21": {
+       "B_fro": 6.278449557430545,
+       "A_fro": 5.5767240423425415,
+       "dW_fro": 18.01466196177986
+      },
+      "22": {
+       "B_fro": 6.844705460961173,
+       "A_fro": 5.587657462530046,
+       "dW_fro": 19.37119393606703
+      },
+      "23": {
+       "B_fro": 5.830399146193258,
+       "A_fro": 5.3953555146701575,
+       "dW_fro": 17.009101757018538
+      }
+     },
+     "max_sliding8_mean": 1.4339428428700012,
+     "max_sliding8_over_losses0": 46.38297770659927,
+     "argmax_sliding8_start": 129,
+     "recorded_eligible": true,
+     "per_visit_n_decreased": 8
+    },
+    "replica2": {
+     "dir": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12/expert2",
+     "device": "cuda:2",
+     "files": {
+      "bank_training_expert2.json": {
+       "sha256": "f6fb5686e26c03fc573f9a38a1ea5a983001a327d5c3d96744ba05bbb167dda0",
+       "bytes": 77628
+      },
+      "capacity_profile.json": {
+       "sha256": "400893e67d86961fa8dbde61251a29275e4e43fe492618aaabeee4eae5eedb37",
+       "bytes": 3075
+      },
+      "fs_adapter.pt": {
+       "sha256": "4c794bb716e2c567b30dba57862b2362f1a78edf49c4f1ddc4addb37ff9aa134",
+       "bytes": 201570
+      },
+      "fs_fit_record.json": {
+       "sha256": "0e7fbea95426b24a4fc67f2e1a71fd9a955a2d5bdb16d7a5990cd54facad00f5",
+       "bytes": 61457
+      },
+      "fs_merged_backbone.pt": {
+       "sha256": "8034bb3133e4033e9e629724f41c802c52c1f592c5bd04b2f0bc65d795c4a482",
+       "bytes": 1856789295
+      },
+      "fs_post_freeze.json": {
+       "sha256": "de8de529775cfb7b8b767b6cb803e483bba7d341d903d1d7c834c37f170518f2",
+       "bytes": 4222
+      },
+      "horizon_feasibility.json": {
+       "sha256": "42fdbdeb9d78a7f0bcbe96f75df7f65306aaa7e49f6b54e5d35decb21b8ad2de",
+       "bytes": 1869
+      },
+      "run_record.json": {
+       "sha256": "47f2eaaed246097c3791ad46b0ddb0446ecb483ec021275be077b7b459e9e6a5",
+       "bytes": 159298
+      },
+      "stdout.log": {
+       "sha256": "bb05f6e106ba42632865a1b0e4da94b75268653cf324459169a19080b932b62f",
+       "bytes": 3098
+      }
+     },
+     "fs_adapter_norms": {
+      "18": {
+       "B_fro": 13.966993447168884,
+       "A_fro": 14.235025240238956,
+       "dW_fro": 109.57302190831771
+      },
+      "19": {
+       "B_fro": 11.900691446952905,
+       "A_fro": 11.093377824369167,
+       "dW_fro": 67.83064368327155
+      },
+      "20": {
+       "B_fro": 11.920836893712508,
+       "A_fro": 9.653239942827598,
+       "dW_fro": 63.42663320088561
+      },
+      "21": {
+       "B_fro": 10.76162340295597,
+       "A_fro": 8.23242798802341,
+       "dW_fro": 48.57076515507155
+      },
+      "22": {
+       "B_fro": 10.063162376581394,
+       "A_fro": 7.422362318925834,
+       "dW_fro": 40.82948396432714
+      },
+      "23": {
+       "B_fro": 10.083897204575871,
+       "A_fro": 8.93486653154593,
+       "dW_fro": 47.863302227195376
+      }
+     },
+     "max_sliding8_mean": 13.662858252702886,
+     "max_sliding8_over_losses0": 441.94512556383404,
+     "argmax_sliding8_start": 286,
+     "recorded_eligible": true,
+     "per_visit_n_decreased": 0
+    },
+    "replica3": {
+     "dir": "artifacts/round2_cci/ed-r3-j4-bank-formal-v2-0922011307-2d8e12/expert3",
+     "device": "cuda:3",
+     "files": {
+      "bank_training_expert3.json": {
+       "sha256": "06a93068666c484e6d4f772e20a71ad553126616a89e8be4553e2da28c064b02",
+       "bytes": 78220
+      },
+      "capacity_profile.json": {
+       "sha256": "8c00125a0a6500137b4f67571fb0534c08b15f8ee1bf5de3c236a87cd6349006",
+       "bytes": 3075
+      },
+      "fs_adapter.pt": {
+       "sha256": "1b31e4c70be86859c203d64cd6e45f622538ff5ab9d70375e708369e7dc0fde0",
+       "bytes": 201570
+      },
+      "fs_fit_record.json": {
+       "sha256": "546cbce8eb92090115313e560815f938754bbdd4285b39ef1b94175bbe7db054",
+       "bytes": 61335
+      },
+      "fs_merged_backbone.pt": {
+       "sha256": "030d2c1661c8c2801236f5871c322ac9098db3c0afedcf6e4bdeee4bb532e878",
+       "bytes": 1856789295
+      },
+      "fs_post_freeze.json": {
+       "sha256": "b35d89e594dd087e11a7ad61142ad6832553da64d6a268ee3893a63fa7f5addf",
+       "bytes": 4220
+      },
+      "horizon_feasibility.json": {
+       "sha256": "ecb53d50c8d409adfb9f955481aa9453a1877ca7461832aec86a5e0eeb08f59b",
+       "bytes": 1868
+      },
+      "run_record.json": {
+       "sha256": "4d8ea61dd96321121194a05a433f08fb5b1930bcf999b2163300451bcb56ac6f",
+       "bytes": 159749
+      },
+      "stdout.log": {
+       "sha256": "bb4686d6ed7b6be4a2c35b44eaf15ea6c3ac1f328eec015d46099f79dadc27c4",
+       "bytes": 3099
+      }
+     },
+     "fs_adapter_norms": {
+      "18": {
+       "B_fro": 11.39537022361854,
+       "A_fro": 11.195734985837447,
+       "dW_fro": 70.09559654930487
+      },
+      "19": {
+       "B_fro": 9.850204482300576,
+       "A_fro": 8.04186014737734,
+       "dW_fro": 44.01686107987568
+      },
+      "20": {
+       "B_fro": 9.465060389553306,
+       "A_fro": 6.802496477776229,
+       "dW_fro": 34.375907859693534
+      },
+      "21": {
+       "B_fro": 8.905146907073979,
+       "A_fro": 5.708100412068793,
+       "dW_fro": 26.320026443908137
+      },
+      "22": {
+       "B_fro": 7.823894390765649,
+       "A_fro": 6.098149178471618,
+       "dW_fro": 23.844426968321926
+      },
+      "23": {
+       "B_fro": 7.483184380087052,
+       "A_fro": 6.961847426437574,
+       "dW_fro": 27.28746965389476
+      }
+     },
+     "max_sliding8_mean": 17.26150276246024,
+     "max_sliding8_over_losses0": 558.3485435243249,
+     "argmax_sliding8_start": 172,
+     "recorded_eligible": true,
+     "per_visit_n_decreased": 0
+    }
+   }
+  },
+  "pt-e8y7ib01": {
+   "run_dir": "artifacts/round2_cci/ed-r4fsformal0923-0923180756-7b1776",
+   "top_level_sha256": {
+    "job-id.txt": "8b5876d26dfa752ea68c2a31a896bbc07a1964626caf1817eaf2d5394dd26501",
+    "job_result.json": "85cfd9501d72e51cc94310db599ddcacc81aaed473f3b453ab6ab93a78bfab27",
+    "invocation.json": "d15018b9c1fe72ce6794cb04bae553066b950cd284784a4cde18ed9d31721fac",
+    "create_argv.json": "cfefa5296c37cc1d104b8a3e453f3673dab8b29c289d4d070ff87a9897b471e9",
+    "submission.json": "0e4ebaa52f78d4a99dea670af6bd91b3f7e294bb3f548493bbfacf705e14d094",
+    "source_manifest.json": "88a6b35ff63ae02a1899816eeaa1b39c9fd46ab5f369bcba836cf8f3aeaad621",
+    "worker.log": "14fab224f705b9cc481525020147a49bcba3fb5bfb3b3434878c4567530c8c99"
+   },
+   "replicas": {
+    "replica0": {
+     "dir": "artifacts/round2_cci/ed-r4fsformal0923-0923180756-7b1776/experts/expert0",
+     "device": "cuda:0",
+     "files": {
+      "fs_adapter.pt": {
+       "sha256": "4aa22defdf6fae0c0adefffaccb390df840a318f9fa64c766d5f877f0f03a7f1",
+       "bytes": 201570
+      },
+      "fs_fit_record.json": {
+       "sha256": "c305f18394442fbf4eac74707ded2d860403cc2a892ac3631592777e928df788",
+       "bytes": 62143
+      },
+      "run_record.json": {
+       "sha256": "c9224e9192ad8bb936847eecc69e95fb81d881e4dda2792b97fac243410a70d5",
+       "bytes": 67705
+      },
+      "stdout.log": {
+       "sha256": "681216db74194ece87ada3a2bb0e6d98de8727bc36aa0a7bc193c58ed07f7774",
+       "bytes": 1048
+      }
+     },
+     "fs_adapter_norms": {
+      "18": {
+       "B_fro": 8.465297207733204,
+       "A_fro": 9.110788114338616,
+       "dW_fro": 38.69775176581593
+      },
+      "19": {
+       "B_fro": 7.90913074685927,
+       "A_fro": 7.3115774076851565,
+       "dW_fro": 29.519092121461867
+      },
+      "20": {
+       "B_fro": 7.79640221382721,
+       "A_fro": 6.70877080017777,
+       "dW_fro": 25.68014893121772
+      },
+      "21": {
+       "B_fro": 7.1782929248168434,
+       "A_fro": 5.527176707975419,
+       "dW_fro": 19.820345078859688
+      },
+      "22": {
+       "B_fro": 6.698492026045842,
+       "A_fro": 5.522188759241412,
+       "dW_fro": 18.664925962730813
+      },
+      "23": {
+       "B_fro": 7.043544788667578,
+       "A_fro": 6.383943544098025,
+       "dW_fro": 23.898905614881304
+      }
+     },
+     "max_sliding8_mean": 1.4737246479836938,
+     "max_sliding8_over_losses0": 47.67218722237277,
+     "argmax_sliding8_start": 130,
+     "recorded_eligible": true,
+     "per_visit_n_decreased": 8
+    },
+    "replica1": {
+     "dir": "artifacts/round2_cci/ed-r4fsformal0923-0923180756-7b1776/experts/expert1",
+     "device": "cuda:1",
+     "files": {
+      "fs_adapter.pt": {
+       "sha256": "0d8106ec0a3fdd75a4c09ae8c2092c0d85e6484a101eec997ab3a4c3e105c5fa",
+       "bytes": 201570
+      },
+      "fs_fit_record.json": {
+       "sha256": "5b256a6faca71026b9efe0c61c3e8217fd003d875f5a40d83acac3d08657daf9",
+       "bytes": 61899
+      },
+      "run_record.json": {
+       "sha256": "959824f1e19932f5387aedd4e01bf6bf8eab25e6d852bab0b4c70a9f4538dd21",
+       "bytes": 67463
+      },
+      "stdout.log": {
+       "sha256": "a681d96ae113c7cb16488f7f5af5dcc934c478f5f2c04aedfd7da9c4a5e5052e",
+       "bytes": 1079
+      }
+     },
+     "fs_adapter_norms": {
+      "18": {
+       "B_fro": 10.648130221838061,
+       "A_fro": 10.499666293085738,
+       "dW_fro": 59.14881603859572
+      },
+      "19": {
+       "B_fro": 8.96851670218184,
+       "A_fro": 7.711217377413626,
+       "dW_fro": 35.89306074631624
+      },
+      "20": {
+       "B_fro": 8.394335824650005,
+       "A_fro": 6.191757098052361,
+       "dW_fro": 26.507895421748756
+      },
+      "21": {
+       "B_fro": 7.7970795657503125,
+       "A_fro": 5.840273907558346,
+       "dW_fro": 23.306044380606235
+      },
+      "22": {
+       "B_fro": 7.862992154280326,
+       "A_fro": 5.812141595362949,
+       "dW_fro": 23.33464363168795
+      },
+      "23": {
+       "B_fro": 7.866868697805186,
+       "A_fro": 6.477873945160283,
+       "dW_fro": 27.055492587894175
+      }
+     },
+     "max_sliding8_mean": 4.471826115679857,
+     "max_sliding8_over_losses0": 144.65506300939936,
+     "argmax_sliding8_start": 126,
+     "recorded_eligible": false,
+     "per_visit_n_decreased": 0
+    },
+    "replica2": {
+     "dir": "artifacts/round2_cci/ed-r4fsformal0923-0923180756-7b1776/experts/expert2",
+     "device": "cuda:2",
+     "files": {
+      "fs_adapter.pt": {
+       "sha256": "d7fe34309ea906744edc37852afacf64da073a694d7abee61def1ffc833eeb73",
+       "bytes": 201570
+      },
+      "fs_fit_record.json": {
+       "sha256": "7a3ef10c06f5de6cbd68797ab31849f1f20622d89673921463ce8cdd9b3ac023",
+       "bytes": 62225
+      },
+      "run_record.json": {
+       "sha256": "5a649af1612186cd45076b3d2d7a1a4b1559fd106aca03ee1c59ce2290f9d1d0",
+       "bytes": 67787
+      },
+      "stdout.log": {
+       "sha256": "fb053fdb29ec6d51c8f065dc51c1532cb44adf97fde1b04f5bf6a1b867cc36b8",
+       "bytes": 1049
+      }
+     },
+     "fs_adapter_norms": {
+      "18": {
+       "B_fro": 8.86649147244654,
+       "A_fro": 8.845775236495784,
+       "dW_fro": 39.550413834575345
+      },
+      "19": {
+       "B_fro": 7.956476073978574,
+       "A_fro": 7.735096880024849,
+       "dW_fro": 31.333269331012893
+      },
+      "20": {
+       "B_fro": 6.933085275196472,
+       "A_fro": 6.494802971105736,
+       "dW_fro": 22.463168771228506
+      },
+      "21": {
+       "B_fro": 6.792126319960121,
+       "A_fro": 5.6692402270611,
+       "dW_fro": 20.02093587078016
+      },
+      "22": {
+       "B_fro": 6.221337037384603,
+       "A_fro": 5.355084936606474,
+       "dW_fro": 17.383546752442474
+      },
+      "23": {
+       "B_fro": 6.178948495576031,
+       "A_fro": 6.021485678996662,
+       "dW_fro": 20.205180083908594
+      }
+     },
+     "max_sliding8_mean": 0.8428785670913636,
+     "max_sliding8_over_losses0": 27.26551728036876,
+     "argmax_sliding8_start": 134,
+     "recorded_eligible": true,
+     "per_visit_n_decreased": 8
+    },
+    "replica3": {
+     "dir": "artifacts/round2_cci/ed-r4fsformal0923-0923180756-7b1776/experts/expert3",
+     "device": "cuda:3",
+     "files": {
+      "fs_adapter.pt": {
+       "sha256": "1aa30dbd01e1d35ba6411dd1553e1cd334561436583193179420a4a178a14d00",
+       "bytes": 201570
+      },
+      "fs_fit_record.json": {
+       "sha256": "8c406b7ca2ea05549d793189f68aa9c4ffa8df1f8b918ec5532ed07a501cab0a",
+       "bytes": 62164
+      },
+      "run_record.json": {
+       "sha256": "c716b46bbbaf0417a73c6550e87d2403a695d3026ef128ad1cc790cc87c13990",
+       "bytes": 67726
+      },
+      "stdout.log": {
+       "sha256": "7348dee5795cbecd72e6d0b78c01540670b56b75a6afa5512b3ecfac42867094",
+       "bytes": 1050
+      }
+     },
+     "fs_adapter_norms": {
+      "18": {
+       "B_fro": 9.15982399635107,
+       "A_fro": 9.033056840543416,
+       "dW_fro": 41.667397544493944
+      },
+      "19": {
+       "B_fro": 8.126954654991886,
+       "A_fro": 7.273117919107731,
+       "dW_fro": 30.15102188949447
+      },
+      "20": {
+       "B_fro": 7.212405120641105,
+       "A_fro": 6.784746823737439,
+       "dW_fro": 24.97840496395626
+      },
+      "21": {
+       "B_fro": 6.992248327448282,
+       "A_fro": 5.717298003109851,
+       "dW_fro": 20.497570847226953
+      },
+      "22": {
+       "B_fro": 6.121216195988922,
+       "A_fro": 5.963161179299873,
+       "dW_fro": 18.73821265929017
+      },
+      "23": {
+       "B_fro": 7.075287739324575,
+       "A_fro": 5.7411011343785585,
+       "dW_fro": 21.7575168118884
+      }
+     },
+     "max_sliding8_mean": 0.8760744392859026,
+     "max_sliding8_over_losses0": 28.339340559658538,
+     "argmax_sliding8_start": 146,
+     "recorded_eligible": true,
+     "per_visit_n_decreased": 8
+    }
+   }
+  }
+ },
+ "e8": {
+  "per_issue": {
+   "iss_292517fb189ee1bd": {
+    "argmin_update_by_replica": [
+     56,
+     56,
+     56,
+     56
+    ],
+    "last_over_min_by_replica": [
+     1.0195046997108486,
+     1.0612890030571727,
+     1.016977533255845,
+     1.0200632389718896
+    ],
+    "last_over_first_by_replica": [
+     0.9847869530990665,
+     1.0251478047989266,
+     0.9823457626337301,
+     0.9853262497997617
+    ]
+   },
+   "iss_d8ff9d3ce61a2f46": {
+    "argmin_update_by_replica": [
+     49,
+     49,
+     49,
+     49
+    ],
+    "last_over_min_by_replica": [
+     1.0393281343955407,
+     1.0859585809038212,
+     1.034077672547871,
+     1.0363087090892702
+    ],
+    "last_over_first_by_replica": [
+     0.9770094358016471,
+     1.0208437757485656,
+     0.9720737307094489,
+     0.974170995856261
+    ]
+   },
+   "iss_6b3c576c6b5558b5": {
+    "argmin_update_by_replica": [
+     50,
+     50,
+     50,
+     50
+    ],
+    "last_over_min_by_replica": [
+     1.0222673116114447,
+     1.0700178900171762,
+     1.0210760426503651,
+     1.0274129752235
+    ],
+    "last_over_first_by_replica": [
+     0.9832058678397919,
+     1.0291317968768194,
+     0.9820600393406963,
+     0.988154863245681
+    ]
+   },
+   "iss_96bdbf1fa8455a7f": {
+    "argmin_update_by_replica": [
+     75,
+     75,
+     75,
+     75
+    ],
+    "last_over_min_by_replica": [
+     1.0290519976548482,
+     1.0705779746810709,
+     1.030030910513801,
+     1.0368805648527724
+    ],
+    "last_over_first_by_replica": [
+     0.9835446546638759,
+     1.0232383086676105,
+     0.9844837405827274,
+     0.9910291882416389
+    ]
+   },
+   "iss_4d2909814aeeb0a5": {
+    "argmin_update_by_replica": [
+     76,
+     76,
+     76,
+     76
+    ],
+    "last_over_min_by_replica": [
+     1.034176675181129,
+     1.0837638072257467,
+     1.025443794948343,
+     1.0327482791051936
+    ],
+    "last_over_first_by_replica": [
+     0.989641002242526,
+     1.0371003148555127,
+     0.9812894109783328,
+     0.9882785598717132
+    ]
+   },
+   "iss_ec3977fe8a715192": {
+    "argmin_update_by_replica": [
+     45,
+     45,
+     45,
+     45
+    ],
+    "last_over_min_by_replica": [
+     1.0202592773715338,
+     1.059875353504923,
+     1.0234805804617162,
+     1.0240604443515287
+    ],
+    "last_over_first_by_replica": [
+     0.9796898644193573,
+     1.017730831122776,
+     0.9827833802359179,
+     0.9833399995200183
+    ]
+   },
+   "iss_041643c6650bb160": {
+    "argmin_update_by_replica": [
+     62,
+     62,
+     62,
+     62
+    ],
+    "last_over_min_by_replica": [
+     1.0389642372993722,
+     1.0815399628000366,
+     1.0341631613117526,
+     1.0444852696210811
+    ],
+    "last_over_first_by_replica": [
+     0.9845146860583136,
+     1.0248586363291252,
+     0.9799651620590122,
+     0.9897458821149128
+    ]
+   },
+   "iss_cc158228e7e29baf": {
+    "argmin_update_by_replica": [
+     63,
+     63,
+     63,
+     63
+    ],
+    "last_over_min_by_replica": [
+     1.032254769403109,
+     1.0767534797449567,
+     1.0261945585420846,
+     1.0344888745988057
+    ],
+    "last_over_first_by_replica": [
+     0.9836398563468757,
+     1.026037610671639,
+     0.9778622553179719,
+     0.98576536268897
+    ]
+   }
+  },
+  "replica_first_relative_divergence_gt_1e-3_vs_replica0": [
+   99,
+   105,
+   105
+  ],
+  "update105": {
+   "issue_id": "iss_d8ff9d3ce61a2f46",
+   "time_utc": "2020-01-26T06:00:00.000000000",
+   "loss_by_replica": [
+    0.05435800900303321,
+    0.055308364963730615,
+    0.05466098760830027,
+    0.054694878574274
+   ],
+   "previous_visit_loss_by_replica": [
+    0.034329042294629686,
+    0.034321982406652934,
+    0.03432352441364933,
+    0.03432274036625259
+   ],
+   "grad_norm_by_replica": [
+    0.13619576394557953,
+    0.13825131952762604,
+    0.13677473366260529,
+    0.13669472932815552
+   ]
+  }
+ },
+ "findings": [
+  {
+   "id": "F1_ALL_FOUR_E8_REPLICAS_DESTABILIZED",
+   "status": "OBSERVED",
+   "text": "All 4 pt-e8y7ib01 replicas blew up, not just the rejected replica1. Max sliding 8-update mean over losses[0]: see replicas.*.max_sliding8_over_losses0 (all > 25x). Correction to the original brief: replicas 2/3 peaked at cycle-aligned 8-window means 0.78/0.71 (sliding 0.84/0.88), not 0.12-0.16. The 3 'eligible' replicas end 1-3% below first visit but above their own per-issue minima (see e8.per_issue)."
+  },
+  {
+   "id": "F2_COMMON_TRIGGER_IS_WITHIN_JOB_NOT_A_DATA_DEFECT",
+   "status": "OBSERVED",
+   "text": "Within pt-e8y7ib01 (TF32 off) every replica's first large event is update 105 on iss_d8ff9d3ce61a2f46 (2020-01-26T06:00, round-robin slot 1, the highest first-visit loss issue): loss ~0.054-0.055 vs 0.0343 at its previous visit, grad norm ~0.136. This is shared because the replicas agree to 4 decimals until ~update 99-105. It is NOT a single causal issue: across the 12 historical formal replicas the first >1.25 per-visit event falls on 5 different issues at updates 100-273, and the first >1.05 drift is most often slot 0 (iss_292517fb189ee1bd) at updates 80-112. pt-3x63g0c6 / pt-cdj1s2le ran with TF32 enabled (their r2_fs_bank_train.py snapshot has no allow_tf32=False), and their replicas diverge past 1e-3 relative by updates 54-72 vs 99-105 for pt-e8y7ib01."
+  },
+  {
+   "id": "F3_NONDETERMINISM_AMPLIFIED_NOT_CAUSAL",
+   "status": "OBSERVED",
+   "text": "Update-0 loss is bitwise identical across replicas; losses differ from update 1 at ~1e-8 relative (nondeterministic backward). The destabilization (per-issue minima at updates 45-76, then rising loss and ~10x grad-norm growth from updates 64-80) is shared by all replicas before they diverge; GPU nondeterminism only decides how each replica passes through and recovers from the blow-up."
+  },
+  {
+   "id": "F4_ONSET_TIMING_ACROSS_12_FORMAL_REPLICAS",
+   "status": "OBSERVED",
+   "text": "By the E_k > 1.02*min(E_0..E_{k-1}) rule every one of the 12 historical formal replicas (lr=0.01) has onset at epoch 10-11 (updates 80-88); the first per-visit >1.25 event is at updates 100-273 in 11/12 (pt-3x63g0c6 replica0 never exceeded 1.083). One replica's first >1.25 event (pt-cdj1s2le replica2, update 273) lies beyond 256, but its epoch-mean onset (epoch 10) is inside 256. The 32-update gradient checks all still improve at epoch 3. See ledger retrospective fields."
+  },
+  {
+   "id": "F5_ADAM_DISPLACEMENT_LOWER_LR_MAY_DELAY_NOT_FIX",
+   "status": "HYPOTHESIS",
+   "text": "Final adapters are large (|dW|_F 17-59 per block from a zero start; |A| from 1.28 to 5-10 per block; see replicas.*.fs_adapter_norms). Adam moves each parameter by ~lr per update regardless of gradient reliability (step norm up to lr*sqrt(49152) ~= 2.2 at lr=0.01). If the instability is reached by accumulated displacement, a lower lr DELAYS it roughly in proportion to 1/lr rather than removing it. Therefore a stability screen certifies an lr only for the screened horizon H; the formal fit must use exactly that H (no extrapolation to 500). Untested."
+  },
+  {
+   "id": "F6_ENVIRONMENT_AND_ADMISSION",
+   "status": "OBSERVED_CIRCUMSTANTIAL",
+   "text": "None of the historical Fs jobs put the S0-certified overlay artifacts/ed-sprint8h-20260922T035313Z-rerun3/cuda_site (torch 2.3.1, xformers 0.0.27) on PYTHONPATH; the image torch is 2.3.0a0+6ddf5cf85e.nv24.4 and the submitting CCI host with the same torch build has no xformers module, so _build_stormer_model most probably fell back to SDPA. official_backend was never recorded, so this is not proven. All used the uncertified admission_record.json (8 rows, content_certificate=null per row, lead_hours=6, history_steps=1, split_id='test')."
+  }
+ ],
+ "all_marked": "INELIGIBLE_AS_FS (see ledger/fs_attempts_ledger.json)"
+}

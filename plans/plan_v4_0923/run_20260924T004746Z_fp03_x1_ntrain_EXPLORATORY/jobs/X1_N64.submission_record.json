@@ -1,0 +1,16 @@
+{
+ "status": "EXPLORATORY_X1 - not FS-QUAL-v1, not pre-registered, cannot select/freeze/certify an Fs",
+ "job": "X1_N64",
+ "job_id": "pt-t3bfl3e9",
+ "run_dir": "artifacts/round2_cci/ed-r4fs03x1n64-0924010930-404a65",
+ "label": "r4fs03x1n64",
+ "timeout_seconds": 5400,
+ "argv_file": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/jobs/X1_N64.argv.json",
+ "argv_file_sha256": "dd355c5cae25443418ae5440cbffaf69892801788aedbf8864bd8e23e87f80d6",
+ "invocation_sha256": "5b1420c2409f180da5424be148b049d93a4871917f489510e21bd1a488ba211c",
+ "source_manifest_sha256": "e0b120f215f833077b5092dffba01f315921cf8e0d0129bf67269c07115ba9dd",
+ "x1_config_sha256": "5b8244f45407238b622d5d3d624494767032580d6dff0d7acc627700447d782b",
+ "override_record": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n64_override_record.json",
+ "authorization": "coordinator approved N=64 (stop_unstable artifact overridden); last job of the X1 phase",
+ "recorded_utc": "2026-09-24T01:09:42.394943+00:00"
+}

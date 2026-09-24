@@ -177,6 +177,16 @@ class NormalizationContract:
     _reverse_diff_std: Optional[Dict[int, torch.Tensor]] = field(
         default=None, repr=False, compare=False
     )
+    # Keep the original input constants as loaded from NPZ.  The official
+    # torchvision transform constructs its reverse transform before the input
+    # tensor is cast to the execution dtype; public inp_mean/inp_std remain
+    # float32 for the historical API and identity contract.
+    _reverse_inp_mean: Optional[torch.Tensor] = field(
+        default=None, repr=False, compare=False
+    )
+    _reverse_inp_std: Optional[torch.Tensor] = field(
+        default=None, repr=False, compare=False
+    )
 
     def __post_init__(self):
         """Reject a contract whose declared policy contradicts its contents.
@@ -298,6 +308,8 @@ class NormalizationContract:
                 for interval, raw in raw_diff_std_source.items()
             },
         )
+        object.__setattr__(contract, "_reverse_inp_mean", torch.from_numpy(inp_mean).clone())
+        object.__setattr__(contract, "_reverse_inp_std", torch.from_numpy(inp_std).clone())
         return contract
 
     def normalize(self, x_raw: torch.Tensor) -> torch.Tensor:
@@ -350,13 +362,21 @@ class NormalizationContract:
         Returns:
             Raw input of same shape
         """
-        mean = self.inp_mean.to(x_norm.device, x_norm.dtype).view(1, -1, 1, 1)
-        std = self.inp_std.to(x_norm.device, x_norm.dtype).view(1, -1, 1, 1)
-        # Use the original CPU float32 constants for inverse construction;
-        # see _reverse_parameters for why this is intentionally not computed
-        # from the device-cast tensors above.
+        reverse_inp_mean = (
+            self._reverse_inp_mean
+            if self._reverse_inp_mean is not None
+            else self.inp_mean
+        )
+        reverse_inp_std = (
+            self._reverse_inp_std
+            if self._reverse_inp_std is not None
+            else self.inp_std
+        )
+        # Use the original CPU constants for inverse construction; see
+        # _reverse_parameters for why this is intentionally not computed from
+        # the device-cast public tensors above.
         mean_inverse, std_inverse = self._reverse_parameters(
-            self.inp_mean.view(1, -1, 1, 1), self.inp_std.view(1, -1, 1, 1),
+            reverse_inp_mean.view(1, -1, 1, 1), reverse_inp_std.view(1, -1, 1, 1),
             x_norm.device, x_norm.dtype,
         )
         return (x_norm - mean_inverse) / std_inverse

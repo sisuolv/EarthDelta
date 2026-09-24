@@ -61,11 +61,15 @@ only -- which is all section 6.2 asks for while B03 stays deferred.
 """
 from __future__ import annotations
 
+import copy
+import dataclasses
 import datetime
+import hashlib
 import math
 import time
 from dataclasses import dataclass, field
 from datetime import datetime as _datetime, timezone
+from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 import torch
@@ -94,7 +98,10 @@ from .static_adapter import (
     TrainingSample,
     assert_bank_fit_samples,
     objective_loss_for_sample,
+    panel_ratio_summary,
     per_sample_loss_direction,
+    state_dict_digest,
+    training_stability,
 )
 
 __all__ = [
@@ -132,6 +139,27 @@ __all__ = [
     "decide_bank_capacity",
     "assert_activation_checkpointing_disabled",
     "check_horizon_feasibility",
+    # FP-04: certified-Fs bank artifacts and the pre-registered rules
+    "bank_digest",
+    "expert_digest",
+    "other_experts_digest",
+    "check_bank_device",
+    "bank_panel_losses",
+    "singleton_probe_states",
+    "compare_probe_states",
+    "save_expert",
+    "load_expert",
+    "install_expert",
+    "save_bank",
+    "load_bank",
+    "assemble_bank",
+    "source_bank_for_expert",
+    "BANK_QUAL_RULE_ID",
+    "BANK_SELECT_RULE_ID",
+    "BANK_QUAL_VERDICTS",
+    "evaluate_bank_expert_qualification",
+    "decide_bank_formal",
+    "evaluate_bank_assembly",
 ]
 
 
@@ -726,6 +754,7 @@ def build_dynamic_bank(
     rank_per_expert: int = DESIGN_RANK_PER_EXPERT,
     scale: float = 1.0,
     seed: Optional[int] = None,
+    device: Optional[torch.device | str] = None,
 ) -> Dict[int, ExpertLoRA]:
     """One K-expert `ExpertLoRA` per targeted block, at the standard LoRA init.
 
@@ -733,6 +762,12 @@ def build_dynamic_bank(
     no-op until it is trained. Section 6.2 calls that out explicitly -- "零 B
     初始状态是正常初始化，未训练零库不是科学失败" -- so nothing here treats a
     zero bank as an error.
+
+    The factors are always DRAWN on CPU from a CPU generator, so the values
+    (and `bank_digest`) do not depend on the device. ``device`` (FP-04,
+    additive; default None keeps the historical CPU-resident result) then
+    moves the finished bank and asserts it arrived there, so a caller that
+    rolls the bank out against a CUDA backbone cannot forget the move.
     """
     blocks = tuple(int(b) for b in target_blocks)
     if not blocks:
@@ -758,6 +793,10 @@ def build_dynamic_bank(
                         torch.randn(down.weight.shape, generator=generator) * 0.02
                     )
         bank[block] = lora
+    if device is not None:
+        for lora in bank.values():
+            lora.to(device)
+        check_bank_device(bank, device, context="build_dynamic_bank")
     return bank
 
 
@@ -1012,6 +1051,26 @@ class ExpertTrainingRecord:
     wallclock_seconds: float = 0.0
     started_at: str = ""
     finished_at: str = ""
+    #: FP-04 observation fields. Pure read-outs taken around the unchanged
+    #: update (Adam + clip at `grad_clip`); nothing here feeds back into it.
+    #: `grad_norms_A` / `grad_norms_B` are the PRE-clip float64 L2 norms of
+    #: the trained expert's down (A) and up (B) factors' real `.grad`. B
+    #: starts at zero, so A's gradient is exactly zero at update 0.
+    grad_norms_A: List[float] = field(default_factory=list)
+    grad_norms_B: List[float] = field(default_factory=list)
+    #: Updates whose pre-clip total norm exceeded `grad_clip` (clip engaged).
+    clip_events: int = 0
+    clip_event_updates: List[int] = field(default_factory=list)
+    #: `expert_digest` of the trained expert before the first / after the
+    #: last update, and `other_experts_digest` of every OTHER expert before /
+    #: after -- the isolation evidence that this process moved only its own.
+    initial_expert_digest: Optional[str] = None
+    final_expert_digest: Optional[str] = None
+    other_experts_digest_before: Optional[str] = None
+    other_experts_digest_after: Optional[str] = None
+    other_experts_unchanged: Optional[bool] = None
+    other_experts_grad_free: Optional[bool] = None
+    optimizer: Dict[str, Any] = field(default_factory=dict)
 
     @property
     def loss_decreased(self) -> bool:
@@ -1059,7 +1118,31 @@ class ExpertTrainingRecord:
             "wallclock_seconds": float(self.wallclock_seconds),
             "started_at": self.started_at,
             "finished_at": self.finished_at,
+            "grad_norms_A": [float(v) for v in self.grad_norms_A],
+            "grad_norms_B": [float(v) for v in self.grad_norms_B],
+            "clip_events": int(self.clip_events),
+            "clip_event_updates": [int(v) for v in self.clip_event_updates],
+            "initial_expert_digest": self.initial_expert_digest,
+            "final_expert_digest": self.final_expert_digest,
+            "other_experts_digest_before": self.other_experts_digest_before,
+            "other_experts_digest_after": self.other_experts_digest_after,
+            "other_experts_unchanged": self.other_experts_unchanged,
+            "other_experts_grad_free": self.other_experts_grad_free,
+            "optimizer": dict(self.optimizer),
         }
+
+
+def _grad_norm_f64(params: Sequence[Tensor]) -> float:
+    """float64 L2 norm of the current `.grad` of `params` (0.0 if none has one).
+
+    Read-only: `.double()` copies, so the gradient the optimizer consumes is
+    never touched.
+    """
+    with torch.no_grad():
+        squares = [p.grad.double().pow(2).sum() for p in params if p.grad is not None]
+        if not squares:
+            return 0.0
+        return float(torch.stack(squares).sum().sqrt())
 
 
 def train_expert(
@@ -1112,6 +1195,22 @@ def train_expert(
 
     params = _select_expert_parameters(bank, expert_index)
     optimizer = torch.optim.Adam(params, lr=float(config.learning_rate))
+    # Observation-only handles on the trained expert's A (down) and B (up)
+    # factors. `params` itself -- and therefore the optimizer and the clip --
+    # is exactly what it was before FP-04.
+    index = int(expert_index)
+    params_a = [bank[b]._get_down(index).weight for b in sorted(bank)]
+    params_b = [bank[b]._get_up(index).weight for b in sorted(bank)]
+    other_params = [
+        p for b in sorted(bank) for k in range(bank[b].num_experts) if k != index
+        for p in (bank[b]._get_down(k).weight, bank[b]._get_up(k).weight)
+    ]
+    # A stale `.grad` left on another expert by an EARLIER expert trained in
+    # this same process (synthetic `--stage all`) is not a weight and is never
+    # read; clear it so `other_experts_grad_free` measures only THIS run. The
+    # other experts are frozen above, so a grad appearing on them now is a leak.
+    for p in other_params:
+        p.grad = None
 
     record = ExpertTrainingRecord(
         expert_index=int(expert_index),
@@ -1127,6 +1226,19 @@ def train_expert(
         started_at=_utc_now(),
     )
     record.zero_initialized_untrained = bank_is_zero_initialized(bank, expert_index)
+    record.initial_expert_digest = expert_digest(bank, index)
+    record.other_experts_digest_before = other_experts_digest(bank, index)
+    group = optimizer.param_groups[0]
+    record.optimizer = {
+        "name": type(optimizer).__name__,
+        "lr": float(group["lr"]),
+        "betas": [float(b) for b in group["betas"]],
+        "eps": float(group["eps"]),
+        "weight_decay": float(group["weight_decay"]),
+        "amsgrad": bool(group["amsgrad"]),
+        "grad_clip_max_norm": config.grad_clip,
+        "schedule": "constant",
+    }
 
     started = time.perf_counter()
     for update in range(int(config.max_updates)):
@@ -1151,6 +1263,9 @@ def train_expert(
             break
 
         loss.backward()
+        # Pre-clip per-factor norms: read-only on the real `.grad` tensors.
+        grad_a = _grad_norm_f64(params_a)
+        grad_b = _grad_norm_f64(params_b)
         grad_norm = float(
             torch.nn.utils.clip_grad_norm_(
                 params,
@@ -1165,6 +1280,11 @@ def train_expert(
         optimizer.step()
         record.losses.append(loss_value)
         record.grad_norms.append(grad_norm)
+        record.grad_norms_A.append(grad_a)
+        record.grad_norms_B.append(grad_b)
+        if config.grad_clip is not None and grad_norm > float(config.grad_clip):
+            record.clip_events += 1
+            record.clip_event_updates.append(int(update))
         record.n_updates += 1
         record.training_issue_ids.append(sample.issue_id)
         record.training_times_utc.append(sample.time_utc)
@@ -1174,6 +1294,12 @@ def train_expert(
 
     record.wallclock_seconds = time.perf_counter() - started
     record.finished_at = _utc_now()
+    record.final_expert_digest = expert_digest(bank, index)
+    record.other_experts_digest_after = other_experts_digest(bank, index)
+    record.other_experts_unchanged = (
+        record.other_experts_digest_before == record.other_experts_digest_after
+    )
+    record.other_experts_grad_free = all(p.grad is None for p in other_params)
     if record.losses:
         record.initial_loss = float(record.losses[0])
         record.final_loss = float(record.losses[-1])
@@ -1989,3 +2115,871 @@ def check_horizon_feasibility(
             created_at=_utc_now(),
         )
     return report
+
+
+# =============================================================================
+# 7. FP-04: bank artifacts on the certified Fs (digests, files, panels, probes)
+# =============================================================================
+#
+# Everything below is additive. Training itself is still `train_expert`
+# (unchanged update); these helpers only identify, save, reload, compare and
+# qualify what it produced.
+
+BANK_SCHEMA = "ed-bank/1"
+EXPERT_FILE_SCHEMA = "ed-bank-expert-file/1"
+BANK_FILE_SCHEMA = "ed-bank-file/1"
+PROBE_FILE_SCHEMA = "ed-bank-probe/1"
+BANK_PANELS_SCHEMA = "ed-bank-panels/1"
+
+
+def _file_sha256(path: Path | str) -> str:
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1 << 22), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _hash_tensor(digest: Any, name: str, tensor: Tensor) -> None:
+    values = tensor.detach().cpu().contiguous()
+    digest.update(f"key={name}\ndtype={values.dtype}\nshape={tuple(values.shape)}\n".encode())
+    digest.update(values.numpy().tobytes())
+
+
+def _bank_blocks(bank: Mapping[int, ExpertLoRA],
+                 target_blocks: Optional[Sequence[int]] = None) -> Tuple[int, ...]:
+    blocks = tuple(sorted(int(b) for b in (target_blocks if target_blocks is not None
+                                            else bank.keys())))
+    if not blocks:
+        raise BankTrainingViolation("BANK_NO_TARGET_BLOCKS", "the bank has no blocks.", {})
+    return blocks
+
+
+def _uniform_geometry(bank: Mapping[int, ExpertLoRA], blocks: Sequence[int]) -> Dict[str, Any]:
+    """K / rank / scale / widths shared by every block, or a refusal."""
+    geometry = {
+        (int(bank[b].num_experts), int(bank[b].rank_per_expert), float(bank[b].scale),
+         int(bank[b].in_features), int(bank[b].out_features),
+         bool(bank[b].shared_down), bool(bank[b].shared_up))
+        for b in blocks
+    }
+    if len(geometry) != 1:
+        raise BankTrainingViolation(
+            "BANK_GEOMETRY_INCONSISTENT",
+            f"bank blocks disagree on (K, rank, scale, in, out, shared): {sorted(geometry)}.",
+            {"geometry": [list(g) for g in sorted(geometry)]})
+    k, rank, scale, fan_in, fan_out, shared_down, shared_up = geometry.pop()
+    if shared_down or shared_up:
+        raise BankTrainingViolation(
+            "BANK_SHARED_FACTORS_UNSUPPORTED",
+            "per-expert digests need independent A/B factors.",
+            {"shared_down": shared_down, "shared_up": shared_up})
+    return {"num_experts": k, "rank_per_expert": rank, "scale": scale,
+            "in_features": fan_in, "out_features": fan_out}
+
+
+def _expert_digest_from_factors(
+    factors: Mapping[int, Tuple[Tensor, Tensor]], *, rank: int, scale: float
+) -> str:
+    """SHA-256 over one expert's (down, up) factors in every block.
+
+    The expert INDEX is deliberately not part of the digest: two experts with
+    identical factors must collide, which is what the distinct-digest rule of
+    BANK-SELECT-v1 relies on.
+    """
+    blocks = sorted(int(b) for b in factors)
+    digest = hashlib.sha256()
+    digest.update(f"schema={BANK_SCHEMA}\nkind=expert\nrank={int(rank)}\n"
+                  f"scale={float(scale)!r}\nblocks={blocks}\n".encode())
+    for block in blocks:
+        down, up = factors[block]
+        _hash_tensor(digest, f"{block}.down", down)
+        _hash_tensor(digest, f"{block}.up", up)
+    return digest.hexdigest()
+
+
+def _expert_factors(bank: Mapping[int, ExpertLoRA], expert_index: int,
+                    blocks: Sequence[int]) -> Dict[int, Tuple[Tensor, Tensor]]:
+    k = int(expert_index)
+    num_experts = int(bank[blocks[0]].num_experts)
+    if not 0 <= k < num_experts:
+        raise BankTrainingViolation(
+            "BANK_EXPERT_INDEX_OUT_OF_RANGE",
+            f"expert {k} is outside [0, {num_experts}).", {"expert_index": k})
+    return {int(b): (bank[b]._get_down(k).weight, bank[b]._get_up(k).weight) for b in blocks}
+
+
+def expert_digest(bank: Mapping[int, ExpertLoRA], expert_index: int, *,
+                  target_blocks: Optional[Sequence[int]] = None) -> str:
+    """Identity of ONE expert's factors (A and B, every block)."""
+    blocks = _bank_blocks(bank, target_blocks)
+    geometry = _uniform_geometry(bank, blocks)
+    return _expert_digest_from_factors(
+        _expert_factors(bank, expert_index, blocks),
+        rank=geometry["rank_per_expert"], scale=geometry["scale"])
+
+
+def other_experts_digest(bank: Mapping[int, ExpertLoRA], expert_index: int, *,
+                         target_blocks: Optional[Sequence[int]] = None) -> str:
+    """Identity of every expert EXCEPT `expert_index` (the isolation evidence)."""
+    blocks = _bank_blocks(bank, target_blocks)
+    geometry = _uniform_geometry(bank, blocks)
+    digest = hashlib.sha256()
+    digest.update(f"schema={BANK_SCHEMA}\nkind=other_experts\nexcluded={int(expert_index)}\n".encode())
+    for k in range(int(geometry["num_experts"])):
+        if k != int(expert_index):
+            digest.update(f"expert={k}:{expert_digest(bank, k, target_blocks=blocks)}\n".encode())
+    return digest.hexdigest()
+
+
+def bank_digest(bank: Mapping[int, ExpertLoRA], *,
+                target_blocks: Optional[Sequence[int]] = None) -> str:
+    """Identity of the whole bank: geometry plus every block's full state dict.
+
+    Recomputable on CPU from `build_dynamic_bank(seed=...)` alone, which is how
+    the FP-04 protocol pins the initial bank before any worker runs.
+    """
+    blocks = _bank_blocks(bank, target_blocks)
+    geometry = _uniform_geometry(bank, blocks)
+    digest = hashlib.sha256()
+    digest.update(f"schema={BANK_SCHEMA}\nkind=dynamic_bank\nblocks={list(blocks)}\n".encode())
+    digest.update(("geometry=" + ",".join(f"{k}={geometry[k]!r}" for k in sorted(geometry))
+                   + "\n").encode())
+    for block in blocks:
+        digest.update(f"block={block}\n".encode())
+        digest.update(state_dict_digest(bank[block]).encode())
+    return digest.hexdigest()
+
+
+def _same_device(actual: torch.device, expected: torch.device) -> bool:
+    if actual.type != expected.type:
+        return False
+    return expected.index is None or actual.index == expected.index
+
+
+def check_bank_device(bank: Mapping[int, ExpertLoRA], device: torch.device | str, *,
+                      context: str = "") -> Dict[str, Any]:
+    """Every factor of the bank must live on ``device`` before a rollout.
+
+    `controlled_rollout` would otherwise fail deep inside a hook with a generic
+    "Expected all tensors to be on the same device" -- or, worse, a caller
+    that compares a CPU-resident reloaded bank against a CUDA backbone could
+    silently compare the wrong objects. This makes the precondition explicit.
+    """
+    expected = torch.device(device)
+    offending: List[Dict[str, Any]] = []
+    for block, lora in bank.items():
+        for name, tensor in list(lora.named_parameters()) + list(lora.named_buffers()):
+            if not _same_device(tensor.device, expected):
+                offending.append({"block": int(block), "tensor": name, "device": str(tensor.device)})
+    if offending:
+        raise BankTrainingViolation(
+            "BANK_DEVICE_MISMATCH",
+            f"{len(offending)} bank tensor(s) are not on {expected} "
+            f"({context or 'bank rollout'}); first: {offending[:3]}. Move the bank "
+            "(build_dynamic_bank(device=...) / load_bank(device=...)) before comparing "
+            "or rolling it out against a backbone on that device.",
+            {"expected": str(expected), "offending": offending[:16], "context": context})
+    return {"check": "bank_device", "device": str(expected), "context": context, "passed": True}
+
+
+def _panel_leads(lead_steps: Sequence[int]) -> List[int]:
+    steps = sorted({int(s) for s in lead_steps})
+    if not steps or steps[0] <= 0:
+        raise BankTrainingViolation(
+            "BANK_PANEL_LEAD_STEPS_INVALID",
+            f"panel lead steps must be positive rollout steps, got {list(lead_steps)}.",
+            {"lead_steps": list(lead_steps)})
+    return steps
+
+
+def bank_panel_losses(
+    fs_bridge: WeatherStepBridge,
+    bank: Mapping[int, ExpertLoRA],
+    plan: EditPlan,
+    samples: Sequence[TrainingSample],
+    spec: ObjectiveSpec,
+    *,
+    lead_steps: Sequence[int] = (1, 4, 12),
+    target_blocks: Sequence[int] = DEFAULT_TARGET_BLOCKS,
+    variables: Optional[Sequence[str]] = None,
+    interval_hours: int = DESIGN_INTERVAL_HOURS,
+) -> Dict[str, Dict[str, float]]:
+    """No-grad per-issue objective at each lead under ``plan``, ONE rollout per issue.
+
+    The same shape and reduction as `static_adapter.fs_panel_losses`
+    (``{issue_id: {"6": L, "24": L, "72": L}}``, float64 objective restricted to
+    one lead), but the rollout is `controlled_rollout(plan, bank)` on the
+    frozen Fs bridge: a singleton plan applies its expert at a0 for the hold
+    window and continues as Fs afterwards. With the expert's B still at its
+    zero init every hook adds an exact zero, so the panel must equal the pure
+    Fs panel bit for bit.
+    """
+    steps = _panel_leads(lead_steps)
+    names = list(variables) if variables is not None else list(fs_bridge.variables)
+    device = next(fs_bridge.model.parameters()).device
+    check_bank_device(bank, device, context="bank_panel_losses")
+    per_lead = {s: dataclasses.replace(spec, lead_steps=(s,)) for s in steps}
+    blocks = tuple(int(b) for b in target_blocks)
+    panel: Dict[str, Dict[str, float]] = {}
+    with torch.no_grad():
+        for sample in samples:
+            if sample.issue_id in panel:
+                raise BankTrainingViolation(
+                    "BANK_PANEL_DUPLICATE_ISSUE",
+                    f"issue {sample.issue_id!r} appears twice in one panel.",
+                    {"issue_id": sample.issue_id})
+            on_device = sample.to(device)
+            trajectory = controlled_rollout(
+                fs_bridge, on_device.x_norm, names, interval=int(interval_hours),
+                steps=steps[-1], plan=plan, expert_loras=dict(bank), target_blocks=blocks,
+                return_trajectory=True,
+            )
+            panel[sample.issue_id] = {
+                str(s * int(interval_hours)): float(
+                    objective_loss_for_sample(fs_bridge, trajectory, on_device, per_lead[s]))
+                for s in steps
+            }
+    return panel
+
+
+def singleton_probe_states(
+    fs_bridge: WeatherStepBridge,
+    bank: Mapping[int, ExpertLoRA],
+    plan: EditPlan,
+    x_norm: Tensor,
+    variables: Sequence[str],
+    *,
+    probe_steps: Sequence[int] = (1, 4, 12),
+    target_blocks: Sequence[int] = DEFAULT_TARGET_BLOCKS,
+    interval_hours: int = DESIGN_INTERVAL_HOURS,
+) -> Dict[int, Tensor]:
+    """The rollout STATES of one plan at the probe steps, as CPU tensors.
+
+    Saved by the training process and recomputed by the assembly verifier:
+    the two must agree exactly (FP-04 A1/A2).
+    """
+    steps = _panel_leads(probe_steps)
+    device = next(fs_bridge.model.parameters()).device
+    check_bank_device(bank, device, context="singleton_probe_states")
+    with torch.no_grad():
+        trajectory = controlled_rollout(
+            fs_bridge, x_norm.to(device), list(variables), interval=int(interval_hours),
+            steps=steps[-1], plan=plan, expert_loras=dict(bank),
+            target_blocks=tuple(int(b) for b in target_blocks), return_trajectory=True,
+        )
+    return {s: trajectory[:, s].detach().cpu().clone() for s in steps}
+
+
+def compare_probe_states(reference: Mapping[Any, Tensor],
+                         candidate: Mapping[Any, Tensor]) -> Dict[str, Any]:
+    """Exact comparison of two probe-state maps (no tolerance).
+
+    ``exact`` requires the same steps, shapes and dtypes, ``torch.equal`` at
+    every step and a max |difference| of exactly 0.0 (a NaN anywhere fails).
+    """
+    ref = {int(k): v for k, v in reference.items()}
+    cand = {int(k): v for k, v in candidate.items()}
+    steps = sorted(ref)
+    diffs: Dict[str, Optional[float]] = {}
+    equal: Dict[str, bool] = {}
+    same_steps = steps == sorted(cand)
+    for step in steps:
+        a = ref[step].detach().cpu()
+        b = cand.get(step)
+        if b is None or b.shape != a.shape or b.dtype != a.dtype:
+            diffs[str(step)] = None
+            equal[str(step)] = False
+            continue
+        b = b.detach().cpu()
+        diffs[str(step)] = float((a.double() - b.double()).abs().max())
+        equal[str(step)] = bool(torch.equal(a, b))
+    exact = bool(same_steps and steps and all(equal.values())
+                 and all(d is not None and d == 0.0 for d in diffs.values()))
+    return {"steps": steps, "same_steps": same_steps, "max_abs_diff_by_step": diffs,
+            "torch_equal_by_step": equal, "exact": exact}
+
+
+def _json_primitives(metadata: Optional[Mapping[str, Any]]) -> Dict[str, Any]:
+    """Metadata stored inside a ``weights_only`` file must be plain JSON types."""
+    import json
+
+    return json.loads(json.dumps(dict(metadata or {}), default=str))
+
+
+def save_expert(bank: Mapping[int, ExpertLoRA], expert_index: int, path: Path | str, *,
+                metadata: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
+    """Write ONE expert's factors (every block) to ``path``; return its identity.
+
+    CPU copies only, so the bytes do not depend on the training device; the
+    payload loads with ``torch.load(weights_only=True)``.
+    """
+    blocks = _bank_blocks(bank)
+    geometry = _uniform_geometry(bank, blocks)
+    k = int(expert_index)
+    factors = _expert_factors(bank, k, blocks)
+    payload = {
+        "schema": EXPERT_FILE_SCHEMA,
+        "expert_index": k,
+        **geometry,
+        "blocks": list(blocks),
+        "factors": {str(b): {"down": down.detach().cpu().clone(), "up": up.detach().cpu().clone()}
+                    for b, (down, up) in factors.items()},
+        "expert_digest": expert_digest(bank, k),
+        "metadata": _json_primitives(metadata),
+    }
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    torch.save(payload, out)
+    return {"path": str(out), "sha256": _file_sha256(out), "expert_index": k,
+            "expert_digest": payload["expert_digest"]}
+
+
+def load_expert(path: Path | str, *, expected_sha256: Optional[str] = None,
+                expected_expert_index: Optional[int] = None) -> Dict[str, Any]:
+    """Read an expert file: byte identity first, then schema and digest.
+
+    Refuses a file whose SHA-256 differs from ``expected_sha256``, whose
+    expert index is not the expected one, or whose factors do not hash to the
+    digest recorded inside it.
+    """
+    file_path = Path(path)
+    sha = _file_sha256(file_path)
+    if expected_sha256 is not None and sha != str(expected_sha256):
+        raise BankTrainingViolation(
+            "BANK_EXPERT_FILE_SHA256_MISMATCH",
+            f"{file_path} has sha256 {sha}, expected {expected_sha256}.",
+            {"path": str(file_path), "actual": sha, "expected": str(expected_sha256)})
+    payload = torch.load(file_path, map_location="cpu", weights_only=True)
+    if not isinstance(payload, dict) or payload.get("schema") != EXPERT_FILE_SCHEMA:
+        raise BankTrainingViolation(
+            "BANK_EXPERT_FILE_SCHEMA", f"{file_path} is not an {EXPERT_FILE_SCHEMA} file.",
+            {"path": str(file_path)})
+    index = int(payload["expert_index"])
+    if expected_expert_index is not None and index != int(expected_expert_index):
+        raise BankTrainingViolation(
+            "BANK_EXPERT_INDEX_MISMATCH",
+            f"{file_path} holds expert {index}, expected expert {expected_expert_index}.",
+            {"path": str(file_path), "stored": index, "expected": int(expected_expert_index)})
+    factors = {int(b): (f["down"], f["up"]) for b, f in payload["factors"].items()}
+    recomputed = _expert_digest_from_factors(
+        factors, rank=int(payload["rank_per_expert"]), scale=float(payload["scale"]))
+    if recomputed != payload.get("expert_digest"):
+        raise BankTrainingViolation(
+            "BANK_EXPERT_DIGEST_MISMATCH",
+            f"{file_path}: factors hash to {recomputed}, the file records "
+            f"{payload.get('expert_digest')}.",
+            {"path": str(file_path), "recomputed": recomputed,
+             "recorded": payload.get("expert_digest")})
+    return {"path": str(file_path), "sha256": sha, "expert_index": index,
+            "expert_digest": recomputed, "factors": factors, "payload": payload}
+
+
+def install_expert(bank: Mapping[int, ExpertLoRA], loaded: Mapping[str, Any], *,
+                   expert_index: Optional[int] = None) -> str:
+    """Copy a loaded expert's factors into slot ``expert_index`` of ``bank``.
+
+    Geometry (K, rank, scale, widths, blocks) must match exactly; the installed
+    expert must then hash to the loaded digest. Returns that digest.
+    """
+    payload = loaded["payload"]
+    k = int(loaded["expert_index"])
+    if expert_index is not None and int(expert_index) != k:
+        raise BankTrainingViolation(
+            "BANK_EXPERT_INDEX_MISMATCH",
+            f"expert file holds expert {k}; it cannot be installed as expert {expert_index}.",
+            {"stored": k, "requested": int(expert_index)})
+    blocks = _bank_blocks(bank)
+    geometry = _uniform_geometry(bank, blocks)
+    for key in ("num_experts", "rank_per_expert", "scale", "in_features", "out_features"):
+        if payload.get(key) != geometry[key]:
+            raise BankTrainingViolation(
+                "BANK_EXPERT_GEOMETRY_MISMATCH",
+                f"expert file {key}={payload.get(key)!r} but the bank has {geometry[key]!r}.",
+                {"key": key, "file": payload.get(key), "bank": geometry[key]})
+    factors = loaded["factors"]
+    if sorted(factors) != list(blocks):
+        raise BankTrainingViolation(
+            "BANK_EXPERT_BLOCKS_MISMATCH",
+            f"expert file covers blocks {sorted(factors)}, the bank {list(blocks)}.",
+            {"file": sorted(factors), "bank": list(blocks)})
+    with torch.no_grad():
+        for block in blocks:
+            down_w = bank[block]._get_down(k).weight
+            up_w = bank[block]._get_up(k).weight
+            down, up = factors[block]
+            if tuple(down.shape) != tuple(down_w.shape) or tuple(up.shape) != tuple(up_w.shape):
+                raise BankTrainingViolation(
+                    "BANK_EXPERT_SHAPE_MISMATCH",
+                    f"block {block}: file shapes {tuple(down.shape)}/{tuple(up.shape)} vs "
+                    f"bank {tuple(down_w.shape)}/{tuple(up_w.shape)}.", {"block": block})
+            down_w.copy_(down.to(device=down_w.device, dtype=down_w.dtype))
+            up_w.copy_(up.to(device=up_w.device, dtype=up_w.dtype))
+    installed = expert_digest(bank, k)
+    if installed != loaded["expert_digest"]:
+        raise BankTrainingViolation(
+            "BANK_EXPERT_INSTALL_MISMATCH",
+            f"installed expert {k} hashes to {installed}, not {loaded['expert_digest']}.",
+            {"installed": installed, "loaded": loaded["expert_digest"]})
+    return installed
+
+
+def save_bank(bank: Mapping[int, ExpertLoRA], path: Path | str, *,
+              metadata: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
+    """Write the whole bank (every block's state dict) with its digests."""
+    blocks = _bank_blocks(bank)
+    geometry = _uniform_geometry(bank, blocks)
+    payload = {
+        "schema": BANK_FILE_SCHEMA,
+        **geometry,
+        "blocks": list(blocks),
+        "state_dicts": {str(b): {name: t.detach().cpu().clone()
+                                 for name, t in bank[b].state_dict().items()} for b in blocks},
+        "bank_digest": bank_digest(bank),
+        "expert_digests": [expert_digest(bank, k) for k in range(geometry["num_experts"])],
+        "metadata": _json_primitives(metadata),
+    }
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    torch.save(payload, out)
+    return {"path": str(out), "sha256": _file_sha256(out), "bank_digest": payload["bank_digest"],
+            "expert_digests": list(payload["expert_digests"])}
+
+
+def load_bank(path: Path | str, *, expected_sha256: Optional[str] = None,
+              device: Optional[torch.device | str] = None
+              ) -> Tuple[Dict[int, ExpertLoRA], Dict[str, Any]]:
+    """Reload a bank file: bytes, schema, strict state dicts, recomputed digests."""
+    file_path = Path(path)
+    sha = _file_sha256(file_path)
+    if expected_sha256 is not None and sha != str(expected_sha256):
+        raise BankTrainingViolation(
+            "BANK_FILE_SHA256_MISMATCH",
+            f"{file_path} has sha256 {sha}, expected {expected_sha256}.",
+            {"path": str(file_path), "actual": sha, "expected": str(expected_sha256)})
+    payload = torch.load(file_path, map_location="cpu", weights_only=True)
+    if not isinstance(payload, dict) or payload.get("schema") != BANK_FILE_SCHEMA:
+        raise BankTrainingViolation(
+            "BANK_FILE_SCHEMA", f"{file_path} is not an {BANK_FILE_SCHEMA} file.",
+            {"path": str(file_path)})
+    bank: Dict[int, ExpertLoRA] = {}
+    for block in payload["blocks"]:
+        lora = ExpertLoRA(int(payload["in_features"]), int(payload["out_features"]),
+                          num_experts=int(payload["num_experts"]),
+                          rank_per_expert=int(payload["rank_per_expert"]),
+                          scale=float(payload["scale"]))
+        lora.load_state_dict(payload["state_dicts"][str(block)], strict=True)
+        lora.requires_grad_(False)
+        bank[int(block)] = lora
+    recomputed = bank_digest(bank)
+    experts = [expert_digest(bank, k) for k in range(int(payload["num_experts"]))]
+    if recomputed != payload.get("bank_digest") or experts != list(payload.get("expert_digests") or []):
+        raise BankTrainingViolation(
+            "BANK_FILE_DIGEST_MISMATCH",
+            f"{file_path}: reloaded bank/expert digests differ from the recorded ones.",
+            {"recomputed_bank": recomputed, "recorded_bank": payload.get("bank_digest"),
+             "recomputed_experts": experts, "recorded_experts": payload.get("expert_digests")})
+    if device is not None:
+        for lora in bank.values():
+            lora.to(device)
+        check_bank_device(bank, device, context="load_bank")
+    return bank, {"path": str(file_path), "sha256": sha, "bank_digest": recomputed,
+                  "expert_digests": experts, "metadata": payload.get("metadata") or {}}
+
+
+def assemble_bank(initial_bank: Mapping[int, ExpertLoRA],
+                  experts: Mapping[int, Mapping[str, Any]]) -> Dict[int, ExpertLoRA]:
+    """The K=4 bank: a copy of the pinned initial bank with EVERY expert replaced.
+
+    Exactly K loaded experts, one per index, pairwise distinct digests. A
+    bank with a missing expert is not "the K=4 bank minus one" -- it is
+    refused (BANK-SELECT-v1: no substitution, no partial assembly).
+    """
+    blocks = _bank_blocks(initial_bank)
+    geometry = _uniform_geometry(initial_bank, blocks)
+    num_experts = int(geometry["num_experts"])
+    indices = sorted(int(k) for k in experts)
+    if indices != list(range(num_experts)):
+        raise BankTrainingViolation(
+            "BANK_ASSEMBLY_INCOMPLETE",
+            f"assembly needs exactly experts {list(range(num_experts))}, got {indices}. "
+            "BANK-SELECT-v1 forbids assembling a bank from fewer experts or "
+            "substituting one.", {"indices": indices, "num_experts": num_experts})
+    digests = [str(experts[k]["expert_digest"]) for k in indices]
+    if len(set(digests)) != num_experts:
+        raise BankTrainingViolation(
+            "BANK_ASSEMBLY_DUPLICATE_EXPERT",
+            "two expert files carry the same factors; a bank of duplicated experts "
+            "is not K distinct experts.", {"expert_digests": digests})
+    bank = {int(b): copy.deepcopy(lora) for b, lora in initial_bank.items()}
+    for k in indices:
+        install_expert(bank, experts[k], expert_index=k)
+    for lora in bank.values():
+        lora.requires_grad_(False)
+    return bank
+
+
+def source_bank_for_expert(initial_bank: Mapping[int, ExpertLoRA],
+                           loaded: Mapping[str, Any]) -> Dict[int, ExpertLoRA]:
+    """What expert k's own training process held: the initial bank with ONLY k trained."""
+    bank = {int(b): copy.deepcopy(lora) for b, lora in initial_bank.items()}
+    install_expert(bank, loaded)
+    for lora in bank.values():
+        lora.requires_grad_(False)
+    return bank
+
+
+# =============================================================================
+# 8. FP-04 pre-registered rules: BANK-QUAL-v1, BANK-SELECT-v1, assembly A1-A5
+# =============================================================================
+#
+# PURE functions of recorded numbers plus a rule mapping taken from the frozen
+# protocol. They never read policy_dev/confirm data, never rank experts by a
+# quality number, and never return a partial bank: a failure of any expert
+# stops the whole batch (see `decide_bank_formal`).
+
+BANK_QUAL_RULE_ID = "BANK-QUAL-v1"
+BANK_SELECT_RULE_ID = "BANK-SELECT-v1"
+BANK_QUAL_VERDICTS: Tuple[str, ...] = ("PASS", "FAIL", "INVALID")
+
+
+def _panel_col(panel: Mapping[str, Mapping[str, float]], lead_hours: int) -> Dict[str, float]:
+    key = str(int(lead_hours))
+    return {str(i): float(row[key]) for i, row in panel.items() if key in row}
+
+
+def _all_finite(values: Sequence[Any]) -> bool:
+    try:
+        return all(math.isfinite(float(v)) for v in values)
+    except (TypeError, ValueError):
+        return False
+
+
+def evaluate_bank_expert_qualification(
+    record: Mapping[str, Any],
+    panels: Mapping[str, Mapping[str, Mapping[str, float]]],
+    diagnostics: Mapping[str, Any],
+    rule: Mapping[str, Any],
+    *,
+    validity: Optional[Mapping[str, bool]] = None,
+) -> Dict[str, Any]:
+    """BANK-QUAL-v1 for ONE formal expert. Verdict in `BANK_QUAL_VERDICTS`.
+
+    ``record`` is the expert's `ExpertTrainingRecord.to_dict()`; ``panels``
+    holds its own-group panels ``{"Fs", "L0", "L1"}`` (pure Fs, untrained
+    singleton, trained singleton; per issue, per lead hour); ``diagnostics``
+    carries the worker's ``nonzero_response``, ``reload`` and ``isolation``
+    facts; ``validity`` the E0 facts (each must be True). Criteria:
+
+      E0 validity    every E0 fact True; untrained panel == Fs bit for bit
+      E1 numerics    n_updates == horizon, every loss / grad norm (total, A, B)
+                     finite, traces consistent, eligible
+      E2 stability   `training_stability` pattern: clip events <= max, every
+                     training loss <= per_visit_ratio_max x its issue's Fs 24h,
+                     no epoch-mean onset (epoch = one pass over the group)
+      E3 direction   own-group 24h mean(L1) / mean(Fs) < threshold (hard)
+      E4 response    nonzero response at a0, B off zero, the expert moved, and
+                     the trained panel differs from the untrained one
+      E5 reload      saved file re-hashes, reloaded digest and probe states exact
+      E6 isolation   other experts unchanged and gradient-free, backbone digest
+                     unchanged, no leftover hooks
+
+    Verdict: INVALID if E0 fails or a threshold is not pre-registered; else
+    FAIL if any E1..E6 fails; else PASS. 6h / 72h own-group ratios and the
+    per-issue 24h detail are REPORT-ONLY: out-of-sample judgement is FP-05's.
+    """
+    rec = dict(record)
+    horizon = rule.get("horizon")
+    e2r = dict(rule.get("e2") or {})
+    e3r = dict(rule.get("e3") or {})
+    fs, l0, l1 = panels.get("Fs") or {}, panels.get("L0") or {}, panels.get("L1") or {}
+    n_group = int(rec.get("n_samples") or 0)
+    epoch_size = e2r.get("epoch_size")
+    if epoch_size == "group_size":
+        epoch_size = n_group
+    status: Dict[str, str] = {}
+
+    # -- E0 ------------------------------------------------------------------
+    facts = {str(k): v for k, v in (validity or {}).items()}
+    trained = [str(i) for i in rec.get("training_issue_ids") or []]
+    facts["untrained_L0_equals_Fs_bitwise"] = bool(fs) and dict(l0) == dict(fs)
+    facts["panels_cover_the_training_issues"] = bool(fs) and (
+        set(trained) <= set(fs) and set(fs) == set(l0) == set(l1))
+    failed = sorted(k for k, v in facts.items() if v is not True)
+    if validity is None:
+        failed = ["NO_VALIDITY_FACTS"] + failed
+    e0 = {"status": "PASS" if not failed else "FAIL", "failed": failed, "facts": facts}
+    status["E0"] = e0["status"]
+
+    thresholds = {
+        "horizon": horizon,
+        "e2.clip_events_max": e2r.get("clip_events_max"),
+        "e2.per_visit_ratio_max": e2r.get("per_visit_ratio_max"),
+        "e2.epoch_onset_factor": e2r.get("epoch_onset_factor"),
+        "e2.epoch_size": epoch_size,
+        "e3.own_group_mean_ratio_24h_lt": e3r.get("own_group_mean_ratio_24h_lt"),
+    }
+    not_preregistered = sorted(k for k, v in thresholds.items() if v is None)
+
+    # -- E1 / E2: the FS-QUAL Q1/Q2 stability pattern, per expert ------------
+    stability: Optional[Dict[str, Any]] = None
+    stability_error = None
+    if not not_preregistered and facts["panels_cover_the_training_issues"]:
+        try:
+            stability = training_stability(
+                rec, _panel_col(fs, 24), horizon=int(horizon),
+                clip_events_max=int(e2r["clip_events_max"]),
+                per_visit_ratio_max=float(e2r["per_visit_ratio_max"]),
+                epoch_onset_factor=float(e2r["epoch_onset_factor"]),
+                epoch_size=int(epoch_size))
+        except (ValueError, KeyError, TypeError) as exc:
+            stability_error = f"{type(exc).__name__}: {exc}"
+    grads_a = list(rec.get("grad_norms_A") or [])
+    grads_b = list(rec.get("grad_norms_B") or [])
+    n_updates = int(rec.get("n_updates") or 0)
+    e1 = {
+        "q1": stability["q1"] if stability else None,
+        "ab_grad_norms_finite": _all_finite(grads_a + grads_b),
+        "ab_trace_lengths_consistent": len(grads_a) == len(grads_b) == n_updates,
+        "eligible": rec.get("eligible") is True,
+        "error": stability_error,
+    }
+    e1["passed"] = bool(stability and stability["q1"]["passed"] and e1["ab_grad_norms_finite"]
+                        and e1["ab_trace_lengths_consistent"] and e1["eligible"])
+    status["E1"] = "PASS" if e1["passed"] else "FAIL"
+    e2 = dict(stability["q2"]) if stability else {"passed": False, "error": stability_error}
+    if stability:
+        e2["epoch_size"] = int(epoch_size)
+        e2["n_full_epochs"] = len(stability["q2"]["epoch_means"])
+    status["E2"] = "PASS" if e2.get("passed") else "FAIL"
+
+    # -- E3: own training group must improve (hard) ------------------------
+    own24 = None
+    if facts["panels_cover_the_training_issues"]:
+        own24 = panel_ratio_summary(fs, l1, 24)
+    threshold = e3r.get("own_group_mean_ratio_24h_lt")
+    e3 = {"own_group_24h": own24, "threshold_lt": threshold}
+    if threshold is None:
+        status["E3"] = "NOT_PREREGISTERED"
+    else:
+        ratio = own24["mean_ratio"] if own24 else None
+        ok = ratio is not None and math.isfinite(float(ratio)) and float(ratio) < float(threshold)
+        status["E3"] = "PASS" if ok else "FAIL"
+
+    # -- E4: nonzero response ----------------------------------------------
+    nz = dict(diagnostics.get("nonzero_response") or {})
+    e4 = {
+        "nonzero_response": nz.get("nonzero") is True,
+        "not_zero_initialized": nz.get("zero_initialized_untrained") is False,
+        "expert_moved": (rec.get("initial_expert_digest") is not None
+                         and rec.get("final_expert_digest") is not None
+                         and rec.get("initial_expert_digest") != rec.get("final_expert_digest")),
+        "trained_panel_differs_from_untrained": bool(l1) and dict(l1) != dict(l0),
+        "max_abs_response": nz.get("max_abs_response"),
+    }
+    status["E4"] = "PASS" if all(e4[k] for k in ("nonzero_response", "not_zero_initialized",
+                                               "expert_moved",
+                                               "trained_panel_differs_from_untrained")) else "FAIL"
+
+    # -- E5: reload --------------------------------------------------------
+    rl = dict(diagnostics.get("reload") or {})
+    probe_diffs = dict(rl.get("probe_max_abs_diff_by_step") or {})
+    e5 = {
+        "file_sha256_matches": rl.get("file_sha256_matches") is True,
+        "expert_digest_matches": rl.get("expert_digest_matches") is True,
+        "probe_exact": rl.get("probe_exact") is True,
+        "probe_max_abs_diff_all_zero": bool(probe_diffs) and all(
+            v is not None and float(v) == 0.0 for v in probe_diffs.values()),
+    }
+    status["E5"] = "PASS" if all(e5.values()) else "FAIL"
+
+    # -- E6: isolation -----------------------------------------------------
+    iso = dict(diagnostics.get("isolation") or {})
+    e6 = {
+        "other_experts_unchanged": rec.get("other_experts_unchanged") is True,
+        "other_experts_grad_free": rec.get("other_experts_grad_free") is True,
+        "backbone_digest_unchanged": iso.get("backbone_digest_unchanged") is True,
+        "no_leftover_hooks": iso.get("no_leftover_hooks") is True,
+    }
+    status["E6"] = "PASS" if all(e6.values()) else "FAIL"
+
+    substantive = [status[k] for k in ("E1", "E2", "E3", "E4", "E5", "E6")]
+    if status["E0"] != "PASS" or not_preregistered or "NOT_PREREGISTERED" in substantive:
+        verdict = "INVALID"
+    elif "FAIL" in substantive:
+        verdict = "FAIL"
+    else:
+        verdict = "PASS"
+    report_only: Dict[str, Any] = {
+        "per_visit_direction": per_sample_loss_direction(rec.get("losses") or [], trained),
+    }
+    if facts["panels_cover_the_training_issues"]:
+        report_only["own_group_6h"] = panel_ratio_summary(fs, l1, 6)
+        report_only["own_group_72h"] = panel_ratio_summary(fs, l1, 72)
+        report_only["own_group_24h_per_issue"] = own24["per_issue_ratio"] if own24 else None
+    return {
+        "rule": BANK_QUAL_RULE_ID,
+        "expert_index": rec.get("expert_index"),
+        "verdict": verdict,
+        "quality_pass": verdict == "PASS",
+        "status": status,
+        "not_preregistered": not_preregistered,
+        "e0": e0, "e1": e1, "e2": e2, "e3": e3, "e4": e4, "e5": e5, "e6": e6,
+        "report_only": report_only,
+    }
+
+
+def decide_bank_formal(experts: Sequence[Mapping[str, Any]],
+                       rule: Mapping[str, Any]) -> Dict[str, Any]:
+    """BANK-SELECT-v1: all K experts of ONE batch PASS, or the bank stops.
+
+    ``experts`` are ``{"expert_index", "qualification", "expert_digest",
+    "expert_file": {"path", "sha256"}, "probe_file": {...}, "batch_id"}``. There
+    is no substitution, no "keep the passing three", and no mixing of experts
+    from different batches (jobs / learning rates). A failing expert is never
+    EXCLUDED -- the whole batch is STOP_CURRENT_BANK -- so no gain-based
+    exclusion reason can ever be exercised here.
+
+    ``rule["fallback"]["requires_failed_criterion"]`` (e.g. ``"E2"``) sets
+    ``fallback_authorized`` on a STOP_CURRENT_BANK: True only if EVERY failed
+    expert failed that criterion (other criteria may fail alongside it). No
+    fallback is ever authorized after INVALID or when no rule is declared.
+    """
+    n_required = int(rule.get("num_experts", DESIGN_NUM_EXPERTS))
+    by_index: Dict[int, Mapping[str, Any]] = {}
+    duplicate = False
+    for entry in experts:
+        k = int(entry["expert_index"])
+        duplicate = duplicate or k in by_index
+        by_index[k] = entry
+    verdicts = {k: str((e.get("qualification") or {}).get("verdict")) for k, e in sorted(by_index.items())}
+    batches = sorted({str(e.get("batch_id")) for e in experts})
+    result: Dict[str, Any] = {
+        "rule": BANK_SELECT_RULE_ID,
+        "num_experts": n_required,
+        "expert_verdicts": {str(k): v for k, v in verdicts.items()},
+        "batches": batches,
+        "substitution": "FORBIDDEN",
+        "partial_bank": "FORBIDDEN",
+        "cross_batch_mixing": "FORBIDDEN",
+        "bank_selected_for_assembly": False,
+        "experts_for_assembly": None,
+        "fallback_authorized": False,
+    }
+    if duplicate or sorted(by_index) != list(range(n_required)):
+        result.update(verdict="INVALID", reason="EXPERT_SET_INCOMPLETE_OR_DUPLICATED")
+        return result
+    if len(batches) != 1 or batches[0] in ("None", ""):
+        result.update(verdict="INVALID", reason="CROSS_BATCH_MIXING_FORBIDDEN")
+        return result
+    values = list(verdicts.values())
+    if "INVALID" in values or any(v not in BANK_QUAL_VERDICTS for v in values):
+        result.update(verdict="INVALID", reason="AN_EXPERT_FAILED_E0_VALIDITY",
+                      invalid_experts=[k for k, v in verdicts.items() if v != "PASS" and v != "FAIL"])
+        return result
+    if all(v == "PASS" for v in values):
+        digests = [by_index[k].get("expert_digest") for k in range(n_required)]
+        files = [(by_index[k].get("expert_file") or {}).get("sha256") for k in range(n_required)]
+        if None in digests or None in files or len(set(digests)) != n_required \
+                or len(set(files)) != n_required:
+            result.update(verdict="INVALID", reason="EXPERT_DIGESTS_MISSING_OR_NOT_DISTINCT",
+                          expert_digests=digests)
+            return result
+        result.update(
+            verdict="BANK_QUAL_PASS_PENDING_ASSEMBLY",
+            bank_selected_for_assembly=True,
+            experts_for_assembly=[{
+                "expert_index": k,
+                "expert_digest": by_index[k]["expert_digest"],
+                "expert_file": dict(by_index[k]["expert_file"]),
+                "probe_file": dict(by_index[k].get("probe_file") or {}),
+            } for k in range(n_required)])
+        return result
+    failed = [k for k, v in verdicts.items() if v == "FAIL"]
+    failed_criteria = {
+        str(k): sorted(c for c, s in ((by_index[k].get("qualification") or {}).get("status") or {}).items()
+                       if s == "FAIL")
+        for k in failed}
+    fallback_rule = dict(rule.get("fallback") or {})
+    required = fallback_rule.get("requires_failed_criterion")
+    authorized = bool(
+        required is not None and failed
+        and all(required in failed_criteria[str(k)] for k in failed))
+    result.update(verdict="STOP_CURRENT_BANK",
+                  failed_experts=failed,
+                  failed_criteria_by_expert=failed_criteria,
+                  fallback_rule=fallback_rule or None,
+                  fallback_authorized=authorized,
+                  note=("BANK-SELECT-v1: one or more experts FAILED BANK-QUAL-v1, so the whole "
+                        "batch stops. The passing experts are NOT kept, NOT assembled as a "
+                        "smaller bank and NOT mixed with any other batch. The lr fallback is "
+                        "authorized only if EVERY failed expert failed "
+                        f"{required or '(no fallback declared)'}; a failure without it (e.g. "
+                        "E3 alone) is a final STOP_CURRENT_BANK."))
+    return result
+
+
+def _exact_zero(values: Any) -> bool:
+    items = list(values.values()) if isinstance(values, Mapping) else list(values or [])
+    return bool(items) and all(v is not None and float(v) == 0.0 for v in items)
+
+
+def _all_positive(values: Any) -> bool:
+    items = list(values.values()) if isinstance(values, Mapping) else list(values or [])
+    return bool(items) and all(v is not None and math.isfinite(float(v)) and float(v) > 0.0
+                               for v in items)
+
+
+def evaluate_bank_assembly(verify_record: Mapping[str, Any], *,
+                           num_experts: int = DESIGN_NUM_EXPERTS) -> Dict[str, Any]:
+    """A1-A5 recomputed from the RAW numbers of `bank_verify` (no tolerance).
+
+    A1 assembled singleton == same-process source bank (exact, every probe step)
+    A2 assembled singleton == the training process's saved probe (exact)
+    A3 whole-bank zero edit == Fs (exactly 0.0) and != F0 (discriminating)
+    A4 per expert: continuation after the hold == Fs exactly at every step,
+       != F0 at every step, with a nonzero edit at the hold
+    A5 reloaded bank file and digests == the assembly record's
+
+    Every "passed" flag in the record is ignored; only the numbers count.
+    Exactness is justified by `ExpertLoRA.forward_dense`: an inactive expert
+    contributes ``expert_out * 0.0``, an exact zero for finite outputs.
+    """
+    rec = dict(verify_record)
+    experts = [str(k) for k in range(int(num_experts))]
+    a1 = rec.get("A1_source_bank") or {}
+    a2 = rec.get("A2_training_probe") or {}
+    a3 = rec.get("A3_zero_edit") or {}
+    a4 = rec.get("A4_continuation") or {}
+    a5 = rec.get("A5_reload") or {}
+    status: Dict[str, bool] = {}
+    status["A1"] = sorted(a1) == experts and all(
+        _exact_zero(a1[k].get("max_abs_diff_by_step")) and all(
+            (a1[k].get("torch_equal_by_step") or {}).values()) for k in experts)
+    status["A2"] = sorted(a2) == experts and all(
+        _exact_zero(a2[k].get("max_abs_diff_by_step"))
+        and all((a2[k].get("torch_equal_by_step") or {}).values())
+        and a2[k].get("probe_file_sha256") is not None
+        and a2[k].get("probe_file_sha256") == a2[k].get("expected_probe_file_sha256")
+        for k in experts)
+    diff_fs = a3.get("max_abs_diff_vs_fs")
+    diff_f0 = a3.get("max_abs_diff_vs_f0")
+    status["A3"] = (diff_fs is not None and float(diff_fs) == 0.0 and diff_f0 is not None
+                    and math.isfinite(float(diff_f0)) and float(diff_f0) > 0.0)
+    status["A4"] = sorted(a4) == experts and all(
+        _exact_zero(a4[k].get("max_abs_diff_vs_fs_continuation_by_step"))
+        and _all_positive(a4[k].get("max_abs_diff_vs_f0_continuation_by_step"))
+        and a4[k].get("edit_effect_at_hold_max_abs") is not None
+        and float(a4[k]["edit_effect_at_hold_max_abs"]) > 0.0
+        for k in experts)
+    status["A5"] = bool(
+        a5.get("file_sha256") is not None
+        and a5.get("file_sha256") == a5.get("expected_file_sha256")
+        and a5.get("bank_digest") is not None
+        and a5.get("bank_digest") == a5.get("expected_bank_digest")
+        and list(a5.get("expert_digests") or []) == list(a5.get("expected_expert_digests") or [])
+        and len(a5.get("expert_digests") or []) == int(num_experts))
+    passed = all(status.values())
+    return {"check": "bank_assembly_equivalence", "status": status, "passed": passed,
+            "failed": sorted(k for k, v in status.items() if not v),
+            "tolerance": "none: every comparison is exact (max |diff| == 0.0)"}

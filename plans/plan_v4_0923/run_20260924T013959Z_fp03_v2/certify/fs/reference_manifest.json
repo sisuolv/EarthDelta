@@ -1,0 +1,21 @@
+{
+ "schema_version": "ed-fs-reference-manifest/1",
+ "protocol_sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe",
+ "fs_adapter_sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089",
+ "fs_merged_backbone_sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b",
+ "independent_reload": {
+  "merged_backbone_digest_matches": true,
+  "base_backbone_digest_matches": true,
+  "static_adapter_digest_matches": true
+ },
+ "checkpoint_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+ "normalization_identity": "ed-norm-identity/1:3e0b216bfbf34ab0",
+ "designated_config_id": "V2_P",
+ "limitations": [
+  "2019 is Stormer's checkpoint-selection year and this project's 'val' split; the 16 holdout issues are now Fs-exposed and must be purged from any later policy_dev/confirm use.",
+  "2015/2018/2019 stores have multi-day holes in whole variable groups (integrity scan); the holdout was reselected on integrity only (amendment A1).",
+  "S0 certifies the forward pass only; the training backward is exercised, not certified.",
+  "2020 training rows carry split_id 'test' while admitted as bank_fit (as in v1).",
+  "delta_min is not pre-registered: v2 can qualify 'no harm', not 'useful gain'."
+ ]
+}

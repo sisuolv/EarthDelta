@@ -1,0 +1,354 @@
+{
+ "schema_version": "ed-fp04-task-result/1",
+ "task": "FP-04 K=4 / rank=4 dynamic expert bank on the certified Fs",
+ "status": "OBSERVED",
+ "verdict": "PASS - BANK_CERTIFIED (qualified, exactly-assembled, registry-certified K=4/rank=4 bank published)",
+ "protocol": {
+  "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json",
+  "sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1",
+  "frozen_utc": "2026-09-24T05:10:07Z",
+  "supersedes_unsubmitted": "9d3cc646d55a9d0b7151461a055e13e11b2e2c2ea92797ed8458bf03556571da (first freeze; E2-only fallback trigger added, coordinator-approved, before any job)",
+  "preregistration_md": {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/PREREGISTRATION.md",
+   "sha256": "231bb6539d8f7e796a824edf98632230820908cda8c8a38197ccc8966fcf87c4"
+  },
+  "go_ahead": "coordinator, before B-J1, B-J2 and B-J3 each"
+ },
+ "certified_fs_consumed": {
+  "bundle": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs",
+  "reference_manifest": {
+   "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+   "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+  },
+  "certify_decision": {
+   "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+   "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+  },
+  "fs_adapter": {
+   "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+   "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+  },
+  "fs_merged_backbone_sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b",
+  "digests": {
+   "merged_backbone_digest": "370bd3bcc7545755bcdb60e482e1ce1ebc201302dc710f7992a4d76c4915bb97",
+   "base_backbone_digest": "bf1eca9d48dbed9e2752678500b2a0cc1488d84627d68de33367492926aa898d",
+   "static_adapter_digest": "566d5dc116771cf96928cb5618404334a78f2a46e7aeb821bb9e141b3695d57f",
+   "artifact_version_digest": "33fcd3b3c34df722e75221c4941b8a716ff277f06f229b3b8c0a7181612c446b"
+  },
+  "structural_fix": "every worker hash-authorized and loaded the ONE certified Fs (authorize_certified_fs + load_certified_fs); all 8 B-J1/B-J2 workers and both B-J3 processes recorded the same merged digest; no worker fit or froze an Fs (cf. historical pt-cdj1s2le: 4 different per-worker Fs digests, ledger only)"
+ },
+ "data": {
+  "admission": {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+   "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+  },
+  "selection_declaration": {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_selection_declaration.json",
+   "sha256": "2b15f80e7a42d7a7dc43130e3f148ebfe13ff9bbd6ed7c8fb438b91df961418d"
+  },
+  "summary": "49 declared slots (90h stride from 2020-01-02T00Z) inside the existing Fs exposure window 2020-01-01T12Z..2020-07-04T18Z; slot 47 (2020-06-26T06Z) and all 4 same-month replacements failed on one specific_humidity_100 slab (store index 712, 2020-06-27T00Z, 102 sigma) -> slot DROPPED (not replaced); final fresh admission 48/48 PASS, consumer re-hash equal on every row",
+  "consumer_check": {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/admission_consumer_check.json",
+   "sha256": "5201fd13eeb725f3c8287b1a8f5a7691b2c2a8ce613ac479dbfd658b51628298"
+  },
+  "grouping": {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_grouping.json",
+   "sha256": "ede23fb9859971b1a06c8fa1df27facdc21a6a5e7ff4e4355c0822d871cefe25"
+  },
+  "group_sizes": [
+   15,
+   16,
+   7,
+   6
+  ],
+  "months": [
+   "2020-01..02",
+   "2020-03..04",
+   "2020-05",
+   "2020-06"
+  ],
+  "purged_at_boundaries": 4,
+  "initial_bank_digest": "78e78848e97e15e680cdd5ceb57f4ea6fb4650e62121a3cd97b33231bb262f7c",
+  "cpu_pins_and_fs_dryrun": {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/analysis/cpu_pins_and_fs_dryrun.json",
+   "sha256": "fe7f5445525a699b4a057786eda114742f3b727d0bfce63f2dbb97cbc19cae5d"
+  }
+ },
+ "jobs": {
+  "B-J1": {
+   "job_id": "pt-ycpvyb6n",
+   "run_dir": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c",
+   "result": "SUCCEEDED rc=0 561.7s",
+   "config": "4 workers x 16 updates lr 2.5e-3, profile cuda:0, horizon cuda:1",
+   "decision": {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ1_shortstep_decision.json",
+    "sha256": "9b441507384571b1468829e9dfff46c63a6a59a9d0f0c7818527ccdad82a5ab1"
+   },
+   "verdict": "PASS",
+   "profile": "H100, K=4/rank=4, peak 14.85 GiB, 1.43 s/update (budget 64 GiB / 30 s), keeps K=4/rank=4; full 4-step hold differentiable; bank digest unchanged by both measurements"
+  },
+  "B-J2": {
+   "job_id": "pt-vt003lhm",
+   "run_dir": "artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d",
+   "result": "SUCCEEDED rc=0 364.4s",
+   "config": "formal H=32 lr 2.5e-3, 4 workers",
+   "decision_original": {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2_formal_decision.json",
+    "sha256": "82aa9a7857079305d4baa9d2318ef1a96e46638aa092b2238cdd3000cbb17b1a"
+   },
+   "decision_r2_used": {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2_formal_decision_r2.json",
+    "sha256": "49feca4658405a4d0b3b5f20dcc22b02bc8980be51a4e6bcbb0f4ac8fad093d3"
+   },
+   "verdict": "BANK_QUAL_PASS_PENDING_ASSEMBLY",
+   "fallback_authorized": false
+  },
+  "B-J2F": "not run (B-J2 did not STOP)",
+  "B-J3": {
+   "job_id": "pt-m52qwunf",
+   "run_dir": "artifacts/round2_cci/ed-r4bankbj3-0924053507-ae0123",
+   "result": "FAILED rc=1 180.2s",
+   "cause": "DEV-FP04-001: formal decision recorded repo-relative paths; assembly fail-closed (ASSEMBLY_NOT_AUTHORIZED), nothing built"
+  },
+  "B-J3_retry": {
+   "job_id": "pt-831c01g4",
+   "run_dir": "artifacts/round2_cci/ed-r4bankbj3r-0924054117-185e82",
+   "result": "SUCCEEDED rc=0 357.3s",
+   "config": "bank_assemble cuda:0 then bank_verify cuda:1 (independent process); argv identical to B-J3 except the r2 decision path",
+   "certify_decision": {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/BJ3_certify_decision.json",
+    "sha256": "101ebc3b0e4d410fff2e8bf5a9e43f238a2b5f08b6dfde957ce744ea53d8e921"
+   },
+   "verdict": "BANK_CERTIFIED"
+  },
+  "budget": "4 of max 7 GPU jobs (expected 3); 1 of 1 infra retry used (B-J3)",
+  "dry_runs": "3 submit_job.py --dry-run dirs kept, labelled artifacts/round2_cci/DRYRUN_NOT_SUBMITTED_*, never submitted"
+ },
+ "deviations": [
+  {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/deviations/DEV-FP04-001_relative_decision_paths.json",
+   "sha256": "32d20a509576452791a96d6d14c882dd8eadd726f282175bba1b62dda2e6cd52"
+  }
+ ],
+ "bank_qual_v1_per_expert": {
+  "0": {
+   "n_issues": 15,
+   "verdict": "PASS",
+   "status": {
+    "E0": "PASS",
+    "E1": "PASS",
+    "E2": "PASS",
+    "E3": "PASS",
+    "E4": "PASS",
+    "E5": "PASS",
+    "E6": "PASS"
+   },
+   "E2": {
+    "clip_events": 0,
+    "max_per_visit_ratio": 1.0,
+    "onset_epoch": null
+   },
+   "E3_own_group_24h_mean_ratio": 0.9900749343807109,
+   "report_only": {
+    "own_group_6h": 0.9988600485082987,
+    "own_group_72h": 0.9875720365881465,
+    "per_visit_decreased": "15/15",
+    "first_16_updates_equal_B-J1_bitwise": true
+   }
+  },
+  "1": {
+   "n_issues": 16,
+   "verdict": "PASS",
+   "status": {
+    "E0": "PASS",
+    "E1": "PASS",
+    "E2": "PASS",
+    "E3": "PASS",
+    "E4": "PASS",
+    "E5": "PASS",
+    "E6": "PASS"
+   },
+   "E2": {
+    "clip_events": 0,
+    "max_per_visit_ratio": 1.0002259002675413,
+    "onset_epoch": null
+   },
+   "E3_own_group_24h_mean_ratio": 0.9908935846168572,
+   "report_only": {
+    "own_group_6h": 0.9987953435750113,
+    "own_group_72h": 0.9918820628031652,
+    "per_visit_decreased": "16/16",
+    "first_16_updates_equal_B-J1_bitwise": true
+   }
+  },
+  "2": {
+   "n_issues": 7,
+   "verdict": "PASS",
+   "status": {
+    "E0": "PASS",
+    "E1": "PASS",
+    "E2": "PASS",
+    "E3": "PASS",
+    "E4": "PASS",
+    "E5": "PASS",
+    "E6": "PASS"
+   },
+   "E2": {
+    "clip_events": 0,
+    "max_per_visit_ratio": 1.0005571439856735,
+    "onset_epoch": null
+   },
+   "E3_own_group_24h_mean_ratio": 0.9849826740404127,
+   "report_only": {
+    "own_group_6h": 0.9992502238360059,
+    "own_group_72h": 0.9904170887613705,
+    "per_visit_decreased": "7/7",
+    "first_16_updates_equal_B-J1_bitwise": true
+   }
+  },
+  "3": {
+   "n_issues": 6,
+   "verdict": "PASS",
+   "status": {
+    "E0": "PASS",
+    "E1": "PASS",
+    "E2": "PASS",
+    "E3": "PASS",
+    "E4": "PASS",
+    "E5": "PASS",
+    "E6": "PASS"
+   },
+   "E2": {
+    "clip_events": 0,
+    "max_per_visit_ratio": 1.0,
+    "onset_epoch": null
+   },
+   "E3_own_group_24h_mean_ratio": 0.9802412120161317,
+   "report_only": {
+    "own_group_6h": 0.9991116522597082,
+    "own_group_72h": 0.98406692020672,
+    "per_visit_decreased": "6/6",
+    "first_16_updates_equal_B-J1_bitwise": true
+   }
+  }
+ },
+ "assembly_A1_A5": {
+  "status": {
+   "A1": true,
+   "A2": true,
+   "A3": true,
+   "A4": true,
+   "A5": true
+  },
+  "tolerance": "none (exact 0.0)",
+  "A3_zero_edit": {
+   "vs_Fs": 0.0,
+   "vs_F0": 1.1939021348953247
+  },
+  "A4_min_vs_F0_by_expert": {
+   "0": 0.11309096217155457,
+   "1": 0.11416459083557129,
+   "2": 0.11414600908756256,
+   "3": 0.11365810036659241
+  },
+  "certify_checks": {
+   "bank_file_rehashes": true,
+   "assembly_used_the_decided_experts": true,
+   "assembly_bound_to_this_decision": true,
+   "verify_read_this_assembly": true,
+   "assembly_self_checks": true,
+   "bank_reloads_to_recorded_digests": true,
+   "bank_slices_are_the_expert_files": true
+  }
+ },
+ "certified_bank": {
+  "bundle": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank",
+  "read_only": true,
+  "files": {
+   "bank.pt": "c3e3e34b60b463b41a6c824fa680d844a2830cd2c7b40d3fc4544dc985b85f81",
+   "bank_assembly.json": "8476185995e12cf2a007b77de25fa50e5591cae655a607e37f5ca05c28b3504f",
+   "bank_manifest.json": "6946ec0bd7fd57b17d144c80f97e66ef46187bb60967aeffb35c0d1e5bf4275f",
+   "bank_verify.json": "fb6ab112c4079e18e291363f3d04bbd2dd712908f490417ef3799d4937fdb9f3",
+   "expert_0.pt": "2b0402a46fad8831139b5e6e018202c5303764f7c76587c31c76f034436e1ed1",
+   "expert_1.pt": "d5a427386850086c4e12b1209e815a534859110564d4eedfc30a1c54401611ab",
+   "expert_2.pt": "54f3d35a0f7456ad8c83117a696afb7736d397003c8675399940c11a785d490f",
+   "expert_3.pt": "119baf7faeabd8acd9826109949b38334b802a34f9c9409635bc9ff56d577a54",
+   "probe_expert_0.pt": "367f87ce4852f9d5e18a8087ac45e1b7f883905430d84ec927998a6d3f5d6550",
+   "probe_expert_1.pt": "867ab21c59e21016a97ca05ed08c1751ce5a712a5599466c2fc98bdf2b492f56",
+   "probe_expert_2.pt": "3ab8b668507e9bf8b454ad34087180fabb999df53bb7d6ccf81bd1d1212d7095",
+   "probe_expert_3.pt": "196b6493141840ff07ee27d19c8012876bc5366085059c770e6ba1d92f885808",
+   "qualification.json": "ab3a6f5b7367d562d03b14751836448b5426e6013ab32a0230dc5e6d1ec01cc1",
+   "registry.json": "c480684df1e9068387d347e00f6afa16f2b08db2d137d23175fb3933d944affd"
+  },
+  "bank_digest": "13bc905444e4af1008b95d8820f0db4a5585621c712b1330d096b027df9cb33b",
+  "expert_digests": [
+   "c8b7455344864b8729e114b68b0221a29d53a2a937e36c1e280a10297299b5c6",
+   "3039d20b3b14dde988a5561a1c51785f18ba557de4504c4fdeea5283654c6acb",
+   "e633a5c68b0e16f4ada3e432f94c883a5c09bbafd6d3d128d65fb5f665cc5f88",
+   "119d2fd44c3bf9186b660a84be2fddf17d4573858c2ab582e8800ee8ea9cd4b2"
+  ],
+  "registry": {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/registry.json",
+   "sha256": "c480684df1e9068387d347e00f6afa16f2b08db2d137d23175fb3933d944affd"
+  },
+  "bank_manifest": {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank_manifest.json",
+   "sha256": "6946ec0bd7fd57b17d144c80f97e66ef46187bb60967aeffb35c0d1e5bf4275f"
+  },
+  "consumer_verification": "registry.verify_bank_bundle PASS (in the decider before publishing, and again in a fresh process: 12 internal files + 10 external pins re-hashed); coordinator independently torch.equal'd every expert slice of bank.pt against expert_k.pt"
+ },
+ "source": {
+  "at_preregistration": {
+   "earthdelta/bank_training.py": "e0de5ec5403c139dc365225695892ef66bef35360107fb37dcd82f1a1b20a8c9",
+   "earthdelta/registry.py": "42a1f064942a6c327bb5f0ce50856ea130970d601878d5ee43f114f399bd99af",
+   "earthdelta/static_adapter.py": "8a3154c8587d5d7dde4844f38892eb3503e7d4227957f7c7ffb1ae9dbc457e46",
+   "earthdelta/fs_protocol.py": "2b3116a1f87951d3d5549a08fd52244f23a6e2784d8378894f8736e25fdb39a2",
+   "earthdelta/metrics_contract.py": "7bd91cf4f244fed07afd3a66aaa4917151cf7893fad5df5bc146d1aeb871b199",
+   "earthdelta/pilot_contract.py": "506b72e26d783fddae4411ff1dadbf8cc071bcb34b7167b3098b9b00805f62c0",
+   "earthdelta/data/make_splits.py": "e859e60fb07f026747c4cf6e07fe837e95f65bc3f19416dfcaffc93b7c48fd32",
+   "scripts/r2_fs_bank_train.py": "b0283f6ec0ec9bbc98ecc8d82ec0c1907e43b255848c6e303260fdda1447606a",
+   "scripts/r4_bank_decide.py": "3aae47105e235779c01ca88d4030873e9a5989071208167fda418703dea81445",
+   "tests/test_fitted_fs_bank_roundtrip.py": "1feb88aa024610b7e1b3a8dd4c118ca1f5b52e5b4f643a5dba80a5df812393d5",
+   "tests/test_bank_quality_gate.py": "aa8ec0cf262989697acc9e5ab5d8f6c782aebe92c6d7434015a6ece5829dd48b",
+   "tests/test_profile_immutability.py": "ac90e0066e1ae407d874ca87720bf2c0947ee4b589ad07ca1fdd8b0c976d2659",
+   "tests/test_plan_gate_chain.py": "a2d9424453b2c323375723de9fc1b2cf121321112cc4930033038dfb8f7617f2",
+   "earthdelta/contracts.py": "9e711ca45077349433a64b5b9321315272e8758ed9467c2650e01b786e39589d",
+   "earthdelta/bridge/stormer_bridge.py": "03e9659db1416de3b2b6cade08c0f245826119ce70bb25c8594523ac8f2652c3",
+   "earthdelta/bridge/stormer_arch.py": "366f9a9ffd03258b942b44de300a86820ecede588d94dd0d81f7c54a3a510f9e",
+   "earthdelta/lowrank.py": "20fd93e6c8f922215df83b8b0a6b4604002b3dc7bfa3575eb5e078f0e77adec3"
+  },
+  "s0_bound_files_unchanged": true,
+  "fp03_directory_untouched": "no file in the FP-03 v2 run directory is newer than FP-04's first file"
+ },
+ "tests": {
+  "full_suite_final": {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/tests/pytest_full_suite_fp04_prereg_refreeze.log",
+   "sha256": "45b28d821ad500ed672fa2f6a021f1d7374ba23e70fe00a13effc7593f6f50c4"
+  },
+  "result": "861 passed, 7 skipped, 0 failed (baseline 766/7)",
+  "first_freeze_suite": {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/tests/pytest_full_suite_fp04_prereg.log",
+   "sha256": "7641a449b9a3c3ffa97c352e32e745cf8d7186cd1bfe360e2acb9e73ab50f6e2"
+  },
+  "pre_fix_crash_log_kept": {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/tests/pytest_new_tests.log",
+   "sha256": "433223a36740d95d4d842caedf20ff512c7d88c7459a96c79b044abc4da73cd0"
+  },
+  "mutation_checks": {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/tests/mutation_checks.json",
+   "sha256": "9410ae55fb0274031f9ae58ddb40af99e4a2d330257a6278b8802775746dc9b4"
+  }
+ },
+ "honest_reading": [
+  "All 4 experts improve their OWN training group at 24h, but modestly: mean L1/Fs 0.9901 / 0.9909 / 0.9850 / 0.9802 (every per-issue ratio < 1). These are in-sample numbers of experts acting at a0=0.25 for 24h; they say nothing about out-of-sample usefulness.",
+  "FP-04 PASS means a qualified, exactly-assembled, registry-certified K=4 bank on the one certified Fs exists. Usefulness (delta_min, out-of-sample gain, policy value) is FP-05; delta_min is still not pre-registered.",
+  "B-J1 profile was 1.43 s/update vs 0.34 s in the historical (pre-strict-FP32) profile; cause not verified; no gate affected."
+ ],
+ "open_items_for_FP05": [
+  "Purge from any policy_dev/confirm use: the 48 FP-04 bank_fit issues (+ their t-12h..t+72h windows) and all FP-03 Fs exposure (2020-01-01T12Z..2020-07-04T18Z, 2019 holdout).",
+  "2020 store index 712 (2020-06-27T00Z) has a bad specific_humidity_100 slab; any window containing it must re-certify content.",
+  "Every FP-05 consumer must load the bank via registry.verify_bank_bundle on certify/bank/, and the Fs via the FP-03 reference manifest, re-hashing both.",
+  "Future protocols: deciders should store resolved absolute paths themselves (DEV-FP04-001)."
+ ],
+ "recorded_utc": "2026-09-24T05:52:06.711375+00:00"
+}

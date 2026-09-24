@@ -1,0 +1,187 @@
+{
+  "check": "fs_independent_reload",
+  "adapter_sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089",
+  "merged_backbone_sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b",
+  "identity": {
+    "merged_backbone_digest_matches": true,
+    "base_backbone_digest_matches": true,
+    "static_adapter_digest_matches": true
+  },
+  "identity_pass": true,
+  "post_freeze": {
+    "passed": true,
+    "artifact": {
+      "schema": "ed-fs-merge/1",
+      "base_backbone_digest": "bf1eca9d48dbed9e2752678500b2a0cc1488d84627d68de33367492926aa898d",
+      "merged_backbone_digest": "370bd3bcc7545755bcdb60e482e1ce1ebc201302dc710f7992a4d76c4915bb97",
+      "static_adapter_digest": "566d5dc116771cf96928cb5618404334a78f2a46e7aeb821bb9e141b3695d57f",
+      "coefficient": 1.0,
+      "target_blocks": [
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "rank_per_expert": 4,
+      "adapter_scale": 1.0,
+      "merged_at": "2026-09-24T02:22:28.198813+00:00",
+      "delta_max_abs": 0.014600764028728008,
+      "delta_frobenius": 3.653596675371299
+    },
+    "reference_identity": {
+      "artifact_version": {
+        "backbone": "stormer_ps4_h1024_d24_nh16_mr4.0_sha256:7fde884ec85f4999|fs_merged_sha256:370bd3bcc7545755",
+        "static_adapter": "fs_r4_b18-19-20-21-22-23_c1_sha256:566d5dc116771cf9",
+        "edit_bank": "none",
+        "normalization": "3e0b216bfbf34ab0",
+        "grid": "128x256",
+        "projection": "patch4",
+        "split": "full",
+        "continuation": "reference_after_hold"
+      },
+      "artifact_version_digest": "33fcd3b3c34df722e75221c4941b8a716ff277f06f229b3b8c0a7181612c446b",
+      "static_adapter_is_bound": true,
+      "recorded_fresh_after_freeze": true,
+      "note": "Recorded from the Fs-merged bridge after the freeze. The F0 identity is not reused; static_adapter now names Fs's digest instead of the placeholder 'none'."
+    },
+    "merge_equivalence": {
+      "check": "fs_merge_equals_always_on_branch",
+      "passed": true,
+      "steps": 1,
+      "max_abs_diff": 5.9604644775390625e-06,
+      "max_rel_diff": 8.242818125836493e-07,
+      "self_max_abs_diff": 0.0,
+      "atol": 2.1901146043092014e-05,
+      "rtol": 1e-05,
+      "branch_max_abs": 7.231100082397461,
+      "target_blocks": [
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "tf32_disabled_for_check": true,
+      "self_max_abs_diff_note": "Noise floor: the merged-path forward called twice with identical arguments, differenced against itself. Compare max_abs_diff against it -- a max_abs_diff of the same order means the two code paths agree as closely as one path agrees with itself."
+    },
+    "zero_edit_equivalence": {
+      "check": "zero_edit_equals_fs",
+      "baseline_tag": "Fs",
+      "baseline_source": "fs_merged_backbone.forward_validation",
+      "passed": true,
+      "steps": 4,
+      "num_experts": 4,
+      "atol": 0.0,
+      "max_abs_diff_vs_fs": 0.0,
+      "max_abs_diff_vs_f0": 0.5048775672912598,
+      "discriminating": true,
+      "tf32_disabled_for_check": true,
+      "f0_is_not_the_reference": "F0's numbers are NOT reused as the post-freeze reference; every round-4 gain is measured against Fs."
+    },
+    "fs_baseline": {
+      "tag": "Fs",
+      "loss": 0.031052125617221912,
+      "n_samples": 8,
+      "objective": {
+        "lead_steps": [
+          4
+        ],
+        "lead_hours": [
+          24
+        ],
+        "space": "raw",
+        "interval_hours": 6,
+        "n_variables": 69,
+        "q_shape": [
+          1,
+          1,
+          128,
+          1
+        ],
+        "scale_shape": [
+          1,
+          69,
+          1,
+          1
+        ],
+        "q_kind": "cos_latitude_area_weight",
+        "scale_kind": "official_per_variable_input_std"
+      },
+      "computed_at": "2026-09-24T02:24:36.508496+00:00",
+      "role": "the post-freeze no-edit reference; gain = baseline - candidate"
+    },
+    "background_f0": {
+      "tag": "background_F0",
+      "loss": 0.03187907820466652,
+      "n_samples": 8,
+      "objective": {
+        "lead_steps": [
+          4
+        ],
+        "lead_hours": [
+          24
+        ],
+        "space": "raw",
+        "interval_hours": 6,
+        "n_variables": 69,
+        "q_shape": [
+          1,
+          1,
+          128,
+          1
+        ],
+        "scale_shape": [
+          1,
+          69,
+          1,
+          1
+        ],
+        "q_kind": "cos_latitude_area_weight",
+        "scale_kind": "official_per_variable_input_std"
+      },
+      "computed_at": "2026-09-24T02:24:38.472025+00:00",
+      "reporting_only": true,
+      "note": "F0 background score, retained for reporting only. Round-4 gains are measured against Fs; this number must never be subtracted from an Fs-relative loss or reported as gain_vs_Fs."
+    },
+    "verified_at": "2026-09-24T02:24:34.476112+00:00"
+  },
+  "numerical_merge_pass": true,
+  "zero_edit_pass": true,
+  "continuation": {
+    "check": "continuation_after_hold_is_fs_from_edited_state",
+    "passed": true,
+    "hold": 4,
+    "total": 12,
+    "active_expert": 0,
+    "coefficient": 0.25,
+    "edit_effect_at_hold_max_abs": 0.009429693222045898,
+    "max_abs_diff_vs_fs_continuation_by_step": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "max_abs_diff_vs_f0_continuation_by_step": [
+      0.1143798828125,
+      0.22140264511108398,
+      0.3300814628601074,
+      0.40744471549987793,
+      0.6794376373291016,
+      0.6540367603302002,
+      0.5816915035247803,
+      0.6141259670257568
+    ],
+    "exact_fs_continuation": true,
+    "discriminates_f0": true,
+    "tf32_disabled_for_check": true
+  },
+  "merge_tolerance_source": "record_post_freeze_reference defaults (atol=max(1e-5, 1.5e-3*delta_max_abs), rtol=1e-5); r4_fs_decide --kind certify checks they equal the protocol's pre-registered merge_equivalence_tolerance",
+  "reload_pass": true
+}

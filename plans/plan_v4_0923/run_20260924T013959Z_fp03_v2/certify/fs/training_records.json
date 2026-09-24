@@ -1,0 +1,34 @@
+{
+ "V2_P": {
+  "fs_fit_record.json": {
+   "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b/replica3/fs_fit_record.json",
+   "sha256": "b65ae4b6f53aa36e8334e72e2b1541179e9733b01a656f272a78593e7efbc7e2"
+  },
+  "fs_panels.json": {
+   "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b/replica3/fs_panels.json",
+   "sha256": "4288ce99ef072a61e0847ed4516ddf0a3e48d3749fa5b77e9098652d666985b6"
+  },
+  "fs_diagnostics.json": {
+   "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b/replica3/fs_diagnostics.json",
+   "sha256": "df62d47cb59819dcfd2be2bef84437f5da78c5c862677d9a5b747d79dac62a77"
+  },
+  "run_record.json": {
+   "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b/replica3/run_record.json",
+   "sha256": "f58e07a268aeed1246133906dd88cdc53b7424fedb2966541b4d3eabffa1352f"
+  },
+  "provenance.json": {
+   "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b/replica3/provenance.json",
+   "sha256": "04cbcd57ef6aa0b7e355973e1934965a721bf5b87c85f16bd945b8414dde45b3"
+  },
+  "fs_panel_record.json": null,
+  "binding_refused.json": null,
+  "stdout.log": {
+   "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b/replica3/stdout.log",
+   "sha256": "ecb8140a51175b24b14ee0a6382e91f12f49932a837f007d49fa9e18640e2c51"
+  },
+  "fs_adapter.pt": {
+   "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b/replica3/fs_adapter.pt",
+   "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+  }
+ }
+}

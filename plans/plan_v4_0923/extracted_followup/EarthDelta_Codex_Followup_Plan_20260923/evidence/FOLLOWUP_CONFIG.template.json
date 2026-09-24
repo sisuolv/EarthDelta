@@ -1,0 +1,117 @@
+{
+  "status": "TO_BE_RUN",
+  "not_execution_evidence": true,
+  "protocol": "plans_v3_0922_fitted_fs_restoration/1",
+  "source_head_expected": "fdd92d79b1b03e8397d4c487d7fa4a347ae6fc37",
+  "implementation_base": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+  "source_manifest": null,
+  "run_directory": null,
+  "asset_manifest": null,
+  "gate_config": null,
+  "s0_certificate": null,
+  "reference_kind": "fitted_fs",
+  "reference_artifact": null,
+  "s0": {
+    "checkpoint_family": "ps4",
+    "normalization_policy": "official_zero_diff_mean",
+    "dtype": "float32",
+    "registered_interval_hours": 6,
+    "registered_steps": [
+      1,
+      4,
+      12
+    ],
+    "max_absolute_tolerance": 1e-05,
+    "must_recover_frozen_remaining_fields": true
+  },
+  "training": {
+    "short_diagnostic_updates": [
+      16,
+      32
+    ],
+    "formal_max_updates_cap": 500,
+    "learning_rate": null,
+    "learning_rate_rule": "FREEZE_BEFORE_TRAINING_SIDE_QUALITY_RESULTS",
+    "retries_cap": null,
+    "quality_rule": null,
+    "quality_rule_status": "TO_BE_PREREGISTERED"
+  },
+  "bank": {
+    "K": 4,
+    "rank": 4,
+    "blocks": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "max_active": 1,
+    "a0": 0.25,
+    "rho": 0.25,
+    "hold_steps": 4,
+    "continuation": "same_fitted_fs_from_edited_state"
+  },
+  "data": {
+    "history_hours": [
+      -12,
+      -6,
+      0
+    ],
+    "target_hours": [
+      6,
+      24,
+      72
+    ],
+    "bank_fit_manifest": null,
+    "policy_dev_manifest": null,
+    "debug_n": 8,
+    "dev_size_options": [
+      32,
+      64,
+      128
+    ],
+    "chosen_dev_n": null,
+    "confirmation_access": false,
+    "exposed_issue_manifest": null
+  },
+  "methods": [
+    "fitted_fs_no_edit",
+    "fold_train_best_static",
+    "regime_router",
+    "ridge_direct_gain",
+    "offline_complete_hindsight_oracle"
+  ],
+  "statistics": {
+    "primary_lead_hours": 24,
+    "diagnostic_lead_hours": 6,
+    "harm_guard_hours": 72,
+    "delta_min": null,
+    "delta_min_status": "TO_BE_PREREGISTERED_AFTER_PILOT_VARIANCE_ESTIMATE",
+    "delta_min_basis": "MUST_BE_JUSTIFIED_BY_VALUE_AND_COST_NOT_MDE",
+    "alpha": null,
+    "power": null,
+    "MDE": null,
+    "N_cap": null,
+    "block_rule": null
+  },
+  "resource_caps": {
+    "approved": false,
+    "gpu_budget": null,
+    "wallclock_deadline": null,
+    "profile_evidence": null
+  },
+  "non_goals": [
+    "shared_F0_substitution",
+    "dualhead",
+    "E3_output_correction",
+    "confirm",
+    "new_backbone",
+    "JEPA",
+    "memory",
+    "dynamic_rank",
+    "spectral_loss",
+    "automatic_cloud_job_submission"
+  ]
+}

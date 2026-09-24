@@ -1,0 +1,61 @@
+{
+ "schema_version": "ed-fp03-deviation/1",
+ "deviation_id": "DEV-001",
+ "title": "Q0 fact tf32_off: checker read the image's env-var DEFAULT instead of the effective TF32 state",
+ "written_utc_note": "Written BEFORE J1_diag_decision_r2.json was produced; see file mtimes and deviation_DEV-001_outcome.json.",
+ "kind": "IMPLEMENTATION_BUG_IN_Q0_VALIDITY_CHECKER",
+ "rule_text_changed": false,
+ "thresholds_changed": false,
+ "experimental_argv_changed": false,
+ "selection_changed": false,
+ "protocol": {
+  "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/protocol/fs_protocol_v1.json",
+  "sha256": "3c143bd7c405c9fc70edfd186c3432fce88845820f8d7fd892a4be0744a2b7af",
+  "unchanged": true
+ },
+ "trigger": {
+  "job": "J1",
+  "job_id": "pt-56auspj8",
+  "run_dir": "artifacts/round2_cci/ed-r4fs03diag-0923203433-4127c2",
+  "original_decision": {
+   "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J1_diag_decision.json",
+   "sha256": "ed214ab0242ac66f1d88b6c30d010e6d3f8b5a43138709e149abfab8c0606acb",
+   "verdict": "STOP",
+   "kept_unmodified": true
+  },
+  "failing_fact": "tf32_off",
+  "processes_failing": "all 8 (A0-A3, NC0-NC3), independent of arm, lr or outcome",
+  "every_other_fact_and_check": "true / passed; all 4 negative controls REJECTED"
+ },
+ "root_cause": [
+  "The ACP image exports TORCH_ALLOW_TF32_CUBLAS_OVERRIDE=1 (recorded in every J1 provenance.json).",
+  "earthdelta.fs_protocol.tf32_is_off additionally required that variable to be unset/'0', on the incorrect belief that it FORCES TF32.",
+  "In the certified torch 2.3.1 the variable appears only as the member initializer of Context::float32_matmul_precision (ATen/Context.h); Context::allowTF32CuBLAS() returns float32_matmul_precision != HIGHEST (ATen/Context.cpp v2.3.1).",
+  "r2_fs_bank_train.py (and s0_gate.py) set torch.backends.cuda.matmul.allow_tf32=False and cudnn.allow_tf32=False at import, before any CUDA work, which resets the precision to HIGHEST: TF32 is OFF.",
+  "The J1 provenance records the effective getters cuda_matmul_allow_tf32=False and cudnn_allow_tf32=False."
+ ],
+ "evidence": [
+  "PyTorch v2.3.1 source: ATen/Context.h member initializer `float32_matmul_precision = check_env(\"TORCH_ALLOW_TF32_CUBLAS_OVERRIDE\") == true ? HIGH : HIGHEST`; Context::allowTF32CuBLAS() reads only that member.",
+  "Executor reproduction, overlay torch 2.3.1+cu121, env=1: after the explicit setters, getter False and precision 'highest'.",
+  "Coordinator independent reproduction, overlay torch 2.3.1+cu121, env=1: BEFORE setters allow_tf32=True / precision 'high'; AFTER setters allow_tf32=False, cudnn False, precision 'highest'.",
+  "s0_gate.py lines 125-126 issue the same explicit setters, so S0 and the Fs processes ran in the same effective FP32 (TF32-off) mode."
+ ],
+ "fix": {
+  "file": "earthdelta/fs_protocol.py",
+  "sha256_before (J1 snapshot)": "a321ff9a9b647547120f80fff6ad253e54eb88fcb06507bad3d2607645144602",
+  "sha256_after": "2b3116a1f87951d3d5549a08fd52244f23a6e2784d8378894f8736e25fdb39a2",
+  "diff": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/DEV-001_fs_protocol.diff",
+  "change_1": "tf32_is_off: TF32 off iff the EFFECTIVE recorded getters cuda_matmul_allow_tf32 and cudnn_allow_tf32 are both False and, when recorded, float32_matmul_precision == 'highest'. The env variable is still recorded but no longer decisive.",
+  "change_2": "collect_provenance records torch.get_float32_matmul_precision() (from J2 on) as an independent cross-check.",
+  "tests": "tests/test_fs_quality_gate.py: env='1' + explicit setters -> off; env='1' without setters -> NOT off (live fresh-interpreter subprocess, both directions); getter True / precision 'high' -> NOT off. Diff: plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/DEV-001_tests.diff"
+ },
+ "why_not_post_hoc": [
+  "The bug is in a Q0 infrastructure/validity fact-checker, not in any Q1-Q6 scientific threshold, the experimental argv, or candidate selection; Q0 failures are pre-registered validity failures, categorically separate from scientific verdicts (confirmed interpretation (b)).",
+  "It failed identically for all 8 processes regardless of arm, lr or outcome, so it cannot be outcome-correlated.",
+  "It was root-caused at the PyTorch source level and reproduced empirically by both executor and coordinator.",
+  "The original STOP decision stays on disk untouched; the re-decision is a new file."
+ ],
+ "approval": "Coordinator approved option (A) in writing before J1_diag_decision_r2.json was produced; options (B) protocol v2 and (C) exporting the env var in J2's argv were rejected.",
+ "action": "Re-run the J1 diag decision with the J1-snapshot decider + only this fs_protocol.py change (the working tree differs from the J1 snapshot only in fs_protocol.py and tests/test_fs_quality_gate.py), writing decisions/J1_diag_decision_r2.json. Submit J2 with the frozen, unchanged argv only if r2 is PASS. J2's snapshot will carry the fixed fs_protocol.py; this is the only source drift from source_at_preregistration.",
+ "why_a_separate_file": "forensics/historical_fs_forensics.json is pinned by SHA-256 in the frozen protocol (inputs.forensics); editing it would break that binding, so deviations are recorded in new files beside it."
+}

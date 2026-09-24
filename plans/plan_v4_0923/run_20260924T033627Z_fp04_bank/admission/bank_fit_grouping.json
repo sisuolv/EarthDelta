@@ -1,0 +1,172 @@
+{
+ "schema_version": "ed-fp04-bank-fit-grouping/1",
+ "admission": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+  "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+ },
+ "rule": "ed-bank-diversity/1:disjoint-calendar-month-blocks",
+ "num_experts": 4,
+ "hold_steps": 4,
+ "group_sizes": [
+  15,
+  16,
+  7,
+  6
+ ],
+ "groups": [
+  {
+   "expert_index": 0,
+   "rule": "ed-bank-diversity/1:disjoint-calendar-month-blocks",
+   "months": [
+    "2020-01",
+    "2020-02"
+   ],
+   "start_utc": 1577836800,
+   "end_utc": 1583020800,
+   "start_iso": "2020-01-01T00:00:00+00:00",
+   "end_iso": "2020-03-01T00:00:00+00:00",
+   "n_samples": 15,
+   "issue_ids": [
+    "iss_292517fb189ee1bd",
+    "iss_b83cbb00e6cb5eb3",
+    "iss_00764efdd9468778",
+    "iss_d2871a74548df0f1",
+    "iss_bcf27964e77c54b3",
+    "iss_6e4faae20c3f33f0",
+    "iss_d93bbfd8a1387d02",
+    "iss_0f0a37e8393048e2",
+    "iss_475192a76d40e894",
+    "iss_18d8c1b619a302e6",
+    "iss_48db9e7d6b34ef39",
+    "iss_765fa161b1b1e581",
+    "iss_d574995f92709e85",
+    "iss_fd1097836dbd4da8",
+    "iss_039add2d41f5c08a"
+   ]
+  },
+  {
+   "expert_index": 1,
+   "rule": "ed-bank-diversity/1:disjoint-calendar-month-blocks",
+   "months": [
+    "2020-03",
+    "2020-04"
+   ],
+   "start_utc": 1583020800,
+   "end_utc": 1588291200,
+   "start_iso": "2020-03-01T00:00:00+00:00",
+   "end_iso": "2020-05-01T00:00:00+00:00",
+   "n_samples": 16,
+   "issue_ids": [
+    "iss_4f2b54d7e8953451",
+    "iss_0385d2c288807351",
+    "iss_b9770dd8b6aaa215",
+    "iss_0dcd1c194c0f2001",
+    "iss_b602673ed527ee65",
+    "iss_395368a523eef01e",
+    "iss_9f5c84e9feaac58a",
+    "iss_9f1b600cc88b7d0b",
+    "iss_c9262546e63a96f0",
+    "iss_1b2a9b2659e92e32",
+    "iss_3f121b796ed3792d",
+    "iss_7c410dbdd2c331c8",
+    "iss_f14ddf0d753a686d",
+    "iss_d30654bc90d6cc68",
+    "iss_2b8803810786f267",
+    "iss_6361e4cdd8050ae3"
+   ]
+  },
+  {
+   "expert_index": 2,
+   "rule": "ed-bank-diversity/1:disjoint-calendar-month-blocks",
+   "months": [
+    "2020-05"
+   ],
+   "start_utc": 1588291200,
+   "end_utc": 1590969600,
+   "start_iso": "2020-05-01T00:00:00+00:00",
+   "end_iso": "2020-06-01T00:00:00+00:00",
+   "n_samples": 7,
+   "issue_ids": [
+    "iss_32d48efebee12be2",
+    "iss_4cef9a9654f92229",
+    "iss_658520ec80cc7e3e",
+    "iss_342bd18e13bd60b8",
+    "iss_c91b65e1183c905e",
+    "iss_498e78935151da92",
+    "iss_bbd4e6e2ec71d9ca"
+   ]
+  },
+  {
+   "expert_index": 3,
+   "rule": "ed-bank-diversity/1:disjoint-calendar-month-blocks",
+   "months": [
+    "2020-06"
+   ],
+   "start_utc": 1590969600,
+   "end_utc": 1593561600,
+   "start_iso": "2020-06-01T00:00:00+00:00",
+   "end_iso": "2020-07-01T00:00:00+00:00",
+   "n_samples": 6,
+   "issue_ids": [
+    "iss_04eb8e8d56c68faa",
+    "iss_4ea182f8369adc22",
+    "iss_6ea3c5d0ec7f926e",
+    "iss_053f08aae32d5ad8",
+    "iss_3b86043db1bbf33d",
+    "iss_b42c91ed1b555939"
+   ]
+  }
+ ],
+ "purged": [
+  {
+   "position": 15,
+   "issue_id": "iss_bda1ac1be4bd5615",
+   "issue_time_utc": "2020-02-27T06:00:00+00:00",
+   "window_start_utc": "2020-02-26T18:00:00+00:00",
+   "window_end_utc": "2020-03-01T06:00:00+00:00",
+   "group_start_utc": "2020-01-01T00:00:00+00:00",
+   "group_end_utc": "2020-03-01T00:00:00+00:00",
+   "expert_index": 0,
+   "reason": "group_boundary_overlap",
+   "detail": "the sample's history/target/hold window crosses this diversity group's boundary, so admitting it would make two experts' training data overlap in time"
+  },
+  {
+   "position": 32,
+   "issue_id": "iss_e99490eb752f38be",
+   "issue_time_utc": "2020-05-01T00:00:00+00:00",
+   "window_start_utc": "2020-04-30T12:00:00+00:00",
+   "window_end_utc": "2020-05-04T00:00:00+00:00",
+   "group_start_utc": "2020-05-01T00:00:00+00:00",
+   "group_end_utc": "2020-06-01T00:00:00+00:00",
+   "expert_index": 2,
+   "reason": "group_boundary_overlap",
+   "detail": "the sample's history/target/hold window crosses this diversity group's boundary, so admitting it would make two experts' training data overlap in time"
+  },
+  {
+   "position": 40,
+   "issue_id": "iss_19c90e3849fe555f",
+   "issue_time_utc": "2020-05-31T00:00:00+00:00",
+   "window_start_utc": "2020-05-30T12:00:00+00:00",
+   "window_end_utc": "2020-06-03T00:00:00+00:00",
+   "group_start_utc": "2020-05-01T00:00:00+00:00",
+   "group_end_utc": "2020-06-01T00:00:00+00:00",
+   "expert_index": 2,
+   "reason": "group_boundary_overlap",
+   "detail": "the sample's history/target/hold window crosses this diversity group's boundary, so admitting it would make two experts' training data overlap in time"
+  },
+  {
+   "position": 47,
+   "issue_id": "iss_703b354be6d94c63",
+   "issue_time_utc": "2020-06-30T00:00:00+00:00",
+   "window_start_utc": "2020-06-29T12:00:00+00:00",
+   "window_end_utc": "2020-07-03T00:00:00+00:00",
+   "group_start_utc": "2020-06-01T00:00:00+00:00",
+   "group_end_utc": "2020-07-01T00:00:00+00:00",
+   "expert_index": 3,
+   "reason": "group_boundary_overlap",
+   "detail": "the sample's history/target/hold window crosses this diversity group's boundary, so admitting it would make two experts' training data overlap in time"
+  }
+ ],
+ "n_input": 48,
+ "n_assigned": 44
+}

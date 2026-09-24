@@ -1,0 +1,11 @@
+[
+  "python3",
+  "-u",
+  "@SNAPSHOT@/scripts/r4_s0_parity_diagnose.py",
+  "--run",
+  "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3",
+  "--assets",
+  "@ASSETS@",
+  "--out",
+  "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/four_arm_trace.json"
+]

@@ -1,0 +1,432 @@
+{
+  "schema_version": "earthdelta-plan-audit-evidence/1",
+  "status": "OBSERVED",
+  "generated_at_utc": "2026-09-23T16:01:16.858625+00:00",
+  "implementation_commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+  "actual_branch_head": "fdd92d79b1b03e8397d4c487d7fa4a347ae6fc37",
+  "comparison_base": "d749a1c62521226df857587e08f7d067b0f15355",
+  "evidence_policy": {
+    "STATIC_CONFIRMED": "read actual code or document; summaries only support what is recorded",
+    "EXECUTION_CONFIRMED": "read real historical log or embedded job record; not necessarily rerun",
+    "PLAUSIBLE_UNVERIFIED": "hypothesis, not a root cause certificate",
+    "MISSING": "required input unavailable"
+  },
+  "local_source_copies": [
+    {
+      "path": "evidence/source_plan/CLAUDE_10H_PROMPT.md",
+      "status": "OBSERVED",
+      "sha256": "a76cc4ffc92a9f08c6c30181e04ff7d5caa4dbf43af67cb62a7b1bc3701fb87b",
+      "bytes": 6917,
+      "line_count": 67
+    },
+    {
+      "path": "evidence/source_plan/EarthDelta_Stage1A_Independent_Audit_Review_20260921.md",
+      "status": "OBSERVED",
+      "sha256": "5ca09f77f200634e55ae04d5890b221d44aadbfb2141c3e11e342e1149c6256b",
+      "bytes": 20871,
+      "line_count": 343
+    },
+    {
+      "path": "evidence/source_plan/EarthDelta_Stage1A_Independent_Review.md",
+      "status": "OBSERVED",
+      "sha256": "36bcd1769553ff582fc5ab7e1e4a83e1a3a213a4ef2f891382a44a6738c636d9",
+      "bytes": 22541,
+      "line_count": 466
+    },
+    {
+      "path": "evidence/source_plan/EarthDelta_Stage1A_Round3_Audit_Review.md",
+      "status": "OBSERVED",
+      "sha256": "d948e308e73cd08e423b786158a4b121865ceffb3071117d46685bdb6dfa551c",
+      "bytes": 20928,
+      "line_count": 436
+    },
+    {
+      "path": "evidence/source_plan/NEXT_STEPS_10H_PLAN.md",
+      "status": "OBSERVED",
+      "sha256": "199ac192d7f30b983935d1b5801701136f9560cfab5810d7b9b65fed82e5872c",
+      "bytes": 25947,
+      "line_count": 302
+    },
+    {
+      "path": "evidence/reference_reports/ROUND4_REPORT.md",
+      "status": "OBSERVED",
+      "sha256": "acc412efda19f0c6d0d65ba560e929c6ada7a0fb276bcf0d7118b4e027bc7256",
+      "bytes": 37872,
+      "line_count": 331
+    },
+    {
+      "path": "evidence/reference_reports/SPRINT_8H_DECISION.json",
+      "status": "OBSERVED",
+      "sha256": "b4ccfa22ade5b3eb88d712e62520f69c8cd6bcd552b0308a169b4b2556e476ac",
+      "bytes": 1158,
+      "line_count": 35
+    },
+    {
+      "path": "evidence/reference_reports/SPRINT_8H_RESULTS.md",
+      "status": "OBSERVED",
+      "sha256": "52e61896109a8529d906b3a86a2f3bce7a2c46381781a39fc2af7aeecaf5cabb",
+      "bytes": 1703,
+      "line_count": 28
+    },
+    {
+      "path": "evidence/observed_logs/round4_additional_tests.log",
+      "status": "OBSERVED",
+      "sha256": "2062420d036c2c9ce65a2e22fd773e14e63822b56b3943a1d1261afca61bfaf5",
+      "bytes": 316,
+      "line_count": 5
+    },
+    {
+      "path": "evidence/observed_logs/round4_targeted_tests.log",
+      "status": "OBSERVED",
+      "sha256": "4b3b3fc388bd31451fe31f94e2d4d7796a3d6008d6fe225b05d818aa27658f03",
+      "bytes": 554,
+      "line_count": 8
+    },
+    {
+      "path": "evidence/input_status/CURRENT_STATUS.md",
+      "status": "OBSERVED",
+      "sha256": "f3450f72e8f66ba1496830bd24c63b0f1fc8cadde69a8fb3e2df0abf7f79c93c",
+      "bytes": 1135,
+      "line_count": 19
+    },
+    {
+      "path": "evidence/input_status/EVIDENCE_MANIFEST.md",
+      "status": "OBSERVED",
+      "sha256": "db2e42f6ae1d8f63d09bbeaf12010aa9e69ceb56afb0ff77786796796253938e",
+      "bytes": 1340,
+      "line_count": 22
+    }
+  ],
+  "remote_sources": [
+    {
+      "id": "SRC-01",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "current_code",
+      "repository_path": "earthdelta/metrics_contract.py",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/earthdelta/metrics_contract.py",
+      "read_ranges": [
+        [
+          1,
+          365
+        ],
+        [
+          640,
+          835
+        ]
+      ],
+      "git_blob_sha": "d9f3a157807b5f36b6e984572a04c14f12450666",
+      "limitation": "Read pinned source ranges; not executed in this review."
+    },
+    {
+      "id": "SRC-02",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "current_code",
+      "repository_path": "earthdelta/static_adapter.py",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/earthdelta/static_adapter.py",
+      "read_ranges": [
+        [
+          884,
+          1005
+        ],
+        [
+          1805,
+          1939
+        ]
+      ],
+      "git_blob_sha": "482a51ddf2595b7e4d3ec942778251dc7655b070",
+      "limitation": "Read pinned source ranges; not executed in this review."
+    },
+    {
+      "id": "SRC-03",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "current_code",
+      "repository_path": "scripts/r2_fs_bank_train.py",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/scripts/r2_fs_bank_train.py",
+      "read_ranges": [
+        [
+          520,
+          626
+        ],
+        [
+          715,
+          825
+        ],
+        [
+          920,
+          1016
+        ]
+      ],
+      "git_blob_sha": "667f203b48841710ab50ac875b41031eac4a2a61",
+      "limitation": "These current reads plus same-commit stage_fs_fit/freeze ranges read previously; no whole-repository execution."
+    },
+    {
+      "id": "SRC-04",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "current_code",
+      "repository_path": "scripts/r2_admission_gate.py",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/scripts/r2_admission_gate.py",
+      "read_ranges": [
+        [
+          165,
+          315
+        ]
+      ],
+      "git_blob_sha": "2e0313be442f30b010081fed0a9b227c179e8854",
+      "limitation": "Read pinned source ranges; not executed in this review."
+    },
+    {
+      "id": "SRC-05",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "current_code",
+      "repository_path": "earthdelta/bridge/stormer_bridge.py",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/earthdelta/bridge/stormer_bridge.py",
+      "read_ranges": [
+        [
+          840,
+          1090
+        ]
+      ],
+      "git_blob_sha": "799d830328d03a8e706c80f25daf645e3711afa5",
+      "limitation": "Current rollout/lock read; normalization at same immutable commit was read in the preceding review, not newly executed."
+    },
+    {
+      "id": "SRC-06",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "current_code",
+      "repository_path": "scripts/s0_gate.py",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/scripts/s0_gate.py",
+      "read_ranges": [
+        [
+          2310,
+          2515
+        ],
+        [
+          2770,
+          3005
+        ]
+      ],
+      "git_blob_sha": "3663c126737962a10403521c25cbf337540a835e",
+      "limitation": "Current production verdict/publication read; identity helpers from same pinned previous read. Requested last range exceeds EOF; only returned text used."
+    },
+    {
+      "id": "SRC-07",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "current_code",
+      "repository_path": "earthdelta/bank_training.py",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/earthdelta/bank_training.py",
+      "read_ranges": [
+        [
+          1290,
+          1378
+        ]
+      ],
+      "git_blob_sha": "a148a62d28d49b6efa3d294ed83845b2c7e197d9",
+      "limitation": "Read pinned source ranges; not executed in this review."
+    },
+    {
+      "id": "SRC-08",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "current_code",
+      "repository_path": "earthdelta/selection.py",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/earthdelta/selection.py",
+      "read_ranges": [
+        [
+          365,
+          462
+        ]
+      ],
+      "git_blob_sha": "9d5aa77710b8037859bda4ed403b8beb160632e1",
+      "limitation": "Read pinned source ranges; not executed in this review."
+    },
+    {
+      "id": "SRC-09",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "current_code",
+      "repository_path": "earthdelta/value_pilot.py",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/earthdelta/value_pilot.py",
+      "read_ranges": [
+        [
+          156,
+          194
+        ]
+      ],
+      "git_blob_sha": "e55a1f719de54201dd42ec281de55fa4822f3f25",
+      "limitation": "Current scoring call site read. Other same-commit full-file observations reused with code-tree identity verified."
+    },
+    {
+      "id": "SRC-10",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "current_code",
+      "repository_path": "scripts/r4_value_pilot.py",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/scripts/r4_value_pilot.py",
+      "read_ranges": [
+        [
+          451,
+          493
+        ]
+      ],
+      "git_blob_sha": "cbc99dc5d8e42b007fc4d28ca2d4670e303fd3d0",
+      "limitation": "Current parser/dispatch read; full pinned file was read in preceding review; no downstream execution inferred."
+    },
+    {
+      "id": "SRC-11",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "plan",
+      "repository_path": "plans/plans_v3_0922/NEXT_STEPS_10H_PLAN.md",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/plans/plans_v3_0922/NEXT_STEPS_10H_PLAN.md",
+      "read_ranges": [
+        [
+          223,
+          245
+        ]
+      ],
+      "git_blob_sha": "d5418f3f7a6c64587e1bec92c155831b15493f57",
+      "limitation": "Full uploaded source-plan read before current code; local full-file git blob SHA equals the pinned repository blob."
+    },
+    {
+      "id": "SRC-12",
+      "status": "OBSERVED",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "kind": "historical_test_log",
+      "repository_path": "codex_audit_round4/evidence/targeted_tests.log",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/codex_audit_round4/evidence/targeted_tests.log",
+      "read_ranges": [
+        [
+          1,
+          8
+        ]
+      ],
+      "git_blob_sha": "5fbb682b9e283b3e60e3750b5e6eec96d87c6ef6",
+      "limitation": "Original text copied in this package and Git blob SHA verified. Historical working-tree scope, not current reviewer execution."
+    },
+    {
+      "id": "SRC-13",
+      "status": "OBSERVED",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "kind": "historical_test_log",
+      "repository_path": "codex_audit_round4/evidence/additional_tests.log",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/codex_audit_round4/evidence/additional_tests.log",
+      "read_ranges": [
+        [
+          1,
+          5
+        ]
+      ],
+      "git_blob_sha": "00ce1e60d884f3f12e353d8a8d1d73a67696ec24",
+      "limitation": "Original text copied and Git blob SHA verified; same scope limitation."
+    },
+    {
+      "id": "SRC-14",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "historical_artifact_index",
+      "repository_path": "codex_audit_round4/evidence/artifact_crosschecks.json",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/codex_audit_round4/evidence/artifact_crosschecks.json",
+      "read_ranges": [],
+      "git_blob_sha": "f42ef119471c0b611df4dfdba2de479a8dc3b4a5",
+      "limitation": "Full JSON read. These are recorded crosschecks, not rehashed large artifacts in this review."
+    },
+    {
+      "id": "SRC-15",
+      "status": "OBSERVED",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "kind": "captured_job_records",
+      "repository_path": "codex_audit_round4/evidence/gpu_records_recomputed.json",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/codex_audit_round4/evidence/gpu_records_recomputed.json",
+      "read_ranges": [
+        [
+          1,
+          170
+        ]
+      ],
+      "git_blob_sha": "935ff4f8eef5bf0a817ddebf1046d327c6f9c936",
+      "limitation": "Read first job section and searched formal deterioration records in full retrieved response; did not read/recompute every number of the 763369-byte file or rerun jobs."
+    },
+    {
+      "id": "SRC-16",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "historical_validation_record",
+      "repository_path": "codex_audit_round4/evidence/final_validation.json",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/codex_audit_round4/evidence/final_validation.json",
+      "read_ranges": [],
+      "git_blob_sha": "999db710406393065b7613cfa6aaf861f82c7b16",
+      "limitation": "Full JSON read. Records d749 working-tree snapshot; not a fresh latest-HEAD validation."
+    },
+    {
+      "id": "SRC-17",
+      "status": "OBSERVED",
+      "evidence_status": "STATIC_CONFIRMED",
+      "kind": "historical_source_inventory",
+      "repository_path": "codex_audit_round4/evidence/audit_source_snapshot.json",
+      "commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+      "url": "https://github.com/sisuolv/EarthDelta/blob/a3596e6b804e9d23b72d1247b08c47129d6b50b1/codex_audit_round4/evidence/audit_source_snapshot.json",
+      "read_ranges": [],
+      "git_blob_sha": "6aa2001da292a85d249902f51caeec7f468a8a35",
+      "limitation": "Full JSON read; hashes list captured source files, not automatically current runtime."
+    }
+  ],
+  "repo_metadata_urls": [
+    "https://api.github.com/repos/sisuolv/EarthDelta/branches?per_page=100",
+    "https://api.github.com/repos/sisuolv/EarthDelta/git/trees/a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+    "https://api.github.com/repos/sisuolv/EarthDelta/git/trees/fdd92d79b1b03e8397d4c487d7fa4a347ae6fc37"
+  ],
+  "missing_primary_evidence": [
+    {
+      "status": "MISSING",
+      "item": "pt-7ant09uv latest raw S0 gate/config/job log/output tensors",
+      "consequence": "cannot independently recompute latest parity"
+    },
+    {
+      "status": "MISSING",
+      "item": "66 passed / 3 skipped primary pytest log and exact source binding",
+      "consequence": "not counted as latest verified CPU suite"
+    },
+    {
+      "status": "MISSING",
+      "item": "616-issue original admission.json and actual certified Zarr slices",
+      "consequence": "reported admission only; no independent data re-read"
+    },
+    {
+      "status": "MISSING",
+      "item": "all original large Fs and dynamic checkpoints for historical workers",
+      "consequence": "no independent byte/state or behavioral replay in this review"
+    },
+    {
+      "status": "MISSING",
+      "item": "qualified common-Fs bank, complete Stage4 cache, frozen legal predictions and native result table",
+      "consequence": "science goals not established"
+    }
+  ],
+  "future_evidence_status": "TO_BE_RUN",
+  "reviewer_repository_tests_run": false,
+  "reviewer_gpu_runs": 0,
+  "reviewer_training_runs": 0
+}

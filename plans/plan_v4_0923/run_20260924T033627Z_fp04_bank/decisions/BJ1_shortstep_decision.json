@@ -1,0 +1,414 @@
+{
+ "kind": "shortstep",
+ "rule": "BANK-SHORTSTEP-v1",
+ "job": "B-J1",
+ "workers": [
+  {
+   "config_id": "BJ1_E0",
+   "expert_index": 0,
+   "dir": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert0",
+   "files": {
+    "bank_training_expert0.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert0/bank_training_expert0.json",
+     "sha256": "03a7ec841f85507cb87590cabe4298a89c15826fbd07daf7356d13c6ac1efb5a"
+    },
+    "bank_panels_expert0.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert0/bank_panels_expert0.json",
+     "sha256": "ea65c266341b7567f7a7306c07db8ffed35a79b0254392823040d88ab81bdeff"
+    },
+    "bank_diagnostics_expert0.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert0/bank_diagnostics_expert0.json",
+     "sha256": "fa39785c1ecb0f43bd6267aad782292bacb5b974db9520261e68449014426c78"
+    },
+    "expert_0.pt": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert0/expert_0.pt",
+     "sha256": "9afbdd03688dd5db5560805431b87648acb82ccf5031dfc44136277a9106f537"
+    },
+    "bank_probe_expert0.pt": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert0/bank_probe_expert0.pt",
+     "sha256": "fb3552526ec503e6e2dd42c249fec41deab636b13267924dbebd9f8af42afdf6"
+    },
+    "run_record.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert0/run_record.json",
+     "sha256": "003d7608f91b2938108c6ab084cae7ac575729e31566cbebac96d22be87c2045"
+    },
+    "provenance.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert0/provenance.json",
+     "sha256": "2b4e112385e502fed2e45317a1ae5e3574906405bcc6fdcedccb1a581ab59af8"
+    },
+    "stdout.log": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert0/stdout.log",
+     "sha256": "3149e9536cb6b03429b23e71a052b7861554633ba59376b8a30ebae517511310"
+    },
+    "binding_refused.json": null
+   },
+   "validity_facts": {
+    "official_backend": true,
+    "torch_version": true,
+    "xformers_version": true,
+    "tf32_off": true,
+    "s0_certificate_consumed": true,
+    "admission_consumer_pass": true,
+    "protocol_sha256_match": true,
+    "config_id_match": true,
+    "certified_fs_authorized": true,
+    "no_source_drift": true,
+    "fs_source_is_certified_bundle": true,
+    "certified_fs_identity_pass": true,
+    "certified_fs_digests_are_pinned": true,
+    "initial_bank_digest_is_pinned": true,
+    "initial_expert_digest_is_pinned": true,
+    "grouping_is_pinned": true,
+    "training_order_is_the_pinned_group": true,
+    "probe_issue_is_pinned": true,
+    "backbone_is_certified_fs": true
+   },
+   "checks": {
+    "n_updates_as_declared": true,
+    "mode_as_declared": true,
+    "lr_as_declared": true,
+    "finite": true,
+    "B_grad_positive_at_update0": true,
+    "A_grad_zero_at_update0": true,
+    "A_grad_positive_from_update1": true,
+    "untrained_L0_equals_Fs_bitwise": true,
+    "expert_moved": true,
+    "nonzero_response": true,
+    "other_experts_unchanged": true,
+    "other_experts_grad_free": true,
+    "backbone_digest_unchanged": true,
+    "no_leftover_hooks": true,
+    "reload_exact": true,
+    "expert_file_rehashes": true
+   },
+   "passed": true,
+   "failed": []
+  },
+  {
+   "config_id": "BJ1_E1",
+   "expert_index": 1,
+   "dir": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert1",
+   "files": {
+    "bank_training_expert1.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert1/bank_training_expert1.json",
+     "sha256": "b63ad3dcbd2b4310fae4661427a1091633ad11b3a2fbac45514019cffe59e295"
+    },
+    "bank_panels_expert1.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert1/bank_panels_expert1.json",
+     "sha256": "312a6a64ae50927e51cf67a109bdd1ef1e5884babd2059e96e052a4d2b208875"
+    },
+    "bank_diagnostics_expert1.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert1/bank_diagnostics_expert1.json",
+     "sha256": "bd43328094ae382a400936c3355015392f2a5a7f9e3607e91b0b551e5ea23f42"
+    },
+    "expert_1.pt": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert1/expert_1.pt",
+     "sha256": "20b49968f0dda71d0ecb2b6c8176c9265c971f5ad887f598fe66b389791e9ff4"
+    },
+    "bank_probe_expert1.pt": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert1/bank_probe_expert1.pt",
+     "sha256": "aa1ac5872408e72f49af32750917691f7c98082edc876a79b57ffa633d246d63"
+    },
+    "run_record.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert1/run_record.json",
+     "sha256": "d2bb3991455992b0d4c63fc89026da8205bd69d34e236e018cc494811adf21ac"
+    },
+    "provenance.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert1/provenance.json",
+     "sha256": "ce518eeb1bd9bd2b776a54cadcf62cf7b5a3270545e4c13720cefbf903b1423e"
+    },
+    "stdout.log": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert1/stdout.log",
+     "sha256": "29acd39fdfb4a10c479d32a9be49444ca300552bbd36c16c421bbc6f898af600"
+    },
+    "binding_refused.json": null
+   },
+   "validity_facts": {
+    "official_backend": true,
+    "torch_version": true,
+    "xformers_version": true,
+    "tf32_off": true,
+    "s0_certificate_consumed": true,
+    "admission_consumer_pass": true,
+    "protocol_sha256_match": true,
+    "config_id_match": true,
+    "certified_fs_authorized": true,
+    "no_source_drift": true,
+    "fs_source_is_certified_bundle": true,
+    "certified_fs_identity_pass": true,
+    "certified_fs_digests_are_pinned": true,
+    "initial_bank_digest_is_pinned": true,
+    "initial_expert_digest_is_pinned": true,
+    "grouping_is_pinned": true,
+    "training_order_is_the_pinned_group": true,
+    "probe_issue_is_pinned": true,
+    "backbone_is_certified_fs": true
+   },
+   "checks": {
+    "n_updates_as_declared": true,
+    "mode_as_declared": true,
+    "lr_as_declared": true,
+    "finite": true,
+    "B_grad_positive_at_update0": true,
+    "A_grad_zero_at_update0": true,
+    "A_grad_positive_from_update1": true,
+    "untrained_L0_equals_Fs_bitwise": true,
+    "expert_moved": true,
+    "nonzero_response": true,
+    "other_experts_unchanged": true,
+    "other_experts_grad_free": true,
+    "backbone_digest_unchanged": true,
+    "no_leftover_hooks": true,
+    "reload_exact": true,
+    "expert_file_rehashes": true
+   },
+   "passed": true,
+   "failed": []
+  },
+  {
+   "config_id": "BJ1_E2",
+   "expert_index": 2,
+   "dir": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert2",
+   "files": {
+    "bank_training_expert2.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert2/bank_training_expert2.json",
+     "sha256": "9bb79413ecf46ca3614aaa4a0de48762c2beac0a173f9706655e560de7d82d5d"
+    },
+    "bank_panels_expert2.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert2/bank_panels_expert2.json",
+     "sha256": "8508d3a78a27441b300cf7ca0003457c3927bf91f20c789cdc13fcb5d4c831a0"
+    },
+    "bank_diagnostics_expert2.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert2/bank_diagnostics_expert2.json",
+     "sha256": "a121000eb6be891ad76fe6d5cff8dcaf065312eca1ce0cdba9a019cf193151be"
+    },
+    "expert_2.pt": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert2/expert_2.pt",
+     "sha256": "0506a28b2796d03bf94487c1e2dd959378fb70c7ac21c0bbd98c2b890348ef17"
+    },
+    "bank_probe_expert2.pt": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert2/bank_probe_expert2.pt",
+     "sha256": "73048dabfc2dac4bd8c4b807ff68e03312119c6db3631f46dc0a46eafe540757"
+    },
+    "run_record.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert2/run_record.json",
+     "sha256": "859b76d1b6fd7e4fdc9a9fccf5b90092633644ec86726de9b5acd119edcd7805"
+    },
+    "provenance.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert2/provenance.json",
+     "sha256": "871342a3f166c094bceac939633fce51bf7fc40ac058ca1a18c58b773522cf72"
+    },
+    "stdout.log": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert2/stdout.log",
+     "sha256": "a8b65392cd99f7882681e9c62c2474b65a6ca7640df464db079f26d73195bf35"
+    },
+    "binding_refused.json": null
+   },
+   "validity_facts": {
+    "official_backend": true,
+    "torch_version": true,
+    "xformers_version": true,
+    "tf32_off": true,
+    "s0_certificate_consumed": true,
+    "admission_consumer_pass": true,
+    "protocol_sha256_match": true,
+    "config_id_match": true,
+    "certified_fs_authorized": true,
+    "no_source_drift": true,
+    "fs_source_is_certified_bundle": true,
+    "certified_fs_identity_pass": true,
+    "certified_fs_digests_are_pinned": true,
+    "initial_bank_digest_is_pinned": true,
+    "initial_expert_digest_is_pinned": true,
+    "grouping_is_pinned": true,
+    "training_order_is_the_pinned_group": true,
+    "probe_issue_is_pinned": true,
+    "backbone_is_certified_fs": true
+   },
+   "checks": {
+    "n_updates_as_declared": true,
+    "mode_as_declared": true,
+    "lr_as_declared": true,
+    "finite": true,
+    "B_grad_positive_at_update0": true,
+    "A_grad_zero_at_update0": true,
+    "A_grad_positive_from_update1": true,
+    "untrained_L0_equals_Fs_bitwise": true,
+    "expert_moved": true,
+    "nonzero_response": true,
+    "other_experts_unchanged": true,
+    "other_experts_grad_free": true,
+    "backbone_digest_unchanged": true,
+    "no_leftover_hooks": true,
+    "reload_exact": true,
+    "expert_file_rehashes": true
+   },
+   "passed": true,
+   "failed": []
+  },
+  {
+   "config_id": "BJ1_E3",
+   "expert_index": 3,
+   "dir": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert3",
+   "files": {
+    "bank_training_expert3.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert3/bank_training_expert3.json",
+     "sha256": "e0251fbb929cbc2ad536c47e0e8ad9f5a089920a062be19b612a19e4ab88cc38"
+    },
+    "bank_panels_expert3.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert3/bank_panels_expert3.json",
+     "sha256": "2fbfcf27185528121230b54a2519857b36484ab11be279449eb775d8a25f6998"
+    },
+    "bank_diagnostics_expert3.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert3/bank_diagnostics_expert3.json",
+     "sha256": "41b7081b3ec28b952212400314e9dcdee346603f5ea491cc5ff71e3e68f7340f"
+    },
+    "expert_3.pt": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert3/expert_3.pt",
+     "sha256": "1b4d53881b0e05450f2b9b5f74885ca19e6687242d7d02edaf736a0cb4e37b0a"
+    },
+    "bank_probe_expert3.pt": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert3/bank_probe_expert3.pt",
+     "sha256": "d4ee9815988051ff1f848f0bf32a617d589c5e478f2649c301c78479ebbdd73c"
+    },
+    "run_record.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert3/run_record.json",
+     "sha256": "28cc607119baf0a871318ccb4c865176467758fecfa106784cd95ca833fc86b0"
+    },
+    "provenance.json": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert3/provenance.json",
+     "sha256": "41d1072c946c6ea86db3cc82d3996364d6f041fd87e796f2a1c65288250465a4"
+    },
+    "stdout.log": {
+     "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/expert3/stdout.log",
+     "sha256": "388ebf76d36fd200d3ea10accb8bf7009c251146c141191ed5cecbef13d274de"
+    },
+    "binding_refused.json": null
+   },
+   "validity_facts": {
+    "official_backend": true,
+    "torch_version": true,
+    "xformers_version": true,
+    "tf32_off": true,
+    "s0_certificate_consumed": true,
+    "admission_consumer_pass": true,
+    "protocol_sha256_match": true,
+    "config_id_match": true,
+    "certified_fs_authorized": true,
+    "no_source_drift": true,
+    "fs_source_is_certified_bundle": true,
+    "certified_fs_identity_pass": true,
+    "certified_fs_digests_are_pinned": true,
+    "initial_bank_digest_is_pinned": true,
+    "initial_expert_digest_is_pinned": true,
+    "grouping_is_pinned": true,
+    "training_order_is_the_pinned_group": true,
+    "probe_issue_is_pinned": true,
+    "backbone_is_certified_fs": true
+   },
+   "checks": {
+    "n_updates_as_declared": true,
+    "mode_as_declared": true,
+    "lr_as_declared": true,
+    "finite": true,
+    "B_grad_positive_at_update0": true,
+    "A_grad_zero_at_update0": true,
+    "A_grad_positive_from_update1": true,
+    "untrained_L0_equals_Fs_bitwise": true,
+    "expert_moved": true,
+    "nonzero_response": true,
+    "other_experts_unchanged": true,
+    "other_experts_grad_free": true,
+    "backbone_digest_unchanged": true,
+    "no_leftover_hooks": true,
+    "reload_exact": true,
+    "expert_file_rehashes": true
+   },
+   "passed": true,
+   "failed": []
+  }
+ ],
+ "across_workers": {
+  "all_workers_present": true,
+  "one_initial_bank": true,
+  "one_grouping": true,
+  "one_shared_certified_fs": true
+ },
+ "measurements": {
+  "profile": {
+   "config_id": "BJ1_PROFILE",
+   "validity_facts": {
+    "official_backend": true,
+    "torch_version": true,
+    "xformers_version": true,
+    "tf32_off": true,
+    "s0_certificate_consumed": true,
+    "admission_consumer_pass": true,
+    "protocol_sha256_match": true,
+    "config_id_match": true,
+    "certified_fs_authorized": true,
+    "no_source_drift": true,
+    "fs_source_is_certified_bundle": true,
+    "certified_fs_identity_pass": true,
+    "certified_fs_digests_are_pinned": true
+   },
+   "checks": {
+    "bank_unchanged": true,
+    "bank_is_the_pinned_initial_bank": true,
+    "profile_no_error": true,
+    "real_cuda_profile": true,
+    "keeps_K4_rank4": true,
+    "profiled_K4_rank4": true
+   },
+   "passed": true,
+   "failed": [],
+   "summary": {
+    "peak_memory_gib": 14.846409320831299,
+    "seconds_per_update": 1.4299464739548664
+   }
+  },
+  "horizon_check": {
+   "config_id": "BJ1_HORIZON",
+   "validity_facts": {
+    "official_backend": true,
+    "torch_version": true,
+    "xformers_version": true,
+    "tf32_off": true,
+    "s0_certificate_consumed": true,
+    "admission_consumer_pass": true,
+    "protocol_sha256_match": true,
+    "config_id_match": true,
+    "certified_fs_authorized": true,
+    "no_source_drift": true,
+    "fs_source_is_certified_bundle": true,
+    "certified_fs_identity_pass": true,
+    "certified_fs_digests_are_pinned": true
+   },
+   "checks": {
+    "bank_unchanged": true,
+    "bank_is_the_pinned_initial_bank": true,
+    "full_hold_feasible": true,
+    "no_activation_checkpointing": true,
+    "no_fallback_needed": true
+   },
+   "passed": true,
+   "failed": [],
+   "summary": {
+    "max_feasible_differentiable_steps": 4
+   }
+  }
+ },
+ "verdict": "PASS",
+ "reads_no_training_effect_number": true,
+ "note": "Machinery only: validity, gradient pattern, digests, reload, isolation, one shared certified Fs, K=4 profile, full-hold horizon, bank unchanged by the measurements. No loss trend or L1/Fs ratio was read.",
+ "protocol_sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1",
+ "inputs": {
+  "protocol": {
+   "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json",
+   "sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1"
+  }
+ },
+ "job_dir": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c",
+ "decided_utc": "2026-09-24T05:24:26.638580+00:00",
+ "decider_sha256": "3aae47105e235779c01ca88d4030873e9a5989071208167fda418703dea81445"
+}

@@ -1,0 +1,21 @@
+{
+ "job": "V2-J3",
+ "job_id": "pt-fuiqqeau",
+ "run_dir": "artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b",
+ "label": "r4fs03v2p",
+ "timeout_seconds": 3600,
+ "config_id": "V2_P",
+ "learning_rate": 0.0025,
+ "H": 32,
+ "argv_file": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/jobs/V2_J3.argv.json",
+ "argv_file_sha256": "73f5565d377da5075117ad6975347f8bbb8fefdf06551f3da18f5f7f4254b5d1",
+ "invocation_sha256": "82429c7eff04de16b0b59b9f28dcf4724ab3b9cdda5fbcc27a799c61e8cff58c",
+ "source_manifest_sha256": "488f26217ac0cd36d7b21d5dc681df920646d559f77cae9d7881e9ef9d5f9f48",
+ "protocol_sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe",
+ "go_ahead": "coordinator explicit go-ahead on the v2 protocol sha before submission",
+ "preconditions": [
+  "no source drift vs source_at_preregistration",
+  "all protocol input pins verified"
+ ],
+ "recorded_utc": "2026-09-24T02:09:45.019981+00:00"
+}

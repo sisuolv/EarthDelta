@@ -1,0 +1,243 @@
+{
+  "metadata": {
+    "status": "PROTOCOL_V2 fresh holdout under amendment A1 (never trained on; no model output before the confirmatory job)",
+    "amendment": {
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/holdout/holdout_selection_amendment_A1.json",
+      "sha256": "2c59fd02d0d73a49493d7cb910d903935a88f554782847d1df3aae344e6f17e2"
+    },
+    "integrity_scan": {
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/holdout/finiteness_scan_2019.json",
+      "sha256": "e35f7b1eb613ba8c8fa6ebc0437d64034087a42d980a3986168dc3570bbff87c"
+    },
+    "targets": [
+      4.0,
+      52.2,
+      100.4,
+      148.6,
+      196.8,
+      245.0,
+      293.2,
+      341.4,
+      389.6,
+      437.8,
+      486.0,
+      534.2,
+      582.4,
+      630.6,
+      678.8,
+      727.0
+    ],
+    "picks": [
+      4,
+      62,
+      100,
+      135,
+      197,
+      254,
+      293,
+      350,
+      390,
+      438,
+      486,
+      519,
+      582,
+      631,
+      679,
+      727
+    ]
+  },
+  "rows": [
+    {
+      "issue_time": 1546387200,
+      "valid_time": 1546646400,
+      "available_time": 1546668000,
+      "event_id": "2019010200_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_78005e70ef00db03",
+      "data_role": null
+    },
+    {
+      "issue_time": 1547640000,
+      "valid_time": 1547899200,
+      "available_time": 1547920800,
+      "event_id": "2019011612_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_f0db1d0ae777475e",
+      "data_role": null
+    },
+    {
+      "issue_time": 1548460800,
+      "valid_time": 1548720000,
+      "available_time": 1548741600,
+      "event_id": "2019012600_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_e3110523a5d06cce",
+      "data_role": null
+    },
+    {
+      "issue_time": 1549216800,
+      "valid_time": 1549476000,
+      "available_time": 1549497600,
+      "event_id": "2019020318_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_e60ea3d4da079032",
+      "data_role": null
+    },
+    {
+      "issue_time": 1550556000,
+      "valid_time": 1550815200,
+      "available_time": 1550836800,
+      "event_id": "2019021906_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_d75a54f56f713595",
+      "data_role": null
+    },
+    {
+      "issue_time": 1551787200,
+      "valid_time": 1552046400,
+      "available_time": 1552068000,
+      "event_id": "2019030512_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_71451e9041be8cbe",
+      "data_role": null
+    },
+    {
+      "issue_time": 1552629600,
+      "valid_time": 1552888800,
+      "available_time": 1552910400,
+      "event_id": "2019031506_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_0afb18079efc6ce7",
+      "data_role": null
+    },
+    {
+      "issue_time": 1553860800,
+      "valid_time": 1554120000,
+      "available_time": 1554141600,
+      "event_id": "2019032912_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_69f5893dc7bfcf77",
+      "data_role": null
+    },
+    {
+      "issue_time": 1554724800,
+      "valid_time": 1554984000,
+      "available_time": 1555005600,
+      "event_id": "2019040812_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_d5e8c2f833ca3410",
+      "data_role": null
+    },
+    {
+      "issue_time": 1555761600,
+      "valid_time": 1556020800,
+      "available_time": 1556042400,
+      "event_id": "2019042012_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_12595134f55a0d79",
+      "data_role": null
+    },
+    {
+      "issue_time": 1556798400,
+      "valid_time": 1557057600,
+      "available_time": 1557079200,
+      "event_id": "2019050212_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_dd44eafd1e0c8efb",
+      "data_role": null
+    },
+    {
+      "issue_time": 1557511200,
+      "valid_time": 1557770400,
+      "available_time": 1557792000,
+      "event_id": "2019051018_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_ce84cd695e6a258e",
+      "data_role": null
+    },
+    {
+      "issue_time": 1558872000,
+      "valid_time": 1559131200,
+      "available_time": 1559152800,
+      "event_id": "2019052612_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_85ab69ef55ac747c",
+      "data_role": null
+    },
+    {
+      "issue_time": 1559930400,
+      "valid_time": 1560189600,
+      "available_time": 1560211200,
+      "event_id": "2019060718_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_689934ad4b3ab205",
+      "data_role": null
+    },
+    {
+      "issue_time": 1560967200,
+      "valid_time": 1561226400,
+      "available_time": 1561248000,
+      "event_id": "2019061918_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_a3413f0b2c6bfe39",
+      "data_role": null
+    },
+    {
+      "issue_time": 1562004000,
+      "valid_time": 1562263200,
+      "available_time": 1562284800,
+      "event_id": "2019070118_L072",
+      "split_id": "val",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_f7c0ae6dee63f24d",
+      "data_role": null
+    }
+  ]
+}

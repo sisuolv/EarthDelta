@@ -1,0 +1,379 @@
+[
+  {
+    "id": "FP-00",
+    "priority": "P0",
+    "depends_on": [],
+    "scope": "只读核验最新分支/工作区、原计划、原始日志与实际资产；不训练、不提交GPU作业。",
+    "files": [
+      "evidence/REQUIRED_INPUTS.md",
+      "tools/collect_entry_evidence.py",
+      "plans/plans_v3_0922/",
+      "codex_audit_round4/evidence/"
+    ],
+    "implementation": [
+      "记录实际HEAD、代码树、未提交diff及module文件hash；保留用户改动。",
+      "检查pt-7ant09uv原始证书/张量和两个formal Fs作业资料；缺失项逐项MISSING，禁止据摘要升级。",
+      "冻结新run目录、asset map、曝光台账与原fitted-Fs协议；只读收集不产生任何parity PASS。"
+    ],
+    "commands": [
+      "python \"$PKG/tools/validate_delivery.py\" --package \"$PKG\"",
+      "python \"$PKG/tools/collect_entry_evidence.py\" --repo \"$REPO\" --out \"$RUN/entry\""
+    ],
+    "acceptance_criteria": [
+      "source与实现差异清单可复核；没有覆盖原证据。",
+      "列全S0/Fs/data缺项，清楚区分可执行CPU工作与缺资产的GPU工作。",
+      "FP-01所需实际路径与S0-only预算均明确，方可请求其解锁。"
+    ],
+    "evidence_outputs": [
+      "entry/entry_evidence.json",
+      "entry/worktree.diff",
+      "entry/source_files.json",
+      "required_inputs_resolved.json",
+      "authorization.json"
+    ],
+    "stop_if": [
+      "代码或资产身份未确定；禁止修改证书填PASS。",
+      "任何要求提供账号密钥/修改用户无关作业的步骤。"
+    ],
+    "cpu_gpu": "CPU only",
+    "authorization": "OPEN_READ_ONLY",
+    "execution_state": "READY",
+    "status": "TO_BE_RUN",
+    "estimated_minutes": null,
+    "estimate_status": "MISSING_NEEDS_MEASURED_PROFILE",
+    "estimated_minutes_note": "不预测未知硬件/排队/数据传输/工程耗时；先记录实际profile，再登记后续上限。原计划60/75分钟等是worker管理cap，不是本次实测或完成承诺。"
+  },
+  {
+    "id": "FP-01",
+    "priority": "P0",
+    "depends_on": [
+      "FP-00"
+    ],
+    "scope": "定位并修复官方/bridge多步差异；冻结1e-5不变，1/4/12步独立官方S0全部通过才闭合。",
+    "files": [
+      "earthdelta/bridge/stormer_bridge.py",
+      "scripts/r4_s0_parity_diagnose.py",
+      "scripts/export_upstream_reference.py",
+      "scripts/s0_gate.py",
+      "scripts/r4_s0_rerun_existing_env.py",
+      "tests/test_normalization_policy.py",
+      "tests/test_s0_gate_end_to_end.py",
+      "tests/test_input_inverse_source_precision.py (NEW)"
+    ],
+    "implementation": [
+      "检查执行机真实NPZ dtype与hash。比较input inverse在源dtype先求倒数再cast、先float再求倒数；必要时保留raw input常量/预构造buffers，更新算术身份。",
+      "修复diagnostic后处理模型条件遗漏/10的问题；实现official-model×official-transform、official×bridge、bridge×official、bridge×bridge四臂逐step trace。",
+      "共同输入局部算子比较与自由rollout分开；记录inverse/constants/pad/constant mask/model/raw add/renormalize差异；不要用双边共错修补。",
+      "以实际导入源码hash+config+raw/normalized输入+各时效输出绑定独立export/gate；修改后建立新证据目录，不复用旧PASS。",
+      "独立真实export和gate输出全部注册步数<=1e-5；缺CUDA/xformers/权重/NPZ则BLOCKED，CPU synthetic只能证明测试逻辑。"
+    ],
+    "commands": [
+      "python -m pytest -q tests/test_normalization_policy.py tests/test_s0_gate_identity.py tests/test_s0_fail_closed.py tests/test_s0_gate_end_to_end.py tests/test_input_inverse_source_precision.py",
+      "python scripts/r4_s0_parity_diagnose.py --run \"$RUN\" --assets \"$ASSETS\" --out \"$RUN/s0/four_arm_trace.json\"",
+      "python scripts/r4_s0_rerun_existing_env.py --run \"$RUN\" --assets \"$ASSETS\" --overlay-run \"$OVERLAY_RUN\""
+    ],
+    "acceptance_criteria": [
+      "四臂/逐算子数据解释首个差异；若未解释则PLAUSIBLE_UNVERIFIED而不是写root cause fixed。",
+      "相同冻结ps4、原生输入、FP32、official_zero_diff_mean、全部1/4/12步max_abs_diff<=1e-5。",
+      "gate结果committed PASS、job exit成功、身份/hash/环境完整；真实原始输出可独立复算。"
+    ],
+    "evidence_outputs": [
+      "s0/gate_config.json",
+      "s0/four_arm_trace.json",
+      "s0/official_manifest.json",
+      "s0/official_output_6h_1step.pt",
+      "s0/official_output_6h_4step.pt",
+      "s0/official_output_6h_12step.pt",
+      "s0/s0_gate_result.json",
+      "s0/job_result.json",
+      "s0/stdout.log",
+      "s0/source_manifest.json"
+    ],
+    "stop_if": [
+      "任一注册时效超1e-5或输入/源码/资产绑定失败。",
+      "不得放宽容差、减少时效/变量/空间、用SDPA冒充official xformers。",
+      "任何GPU资产/数值根因证据缺失；到达已批准cap。"
+    ],
+    "cpu_gpu": "CPU regression + real GPU S0",
+    "authorization": "S0_ONLY_AFTER_FP00_AND_RESOURCE_APPROVAL",
+    "execution_state": "BLOCKED_BY_FP00",
+    "status": "TO_BE_RUN",
+    "estimated_minutes": null,
+    "estimate_status": "MISSING_NEEDS_MEASURED_PROFILE",
+    "estimated_minutes_note": "不预测未知硬件/排队/数据传输/工程耗时；先记录实际profile，再登记后续上限。原计划60/75分钟等是worker管理cap，不是本次实测或完成承诺。"
+  },
+  {
+    "id": "FP-02",
+    "priority": "P0",
+    "depends_on": [
+      "FP-01"
+    ],
+    "scope": "只修复原Fs计划的真实入口消费链：STOP、admission、Q、registry、profile不可变性。",
+    "files": [
+      "scripts/r2_fs_bank_train.py",
+      "scripts/r2_admission_gate.py",
+      "earthdelta/static_adapter.py",
+      "earthdelta/pilot_contract.py",
+      "earthdelta/metrics_contract.py",
+      "earthdelta/registry.py",
+      "earthdelta/bank_training.py",
+      "scripts/plan_followup_runner.py (NEW THIN WRAPPER)",
+      "tests/test_plan_gate_chain.py (NEW)",
+      "tests/test_loaded_admission_binding.py (NEW)",
+      "tests/test_profile_immutability.py (NEW)"
+    ],
+    "implementation": [
+      "stage-all任一步False/exception则后继BLOCKED且未调用；单阶段也必须验证前驱证书，不能绕过。",
+      "消费者验证外层PASS、全部行内容hash、实际UTC t-12/t-6/t以及+6/+24/+72、norm/source/config和角色；不得以issue_index替代实际时间身份。",
+      "同一Q用于训练loss/端点gain/选择评分，端点先double再差分；legacy仅诊断，校准项默认关闭且单独输出。",
+      "profile使用临时clone或完整恢复，参数/buffers/模式/梯度状态前后一致，绝不改变已冻结产物。",
+      "正式registry非空唯一明确no-edit，必须绑定实际Fs/bank/normalization/protocol；构造测试直接调用真正消费入口。",
+      "创建薄runner复用现有函数与序列化，不重写气象模型；其CLI按本任务文档新增后才可调用。"
+    ],
+    "commands": [
+      "python -m pytest -q tests/test_metric_contract.py tests/test_content_verification_b08.py tests/test_pilot_admission_b09.py tests/test_candidate_registry_b15.py tests/test_plan_gate_chain.py tests/test_loaded_admission_binding.py tests/test_profile_immutability.py",
+      "python scripts/plan_followup_runner.py verify-contracts --run \"$RUN\""
+    ],
+    "acceptance_criteria": [
+      "注入前驱FAIL/MISSING、错norm、错时次、缺任一内容证书、6h准入供24h训练时，实际入口拒绝且trainer spy调用数0。",
+      "native endpoint identity通过FP32源端点反例；invalid mask/scale拒绝。",
+      "profile前后bank hash相同；critical source更新影响S0时返回FP-01重新验证。"
+    ],
+    "evidence_outputs": [
+      "contracts/contract_gate.json",
+      "contracts/pytest.log",
+      "contracts/junit.xml",
+      "contracts/source_manifest.json",
+      "contracts/admission_manifest.json",
+      "contracts/rejected_cases.json",
+      "contracts/profile_immutability.json"
+    ],
+    "stop_if": [
+      "任何消费链可fail-open，或变更了S0认证的数值路径未复验。",
+      "冻结split/目标/候选/阈值不能从后续结果倒推修改。"
+    ],
+    "cpu_gpu": "CPU; no expert training",
+    "authorization": "LOCKED",
+    "execution_state": "LOCKED",
+    "status": "TO_BE_RUN",
+    "estimated_minutes": null,
+    "estimate_status": "MISSING_NEEDS_MEASURED_PROFILE",
+    "estimated_minutes_note": "不预测未知硬件/排队/数据传输/工程耗时；先记录实际profile，再登记后续上限。原计划60/75分钟等是worker管理cap，不是本次实测或完成承诺。"
+  },
+  {
+    "id": "FP-03",
+    "priority": "P0",
+    "depends_on": [
+      "FP-02"
+    ],
+    "scope": "先解决fitted-Fs退化，再训练/选定并冻结唯一共同Fs；不能直接启动动态expert。",
+    "files": [
+      "earthdelta/static_adapter.py",
+      "scripts/r2_fs_bank_train.py",
+      "scripts/plan_followup_runner.py (NEW)",
+      "tests/test_fs_quality_gate.py (NEW)",
+      "tests/test_fs_static_adapter.py"
+    ],
+    "implementation": [
+      "建立真实质量资格门，与finite/update count/merge equivalence分开。固定初始化、训练侧面板、候选checkpoint、允许retry/LR选择及预算；规则在观察候选质量前冻结。",
+      "先16–32 update诊断；finite grad和loss仅必要条件。500保留为上限，非强制目标；不盲目重复已退化0.01/500设置。",
+      "在共同初始/候选最终checkpoint上复评同一面板，并单列逐issue首次/末次访问loss；实际8/8大退化案例必须拒绝，不能只做格式化。",
+      "依据训练侧预登记规则选一次Fs，保存adapter及合并backbone、optimizer/seed/data/source证据、nonfinite和失败尝试。",
+      "独立进程重载并核验merged/always-on、no-edit/continuation从编辑状态继续Fs；所有后续worker只加载这份内容身份。"
+    ],
+    "commands": [
+      "python -m pytest -q tests/test_fs_static_adapter.py tests/test_fs_quality_gate.py tests/test_plan_gate_chain.py",
+      "python scripts/plan_followup_runner.py fs-diagnose --run \"$RUN\"",
+      "python scripts/plan_followup_runner.py fs-fit-freeze --run \"$RUN\"",
+      "python scripts/plan_followup_runner.py verify-fs --run \"$RUN\""
+    ],
+    "acceptance_criteria": [
+      "真实固定面板质量满足预登记标准；没有将数值merge PASS当质量PASS。",
+      "重载后Fs身份/行为一致；退化候选不能发布合格reference_manifest。",
+      "得到唯一Fs certificate，包含实际权重hash、训练侧选择轨迹和资格限制。"
+    ],
+    "evidence_outputs": [
+      "fs/quality_rule.json",
+      "fs/training_records.json",
+      "fs/panel_initial_final.json",
+      "fs/fs_adapter.pt",
+      "fs/fs_merged_backbone.pt",
+      "fs/qualification.json",
+      "fs/independent_reload.json",
+      "fs/reference_manifest.json",
+      "fs/job_result.json"
+    ],
+    "stop_if": [
+      "S0不再有效；缺训练侧质量阈值/预算；Fs仍明显退化；没有独立可重载产物。",
+      "禁止以F0冒充合格Fs、按dev赢家挑Fs、无限重试或漏报坏run。"
+    ],
+    "cpu_gpu": "CPU regression + one bounded GPU Fs path",
+    "authorization": "LOCKED",
+    "execution_state": "LOCKED",
+    "status": "TO_BE_RUN",
+    "estimated_minutes": null,
+    "estimate_status": "MISSING_NEEDS_MEASURED_PROFILE",
+    "estimated_minutes_note": "不预测未知硬件/排队/数据传输/工程耗时；先记录实际profile，再登记后续上限。原计划60/75分钟等是worker管理cap，不是本次实测或完成承诺。"
+  },
+  {
+    "id": "FP-04",
+    "priority": "P1",
+    "depends_on": [
+      "FP-03"
+    ],
+    "scope": "在唯一合格Fs上训练K4/rank4，并建立持久化、独立qualification、组装与registry证书。",
+    "files": [
+      "earthdelta/bank_training.py",
+      "earthdelta/value_pilot.py (reuse persistence only with fitted-Fs schema)",
+      "scripts/r2_fs_bank_train.py",
+      "scripts/plan_followup_runner.py (NEW)",
+      "earthdelta/registry.py",
+      "tests/test_fitted_fs_bank_roundtrip.py (NEW)"
+    ],
+    "implementation": [
+      "所有worker从同一Fs artifact启动并记录加载后state hash；不允许worker本地再fit Fs。",
+      "K4/rank4 blocks18–23、singleton .25、hold4×6h固定；profile若要求K2只能在看dev前登记新身份。",
+      "先短步验证，再按预算训练；每个expert有自己的训练来源、梯度、非零响应、资格与可重载checkpoint。",
+      "保存并重载组装bank；同输入逐k比较源expert与assembled singleton 6/24/72h输出，zero-edit=Fs、窗外继续Fs。",
+      "冻结registry绑定完整bank/Fs/norm/inputs/protocol/source与资格证书；不得仅保存JSON中的参数摘要。"
+    ],
+    "commands": [
+      "python -m pytest -q tests/test_bank_training.py tests/test_bank_gradients.py tests/test_fitted_fs_bank_roundtrip.py tests/test_candidate_registry_b15.py",
+      "python scripts/plan_followup_runner.py bank-train --run \"$RUN\"",
+      "python scripts/plan_followup_runner.py bank-qualify-assemble --run \"$RUN\""
+    ],
+    "acceptance_criteria": [
+      "4个worker的reference hash唯一；4个expert全有合格且可重载证据。",
+      "组装前后行为等价与reference continuation通过冻结数值规则；不得套用S0以外容差给S0放行。",
+      "被消费registry精确绑定最终dynamic权重；profile不会改变它。"
+    ],
+    "evidence_outputs": [
+      "bank/expert_0.pt",
+      "bank/expert_1.pt",
+      "bank/expert_2.pt",
+      "bank/expert_3.pt",
+      "bank/qualification.json",
+      "bank/bank.pt",
+      "bank/assembly_equivalence.json",
+      "bank/registry.json",
+      "bank/bank_manifest.json",
+      "bank/job_results.json"
+    ],
+    "stop_if": [
+      "任何reference不同/专家不合格/动态权重缺失/行为不等价/metadata不匹配。",
+      "不按dev收益删掉坏expert再称原K4合格。"
+    ],
+    "cpu_gpu": "GPU independent processes + CPU artifact validation",
+    "authorization": "LOCKED",
+    "execution_state": "LOCKED",
+    "status": "TO_BE_RUN",
+    "estimated_minutes": null,
+    "estimate_status": "MISSING_NEEDS_MEASURED_PROFILE",
+    "estimated_minutes_note": "不预测未知硬件/排队/数据传输/工程耗时；先记录实际profile，再登记后续上限。原计划60/75分钟等是worker管理cap，不是本次实测或完成承诺。"
+  },
+  {
+    "id": "FP-05",
+    "priority": "P1",
+    "depends_on": [
+      "FP-04"
+    ],
+    "scope": "按原计划构建五候选cache与廉价时间隔离OOF开发表；不训练dual-head，不打开confirm。",
+    "files": [
+      "scripts/plan_followup_runner.py (NEW)",
+      "earthdelta/value_pilot.py (reuse cache primitives, explicit fitted-Fs identity)",
+      "earthdelta/metrics_contract.py",
+      "scripts/plan_dev_evaluate.py (NEW)",
+      "tests/test_plan_cache_evaluation.py (NEW)"
+    ],
+    "implementation": [
+      "8个exposed起报全候选debug；通过后按实际吞吐/可用独立过程/磁盘冻结32/64/128 dev规模及采样顺序，非依据收益。",
+      "复用cache机制但明确reference=fitted-Fs；候选严格5=zero+4singleton .25，一条12步轨迹存6/24/72端点；保留全部失败分母与成本。",
+      "跨时间purged OOF，以fold-train选择静态专家/拟合regime和ridge direct-gain；scaler与HPO均仅fold-train；每issue所有candidate同角色。",
+      "合法policy读取t-12/t-6/t和已声明的便宜信息，不读验证truth/真实candidate response/oracle。预测/动作先保存hash，再由评分器结算。",
+      "oracle从完整实际结果表计算，明确hindsight非可部署；不把完整表预先泄漏到模型训练；confirm保持封闭。"
+    ],
+    "commands": [
+      "python -m pytest -q tests/test_plan_cache_evaluation.py tests/test_metric_contract.py tests/test_plan_gate_chain.py",
+      "python scripts/plan_followup_runner.py cache-debug --run \"$RUN\"",
+      "python scripts/plan_followup_runner.py cache-dev --run \"$RUN\"",
+      "python scripts/plan_dev_evaluate.py --run \"$RUN\""
+    ],
+    "acceptance_criteria": [
+      "事先冻结的完整issue×5候选矩阵可从hash绑定端点独立复算。",
+      "OOF动作在标签揭示前提交，fold无历史/未来支持交叠；不把grid/candidate/lead当独立n。",
+      "24h主loss、gain Fs/static、72h guard、harm/noedit、成本及失败可复核；宽CI保留INCONCLUSIVE。"
+    ],
+    "evidence_outputs": [
+      "cache/debug_manifest.json",
+      "cache/dev_protocol.json",
+      "cache/cache_manifest.json",
+      "cache/candidate_results.parquet",
+      "policies/folds.json",
+      "policies/oof_predictions.json",
+      "policies/prediction_freeze.json",
+      "evaluation/dev_results.csv",
+      "evaluation/paired_block_bootstrap.json",
+      "evaluation/costs.json",
+      "evaluation/failures.json"
+    ],
+    "stop_if": [
+      "任何前驱不合格；矩阵不完整或只有成功subset；发现oracle/validation信息进入fit。",
+      "dev规模/专家/目标按结果改变；读取confirm。",
+      "不得把oracle PASS当合法policy或novelty PASS。"
+    ],
+    "cpu_gpu": "GPU cached rollouts + CPU cheap heads/statistics",
+    "authorization": "LOCKED",
+    "execution_state": "LOCKED",
+    "status": "TO_BE_RUN",
+    "estimated_minutes": null,
+    "estimate_status": "MISSING_NEEDS_MEASURED_PROFILE",
+    "estimated_minutes_note": "不预测未知硬件/排队/数据传输/工程耗时；先记录实际profile，再登记后续上限。原计划60/75分钟等是worker管理cap，不是本次实测或完成承诺。"
+  },
+  {
+    "id": "FP-06",
+    "priority": "P1",
+    "depends_on": [
+      "FP-05"
+    ],
+    "scope": "独立核验本迭代结果并决定STOP/CONTINUE/PIVOT/INCONCLUSIVE；不自动开启下一研究阶段。",
+    "files": [
+      "scripts/plan_dev_evaluate.py (NEW)",
+      "scripts/plan_followup_runner.py (NEW)",
+      "CURRENT_GAP_ANALYSIS.md",
+      "evidence/PLAN_AUDIT_RESULT.json"
+    ],
+    "implementation": [
+      "从冻结矩阵重算各方法，核对issue/candidate/seed/时间块分母与全部资源。",
+      "分别评估oracle headroom、oracle-static、legal-static、ridge/regime；阈值与MDE分开，不凭空写收益百分比。",
+      "若Fs/bank资格不足，停止当前资产继续扩张但不判idea科学失败；若CI跨阈值到达cap则INCONCLUSIVE停止追加。",
+      "发布机器decision与HANDOFF，明确代码、CPU、GPU、parity、实验、科学支持各层；original confirm/dualhead仍未解锁。"
+    ],
+    "commands": [
+      "python scripts/plan_dev_evaluate.py --run \"$RUN\" --verify-only",
+      "python scripts/plan_followup_runner.py decision --run \"$RUN\""
+    ],
+    "acceptance_criteria": [
+      "每条外部声明能追到正确commit、job、artifact、metric。",
+      "停止/继续结论与置信区间、最低有用效应、资格和成本相符；无阈值回改。",
+      "保存新PLAN_AUDIT_RESULT和HANDOFF而不篡改本包历史审查。"
+    ],
+    "evidence_outputs": [
+      "decision.json",
+      "HANDOFF.md",
+      "AUDIT_RESULT_AFTER_RUN.json",
+      "evaluation/independent_recompute.json",
+      "claims.json"
+    ],
+    "stop_if": [
+      "证据仍缺失/不可重算；效应不够或INCONCLUSIVE且预算到cap。",
+      "任何宣称新颖性成立/正式holdout完成却无对应实验。"
+    ],
+    "cpu_gpu": "CPU only",
+    "authorization": "LOCKED",
+    "execution_state": "LOCKED",
+    "status": "TO_BE_RUN",
+    "estimated_minutes": null,
+    "estimate_status": "MISSING_NEEDS_MEASURED_PROFILE",
+    "estimated_minutes_note": "不预测未知硬件/排队/数据传输/工程耗时；先记录实际profile，再登记后续上限。原计划60/75分钟等是worker管理cap，不是本次实测或完成承诺。"
+  }
+]

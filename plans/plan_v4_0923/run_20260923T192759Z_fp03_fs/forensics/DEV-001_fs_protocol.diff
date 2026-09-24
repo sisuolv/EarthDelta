@@ -1,0 +1,31 @@
+--- artifacts/round2_cci/ed-r4fs03diag-0923203433-4127c2/source/earthdelta/fs_protocol.py	2026-09-23 20:11:06.975814321 +0000
++++ earthdelta/fs_protocol.py	2026-09-23 20:49:34.310734166 +0000
+@@ -342,6 +342,7 @@
+         "tf32": {
+             "cuda_matmul_allow_tf32": bool(torch.backends.cuda.matmul.allow_tf32),
+             "cudnn_allow_tf32": bool(torch.backends.cudnn.allow_tf32),
++            "float32_matmul_precision": torch.get_float32_matmul_precision(),
+             "env": {k: os.environ.get(k) for k in TF32_ENV_OVERRIDES},
+         },
+         "determinism": {
+@@ -361,7 +362,18 @@
+ 
+ 
+ def tf32_is_off(provenance: Mapping[str, Any]) -> bool:
++    """TF32 is off iff the EFFECTIVE flags, read after the process configured
++    torch, are off.
++
++    ``TORCH_ALLOW_TF32_CUBLAS_OVERRIDE`` is recorded but not decisive: in the
++    certified torch 2.3.1 it only initializes ``float32_matmul_precision``
++    (ATen/Context.h member initializer); the explicit
++    ``torch.backends.cuda.matmul.allow_tf32 = False`` every Fs process issues at
++    import resets it to HIGHEST, and cuBLAS consults only that member
++    (``Context::allowTF32CuBLAS``), which is exactly what the recorded getter
++    returns. When the precision itself was recorded it must be "highest".
++    """
+     tf32 = provenance.get("tf32") or {}
+-    env = tf32.get("env") or {}
++    precision = tf32.get("float32_matmul_precision")
+     return (tf32.get("cuda_matmul_allow_tf32") is False and tf32.get("cudnn_allow_tf32") is False
+-            and env.get("TORCH_ALLOW_TF32_CUBLAS_OVERRIDE") in (None, "", "0"))
++            and (precision is None or precision == "highest"))

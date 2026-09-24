@@ -1,0 +1,25 @@
+{
+ "job": "B-J1",
+ "job_id": "pt-ycpvyb6n",
+ "run_dir": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c",
+ "label": "r4bankbj1",
+ "timeout_seconds": 3600,
+ "configs": [
+  "BJ1_E0..E3 (cuda:0..3, 16 updates, lr 2.5e-3)",
+  "BJ1_PROFILE (cuda:0)",
+  "BJ1_HORIZON (cuda:1)"
+ ],
+ "argv_file": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/jobs/B-J1.argv.json",
+ "argv_file_sha256": "8daa56c4602e897f0d9b327727cec43c750dcf9329e14ddca63917a4532ba408",
+ "invocation_sha256": "e4df72b3d483885ccaf5398d88203fb91a98005f97d3630ca6acd5bdbcb788b8",
+ "source_manifest_sha256": "a9ba6ef05f0bdc61a8a96bcf778bb492df21fd675d0ccc778f737271b86dcb72",
+ "protocol_sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1",
+ "go_ahead": "coordinator explicit go-ahead on protocol 394562dd... before submission",
+ "preconditions": [
+  "no source drift vs source_at_preregistration (snapshot manifest checked)",
+  "all protocol input pins verified"
+ ],
+ "budget": "GPU job 1 of max 7",
+ "dry_run_dir_not_submitted": "artifacts/round2_cci/DRYRUN_NOT_SUBMITTED_ed-r4bankbj1-0924051336-ee3c78",
+ "recorded_utc": "2026-09-24T05:14:05.617230+00:00"
+}

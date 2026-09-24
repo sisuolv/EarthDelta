@@ -1,0 +1,50 @@
+{
+ "schema_version": "ed-fp03-task-result/1",
+ "task": "FP-03 protocol v2 (short training horizon H=32)",
+ "status": "OBSERVED",
+ "verdict": "PASS - FS_SELECTED (unique qualified fitted Fs published)",
+ "protocol": {"path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/fs_protocol_v2.json",
+              "sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe",
+              "frozen_utc": "2026-09-24T02:04:13Z", "go_ahead": "coordinator, before any v2 GPU job"},
+ "jobs": {
+  "V2-J3": {"job_id": "pt-fuiqqeau", "run_dir": "artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b",
+            "result": "SUCCEEDED rc=0 306.8s", "config": "V2_P, H=32, lr 2.5e-3, 4 replicas (bitwise identical)",
+            "decision": "decisions/V2_J3_formal_decision.json: QUALITY_PASS_PENDING_DESIGNATED_GATES"},
+  "V2-J4": {"job_id": "pt-gr3rrmdg", "run_dir": "artifacts/round2_cci/ed-r4fs03v2j4-0924021935-be0786",
+            "result": "SUCCEEDED rc=0 263.7s", "config": "V2_J4_FREEZE (cuda:0) then V2_J4_VERIFY (cuda:1, independent process)",
+            "decision": "certify/V2_certify_decision.json: FS_SELECTED"},
+  "V2-J3b": "not run (V2-J3 did not FAIL)",
+  "budget": "2 of max 4 GPU jobs; 0 infra retries"
+ },
+ "fs_qual_v2_per_replica_all_4_identical": {
+  "Q0": "PASS (15/15 facts: certified backend torch 2.3.1+cu121/xformers 0.0.27, TF32 off, S0 consumed, admissions certified, protocol/config-id, init digest, train F0 = pinned v1 J1 reference bitwise, fresh-holdout F0 bitwise across replicas, formal 32-update record)",
+  "Q1": "PASS (32 updates, finite)",
+  "Q2": "PASS (0 clips, max per-visit ratio 1.0000, no epoch onset)",
+  "Q3": "PASS (8/8)",
+  "Q4": "PASS (train 24h mean 0.974060, max 0.980014)",
+  "Q5": "PASS (train 72h mean 0.992369 <= 1.01)",
+  "Q6": "PASS (fresh 2019 holdout, 16 issues, 24h mean 1.003393 <= 1.02)"
+ },
+ "designated_gates_independent_process": {
+  "identity_pass": "merged-backbone, base-backbone and static-adapter digests all match",
+  "numerical_merge_pass": "max_abs_diff 5.960e-06 vs pre-registered atol 2.190e-05 (= 1.5e-3 * delta_max_abs 0.014601), rtol 1e-5",
+  "reload_pass": "zero-edit vs Fs exactly 0.0 (vs F0 0.505, discriminating); continuation after hold exactly equal to Fs at every step, differs from F0 (min 0.114), non-vacuous edit (9.43e-3)"
+ },
+ "certified_fs": {
+  "bundle": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/",
+  "fs_adapter_sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089",
+  "fs_merged_backbone_sha256_prefix": "1e48438ee98dc725",
+  "reference_manifest": "certify/fs/reference_manifest.json",
+  "verified": "bundle adapter == designated == V2-J3 replica0; bundle merged backbone == freeze output; bundle reload record == verify output"
+ },
+ "honest_reading": [
+  "Q6 passes the pre-registered bar, but on the untouched 2019 holdout the Fs is slightly WORSE than F0: mean +0.34%, 14/16 issues worse, per-issue 0.9991..1.0105. The certified Fs is a 'no material harm' static reference (improves its 8 training issues by 2.6% at 24h, near-neutral to slightly negative out of sample), not a demonstrated out-of-sample gain. delta_min was never pre-registered, so v2 qualifies 'no harm', not 'useful gain'.",
+  "The certified adapter file is byte-identical to v1 J1 arm A2's (deterministic training); the certified artifact is V2-J3's own file, qualified on the fresh holdout."
+ ],
+ "open_items_for_FP04": [
+  "Full bank_fit / policy_dev / confirm split freeze (not done). Fs exposure: 2020 training issues (v1 interval 2020-01-01T12Z..2020-07-04T18Z) and the 2019 holdout (2019-01-01T12Z..2019-07-04T18Z) must be purged from policy_dev/confirm.",
+  "2015/2018/2019 stores have multi-day holes in whole variable groups (integrity scan) - any FP-04/05 use of those years must certify content per row.",
+  "S0 certifies the forward pass only; 2020 rows carry split_id 'test' while admitted as bank_fit.",
+  "Every later worker must load this exact Fs identity (reference_manifest) and re-hash it."
+ ]
+}

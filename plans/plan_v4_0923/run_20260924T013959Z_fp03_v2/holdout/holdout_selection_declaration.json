@@ -1,0 +1,26 @@
+{
+ "schema_version": "ed-fp03-v2-holdout-declaration/1",
+ "status": "PROTOCOL_V2 - fresh-holdout selection rule, declared BEFORE any 2019 data value is read",
+ "written_before": "the 2019 manifest was built and before r2_admission_gate.py (content verification) read any 2019 value; only store metadata (time length 1460, grid/variable-order hashes) was inspected",
+ "year": 2019,
+ "year_choice_justification": [
+  "No Fs experiment has touched 2019: FP-03 v1 (J1, J2, J3, J3b) and the X1 diagnostic used only 2020 issues.",
+  "The Stormer backbone was pretrained on 1979-2018 (reference/stormer/README.md: train/ holds 1979_0000.h5 .. 2018_1458.h5; normalization constants 1979-2018). 2015 and 2018 are therefore backbone-in-sample years, a regime the Fs is never deployed on. 2019, like the 2020 Fs training issues, was not trained on by the backbone.",
+  "2018 was additionally used by the separate shared-F0 sprint for bank training/qualification.",
+  "2016 and 2017 stores are empty (0 timesteps)."
+ ],
+ "year_caveats": [
+  "2019 is Stormer's validation split (used for its checkpoint selection), so the backbone is not strictly out-of-sample there.",
+  "2019 is this project's 'val' split (YEAR_SPLITS) and the separate shared-F0 sprint used 2019 issues for policy_fit/calibration; that sprint never touched this Fs. The chosen holdout issues become Fs-exposed and must be excluded (with purge) from any later policy_dev/confirm use.",
+  "The coordinator may override the year before the go-ahead; the admission is CPU-only and would be rebuilt."
+ ],
+ "selection_rule": {
+  "n_issues": 16,
+  "window": "2019-01-02T00Z .. 2019-07-01T18Z (the same seasonal window as the 8 training issues and the old holdout)",
+  "steps": "issue step_i = 4 + round(i * 723 / 15), i = 0..15, where step 0 = 2019-01-01T00Z at 6h resolution (step 4 = 2019-01-02T00Z, step 727 = 2019-07-01T18Z)",
+  "rows": "the library's own build_manifest(years=[2019], lead_hours=[72], normalization_hash='3e0b216bfbf34ab0', formal=True) rows at those issue times, in time order",
+  "admission": "scripts/r2_admission_gate.py --formal --data-role bank_fit --history-steps 2 --limit 16 --verify-content --content-samples 16 --normalization-dir reference/stormer/normalization_constants (identical to the v1 admissions); certificates span t-12h .. t+72h"
+ },
+ "replacement_rule": "If a selected row fails admission, replace it with the first admissible manifest row among the next 4 slots (+6h .. +24h). If no admissible replacement exists within +24h, or more than 2 rows need replacement, STOP and report before any protocol freeze. Every replacement is recorded.",
+ "use_restriction": "No model output (F0, L0 or L1 panel, rollout or loss) is computed on these issues before the single confirmatory v2 job. The admission's content verification reads raw values for integrity only (finite, physical range, hashes), as ARTIFACT_CONTRACT section 3 allows; nothing is selected from forecast skill."
+}

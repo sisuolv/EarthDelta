@@ -1,0 +1,23 @@
+{
+ "schema_version": "ed-fp03-v2-holdout-attempt/1",
+ "attempt": 1,
+ "declaration": {"path": "holdout/holdout_selection_declaration.json",
+                 "sha256": "49e7b3fcc95b0f29004e388e728376c65f339669f59178d58e957d42bcf599a5"},
+ "admission_record": "holdout/v2_holdout_admission.json (outer passed=false; kept as evidence)",
+ "result": "FAIL: 5 of 16 selected 2019 rows fail content verification with CONTENT_NON_FINITE (issues 2019-01-14T00, 02-07T06, 03-03T06, 03-27T06, 05-14T12); no admissible replacement within +24h for any of them",
+ "declared_consequence": "More than 2 replacements needed and none within +24h -> STOP and report before any protocol freeze (replacement_rule). Honoured: no year switch or rule change was made unilaterally.",
+ "integrity_scan": {
+  "method": "holdout/scan_finiteness.py: finiteness only, steps 0..735, no statistics or model outputs",
+  "2019": "124 of 736 steps contain non-finite values in 10 contiguous runs of whole days (4-16 steps; mostly all temperature pressure levels); 466 of 724 issue slots in the window have a fully finite t-12h..t+72h window",
+  "2018": "192 of 736 steps in 11 runs (mostly v-wind levels); 392 clean issue slots",
+  "2015": "216 of 736 steps in 14 runs (mostly u-wind levels); 326 clean issue slots",
+  "files": ["holdout/finiteness_scan_2019.json", "holdout/finiteness_scan_2018.json", "holdout/finiteness_scan_2015.json"],
+  "observation": "2020 (all v1/X1 admissions passed) has no such gaps in the rows used; 2015/2018/2019 stores have multi-day holes in whole variable groups, consistent with incomplete downloads. Relevant to any later use of these years (FP-04/05)."
+ },
+ "proposed_amendment_A1_not_applied": {
+  "rule": "Same year (2019), window, count and targets (T_i = 4 + i*723/15). Candidates = issue slots in [4, 727] whose full t-12h..t+72h window is finite in the integrity scan. For each i pick the candidate nearest to T_i (ties -> earlier). Require 16 distinct picks pairwise > 84h apart (support-disjoint). Run the same admission gate; if any row fails, STOP.",
+  "preview_from_integrity_scan_only": ["2019-01-02T00", "01-16T12", "01-26T00", "02-03T18", "02-19T06", "03-05T12", "03-15T06", "03-29T12", "04-08T12", "04-20T12", "05-02T12", "05-10T18", "05-26T12", "06-07T18", "06-19T18", "07-01T18"],
+  "preview_properties": "16 distinct; min spacing 198h; max shift from target 91h",
+  "status": "AWAITING COORDINATOR DECISION"
+ }
+}

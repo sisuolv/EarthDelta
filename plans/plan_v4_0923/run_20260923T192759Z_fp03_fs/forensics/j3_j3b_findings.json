@@ -1,0 +1,35 @@
+{
+ "schema_version": "ed-fp03-j3-findings/1",
+ "jobs": {
+  "J3": {"job_id": "pt-sz6iv529", "run_dir": "artifacts/round2_cci/ed-r4fs03formal-0923212136-800630",
+         "lr": 0.0025, "lr_source": "J2_screen_decision.json selected_lr (arm A2)",
+         "decision": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J3_formal_decision.json",
+         "verdict": "STOP_FITTED_FS_QUALITY"},
+  "J3b": {"job_id": "pt-n6b5uf0v", "run_dir": "artifacts/round2_cci/ed-r4fs03formalb-0923213547-b7d556",
+          "lr": 0.00125, "lr_source": "J2_screen_decision.json fallback_lr (arm A3)",
+          "decision": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J3b_formal_decision.json",
+          "verdict": "STOP_FITTED_FS_QUALITY"}
+ },
+ "findings": [
+  {
+   "id": "J3-F1_FORMAL_RESULT",
+   "status": "OBSERVED",
+   "text": "FS-SELECT-v1 selects no Fs from either job. In J3 and in J3b, all 4 replicas are Q0-valid and pass Q1 (finite, 256 updates), Q2 (0 clip events, max per-visit ratio 1.0000, no epoch-mean onset), Q3 (8/8 issues improved), Q4 (train 24h: J3 m 0.910518 / max r_i 0.924608; J3b m 0.929409 / max r_i 0.938387) and Q5 (train 72h: J3 1.000934; J3b 0.995181). Every replica FAILs Q6 (holdout 24h mean ratio <= 1.02): J3 1.038925, J3b 1.020438. J3b misses by 0.000438; training is bitwise deterministic here (J3-F2), so this is an exact value, not run-to-run noise. FS-BUDGET-v1: J3b was run because J3 was FAIL; with J3b also FAIL there is no further pre-registered Fs job, and J4 (freeze/certify) is not reached."
+  },
+  {
+   "id": "J3-F2_BITWISE_REPRODUCIBLE_TRAINING_UNDER_THE_CERTIFIED_BACKEND",
+   "status": "OBSERVED",
+   "text": "Under the S0-certified execution (official Stormer + xformers 0.0.27, torch 2.3.1+cu121, TF32 off), Fs training is bitwise reproducible across the 4 H100s and across jobs: the 4 J3 replicas equal J2 arm A2 exactly (every loss, grad norm, per-factor grad norm, final adapter digest, adapter file sha256 172cbfddd281eb38..., and all F0/L0/L1 panels); the 4 J3b replicas equal J2 arm A3 exactly (adapter sha256 c656026b3c54872b...); J1 arm A0's 32 updates equal J2 arm A0's first 32. By contrast the uncertified historical runs diverged between replicas from update 1 (pt-e8y7ib01, TF32 off: ~1e-8 relative at update 1, >1e-3 by updates 99-105; TF32-on jobs: >1e-3 by updates 54-72). So the original brief's 'GPU float nondeterminism decides which replica falls over' describes the uncertified execution path only; under the certified path the FS-SELECT-v1 witnesses are exact reproductions and replica outcomes cannot differ. The mechanism (which kernel's backward was nondeterministic before) is not verified here and is not claimed."
+  },
+  {
+   "id": "J3-F3_WHAT_FAILS_IS_GENERALIZATION",
+   "status": "OBSERVED (numbers) / INTERPRETATION (last sentence)",
+   "text": "Both learning rates improve every one of the 8 TRAINING issues at the trained 24h lead, and make every one of the 8 HELD-OUT issues worse at 24h. Holdout mean ratios J3 (lr 2.5e-3): 6h 1.039160, 24h 1.038925 (per-issue 1.0287-1.0578), 72h 1.099221; J3b (lr 1.25e-3): 6h 1.022742, 24h 1.020438 (per-issue 1.0163-1.0301), 72h 1.061759. Holdout 6h and 72h are report-only (Q5 guards the TRAIN panel at 72h). Halving the lr shrinks the train-24h gain (-8.9% -> -7.1%) and the holdout harm (+3.9% -> +2.0% at 24h) together. Interpretation: with 8 training issues, a 24h-only objective and 49,152 adapter parameters, the static adapter learns issue-specific 24h corrections that do not transfer to nearby issue times; lowering lr alone does not change that trade-off enough to pass Q6."
+  },
+  {
+   "id": "J3-F4_FP03_STATUS_UNDER_PROTOCOL_V1",
+   "status": "DECISION",
+   "text": "STOP_FITTED_FS_QUALITY (CLAUDE_OPUSPLAN_EXECUTION_PROMPT Stage 1; STOP_CONDITIONS section 2: Fs quality not closed -> downstream BLOCKED). No reference_manifest or Fs certificate is published; FP-04+ stay locked. This is a failure of this 8-issue, 24h-objective static adapter under FS-QUAL-v1, not a finding that the EarthDelta idea is scientifically invalid (STOP_CONDITIONS section 3: allowed INCONCLUSIVE_QUALIFICATION vs observed degradation; here the holdout degradation is observed). Budget used: J1, J2, J3, J3b (4 of 5 scientific jobs), 0 infra retries. Anything further needs protocol v2 and user approval (FS-BUDGET-v1)."
+  }
+ ]
+}

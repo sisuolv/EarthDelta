@@ -1,0 +1,64 @@
+{
+  "status": "OBSERVED",
+  "scope": "PACKAGE_TOOL_SELF_TESTS_ONLY",
+  "n_tests": 8,
+  "passed": true,
+  "tests": [
+    {
+      "name": "valid_delivery",
+      "passed": true
+    },
+    {
+      "name": "missing_required_file",
+      "passed": true,
+      "rejection_checks": [
+        "required_paths"
+      ]
+    },
+    {
+      "name": "content_tampering",
+      "passed": true,
+      "rejection_checks": [
+        "sha256_integrity"
+      ]
+    },
+    {
+      "name": "unauthorized_bank_unlock",
+      "passed": true,
+      "rejection_checks": [
+        "initial_authorization"
+      ]
+    },
+    {
+      "name": "cyclic_dag",
+      "passed": true,
+      "rejection_checks": [
+        "dag_acyclic"
+      ]
+    },
+    {
+      "name": "silent_F0_substitution",
+      "passed": true,
+      "rejection_checks": [
+        "frozen_protocol"
+      ]
+    },
+    {
+      "name": "invalid_output_verdict",
+      "passed": true,
+      "rejection_checks": [
+        "overall_enum"
+      ]
+    },
+    {
+      "name": "missing_task_estimate_field",
+      "passed": true,
+      "rejection_checks": [
+        "task_list_fields"
+      ]
+    }
+  ],
+  "repository_tests_run": false,
+  "gpu_runs": 0,
+  "training_runs": 0
+}

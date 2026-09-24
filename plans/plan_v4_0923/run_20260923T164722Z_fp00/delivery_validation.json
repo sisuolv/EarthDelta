@@ -1,0 +1,70 @@
+{
+  "status": "OBSERVED",
+  "scope": "DELIVERY_STRUCTURE_ONLY",
+  "passed": true,
+  "checks": [
+    {
+      "name": "required_paths",
+      "passed": true
+    },
+    {
+      "name": "audit_top_fields",
+      "passed": true
+    },
+    {
+      "name": "overall_enum",
+      "passed": true
+    },
+    {
+      "name": "baseline_fields",
+      "passed": true
+    },
+    {
+      "name": "plan_item_template",
+      "passed": true
+    },
+    {
+      "name": "special_verdict_fields",
+      "passed": true
+    },
+    {
+      "name": "task_list_fields",
+      "passed": true
+    },
+    {
+      "name": "unique_tasks_and_dependencies",
+      "passed": true
+    },
+    {
+      "name": "dag_acyclic",
+      "passed": true
+    },
+    {
+      "name": "future_status_no_fake_results",
+      "passed": true
+    },
+    {
+      "name": "initial_authorization",
+      "passed": true
+    },
+    {
+      "name": "fs_precedes_bank_and_science",
+      "passed": true
+    },
+    {
+      "name": "frozen_protocol",
+      "passed": true
+    },
+    {
+      "name": "manifest_coverage",
+      "passed": true
+    },
+    {
+      "name": "sha256_integrity",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "repository_tests_run": false,
+  "gpu_runs": 0
+}

@@ -1,0 +1,99 @@
+{
+  "status": "OBSERVED",
+  "input_zip": {
+    "name": "EarthDelta_ChatGPT_Pro_Plan_Audit_20260923(1).zip",
+    "sha256": "88ff852b4a0064663c5600f3a1db25933499a148949bb58a5531a8d7d0705462",
+    "bytes": 76880
+  },
+  "read_order": [
+    "all source_plan files",
+    "CURRENT_STATUS.md and EVIDENCE_MANIFEST.md and reference_reports",
+    "current GitHub code ranges, commit/tree metadata, historical logs/job records"
+  ],
+  "all_source_plan_read": true,
+  "all_reference_reports_read": true,
+  "input_contains_code_or_raw_gpu": false,
+  "input_files": [
+    {
+      "path": "CHATGPT_PRO_PLAN_AUDIT_PROMPT.md",
+      "lines": 114,
+      "sha256": "fd0447e184ccf6fde3cfa12b7e7e9399c53dfebf74c88df7c89c62ac0f6d07f2"
+    },
+    {
+      "path": "CODEX_FOLLOWUP_PLAN_ZIP_SPEC.md",
+      "lines": 52,
+      "sha256": "14d2719aedca76ce77e1de25215e0896c707c577d0988ae85e2d8e17fdb0d997"
+    },
+    {
+      "path": "CURRENT_STATUS.md",
+      "lines": 19,
+      "sha256": "f3450f72e8f66ba1496830bd24c63b0f1fc8cadde69a8fb3e2df0abf7f79c93c"
+    },
+    {
+      "path": "EVIDENCE_MANIFEST.md",
+      "lines": 22,
+      "sha256": "db2e42f6ae1d8f63d09bbeaf12010aa9e69ceb56afb0ff77786796796253938e"
+    },
+    {
+      "path": "FOLLOWUP_PLAN_MANIFEST.template.json",
+      "lines": 27,
+      "sha256": "74e8fc7b14a0ea18bebb1d5e96e0b5f74a6f0ead2d38a5ce2b0d05acb6404967"
+    },
+    {
+      "path": "OUTPUT_SCHEMA.json",
+      "lines": 31,
+      "sha256": "453795c6c49fb3a149bdd353d3bfeb65628c48332f41c863b90d3f5242aeb81c"
+    },
+    {
+      "path": "README_CN.md",
+      "lines": 23,
+      "sha256": "47310583454a7de82eb3c808e262187b680b7d1e1bd4d99fb57036c593fcf4d6"
+    },
+    {
+      "path": "START_HERE.md",
+      "lines": 20,
+      "sha256": "e164d6399ad8306eabcb928151667c069ae5731365d9109161025fae44384476"
+    },
+    {
+      "path": "reference_reports/ROUND4_REPORT.md",
+      "lines": 331,
+      "sha256": "acc412efda19f0c6d0d65ba560e929c6ada7a0fb276bcf0d7118b4e027bc7256"
+    },
+    {
+      "path": "reference_reports/SPRINT_8H_DECISION.json",
+      "lines": 35,
+      "sha256": "b4ccfa22ade5b3eb88d712e62520f69c8cd6bcd552b0308a169b4b2556e476ac"
+    },
+    {
+      "path": "reference_reports/SPRINT_8H_RESULTS.md",
+      "lines": 28,
+      "sha256": "52e61896109a8529d906b3a86a2f3bce7a2c46381781a39fc2af7aeecaf5cabb"
+    },
+    {
+      "path": "source_plan/CLAUDE_10H_PROMPT.md",
+      "lines": 67,
+      "sha256": "a76cc4ffc92a9f08c6c30181e04ff7d5caa4dbf43af67cb62a7b1bc3701fb87b"
+    },
+    {
+      "path": "source_plan/EarthDelta_Stage1A_Independent_Audit_Review_20260921.md",
+      "lines": 343,
+      "sha256": "5ca09f77f200634e55ae04d5890b221d44aadbfb2141c3e11e342e1149c6256b"
+    },
+    {
+      "path": "source_plan/EarthDelta_Stage1A_Independent_Review.md",
+      "lines": 466,
+      "sha256": "36bcd1769553ff582fc5ab7e1e4a83e1a3a213a4ef2f891382a44a6738c636d9"
+    },
+    {
+      "path": "source_plan/EarthDelta_Stage1A_Round3_Audit_Review.md",
+      "lines": 436,
+      "sha256": "d948e308e73cd08e423b786158a4b121865ceffb3071117d46685bdb6dfa551c"
+    },
+    {
+      "path": "source_plan/NEXT_STEPS_10H_PLAN.md",
+      "lines": 302,
+      "sha256": "199ac192d7f30b983935d1b5801701136f9560cfab5810d7b9b65fed82e5872c"
+    }
+  ],
+  "scope_limit": "Archive contains only plans/reports; GitHub connector supplied additional code/logs. Full repository/diff and latest GPU tensors were not exhaustively read."
+}

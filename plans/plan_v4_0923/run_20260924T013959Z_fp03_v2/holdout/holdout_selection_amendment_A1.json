@@ -1,0 +1,25 @@
+{
+ "schema_version": "ed-fp03-v2-holdout-amendment/1",
+ "amendment_id": "A1",
+ "status": "PROTOCOL_V2 holdout selection AMENDMENT (coordinator-approved in writing after attempt 1 failed); declared BEFORE the A1 manifest and admission were built",
+ "amends": {"path": "holdout/holdout_selection_declaration.json",
+            "sha256": "49e7b3fcc95b0f29004e388e728376c65f339669f59178d58e957d42bcf599a5",
+            "kept_unmodified": true},
+ "trigger": {"record": "holdout/holdout_attempt1_failed.json",
+             "summary": "attempt 1: 5 of 16 evenly spaced 2019 rows CONTENT_NON_FINITE, no clean slot within +24h -> declared stop rule fired and was honoured"},
+ "unchanged": "year 2019; 16 issues; window 2019-01-02T00Z .. 2019-07-01T18Z; targets T_i = 4 + i*723/15 (step 0 = 2019-01-01T00Z, 6h); build_manifest rows; admission gate command; the no-model-output restriction until the confirmatory job",
+ "rule": {
+  "candidates": "issue slots t in [4, 727] whose full certificate window t-2 .. t+12 (t-12h .. t+72h) is finite at every step according to the integrity scan holdout/finiteness_scan_2019.json",
+  "pick": "for each target T_i the candidate nearest to T_i; ties go to the earlier slot",
+  "constraints": "16 distinct picks, pairwise more than 84h apart (support-disjoint); the admission gate is then run unchanged",
+  "stop": "if any picked row still fails admission, STOP and report (no further reselection without approval)"
+ },
+ "why_this_is_not_skill_selection": "Candidates are filtered on raw-data finiteness only (ARTIFACT_CONTRACT section 3: integrity checks may read target content for finite/hash but must not select on forecast gain). No model output, loss, gain or weather statistic is used.",
+ "regime_bias_reasoning": "The 2019 holes are contiguous runs of whole days (4-16 steps) in one variable group at a time (mostly all temperature pressure levels), recurring roughly every ~96 steps, and 2015/2018 show the same kind of whole-variable-group, whole-day holes in different variable groups. That is the signature of a download/pipeline artifact, not of any weather regime, so moving a target to the nearest clean slot (max shift 91h) should not bias the holdout toward particular weather. It does exclude the gap days themselves; that exclusion is by data availability, recorded, and applies equally to any use of this store.",
+ "preview_from_integrity_scan_only": {
+  "picks_utc": ["2019-01-02T00", "01-16T12", "01-26T00", "02-03T18", "02-19T06", "03-05T12", "03-15T06", "03-29T12", "04-08T12", "04-20T12", "05-02T12", "05-10T18", "05-26T12", "06-07T18", "06-19T18", "07-01T18"],
+  "min_spacing_hours": 198,
+  "max_shift_from_target_hours": 91
+ },
+ "approval": "Coordinator: 'Approved: option A1' (after reviewing attempt 1 and the integrity scan)."
+}

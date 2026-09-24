@@ -1,0 +1,27 @@
+{
+  "status": "OBSERVED",
+  "observed_date": "2026-09-23",
+  "repository": "sisuolv/EarthDelta",
+  "branch": "audit/round2-review-20260921",
+  "actual_branch_head": "fdd92d79b1b03e8397d4c487d7fa4a347ae6fc37",
+  "implementation_commit": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+  "comparison_base": "d749a1c62521226df857587e08f7d067b0f15355",
+  "branch_observation": "fresh authorized GitHub branches read; encoded branch-path URL failed; branches listing succeeded",
+  "root_tree_comparison": {
+    "identical_entries_except": [
+      "plans"
+    ],
+    "same_content_trees": {
+      "earthdelta": "8d344f4538f23f2fe3a0e7f518a26b0b0e09c07f",
+      "scripts": "76fd3459feeb381f1f6b9792ca5fee72de68b38e",
+      "tests": "67f02384badda00a8139516c04e24044c7b4c353",
+      "codex_audit_round4": "a90a5235fb992bcf600b70b11200c807288a2c34",
+      "reference": "f127c7c902a02525645bffd09a1acff0dc4b51a4"
+    },
+    "plans_at_implementation": "259b7546495efbfe8581bdad07a52c8a51d66a80",
+    "plans_at_actual_head": "ca0c5573417a543d78f58a682b672c7f4e146885"
+  },
+  "latest_commit_message": "docs: add ChatGPT Pro follow-up plan package prompt",
+  "evidence_level": "STATIC_CONFIRMED",
+  "limitation": "No full clone, no complete raw runtime artifacts, no test/GPU rerun. Read current source ranges pinned to implementation commit, verified code-tree identity at actual HEAD."
+}

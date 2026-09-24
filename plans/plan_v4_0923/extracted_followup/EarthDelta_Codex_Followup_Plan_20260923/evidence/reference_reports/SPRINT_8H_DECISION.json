@@ -1,0 +1,35 @@
+{
+  "schema_version": "earthdelta_research_sprint_decision_v1",
+  "run_id": "ed-sprint8h-20260922T035313Z",
+  "baseline_head": "d749a1c62521226df857587e08f7d067b0f15355",
+  "status": "BLOCKED_S0_MULTISTEP_PARITY",
+  "decision": "STOP_DOWNSTREAM_SCIENTIFIC_PIPELINE",
+  "admission": {"status": "PASS", "issues": 616, "content_replacements": 0},
+  "s0": {
+    "status": "FAIL",
+    "job_id": "pt-7ant09uv",
+    "device": "NVIDIA H100 80GB HBM3",
+    "failed_criteria": ["multistep_parity"],
+    "tolerance": 1e-5,
+    "max_abs_diff": {
+      "6h_1step": 5.9604644775390625e-06,
+      "6h_4step": 3.933906555175781e-05,
+      "6h_12step": 1.3911724090576172e-04
+    }
+  },
+  "downstream": {
+    "expert_training": "NOT_STARTED",
+    "qualification": "NOT_STARTED",
+    "bank_assembly": "NOT_STARTED",
+    "cache": "NOT_STARTED",
+    "evaluation": "NOT_STARTED"
+  },
+  "claims": {
+    "engineering_environment": "SUPPORTED",
+    "official_bridge_parity": "BLOCKED",
+    "weather_utility": "INCONCLUSIVE",
+    "novelty_effect": "INCONCLUSIVE_BLOCKED",
+    "old_fitted_fs_pipeline": "OPEN_MUST_FIX_BEFORE_STAGE4"
+  },
+  "thresholds_changed_after_outcome": false
+}

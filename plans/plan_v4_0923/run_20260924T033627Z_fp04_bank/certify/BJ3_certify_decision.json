@@ -1,0 +1,100 @@
+{
+ "rule": "BANK-CERTIFY-v1",
+ "kind": "certify",
+ "formal_decision": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2_formal_decision_r2.json",
+  "sha256": "49feca4658405a4d0b3b5f20dcc22b02bc8980be51a4e6bcbb0f4ac8fad093d3"
+ },
+ "validity_facts": {
+  "assemble": {
+   "official_backend": true,
+   "torch_version": true,
+   "xformers_version": true,
+   "tf32_off": true,
+   "s0_certificate_consumed": true,
+   "admission_consumer_pass": true,
+   "protocol_sha256_match": true,
+   "config_id_match": true,
+   "certified_fs_authorized": true,
+   "no_source_drift": true,
+   "fs_source_is_certified_bundle": true,
+   "certified_fs_identity_pass": true,
+   "certified_fs_digests_are_pinned": true
+  },
+  "verify": {
+   "official_backend": true,
+   "torch_version": true,
+   "xformers_version": true,
+   "tf32_off": true,
+   "s0_certificate_consumed": true,
+   "admission_consumer_pass": true,
+   "protocol_sha256_match": true,
+   "config_id_match": true,
+   "certified_fs_authorized": true,
+   "no_source_drift": true,
+   "fs_source_is_certified_bundle": true,
+   "certified_fs_identity_pass": true,
+   "certified_fs_digests_are_pinned": true
+  }
+ },
+ "bank_certified": true,
+ "assembly_evaluation": {
+  "check": "bank_assembly_equivalence",
+  "status": {
+   "A1": true,
+   "A2": true,
+   "A3": true,
+   "A4": true,
+   "A5": true
+  },
+  "passed": true,
+  "failed": [],
+  "tolerance": "none: every comparison is exact (max |diff| == 0.0)"
+ },
+ "checks": {
+  "bank_file_rehashes": true,
+  "assembly_used_the_decided_experts": true,
+  "assembly_bound_to_this_decision": true,
+  "verify_read_this_assembly": true,
+  "assembly_self_checks": true,
+  "bank_reloads_to_recorded_digests": true,
+  "bank_slices_are_the_expert_files": true
+ },
+ "verdict": "BANK_CERTIFIED",
+ "bank_bundle": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank",
+ "bank_manifest_sha256": "6946ec0bd7fd57b17d144c80f97e66ef46187bb60967aeffb35c0d1e5bf4275f",
+ "registry_sha256": "c480684df1e9068387d347e00f6afa16f2b08db2d137d23175fb3933d944affd",
+ "bundle_consumer_check": {
+  "num_experts": 4,
+  "registry": {
+   "registry": "r2_dynamic_bank",
+   "schema": "ed-candidate-registry/1",
+   "num_experts": 4,
+   "rho": 0.25,
+   "n_entries": 5,
+   "reference_plan_id": "reference",
+   "candidate_plan_ids": [
+    "expert_0",
+    "expert_1",
+    "expert_2",
+    "expert_3"
+   ]
+  },
+  "external_rehashed": true,
+  "passed": true
+ },
+ "protocol_sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1",
+ "inputs": {
+  "protocol": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json",
+   "sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1"
+  },
+  "formal_decision": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2_formal_decision_r2.json",
+   "sha256": "49feca4658405a4d0b3b5f20dcc22b02bc8980be51a4e6bcbb0f4ac8fad093d3"
+  }
+ },
+ "job_dir": null,
+ "decided_utc": "2026-09-24T05:48:15.169488+00:00",
+ "decider_sha256": "3aae47105e235779c01ca88d4030873e9a5989071208167fda418703dea81445"
+}

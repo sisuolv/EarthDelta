@@ -1,0 +1,119 @@
+{
+  "metadata": {
+    "built_by": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/admission/build_manifests.py",
+    "build_manifest": {
+      "years": [
+        2020
+      ],
+      "lead_hours": [
+        72
+      ],
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "formal": true
+    },
+    "issue_order_source": {
+      "path": "artifacts/round2_cci/ed-r4fsformal0923-0923180756-7b1776/experts/expert0/fs_fit_record.json",
+      "sha256": "c305f18394442fbf4eac74707ded2d860403cc2a892ac3631592777e928df788"
+    },
+    "purpose": "FP-03 Fs bank_fit training rows",
+    "order": "pt-e8y7ib01 round-robin order"
+  },
+  "rows": [
+    {
+      "issue_time": 1577923200,
+      "valid_time": 1578182400,
+      "available_time": 1578204000,
+      "event_id": "2020010200_L072",
+      "split_id": "test",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_292517fb189ee1bd",
+      "data_role": null
+    },
+    {
+      "issue_time": 1580018400,
+      "valid_time": 1580277600,
+      "available_time": 1580299200,
+      "event_id": "2020012606_L072",
+      "split_id": "test",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_d8ff9d3ce61a2f46",
+      "data_role": null
+    },
+    {
+      "issue_time": 1582113600,
+      "valid_time": 1582372800,
+      "available_time": 1582394400,
+      "event_id": "2020021912_L072",
+      "split_id": "test",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_6b3c576c6b5558b5",
+      "data_role": null
+    },
+    {
+      "issue_time": 1584208800,
+      "valid_time": 1584468000,
+      "available_time": 1584489600,
+      "event_id": "2020031418_L072",
+      "split_id": "test",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_96bdbf1fa8455a7f",
+      "data_role": null
+    },
+    {
+      "issue_time": 1586304000,
+      "valid_time": 1586563200,
+      "available_time": 1586584800,
+      "event_id": "2020040800_L072",
+      "split_id": "test",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_4d2909814aeeb0a5",
+      "data_role": null
+    },
+    {
+      "issue_time": 1588399200,
+      "valid_time": 1588658400,
+      "available_time": 1588680000,
+      "event_id": "2020050206_L072",
+      "split_id": "test",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_ec3977fe8a715192",
+      "data_role": null
+    },
+    {
+      "issue_time": 1590494400,
+      "valid_time": 1590753600,
+      "available_time": 1590775200,
+      "event_id": "2020052612_L072",
+      "split_id": "test",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_041643c6650bb160",
+      "data_role": null
+    },
+    {
+      "issue_time": 1592589600,
+      "valid_time": 1592848800,
+      "available_time": 1592870400,
+      "event_id": "2020061918_L072",
+      "split_id": "test",
+      "normalization_hash": "3e0b216bfbf34ab0",
+      "grid_hash": "c05fcc6b8e5e14ba",
+      "availability_source": "reanalysis_retrospective",
+      "issue_id": "iss_cc158228e7e29baf",
+      "data_role": null
+    }
+  ]
+}

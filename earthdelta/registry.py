@@ -52,6 +52,9 @@ __all__ = [
     "DEFAULT_RHO",
     "DEFAULT_A0",
     "REGISTRY_SCHEMA_VERSION",
+    "BANK_BUNDLE_SCHEMA",
+    "bank_entry_artifact_refs",
+    "verify_bank_bundle",
 ]
 
 
@@ -500,8 +503,14 @@ class CandidateRegistry:
         source: str = "contracts.reference_plan",
         data_role: Optional[Any] = None,
         notes: str = "",
+        artifact_ref: Optional[Dict[str, Any]] = None,
     ) -> RegistryEntry:
-        """Register the explicit no-edit plan every registry must carry."""
+        """Register the explicit no-edit plan every registry must carry.
+
+        ``artifact_ref`` (FP-04, additive) binds the no-edit row to the
+        artifact it runs -- after the Fs freeze that is the certified Fs, not
+        F0 -- so a consumer can check the reference, not just the candidates.
+        """
         experts = num_experts if num_experts is not None else self.num_experts
         if experts is None:
             raise RegistryViolation(
@@ -521,7 +530,8 @@ class CandidateRegistry:
                 rho=plan.rho,
             )
         return self.register(
-            plan, source=source, data_role=data_role, notes=notes, is_reference=True
+            plan, source=source, data_role=data_role, notes=notes, is_reference=True,
+            artifact_ref=artifact_ref,
         )
 
     def register_single_expert_plans(
@@ -777,7 +787,10 @@ def build_pilot_registry(
     registry = CandidateRegistry(
         name=name, num_experts=num_experts, rho=rho, metadata=metadata
     )
-    registry.register_reference(num_experts, data_role=data_role)
+    registry.register_reference(
+        num_experts, data_role=data_role,
+        artifact_ref=(artifact_refs or {}).get("reference"),
+    )
     registry.register_single_expert_plans(
         num_experts,
         expected_coefficient=expected_coefficient,
@@ -786,3 +799,301 @@ def build_pilot_registry(
     )
     registry.validate()
     return registry
+
+
+# =============================================================================
+# FP-04: the certified bank bundle and its consumer-side verification
+# =============================================================================
+#
+# A registry that only summarizes coefficients says what MAY run; it does not
+# say which bytes run. The FP-04 bundle binds every registered row to files:
+# the no-edit reference to the certified Fs, each singleton to its expert file
+# and to the assembled bank, and the whole set to the Fs / normalization /
+# checkpoint / inputs / protocol / source hashes it was produced under.
+# `verify_bank_bundle` is the CONSUMER's check: it re-hashes every file and
+# re-derives every binding instead of trusting any JSON summary, including the
+# bundle's own.
+
+BANK_BUNDLE_SCHEMA = "ed-bank-bundle/1"
+
+
+def _sha256_file(path: Path) -> str:
+    import hashlib
+
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1 << 22), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def bank_entry_artifact_refs(binding: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    """The artifact_ref every registry row of the bank must carry.
+
+    ``reference`` (the explicit no-edit row) names the certified Fs -- after
+    the freeze "no edit" means Fs, never F0. ``expert_k`` names expert k's file
+    and digest AND the assembled bank it lives in, so an index/file swap in
+    either direction is detectable.
+    """
+    fs = binding["fs"]
+    refs: Dict[str, Dict[str, Any]] = {
+        "reference": {
+            "kind": "fs_reference",
+            "meaning": "no-edit = the certified Fs (never F0)",
+            "fs_reference_manifest_sha256": fs["reference_manifest"]["sha256"],
+            "fs_adapter_sha256": fs["fs_adapter"]["sha256"],
+            "fs_merged_backbone_sha256": fs["fs_merged_backbone"]["sha256"],
+            "merged_backbone_digest": fs["merged_backbone_digest"],
+        }
+    }
+    bank = binding["bank"]
+    for expert in binding["experts"]:
+        k = int(expert["expert_index"])
+        refs[f"expert_{k}"] = {
+            "kind": "bank_expert",
+            "expert_index": k,
+            "file": expert["file"],
+            "sha256": expert["sha256"],
+            "expert_digest": expert["expert_digest"],
+            "bank_file": bank["file"],
+            "bank_sha256": bank["sha256"],
+            "bank_digest": bank["bank_digest"],
+        }
+    return refs
+
+
+def verify_bank_bundle(
+    bundle_dir: Path | str,
+    *,
+    expected_fs: Optional[Dict[str, Any]] = None,
+    expected_protocol_sha256: Optional[str] = None,
+    expected_source: Optional[Dict[str, str]] = None,
+    expected_normalization_identity: Optional[str] = None,
+    rehash_external: bool = True,
+    deep: bool = True,
+) -> Dict[str, Any]:
+    """Consumer-side verification of an FP-04 bank bundle. Fail-closed.
+
+    Every failure is collected and raised together as ``BANK_BUNDLE_INVALID``:
+
+      * ``bank_manifest.json`` has the bundle schema; ``registry.json`` hashes
+        to the manifest's value, loads, VALIDATES (explicit no-edit row, K
+        singletons at the realized a0) and carries exactly the binding and the
+        per-row artifact_refs `bank_entry_artifact_refs` derives from it;
+      * every singleton's support index equals the expert index its
+        artifact_ref and file name claim (no index/file swap);
+      * every internal file (bank, experts, probes, records) and -- with
+        ``rehash_external`` -- every external pin (Fs bundle files, protocol,
+        admission, grouping, gate config, S0 certificate, decisions) re-hashes
+        to the recorded SHA-256; the Fs reference manifest agrees with the
+        binding on Fs hashes, normalization identity and checkpoint;
+      * ``expected_fs`` / ``expected_protocol_sha256`` / ``expected_source`` /
+        ``expected_normalization_identity`` (when given) equal the binding;
+      * with ``deep``: `bank.pt` reloads (weights_only) to the recorded bank
+        and expert digests, each expert file reloads to its digest and index,
+        and each equals the corresponding slice of the bank.
+    """
+    bundle = Path(bundle_dir)
+    failures: List[Dict[str, Any]] = []
+
+    def fail(code: str, **detail: Any) -> None:
+        failures.append({"code": code, **detail})
+
+    manifest_path = bundle / "bank_manifest.json"
+    if not manifest_path.is_file():
+        raise RegistryViolation("BANK_BUNDLE_INVALID", f"{manifest_path} does not exist.",
+                                {"failures": [{"code": "MANIFEST_MISSING"}]})
+    manifest = json.loads(manifest_path.read_text())
+    if manifest.get("schema_version") != BANK_BUNDLE_SCHEMA:
+        fail("MANIFEST_SCHEMA", schema=manifest.get("schema_version"))
+    binding = manifest.get("binding") or {}
+    try:
+        num_experts = int(binding["num_experts"])
+        experts = list(binding["experts"])
+        bank_info = dict(binding["bank"])
+        fs = dict(binding["fs"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise RegistryViolation("BANK_BUNDLE_INVALID", f"binding incomplete: {exc}",
+                                {"failures": [{"code": "BINDING_INCOMPLETE", "error": str(exc)}]})
+
+    # -- 1. registry: validated and re-derived, never trusted ---------------
+    reg_info = dict(manifest.get("registry") or {})
+    reg_path = bundle / str(reg_info.get("file", "registry.json"))
+    registry_summary: Optional[Dict[str, Any]] = None
+    if not reg_path.is_file():
+        fail("REGISTRY_MISSING", path=str(reg_path))
+    else:
+        if _sha256_file(reg_path) != reg_info.get("sha256"):
+            fail("REGISTRY_SHA256_MISMATCH", path=str(reg_path))
+        try:
+            registry = CandidateRegistry.from_json(reg_path)
+            registry_summary = registry.validate()
+        except (RegistryViolation, ValueError, KeyError, TypeError) as exc:
+            fail("REGISTRY_INVALID", error=f"{type(exc).__name__}: {exc}")
+            registry = None
+        if registry is not None:
+            if registry.num_experts != num_experts:
+                fail("REGISTRY_NUM_EXPERTS_MISMATCH", registry=registry.num_experts,
+                     binding=num_experts)
+            if registry.metadata.get("bank_binding") != binding:
+                fail("REGISTRY_BINDING_MISMATCH")
+            expected_refs = bank_entry_artifact_refs(binding)
+            registered = sorted(e.plan_id for e in registry.entries)
+            if registered != sorted(expected_refs):
+                fail("REGISTRY_ENTRY_SET_MISMATCH", registered=registered,
+                     expected=sorted(expected_refs))
+            for entry in registry.entries:
+                if entry.artifact_ref != expected_refs.get(entry.plan_id):
+                    fail("REGISTRY_ARTIFACT_REF_MISMATCH", plan_id=entry.plan_id)
+                if entry.is_reference:
+                    continue
+                support = entry.support
+                ref = entry.artifact_ref or {}
+                if (len(support) != 1 or entry.plan_id != f"expert_{support[0]}"
+                        or ref.get("expert_index") != support[0]
+                        or ref.get("file") != f"expert_{support[0]}.pt"):
+                    fail("REGISTRY_INDEX_FILE_MISMATCH", plan_id=entry.plan_id,
+                         support=list(support), ref_index=ref.get("expert_index"),
+                         ref_file=ref.get("file"))
+    indices = sorted(int(e.get("expert_index", -1)) for e in experts)
+    if indices != list(range(num_experts)):
+        fail("BINDING_EXPERT_SET", indices=indices, num_experts=num_experts)
+    for e in experts:
+        if e.get("file") != f"expert_{int(e.get('expert_index', -1))}.pt":
+            fail("BINDING_INDEX_FILE_MISMATCH", expert=e.get("expert_index"), file=e.get("file"))
+    if len({e.get("expert_digest") for e in experts}) != len(experts):
+        fail("BINDING_EXPERT_DIGESTS_NOT_DISTINCT")
+
+    # -- 2. internal files --------------------------------------------------
+    internal = [(bank_info.get("file"), bank_info.get("sha256"))]
+    for e in experts:
+        internal.append((e.get("file"), e.get("sha256")))
+        internal.append((e.get("probe_file"), e.get("probe_sha256")))
+    for rec in (binding.get("records") or {}).values():
+        internal.append((rec.get("file"), rec.get("sha256")))
+    rehashed: Dict[str, str] = {}
+    for name, want in internal:
+        path = bundle / str(name)
+        if not name or not path.is_file():
+            fail("FILE_MISSING", file=name)
+            continue
+        got = _sha256_file(path)
+        rehashed[str(name)] = got
+        if got != want:
+            fail("FILE_SHA256_MISMATCH", file=name, recorded=want, actual=got)
+
+    # -- 3. external pins -----------------------------------------------------
+    external: List[Tuple[str, Dict[str, Any]]] = []
+    for key in ("reference_manifest", "certify_decision", "fs_adapter", "fs_merged_backbone"):
+        external.append((f"fs.{key}", dict(fs.get(key) or {})))
+    external.append(("protocol", dict(binding.get("protocol") or {})))
+    for key, ref in (binding.get("inputs") or {}).items():
+        external.append((f"inputs.{key}", dict(ref or {})))
+    for key, ref in (binding.get("decisions") or {}).items():
+        external.append((f"decisions.{key}", dict(ref or {})))
+    if rehash_external:
+        for label, ref in external:
+            path = ref.get("path")
+            if not path or not Path(path).is_file():
+                fail("EXTERNAL_FILE_MISSING", pin=label, path=path)
+                continue
+            got = _sha256_file(Path(path))
+            if got != ref.get("sha256"):
+                fail("EXTERNAL_SHA256_MISMATCH", pin=label, path=path, recorded=ref.get("sha256"),
+                     actual=got)
+        manifest_ref = fs.get("reference_manifest") or {}
+        if manifest_ref.get("path") and Path(manifest_ref["path"]).is_file():
+            fs_manifest = json.loads(Path(manifest_ref["path"]).read_text())
+            pairs = (
+                ("fs_adapter_sha256", (fs.get("fs_adapter") or {}).get("sha256")),
+                ("fs_merged_backbone_sha256", (fs.get("fs_merged_backbone") or {}).get("sha256")),
+                ("normalization_identity", binding.get("normalization_identity")),
+                ("checkpoint_sha256", binding.get("checkpoint_sha256")),
+                ("protocol_sha256", fs.get("fs_protocol_sha256")),
+            )
+            for key, value in pairs:
+                if fs_manifest.get(key) != value:
+                    fail("FS_REFERENCE_MANIFEST_DISAGREES", key=key,
+                         manifest=fs_manifest.get(key), binding=value)
+
+    # -- 4. caller's expectations --------------------------------------------
+    for key, want in (expected_fs or {}).items():
+        got = fs.get(key)
+        if isinstance(got, dict) and not isinstance(want, dict):
+            got = got.get("sha256")
+        if got != want:
+            fail("FS_NOT_EXPECTED", key=key, expected=want, bound=got)
+    if expected_protocol_sha256 is not None and \
+            (binding.get("protocol") or {}).get("sha256") != expected_protocol_sha256:
+        fail("PROTOCOL_NOT_EXPECTED", expected=expected_protocol_sha256,
+             bound=(binding.get("protocol") or {}).get("sha256"))
+    if expected_normalization_identity is not None and \
+            binding.get("normalization_identity") != expected_normalization_identity:
+        fail("NORMALIZATION_NOT_EXPECTED", expected=expected_normalization_identity,
+             bound=binding.get("normalization_identity"))
+    source = dict(binding.get("source") or {})
+    for rel, want in (expected_source or {}).items():
+        if source.get(rel) != want:
+            fail("SOURCE_NOT_EXPECTED", file=rel, expected=want, bound=source.get(rel))
+
+    # -- 5. deep: the bytes are the bank the binding describes ---------------
+    deep_report: Dict[str, Any] = {}
+    if deep:
+        from . import bank_training as bt  # lazy: bank_training imports this module
+
+        try:
+            bank, meta = bt.load_bank(bundle / str(bank_info.get("file")),
+                                      expected_sha256=bank_info.get("sha256"))
+            deep_report["bank_digest"] = meta["bank_digest"]
+            if meta["bank_digest"] != bank_info.get("bank_digest"):
+                fail("BANK_DIGEST_MISMATCH", recorded=bank_info.get("bank_digest"),
+                     reloaded=meta["bank_digest"])
+            if list(meta["expert_digests"]) != list(bank_info.get("expert_digests") or []):
+                fail("BANK_EXPERT_DIGESTS_MISMATCH")
+            if int(next(iter(bank.values())).num_experts) != num_experts:
+                fail("BANK_NUM_EXPERTS_MISMATCH")
+            for e in experts:
+                k = int(e.get("expert_index", -1))
+                try:
+                    loaded = bt.load_expert(bundle / str(e.get("file")),
+                                            expected_sha256=e.get("sha256"),
+                                            expected_expert_index=k)
+                except bt.BankTrainingViolation as exc:
+                    fail("EXPERT_FILE_INVALID", expert=k, violation=exc.code)
+                    continue
+                if loaded["expert_digest"] != e.get("expert_digest"):
+                    fail("EXPERT_DIGEST_MISMATCH", expert=k)
+                if 0 <= k < len(meta["expert_digests"]) and \
+                        meta["expert_digests"][k] != loaded["expert_digest"]:
+                    fail("EXPERT_NOT_THE_BANK_SLICE", expert=k)
+                probe_path = bundle / str(e.get("probe_file"))
+                if probe_path.is_file():
+                    import torch
+
+                    probe = torch.load(probe_path, map_location="cpu", weights_only=True)
+                    if probe.get("schema") != bt.PROBE_FILE_SCHEMA or \
+                            int(probe.get("expert_index", -1)) != k:
+                        fail("PROBE_FILE_INVALID", expert=k)
+        except bt.BankTrainingViolation as exc:
+            fail("BANK_FILE_INVALID", violation=exc.code, error=exc.message[:300])
+
+    report = {
+        "check": "bank_bundle_consumer_verification",
+        "bundle": str(bundle),
+        "schema": BANK_BUNDLE_SCHEMA,
+        "num_experts": num_experts,
+        "registry": registry_summary,
+        "internal_files_rehashed": rehashed,
+        "external_pins": [label for label, _ in external],
+        "external_rehashed": bool(rehash_external),
+        "deep": deep_report if deep else None,
+        "passed": not failures,
+        "failures": failures,
+    }
+    if failures:
+        raise RegistryViolation(
+            "BANK_BUNDLE_INVALID",
+            f"bank bundle failed {len(failures)} consumer check(s); first: {failures[0]}",
+            report,
+        )
+    return report

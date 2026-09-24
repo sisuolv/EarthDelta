@@ -1,0 +1,14 @@
+/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py:619: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")
+{
+ "initial_bank_digest": "78e78848e97e15e680cdd5ceb57f4ea6fb4650e62121a3cd97b33231bb262f7c",
+ "identity_pass": true,
+ "recomputed_equals_bundle_record": true,
+ "digests": {
+  "merged_backbone_digest": "370bd3bcc7545755bcdb60e482e1ce1ebc201302dc710f7992a4d76c4915bb97",
+  "base_backbone_digest": "bf1eca9d48dbed9e2752678500b2a0cc1488d84627d68de33367492926aa898d",
+  "static_adapter_digest": "566d5dc116771cf96928cb5618404334a78f2a46e7aeb821bb9e141b3695d57f",
+  "artifact_version_digest": "33fcd3b3c34df722e75221c4941b8a716ff277f06f229b3b8c0a7181612c446b"
+ }
+}
+EXIT 0

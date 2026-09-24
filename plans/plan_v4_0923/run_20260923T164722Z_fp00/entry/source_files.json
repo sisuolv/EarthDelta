@@ -1,0 +1,292 @@
+[
+  {
+    "path": "earthdelta/__init__.py",
+    "bytes": 2172,
+    "sha256": "cd5c8ffd5ebb33bd779fcd2f823711561f6ea15fddf5e892e73a80d05fd522dd"
+  },
+  {
+    "path": "earthdelta/bank_training.py",
+    "bytes": 81140,
+    "sha256": "368324e993dbf49151edefead69c4e86272bd6847d2f0ea9b48d952e96db1fca"
+  },
+  {
+    "path": "earthdelta/bridge/__init__.py",
+    "bytes": 2035,
+    "sha256": "5935f600078ee81ad192fe615e04339a0192edf384bf2692e1a1139b410f69d7"
+  },
+  {
+    "path": "earthdelta/bridge/stormer_arch.py",
+    "bytes": 20213,
+    "sha256": "366f9a9ffd03258b942b44de300a86820ecede588d94dd0d81f7c54a3a510f9e"
+  },
+  {
+    "path": "earthdelta/bridge/stormer_bridge.py",
+    "bytes": 48977,
+    "sha256": "0f8d828998fdc37dbe188ed5672ace190cfd724e1049b2bf7cb7a644e1f7df8c"
+  },
+  {
+    "path": "earthdelta/contracts.py",
+    "bytes": 31197,
+    "sha256": "9e711ca45077349433a64b5b9321315272e8758ed9467c2650e01b786e39589d"
+  },
+  {
+    "path": "earthdelta/data/__init__.py",
+    "bytes": 1113,
+    "sha256": "3a07c5bc538e67bf84e66e6007cf8cf2e71311d9181ec24d74c02615f0890843"
+  },
+  {
+    "path": "earthdelta/data/make_splits.py",
+    "bytes": 47190,
+    "sha256": "e859e60fb07f026747c4cf6e07fe837e95f65bc3f19416dfcaffc93b7c48fd32"
+  },
+  {
+    "path": "earthdelta/data/pull_wb2.py",
+    "bytes": 50256,
+    "sha256": "b8d742fefb99c32d7255fedebe977f59271d6cf314d8cb53c1e9e1788eca3426"
+  },
+  {
+    "path": "earthdelta/geometry.py",
+    "bytes": 5598,
+    "sha256": "313f3f45a07666df2e606cd4e16cf02604cb6c38ff382500151fca6412784477"
+  },
+  {
+    "path": "earthdelta/heads.py",
+    "bytes": 19246,
+    "sha256": "0423c63a950e37f55ccd460bf31de0c083ca66af2691cb3efbf9ae11730539e6"
+  },
+  {
+    "path": "earthdelta/lowrank.py",
+    "bytes": 11578,
+    "sha256": "20fd93e6c8f922215df83b8b0a6b4604002b3dc7bfa3575eb5e078f0e77adec3"
+  },
+  {
+    "path": "earthdelta/memory.py",
+    "bytes": 8593,
+    "sha256": "dddca7926e19cfee9d1586486a48b0c9c7bb2d2ee6c9b8d0aac9b2e81ccbab67"
+  },
+  {
+    "path": "earthdelta/metrics_contract.py",
+    "bytes": 35370,
+    "sha256": "7bd91cf4f244fed07afd3a66aaa4917151cf7893fad5df5bc146d1aeb871b199"
+  },
+  {
+    "path": "earthdelta/paired.py",
+    "bytes": 4216,
+    "sha256": "806dbb2fd4489d378896b060ba9d69743c57059126794f474096cbac4ed1fac3"
+  },
+  {
+    "path": "earthdelta/pilot_contract.py",
+    "bytes": 71015,
+    "sha256": "506b72e26d783fddae4411ff1dadbf8cc071bcb34b7167b3098b9b00805f62c0"
+  },
+  {
+    "path": "earthdelta/probe.py",
+    "bytes": 10050,
+    "sha256": "551c2ae11b6ce547b97df53bd8b066ff25bfeebc0bbb0d08ae07c0c5e7aa55c6"
+  },
+  {
+    "path": "earthdelta/registry.py",
+    "bytes": 33819,
+    "sha256": "16c5e51289b2f36c378b868f2063fb7ab925e998ff98266389705c882e7f363d"
+  },
+  {
+    "path": "earthdelta/selection.py",
+    "bytes": 19215,
+    "sha256": "66869d9bdc9ecf106243c89982a96ce469aea0f725f82cd252ea5d3bc49250e1"
+  },
+  {
+    "path": "earthdelta/spectral.py",
+    "bytes": 4497,
+    "sha256": "443cf644b4327f2c30788f25dfd5538ef5b112fbe11d8a94b12705f49bd38535"
+  },
+  {
+    "path": "earthdelta/static_adapter.py",
+    "bytes": 78066,
+    "sha256": "cb8ad6e9683f03268107d61eca969634d0080d0be7c314f64247e40d1b1d77ec"
+  },
+  {
+    "path": "earthdelta/teacher.py",
+    "bytes": 10299,
+    "sha256": "59fd6a85cba5de0a533df1b88b87bf3a786ed15f2e75b9adec308daa040129df"
+  },
+  {
+    "path": "earthdelta/value_pilot.py",
+    "bytes": 13846,
+    "sha256": "a57558542eb78f19fea02c7f563bc3b6942178f369d4c4bf923a9784f994c3de"
+  },
+  {
+    "path": "scripts/export_upstream_reference.py",
+    "bytes": 33138,
+    "sha256": "5070448c40368f88912f0f4392fb7f1c6902284d73debebb28e6f4f690cdd5f5"
+  },
+  {
+    "path": "scripts/r2_admission_gate.py",
+    "bytes": 13834,
+    "sha256": "818eb62f5315570020c822dc8daf0f9e463b3f6854d9c6c0e72e26faa81c4666"
+  },
+  {
+    "path": "scripts/r2_fs_bank_train.py",
+    "bytes": 39975,
+    "sha256": "5a8b9de07a9e91bee3b21363a10fb466fb30e1b81013d17374cd00350d207643"
+  },
+  {
+    "path": "scripts/r2_pilot_preflight.py",
+    "bytes": 9499,
+    "sha256": "e5ca74e1b8d1e8154d8e2f28bf4fef4e4be4a148650e041131d3c8619bc3fc3a"
+  },
+  {
+    "path": "scripts/r4_admit_sprint.py",
+    "bytes": 2821,
+    "sha256": "8f8bcdabdfd0cbb347fa23e1b3e964e738ae66da3ece5a1f0b93d309de37b9ff"
+  },
+  {
+    "path": "scripts/r4_freeze_sprint.py",
+    "bytes": 6775,
+    "sha256": "0f6490df620dbcd75d549a7caac16fed6f28e90d9369c0a15472867b75fb35e2"
+  },
+  {
+    "path": "scripts/r4_prepare_environment.py",
+    "bytes": 3451,
+    "sha256": "8012394f47fabf3b0ae915dddb849488ae59dd72348fcd95e5dd9de2e45543fe"
+  },
+  {
+    "path": "scripts/r4_run_strict_fp32.py",
+    "bytes": 477,
+    "sha256": "b7b68cf599b0d9d7b5f856d56c0ca439335d673e1f8d7207c92c027d76d76544"
+  },
+  {
+    "path": "scripts/r4_s0_parity_diagnose.py",
+    "bytes": 6778,
+    "sha256": "f003dd27a4094778ebce7187c305eeaeb87c614e7c0667da955a47642c56c1f5"
+  },
+  {
+    "path": "scripts/r4_s0_rerun_existing_env.py",
+    "bytes": 3021,
+    "sha256": "dcbfe664582b3ca4ccb07241df6e98841ae496417f12ca2434d30df2611b1f33"
+  },
+  {
+    "path": "scripts/r4_value_pilot.py",
+    "bytes": 27630,
+    "sha256": "7f118499863f110f428a29f7aa88d05a8bcfd81fe9bbeb82067d7600ef99bd37"
+  },
+  {
+    "path": "scripts/r4_worker_group.py",
+    "bytes": 2280,
+    "sha256": "d8ec00c106879bb993028bb72b9e0d10326693f40969243f72ff616353568e55"
+  },
+  {
+    "path": "scripts/s0_gate.py",
+    "bytes": 121299,
+    "sha256": "357132bf371c07569253fe48eeb5d5418ec1ce26a62f05f16afb28d72bf62cea"
+  },
+  {
+    "path": "tests/conftest.py",
+    "bytes": 236,
+    "sha256": "1c22e709a8e882a6be1a4ee1550ce0b4f91c45a0dcb12c06993d5c4ec7a9560e"
+  },
+  {
+    "path": "tests/test_bank_gradients.py",
+    "bytes": 27767,
+    "sha256": "abc69028f92a7cde833510f39373e88814524336d7db4f29f200d3b6fce77902"
+  },
+  {
+    "path": "tests/test_bank_training.py",
+    "bytes": 32183,
+    "sha256": "9f55559db9e777394ca0bf40fcfcca6d17cf63d63eac05d3a7412e4f049e7614"
+  },
+  {
+    "path": "tests/test_bridge.py",
+    "bytes": 33153,
+    "sha256": "e7b77f2bb9e308008f59aecdcf53872f520d41e2b3c725fee66596f1c955a1e9"
+  },
+  {
+    "path": "tests/test_candidate_registry_b15.py",
+    "bytes": 17648,
+    "sha256": "d180a431547b4fc5e7cbebb0ffca770205d283ca2482c32417768ed44678d5f0"
+  },
+  {
+    "path": "tests/test_checkpoint_compat_shim.py",
+    "bytes": 10443,
+    "sha256": "1e82e1a59b5a519cd099e97ad03c26cae7e19d23755f0dc8b9888c9fc4b1a6e5"
+  },
+  {
+    "path": "tests/test_content_verification_b08.py",
+    "bytes": 20509,
+    "sha256": "85aa503d4cc2bffcb4b77dacd4dda640b42174fc72963d5ffec7bb26af672e4d"
+  },
+  {
+    "path": "tests/test_data.py",
+    "bytes": 34834,
+    "sha256": "3271333f519df4411eced7098a56b919d661e13fc6e0d6c5542b964dfa46235e"
+  },
+  {
+    "path": "tests/test_differentiable_rollout.py",
+    "bytes": 13857,
+    "sha256": "b2df415d1d4d39fe416f083133e4b7b2e89b269d0999c65cecb8296d5c7c2780"
+  },
+  {
+    "path": "tests/test_earthdelta.py",
+    "bytes": 35408,
+    "sha256": "d5c66d10f0dc66e68d2d6c6212863a5ccaf532d3d0e02c80cf6cd862a2c92e44"
+  },
+  {
+    "path": "tests/test_fs_static_adapter.py",
+    "bytes": 37704,
+    "sha256": "ce8bf5fdc7fa84fc692c0bbaa27ebe51768ea7f0cbd825c5deee5d0ef8e62b70"
+  },
+  {
+    "path": "tests/test_metric_contract.py",
+    "bytes": 37109,
+    "sha256": "574808ac46e338e634ca64044fa3944a3c4ea0f0416380f2efe6c07fed55537d"
+  },
+  {
+    "path": "tests/test_normalization_policy.py",
+    "bytes": 18668,
+    "sha256": "0c1c1df675ea4c551f353797f238ce5a5f4f9bfa16be32cf5a475c1e5ff9e8ac"
+  },
+  {
+    "path": "tests/test_pilot_admission_b09.py",
+    "bytes": 25599,
+    "sha256": "588dd208c3e7fdfc26367ad701ed6c270c95967fc46abce2f0550d2e0e75c86b"
+  },
+  {
+    "path": "tests/test_pilot_contract.py",
+    "bytes": 28219,
+    "sha256": "368246424d653913233d2588ec17391e270b1bdaf904b0bd1d4f67e03f4ee55f"
+  },
+  {
+    "path": "tests/test_s0_fail_closed.py",
+    "bytes": 15618,
+    "sha256": "791100bdc806df75d637eb829c9f7c0b581674779d1bad7ea092fc4a35057685"
+  },
+  {
+    "path": "tests/test_s0_gate_end_to_end.py",
+    "bytes": 49288,
+    "sha256": "e77a67df5a77179652e2d627b42117ffcaf239b7a38d95b3c2b6bcbc3e6c7907"
+  },
+  {
+    "path": "tests/test_s0_gate_identity.py",
+    "bytes": 23540,
+    "sha256": "6e4ff63bd1508ff0302069303cf37e47afef4846cb8c58a9231f730f3c5244aa"
+  },
+  {
+    "path": "tests/test_selection_domain.py",
+    "bytes": 11935,
+    "sha256": "8a1e5c208280139670c62260e8840e7af4b3e788ecb2e8625fa70fe69a2750bf"
+  },
+  {
+    "path": "tests/test_time_provenance.py",
+    "bytes": 14094,
+    "sha256": "d3db5061100a3b30568dc6a86cdf2e738adfdef0d21bbebdc404ea935088cef0"
+  },
+  {
+    "path": "tests/test_upstream_parity.py",
+    "bytes": 8888,
+    "sha256": "2563130e1e90b405cb18c9a39dbb80dad765c33b290c297e6b869545058276c2"
+  },
+  {
+    "path": "tests/test_value_pilot.py",
+    "bytes": 6076,
+    "sha256": "fe6153a53b5fa11ea1707ae057f4668d350a56b9916e6cad43c122d4b6fb9c69"
+  }
+]

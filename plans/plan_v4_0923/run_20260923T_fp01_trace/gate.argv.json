@@ -1,0 +1,5 @@
+[
+  "bash",
+  "-lc",
+  "export PYTHONPATH=/mnt/afs/260010168/EarthDelta/.pydeps:/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/cuda_site:$PYTHONPATH; exec python3 -u @SNAPSHOT@/scripts/s0_gate.py --config /mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json --reference-dir /mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/reference/upstream_reference_ps4_7fde884e_zd --output-dir /mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output"
+]

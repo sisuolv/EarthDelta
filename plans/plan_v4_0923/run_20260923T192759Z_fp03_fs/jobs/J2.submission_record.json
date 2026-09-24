@@ -1,0 +1,19 @@
+{
+ "job": "J2",
+ "job_id": "pt-z07uway9",
+ "run_dir": "artifacts/round2_cci/ed-r4fs03scrn-0923210334-9fca4b",
+ "label": "r4fs03scrn",
+ "timeout_seconds": 2700,
+ "argv_file": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/jobs/J2.argv.json",
+ "argv_file_sha256": "d71679a0c9a63de20856e48a0c23845c266dd80476b08e5629705c31f19f6742",
+ "invocation_sha256": "3370b011111f2b6c2a98e739668c88c339a4a566d44490f300ab141947c6ba2d",
+ "source_manifest_sha256": "e0b120f215f833077b5092dffba01f315921cf8e0d0129bf67269c07115ba9dd",
+ "snapshot_fs_protocol_sha256": "2b3116a1f87951d3d5549a08fd52244f23a6e2784d8378894f8736e25fdb39a2",
+ "protocol_sha256": "3c143bd7c405c9fc70edfd186c3432fce88845820f8d7fd892a4be0744a2b7af",
+ "preconditions": [
+  "J1 pt-56auspj8 SUCCEEDED",
+  "J1_diag_decision_r2.json PASS (DEV-001, coordinator-approved)",
+  "argv file byte-identical to the one prepared before J1"
+ ],
+ "recorded_utc": "2026-09-23T21:03:47.676890+00:00"
+}

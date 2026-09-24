@@ -1,0 +1,1373 @@
+{
+ "rule": "BANK-SELECT-v1",
+ "num_experts": 4,
+ "expert_verdicts": {
+  "0": "PASS",
+  "1": "PASS",
+  "2": "PASS",
+  "3": "PASS"
+ },
+ "batches": [
+  "B-J2"
+ ],
+ "substitution": "FORBIDDEN",
+ "partial_bank": "FORBIDDEN",
+ "cross_batch_mixing": "FORBIDDEN",
+ "bank_selected_for_assembly": true,
+ "experts_for_assembly": [
+  {
+   "expert_index": 0,
+   "expert_digest": "c8b7455344864b8729e114b68b0221a29d53a2a937e36c1e280a10297299b5c6",
+   "expert_file": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert0/expert_0.pt",
+    "sha256": "2b0402a46fad8831139b5e6e018202c5303764f7c76587c31c76f034436e1ed1"
+   },
+   "probe_file": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert0/bank_probe_expert0.pt",
+    "sha256": "367f87ce4852f9d5e18a8087ac45e1b7f883905430d84ec927998a6d3f5d6550"
+   }
+  },
+  {
+   "expert_index": 1,
+   "expert_digest": "3039d20b3b14dde988a5561a1c51785f18ba557de4504c4fdeea5283654c6acb",
+   "expert_file": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert1/expert_1.pt",
+    "sha256": "d5a427386850086c4e12b1209e815a534859110564d4eedfc30a1c54401611ab"
+   },
+   "probe_file": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert1/bank_probe_expert1.pt",
+    "sha256": "867ab21c59e21016a97ca05ed08c1751ce5a712a5599466c2fc98bdf2b492f56"
+   }
+  },
+  {
+   "expert_index": 2,
+   "expert_digest": "e633a5c68b0e16f4ada3e432f94c883a5c09bbafd6d3d128d65fb5f665cc5f88",
+   "expert_file": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert2/expert_2.pt",
+    "sha256": "54f3d35a0f7456ad8c83117a696afb7736d397003c8675399940c11a785d490f"
+   },
+   "probe_file": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert2/bank_probe_expert2.pt",
+    "sha256": "3ab8b668507e9bf8b454ad34087180fabb999df53bb7d6ccf81bd1d1212d7095"
+   }
+  },
+  {
+   "expert_index": 3,
+   "expert_digest": "119d2fd44c3bf9186b660a84be2fddf17d4573858c2ab582e8800ee8ea9cd4b2",
+   "expert_file": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert3/expert_3.pt",
+    "sha256": "119baf7faeabd8acd9826109949b38334b802a34f9c9409635bc9ff56d577a54"
+   },
+   "probe_file": {
+    "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert3/bank_probe_expert3.pt",
+    "sha256": "196b6493141840ff07ee27d19c8012876bc5366085059c770e6ba1d92f885808"
+   }
+  }
+ ],
+ "fallback_authorized": false,
+ "verdict": "BANK_QUAL_PASS_PENDING_ASSEMBLY",
+ "kind": "formal",
+ "job": "B-J2",
+ "horizon": 32,
+ "details": [
+  {
+   "config_id": "BJ2_E0",
+   "expert_index": 0,
+   "dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert0",
+   "files": {
+    "bank_training_expert0.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert0/bank_training_expert0.json",
+     "sha256": "47234a8f4a43461af556d641010f4f067366f93cf017cd830315f9f4784b5e56"
+    },
+    "bank_panels_expert0.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert0/bank_panels_expert0.json",
+     "sha256": "ff256077bf073e69a99c770e041928ebab69b32f896b3492481fac562f8f28de"
+    },
+    "bank_diagnostics_expert0.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert0/bank_diagnostics_expert0.json",
+     "sha256": "f13f44e55b64ceede67628b2dac8f3bb2dcd9ffdaf2960e90488f9d76658f8df"
+    },
+    "expert_0.pt": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert0/expert_0.pt",
+     "sha256": "2b0402a46fad8831139b5e6e018202c5303764f7c76587c31c76f034436e1ed1"
+    },
+    "bank_probe_expert0.pt": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert0/bank_probe_expert0.pt",
+     "sha256": "367f87ce4852f9d5e18a8087ac45e1b7f883905430d84ec927998a6d3f5d6550"
+    },
+    "run_record.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert0/run_record.json",
+     "sha256": "e079e47c8c9a4fc7ba9514ff39b903a4431f74a64a12f33568736cff0f386c89"
+    },
+    "provenance.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert0/provenance.json",
+     "sha256": "c19c595d838a7ff49d092ef8f02a34532006a102201d8bc92be2ba3cf819545c"
+    },
+    "stdout.log": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert0/stdout.log",
+     "sha256": "2fb81d4a247d2aadce124546c6e52c2a7d529d42b6a4c451c59224b9f439651e"
+    },
+    "binding_refused.json": null
+   },
+   "record": {
+    "mode": "formal",
+    "n_updates": 32,
+    "learning_rate": 0.0025,
+    "n_samples": 15
+   },
+   "report_only_prefix_equals_shortstep": true,
+   "qualification": {
+    "rule": "BANK-QUAL-v1",
+    "expert_index": 0,
+    "verdict": "PASS",
+    "quality_pass": true,
+    "status": {
+     "E0": "PASS",
+     "E1": "PASS",
+     "E2": "PASS",
+     "E3": "PASS",
+     "E4": "PASS",
+     "E5": "PASS",
+     "E6": "PASS"
+    },
+    "not_preregistered": [],
+    "e0": {
+     "status": "PASS",
+     "failed": [],
+     "facts": {
+      "official_backend": true,
+      "torch_version": true,
+      "xformers_version": true,
+      "tf32_off": true,
+      "s0_certificate_consumed": true,
+      "admission_consumer_pass": true,
+      "protocol_sha256_match": true,
+      "config_id_match": true,
+      "certified_fs_authorized": true,
+      "no_source_drift": true,
+      "fs_source_is_certified_bundle": true,
+      "certified_fs_identity_pass": true,
+      "certified_fs_digests_are_pinned": true,
+      "initial_bank_digest_is_pinned": true,
+      "initial_expert_digest_is_pinned": true,
+      "grouping_is_pinned": true,
+      "training_order_is_the_pinned_group": true,
+      "probe_issue_is_pinned": true,
+      "backbone_is_certified_fs": true,
+      "record_matches_declared": true,
+      "record_is_formal_full_horizon": true,
+      "expert_file_is_the_trained_expert": true,
+      "probe_file_is_recorded": true,
+      "untrained_L0_equals_Fs_bitwise": true,
+      "panels_cover_the_training_issues": true
+     }
+    },
+    "e1": {
+     "q1": {
+      "all_losses_finite": true,
+      "all_grad_norms_finite": true,
+      "n_updates": 32,
+      "required_n_updates": 32,
+      "trace_lengths_consistent": true,
+      "passed": true
+     },
+     "ab_grad_norms_finite": true,
+     "ab_trace_lengths_consistent": true,
+     "eligible": true,
+     "error": null,
+     "passed": true
+    },
+    "e2": {
+     "clip_events": 0,
+     "clip_events_from_trace": 0,
+     "clip_events_max": 0,
+     "first_clip_update": null,
+     "clip_ok": true,
+     "max_per_visit_ratio": 1.0,
+     "argmax_update": 0,
+     "argmax_issue": "iss_292517fb189ee1bd",
+     "per_visit_ratio_max": 1.25,
+     "ratio_ok": true,
+     "epoch_means": [
+      0.03204257398218768,
+      0.03188946753305395
+     ],
+     "epoch_onset_factor": 1.02,
+     "onset_epoch": null,
+     "onset_update": null,
+     "epoch_ok": true,
+     "passed": true,
+     "epoch_size": 15,
+     "n_full_epochs": 2
+    },
+    "e3": {
+     "own_group_24h": {
+      "lead_hours": 24,
+      "n_issues": 15,
+      "per_issue_ratio": {
+       "iss_00764efdd9468778": 0.9900682933771667,
+       "iss_039add2d41f5c08a": 0.9930138108464791,
+       "iss_0f0a37e8393048e2": 0.9891640257901376,
+       "iss_18d8c1b619a302e6": 0.9924939123957416,
+       "iss_292517fb189ee1bd": 0.9956232967662034,
+       "iss_475192a76d40e894": 0.9908767004302268,
+       "iss_48db9e7d6b34ef39": 0.9863498655283484,
+       "iss_6e4faae20c3f33f0": 0.9921969067808438,
+       "iss_765fa161b1b1e581": 0.9885061541905933,
+       "iss_b83cbb00e6cb5eb3": 0.9887331811953118,
+       "iss_bcf27964e77c54b3": 0.9869915264418369,
+       "iss_d2871a74548df0f1": 0.9850573749402423,
+       "iss_d574995f92709e85": 0.9888229340993674,
+       "iss_d93bbfd8a1387d02": 0.9894598642303769,
+       "iss_fd1097836dbd4da8": 0.994313200887332
+      },
+      "max_ratio": 0.9956232967662034,
+      "min_ratio": 0.9850573749402423,
+      "mean_initial": 0.032071403990092166,
+      "mean_final": 0.03175309320098777,
+      "mean_ratio": 0.9900749343807109
+     },
+     "threshold_lt": 1.0
+    },
+    "e4": {
+     "nonzero_response": true,
+     "not_zero_initialized": true,
+     "expert_moved": true,
+     "trained_panel_differs_from_untrained": true,
+     "max_abs_response": 0.27092450857162476
+    },
+    "e5": {
+     "file_sha256_matches": true,
+     "expert_digest_matches": true,
+     "probe_exact": true,
+     "probe_max_abs_diff_all_zero": true
+    },
+    "e6": {
+     "other_experts_unchanged": true,
+     "other_experts_grad_free": true,
+     "backbone_digest_unchanged": true,
+     "no_leftover_hooks": true
+    },
+    "report_only": {
+     "per_visit_direction": {
+      "n_samples_with_repeats": 15,
+      "n_decreased": 15,
+      "fraction_decreased": 1.0,
+      "per_sample": {
+       "iss_292517fb189ee1bd": {
+        "n_observations": 3,
+        "first": 0.03013097330102946,
+        "last": 0.030025838083730983,
+        "min": 0.030025838083730983,
+        "decreased": true
+       },
+       "iss_b83cbb00e6cb5eb3": {
+        "n_observations": 3,
+        "first": 0.0320186000751908,
+        "last": 0.031682874271597904,
+        "min": 0.031682874271597904,
+        "decreased": true
+       },
+       "iss_00764efdd9468778": {
+        "n_observations": 2,
+        "first": 0.031248596553677115,
+        "last": 0.031116866087071694,
+        "min": 0.031116866087071694,
+        "decreased": true
+       },
+       "iss_d2871a74548df0f1": {
+        "n_observations": 2,
+        "first": 0.03394086168508067,
+        "last": 0.03369246937491812,
+        "min": 0.03369246937491812,
+        "decreased": true
+       },
+       "iss_bcf27964e77c54b3": {
+        "n_observations": 2,
+        "first": 0.031957035422605924,
+        "last": 0.03178301109761868,
+        "min": 0.03178301109761868,
+        "decreased": true
+       },
+       "iss_6e4faae20c3f33f0": {
+        "n_observations": 2,
+        "first": 0.03522045863884074,
+        "last": 0.03507272284918502,
+        "min": 0.03507272284918502,
+        "decreased": true
+       },
+       "iss_d93bbfd8a1387d02": {
+        "n_observations": 2,
+        "first": 0.03228688064213397,
+        "last": 0.032137025855812656,
+        "min": 0.032137025855812656,
+        "decreased": true
+       },
+       "iss_0f0a37e8393048e2": {
+        "n_observations": 2,
+        "first": 0.03226277238050622,
+        "last": 0.03207181839649803,
+        "min": 0.03207181839649803,
+        "decreased": true
+       },
+       "iss_475192a76d40e894": {
+        "n_observations": 2,
+        "first": 0.030902433959661243,
+        "last": 0.030782060087795018,
+        "min": 0.030782060087795018,
+        "decreased": true
+       },
+       "iss_18d8c1b619a302e6": {
+        "n_observations": 2,
+        "first": 0.03320619966772423,
+        "last": 0.033106683806068696,
+        "min": 0.033106683806068696,
+        "decreased": true
+       },
+       "iss_48db9e7d6b34ef39": {
+        "n_observations": 2,
+        "first": 0.03148148987716252,
+        "last": 0.031305689565422005,
+        "min": 0.031305689565422005,
+        "decreased": true
+       },
+       "iss_765fa161b1b1e581": {
+        "n_observations": 2,
+        "first": 0.032528123174175146,
+        "last": 0.0323138746076566,
+        "min": 0.0323138746076566,
+        "decreased": true
+       },
+       "iss_d574995f92709e85": {
+        "n_observations": 2,
+        "first": 0.031389330640169466,
+        "last": 0.031177186702960966,
+        "min": 0.031177186702960966,
+        "decreased": true
+       },
+       "iss_fd1097836dbd4da8": {
+        "n_observations": 2,
+        "first": 0.030533178342478675,
+        "last": 0.0304543487702661,
+        "min": 0.0304543487702661,
+        "decreased": true
+       },
+       "iss_039add2d41f5c08a": {
+        "n_observations": 2,
+        "first": 0.03153167537237907,
+        "last": 0.0314253667975703,
+        "min": 0.0314253667975703,
+        "decreased": true
+       }
+      },
+      "note": "first vs last loss on the SAME sample. The raw first/last update losses are not comparable when the schedule cycles through several samples, because they score different samples."
+     },
+     "own_group_6h": {
+      "lead_hours": 6,
+      "n_issues": 15,
+      "per_issue_ratio": {
+       "iss_00764efdd9468778": 0.9990495761268806,
+       "iss_039add2d41f5c08a": 0.9983988263057383,
+       "iss_0f0a37e8393048e2": 0.9984766174939932,
+       "iss_18d8c1b619a302e6": 0.9999391529780917,
+       "iss_292517fb189ee1bd": 1.0003178391120688,
+       "iss_475192a76d40e894": 0.9982797324269383,
+       "iss_48db9e7d6b34ef39": 0.9985707528934367,
+       "iss_6e4faae20c3f33f0": 0.998507225037386,
+       "iss_765fa161b1b1e581": 0.9975514408014666,
+       "iss_b83cbb00e6cb5eb3": 0.998455096775411,
+       "iss_bcf27964e77c54b3": 0.9999454963327962,
+       "iss_d2871a74548df0f1": 0.9974552395419303,
+       "iss_d574995f92709e85": 0.9997846303964819,
+       "iss_d93bbfd8a1387d02": 0.9992339990182194,
+       "iss_fd1097836dbd4da8": 0.9995865714909615
+      },
+      "max_ratio": 1.0003178391120688,
+      "min_ratio": 0.9974552395419303,
+      "mean_initial": 0.014689154386283366,
+      "mean_final": 0.01467240946282889,
+      "mean_ratio": 0.9988600485082987
+     },
+     "own_group_72h": {
+      "lead_hours": 72,
+      "n_issues": 15,
+      "per_issue_ratio": {
+       "iss_00764efdd9468778": 0.9953586048326855,
+       "iss_039add2d41f5c08a": 0.9911092955600751,
+       "iss_0f0a37e8393048e2": 0.9811221916293135,
+       "iss_18d8c1b619a302e6": 0.9875825157617856,
+       "iss_292517fb189ee1bd": 0.9849046573985543,
+       "iss_475192a76d40e894": 0.9852709741912193,
+       "iss_48db9e7d6b34ef39": 0.987645464092258,
+       "iss_6e4faae20c3f33f0": 0.9881840174763638,
+       "iss_765fa161b1b1e581": 0.9859112224230406,
+       "iss_b83cbb00e6cb5eb3": 0.984157638947967,
+       "iss_bcf27964e77c54b3": 0.9851455185252179,
+       "iss_d2871a74548df0f1": 0.9806309450760857,
+       "iss_d574995f92709e85": 0.9902328886861758,
+       "iss_d93bbfd8a1387d02": 0.9960171070275786,
+       "iss_fd1097836dbd4da8": 0.9919775819280814
+      },
+      "max_ratio": 0.9960171070275786,
+      "min_ratio": 0.9806309450760857,
+      "mean_initial": 0.07575340777039741,
+      "mean_final": 0.0748119471903037,
+      "mean_ratio": 0.9875720365881465
+     },
+     "own_group_24h_per_issue": {
+      "iss_00764efdd9468778": 0.9900682933771667,
+      "iss_039add2d41f5c08a": 0.9930138108464791,
+      "iss_0f0a37e8393048e2": 0.9891640257901376,
+      "iss_18d8c1b619a302e6": 0.9924939123957416,
+      "iss_292517fb189ee1bd": 0.9956232967662034,
+      "iss_475192a76d40e894": 0.9908767004302268,
+      "iss_48db9e7d6b34ef39": 0.9863498655283484,
+      "iss_6e4faae20c3f33f0": 0.9921969067808438,
+      "iss_765fa161b1b1e581": 0.9885061541905933,
+      "iss_b83cbb00e6cb5eb3": 0.9887331811953118,
+      "iss_bcf27964e77c54b3": 0.9869915264418369,
+      "iss_d2871a74548df0f1": 0.9850573749402423,
+      "iss_d574995f92709e85": 0.9888229340993674,
+      "iss_d93bbfd8a1387d02": 0.9894598642303769,
+      "iss_fd1097836dbd4da8": 0.994313200887332
+     }
+    }
+   }
+  },
+  {
+   "config_id": "BJ2_E1",
+   "expert_index": 1,
+   "dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert1",
+   "files": {
+    "bank_training_expert1.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert1/bank_training_expert1.json",
+     "sha256": "6eab783d6626b3711019f49387fffa9d432a25ef6e4ed8a78fd80d1715bf6c0f"
+    },
+    "bank_panels_expert1.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert1/bank_panels_expert1.json",
+     "sha256": "8b8372d7539028595d7bf2a208703fa0c3809e44e74e56ed977e52d40a386937"
+    },
+    "bank_diagnostics_expert1.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert1/bank_diagnostics_expert1.json",
+     "sha256": "3dc68e9ae16c559798f89474ab71004f620b3418c94bbcef7faa817efcd4eee4"
+    },
+    "expert_1.pt": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert1/expert_1.pt",
+     "sha256": "d5a427386850086c4e12b1209e815a534859110564d4eedfc30a1c54401611ab"
+    },
+    "bank_probe_expert1.pt": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert1/bank_probe_expert1.pt",
+     "sha256": "867ab21c59e21016a97ca05ed08c1751ce5a712a5599466c2fc98bdf2b492f56"
+    },
+    "run_record.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert1/run_record.json",
+     "sha256": "e56829884888bda00f9df4adee725e84f4d286532a37844a69d0345e225763c6"
+    },
+    "provenance.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert1/provenance.json",
+     "sha256": "0fc7257952ea8a5a0f44d3605acb81f1b564079b743a66fcc2066fe72ad76e42"
+    },
+    "stdout.log": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert1/stdout.log",
+     "sha256": "a3c9fdb6eb74cf4f05b24de931ad46a06aa9fbf52a2e8d5edb13db4a2568e85d"
+    },
+    "binding_refused.json": null
+   },
+   "record": {
+    "mode": "formal",
+    "n_updates": 32,
+    "learning_rate": 0.0025,
+    "n_samples": 16
+   },
+   "report_only_prefix_equals_shortstep": true,
+   "qualification": {
+    "rule": "BANK-QUAL-v1",
+    "expert_index": 1,
+    "verdict": "PASS",
+    "quality_pass": true,
+    "status": {
+     "E0": "PASS",
+     "E1": "PASS",
+     "E2": "PASS",
+     "E3": "PASS",
+     "E4": "PASS",
+     "E5": "PASS",
+     "E6": "PASS"
+    },
+    "not_preregistered": [],
+    "e0": {
+     "status": "PASS",
+     "failed": [],
+     "facts": {
+      "official_backend": true,
+      "torch_version": true,
+      "xformers_version": true,
+      "tf32_off": true,
+      "s0_certificate_consumed": true,
+      "admission_consumer_pass": true,
+      "protocol_sha256_match": true,
+      "config_id_match": true,
+      "certified_fs_authorized": true,
+      "no_source_drift": true,
+      "fs_source_is_certified_bundle": true,
+      "certified_fs_identity_pass": true,
+      "certified_fs_digests_are_pinned": true,
+      "initial_bank_digest_is_pinned": true,
+      "initial_expert_digest_is_pinned": true,
+      "grouping_is_pinned": true,
+      "training_order_is_the_pinned_group": true,
+      "probe_issue_is_pinned": true,
+      "backbone_is_certified_fs": true,
+      "record_matches_declared": true,
+      "record_is_formal_full_horizon": true,
+      "expert_file_is_the_trained_expert": true,
+      "probe_file_is_recorded": true,
+      "untrained_L0_equals_Fs_bitwise": true,
+      "panels_cover_the_training_issues": true
+     }
+    },
+    "e1": {
+     "q1": {
+      "all_losses_finite": true,
+      "all_grad_norms_finite": true,
+      "n_updates": 32,
+      "required_n_updates": 32,
+      "trace_lengths_consistent": true,
+      "passed": true
+     },
+     "ab_grad_norms_finite": true,
+     "ab_trace_lengths_consistent": true,
+     "eligible": true,
+     "error": null,
+     "passed": true
+    },
+    "e2": {
+     "clip_events": 0,
+     "clip_events_from_trace": 0,
+     "clip_events_max": 0,
+     "first_clip_update": null,
+     "clip_ok": true,
+     "max_per_visit_ratio": 1.0002259002675413,
+     "argmax_update": 10,
+     "argmax_issue": "iss_3f121b796ed3792d",
+     "per_visit_ratio_max": 1.25,
+     "ratio_ok": true,
+     "epoch_means": [
+      0.030496983726540524,
+      0.03036171398738015
+     ],
+     "epoch_onset_factor": 1.02,
+     "onset_epoch": null,
+     "onset_update": null,
+     "epoch_ok": true,
+     "passed": true,
+     "epoch_size": 16,
+     "n_full_epochs": 2
+    },
+    "e3": {
+     "own_group_24h": {
+      "lead_hours": 24,
+      "n_issues": 16,
+      "per_issue_ratio": {
+       "iss_0385d2c288807351": 0.9860937271289831,
+       "iss_0dcd1c194c0f2001": 0.9888868233094049,
+       "iss_1b2a9b2659e92e32": 0.9918763233582546,
+       "iss_2b8803810786f267": 0.9934272980692311,
+       "iss_395368a523eef01e": 0.9884963589336584,
+       "iss_3f121b796ed3792d": 0.9942725152227572,
+       "iss_4f2b54d7e8953451": 0.9895481050283658,
+       "iss_6361e4cdd8050ae3": 0.9933196791904734,
+       "iss_7c410dbdd2c331c8": 0.9922614421809711,
+       "iss_9f1b600cc88b7d0b": 0.9903521717576439,
+       "iss_9f5c84e9feaac58a": 0.9894912115354166,
+       "iss_b602673ed527ee65": 0.9883207881863134,
+       "iss_b9770dd8b6aaa215": 0.9906792658744626,
+       "iss_c9262546e63a96f0": 0.9926858381400077,
+       "iss_d30654bc90d6cc68": 0.9932320136398366,
+       "iss_f14ddf0d753a686d": 0.9911366860025396
+      },
+      "max_ratio": 0.9942725152227572,
+      "min_ratio": 0.9860937271289831,
+      "mean_initial": 0.03052252269790001,
+      "mean_final": 0.030244571927671524,
+      "mean_ratio": 0.9908935846168572
+     },
+     "threshold_lt": 1.0
+    },
+    "e4": {
+     "nonzero_response": true,
+     "not_zero_initialized": true,
+     "expert_moved": true,
+     "trained_panel_differs_from_untrained": true,
+     "max_abs_response": 0.47545337677001953
+    },
+    "e5": {
+     "file_sha256_matches": true,
+     "expert_digest_matches": true,
+     "probe_exact": true,
+     "probe_max_abs_diff_all_zero": true
+    },
+    "e6": {
+     "other_experts_unchanged": true,
+     "other_experts_grad_free": true,
+     "backbone_digest_unchanged": true,
+     "no_leftover_hooks": true
+    },
+    "report_only": {
+     "per_visit_direction": {
+      "n_samples_with_repeats": 16,
+      "n_decreased": 16,
+      "fraction_decreased": 1.0,
+      "per_sample": {
+       "iss_4f2b54d7e8953451": {
+        "n_observations": 2,
+        "first": 0.03020166486220473,
+        "last": 0.030053077140101827,
+        "min": 0.030053077140101827,
+        "decreased": true
+       },
+       "iss_0385d2c288807351": {
+        "n_observations": 2,
+        "first": 0.030487242506895492,
+        "last": 0.030282425348564294,
+        "min": 0.030282425348564294,
+        "decreased": true
+       },
+       "iss_b9770dd8b6aaa215": {
+        "n_observations": 2,
+        "first": 0.030258238210862622,
+        "last": 0.030153600299748166,
+        "min": 0.030153600299748166,
+        "decreased": true
+       },
+       "iss_0dcd1c194c0f2001": {
+        "n_observations": 2,
+        "first": 0.030705398850460645,
+        "last": 0.03054872657051827,
+        "min": 0.03054872657051827,
+        "decreased": true
+       },
+       "iss_b602673ed527ee65": {
+        "n_observations": 2,
+        "first": 0.030481909511573077,
+        "last": 0.03032484926130175,
+        "min": 0.03032484926130175,
+        "decreased": true
+       },
+       "iss_395368a523eef01e": {
+        "n_observations": 2,
+        "first": 0.029237223345353475,
+        "last": 0.02904412520591602,
+        "min": 0.02904412520591602,
+        "decreased": true
+       },
+       "iss_9f5c84e9feaac58a": {
+        "n_observations": 2,
+        "first": 0.02975428166427864,
+        "last": 0.029599829482892116,
+        "min": 0.029599829482892116,
+        "decreased": true
+       },
+       "iss_9f1b600cc88b7d0b": {
+        "n_observations": 2,
+        "first": 0.031195493531935903,
+        "last": 0.031053223367471357,
+        "min": 0.031053223367471357,
+        "decreased": true
+       },
+       "iss_c9262546e63a96f0": {
+        "n_observations": 2,
+        "first": 0.030459550671096396,
+        "last": 0.030367481688455596,
+        "min": 0.030367481688455596,
+        "decreased": true
+       },
+       "iss_1b2a9b2659e92e32": {
+        "n_observations": 2,
+        "first": 0.03187085395346777,
+        "last": 0.03173589254740834,
+        "min": 0.03173589254740834,
+        "decreased": true
+       },
+       "iss_3f121b796ed3792d": {
+        "n_observations": 2,
+        "first": 0.031120728883554695,
+        "last": 0.031023251301683895,
+        "min": 0.031023251301683895,
+        "decreased": true
+       },
+       "iss_7c410dbdd2c331c8": {
+        "n_observations": 2,
+        "first": 0.03161920256817633,
+        "last": 0.031493173191898885,
+        "min": 0.031493173191898885,
+        "decreased": true
+       },
+       "iss_f14ddf0d753a686d": {
+        "n_observations": 2,
+        "first": 0.029914655377572135,
+        "last": 0.02978596927853304,
+        "min": 0.02978596927853304,
+        "decreased": true
+       },
+       "iss_d30654bc90d6cc68": {
+        "n_observations": 2,
+        "first": 0.031092239332560712,
+        "last": 0.030990322240466286,
+        "min": 0.030990322240466286,
+        "decreased": true
+       },
+       "iss_2b8803810786f267": {
+        "n_observations": 2,
+        "first": 0.028968637000480028,
+        "last": 0.028869758941932385,
+        "min": 0.028869758941932385,
+        "decreased": true
+       },
+       "iss_6361e4cdd8050ae3": {
+        "n_observations": 2,
+        "first": 0.030584419354175673,
+        "last": 0.03046171793119021,
+        "min": 0.03046171793119021,
+        "decreased": true
+       }
+      },
+      "note": "first vs last loss on the SAME sample. The raw first/last update losses are not comparable when the schedule cycles through several samples, because they score different samples."
+     },
+     "own_group_6h": {
+      "lead_hours": 6,
+      "n_issues": 16,
+      "per_issue_ratio": {
+       "iss_0385d2c288807351": 0.9972695576425386,
+       "iss_0dcd1c194c0f2001": 0.9982236272821683,
+       "iss_1b2a9b2659e92e32": 0.9991549930232574,
+       "iss_2b8803810786f267": 0.9992864715111429,
+       "iss_395368a523eef01e": 0.9993669753887443,
+       "iss_3f121b796ed3792d": 0.9987232526338179,
+       "iss_4f2b54d7e8953451": 0.9994717648653327,
+       "iss_6361e4cdd8050ae3": 0.9991090845347718,
+       "iss_7c410dbdd2c331c8": 0.9985874762598276,
+       "iss_9f1b600cc88b7d0b": 0.9991787748152477,
+       "iss_9f5c84e9feaac58a": 0.9989909061026183,
+       "iss_b602673ed527ee65": 0.998922396340397,
+       "iss_b9770dd8b6aaa215": 0.9989116978783433,
+       "iss_c9262546e63a96f0": 0.9984644428752774,
+       "iss_d30654bc90d6cc68": 0.9985201062731642,
+       "iss_f14ddf0d753a686d": 0.9988440315242897
+      },
+      "max_ratio": 0.9994717648653327,
+      "min_ratio": 0.9972695576425386,
+      "mean_initial": 0.013981379657735124,
+      "mean_final": 0.013964536898900226,
+      "mean_ratio": 0.9987953435750113
+     },
+     "own_group_72h": {
+      "lead_hours": 72,
+      "n_issues": 16,
+      "per_issue_ratio": {
+       "iss_0385d2c288807351": 0.9922324713608002,
+       "iss_0dcd1c194c0f2001": 0.9860756837481974,
+       "iss_1b2a9b2659e92e32": 0.9943301395574597,
+       "iss_2b8803810786f267": 0.9941868498434447,
+       "iss_395368a523eef01e": 0.991113026899794,
+       "iss_3f121b796ed3792d": 0.9946138676937343,
+       "iss_4f2b54d7e8953451": 0.9993677896965394,
+       "iss_6361e4cdd8050ae3": 0.992095241246553,
+       "iss_7c410dbdd2c331c8": 0.9961564128691618,
+       "iss_9f1b600cc88b7d0b": 0.9927610747907372,
+       "iss_9f5c84e9feaac58a": 0.9906505865591626,
+       "iss_b602673ed527ee65": 0.9723926651497534,
+       "iss_b9770dd8b6aaa215": 0.9935913463187093,
+       "iss_c9262546e63a96f0": 0.9922042241270029,
+       "iss_d30654bc90d6cc68": 0.9981526840461857,
+       "iss_f14ddf0d753a686d": 0.9944697448810232
+      },
+      "max_ratio": 0.9993677896965394,
+      "min_ratio": 0.9723926651497534,
+      "mean_initial": 0.07380180577740217,
+      "mean_final": 0.07320268735308821,
+      "mean_ratio": 0.9918820628031652
+     },
+     "own_group_24h_per_issue": {
+      "iss_0385d2c288807351": 0.9860937271289831,
+      "iss_0dcd1c194c0f2001": 0.9888868233094049,
+      "iss_1b2a9b2659e92e32": 0.9918763233582546,
+      "iss_2b8803810786f267": 0.9934272980692311,
+      "iss_395368a523eef01e": 0.9884963589336584,
+      "iss_3f121b796ed3792d": 0.9942725152227572,
+      "iss_4f2b54d7e8953451": 0.9895481050283658,
+      "iss_6361e4cdd8050ae3": 0.9933196791904734,
+      "iss_7c410dbdd2c331c8": 0.9922614421809711,
+      "iss_9f1b600cc88b7d0b": 0.9903521717576439,
+      "iss_9f5c84e9feaac58a": 0.9894912115354166,
+      "iss_b602673ed527ee65": 0.9883207881863134,
+      "iss_b9770dd8b6aaa215": 0.9906792658744626,
+      "iss_c9262546e63a96f0": 0.9926858381400077,
+      "iss_d30654bc90d6cc68": 0.9932320136398366,
+      "iss_f14ddf0d753a686d": 0.9911366860025396
+     }
+    }
+   }
+  },
+  {
+   "config_id": "BJ2_E2",
+   "expert_index": 2,
+   "dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert2",
+   "files": {
+    "bank_training_expert2.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert2/bank_training_expert2.json",
+     "sha256": "a52b3b1a6e1ec1417c1cf6f24405481a76c417f6f752b562e7e0c3ccd1abc911"
+    },
+    "bank_panels_expert2.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert2/bank_panels_expert2.json",
+     "sha256": "1391f9c195e5665cd4698e63ecacff8d6bede64c19e0f4a6e25a9f1eb2f6026f"
+    },
+    "bank_diagnostics_expert2.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert2/bank_diagnostics_expert2.json",
+     "sha256": "7e6c6f237924ce496d0b653947495b74a4ab229c710eec7eceb931832c8601aa"
+    },
+    "expert_2.pt": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert2/expert_2.pt",
+     "sha256": "54f3d35a0f7456ad8c83117a696afb7736d397003c8675399940c11a785d490f"
+    },
+    "bank_probe_expert2.pt": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert2/bank_probe_expert2.pt",
+     "sha256": "3ab8b668507e9bf8b454ad34087180fabb999df53bb7d6ccf81bd1d1212d7095"
+    },
+    "run_record.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert2/run_record.json",
+     "sha256": "077dad16d0adce9a29ddb99f70b2a33f41aed38d167232d2ed70feb65266d880"
+    },
+    "provenance.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert2/provenance.json",
+     "sha256": "2bdd9874dd6efb62cd588a84fb4b0f890344c35e3852606e7d33217087fd2282"
+    },
+    "stdout.log": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert2/stdout.log",
+     "sha256": "c8ee9b4fe9a521699e41582b4ee4e470aed8bc08cdf05a47050391e34d0ffe41"
+    },
+    "binding_refused.json": null
+   },
+   "record": {
+    "mode": "formal",
+    "n_updates": 32,
+    "learning_rate": 0.0025,
+    "n_samples": 7
+   },
+   "report_only_prefix_equals_shortstep": true,
+   "qualification": {
+    "rule": "BANK-QUAL-v1",
+    "expert_index": 2,
+    "verdict": "PASS",
+    "quality_pass": true,
+    "status": {
+     "E0": "PASS",
+     "E1": "PASS",
+     "E2": "PASS",
+     "E3": "PASS",
+     "E4": "PASS",
+     "E5": "PASS",
+     "E6": "PASS"
+    },
+    "not_preregistered": [],
+    "e0": {
+     "status": "PASS",
+     "failed": [],
+     "facts": {
+      "official_backend": true,
+      "torch_version": true,
+      "xformers_version": true,
+      "tf32_off": true,
+      "s0_certificate_consumed": true,
+      "admission_consumer_pass": true,
+      "protocol_sha256_match": true,
+      "config_id_match": true,
+      "certified_fs_authorized": true,
+      "no_source_drift": true,
+      "fs_source_is_certified_bundle": true,
+      "certified_fs_identity_pass": true,
+      "certified_fs_digests_are_pinned": true,
+      "initial_bank_digest_is_pinned": true,
+      "initial_expert_digest_is_pinned": true,
+      "grouping_is_pinned": true,
+      "training_order_is_the_pinned_group": true,
+      "probe_issue_is_pinned": true,
+      "backbone_is_certified_fs": true,
+      "record_matches_declared": true,
+      "record_is_formal_full_horizon": true,
+      "expert_file_is_the_trained_expert": true,
+      "probe_file_is_recorded": true,
+      "untrained_L0_equals_Fs_bitwise": true,
+      "panels_cover_the_training_issues": true
+     }
+    },
+    "e1": {
+     "q1": {
+      "all_losses_finite": true,
+      "all_grad_norms_finite": true,
+      "n_updates": 32,
+      "required_n_updates": 32,
+      "trace_lengths_consistent": true,
+      "passed": true
+     },
+     "ab_grad_norms_finite": true,
+     "ab_trace_lengths_consistent": true,
+     "eligible": true,
+     "error": null,
+     "passed": true
+    },
+    "e2": {
+     "clip_events": 0,
+     "clip_events_from_trace": 0,
+     "clip_events_max": 0,
+     "first_clip_update": null,
+     "clip_ok": true,
+     "max_per_visit_ratio": 1.0005571439856735,
+     "argmax_update": 6,
+     "argmax_issue": "iss_bbd4e6e2ec71d9ca",
+     "per_visit_ratio_max": 1.25,
+     "ratio_ok": true,
+     "epoch_means": [
+      0.03361210885936349,
+      0.033534870386810564,
+      0.03342156987003146,
+      0.03328644178907751
+     ],
+     "epoch_onset_factor": 1.02,
+     "onset_epoch": null,
+     "onset_update": null,
+     "epoch_ok": true,
+     "passed": true,
+     "epoch_size": 7,
+     "n_full_epochs": 4
+    },
+    "e3": {
+     "own_group_24h": {
+      "lead_hours": 24,
+      "n_issues": 7,
+      "per_issue_ratio": {
+       "iss_32d48efebee12be2": 0.9824118676389684,
+       "iss_342bd18e13bd60b8": 0.9875523889839145,
+       "iss_498e78935151da92": 0.9852199147380882,
+       "iss_4cef9a9654f92229": 0.9822135668554354,
+       "iss_658520ec80cc7e3e": 0.9802220396822054,
+       "iss_bbd4e6e2ec71d9ca": 0.9917962449501793,
+       "iss_c91b65e1183c905e": 0.9854664145660637
+      },
+      "max_ratio": 0.9917962449501793,
+      "min_ratio": 0.9802220396822054,
+      "mean_initial": 0.03361348029840962,
+      "mean_final": 0.033108695708132234,
+      "mean_ratio": 0.9849826740404127
+     },
+     "threshold_lt": 1.0
+    },
+    "e4": {
+     "nonzero_response": true,
+     "not_zero_initialized": true,
+     "expert_moved": true,
+     "trained_panel_differs_from_untrained": true,
+     "max_abs_response": 0.44921112060546875
+    },
+    "e5": {
+     "file_sha256_matches": true,
+     "expert_digest_matches": true,
+     "probe_exact": true,
+     "probe_max_abs_diff_all_zero": true
+    },
+    "e6": {
+     "other_experts_unchanged": true,
+     "other_experts_grad_free": true,
+     "backbone_digest_unchanged": true,
+     "no_leftover_hooks": true
+    },
+    "report_only": {
+     "per_visit_direction": {
+      "n_samples_with_repeats": 7,
+      "n_decreased": 7,
+      "fraction_decreased": 1.0,
+      "per_sample": {
+       "iss_32d48efebee12be2": {
+        "n_observations": 5,
+        "first": 0.03292672031065283,
+        "last": 0.032454541155828014,
+        "min": 0.032454541155828014,
+        "decreased": true
+       },
+       "iss_4cef9a9654f92229": {
+        "n_observations": 5,
+        "first": 0.03302750623832941,
+        "last": 0.03252851447319977,
+        "min": 0.03252851447319977,
+        "decreased": true
+       },
+       "iss_658520ec80cc7e3e": {
+        "n_observations": 5,
+        "first": 0.033159896017822675,
+        "last": 0.03258791936146554,
+        "min": 0.03258791936146554,
+        "decreased": true
+       },
+       "iss_342bd18e13bd60b8": {
+        "n_observations": 5,
+        "first": 0.03196704083032255,
+        "last": 0.031602259141394355,
+        "min": 0.031602259141394355,
+        "decreased": true
+       },
+       "iss_c91b65e1183c905e": {
+        "n_observations": 4,
+        "first": 0.03581974139079876,
+        "last": 0.03547129531118515,
+        "min": 0.03547129531118515,
+        "decreased": true
+       },
+       "iss_498e78935151da92": {
+        "n_observations": 4,
+        "first": 0.03517276919152575,
+        "last": 0.03480729403787185,
+        "min": 0.03480729403787185,
+        "decreased": true
+       },
+       "iss_bbd4e6e2ec71d9ca": {
+        "n_observations": 4,
+        "first": 0.033211088036092525,
+        "last": 0.03299992734107676,
+        "min": 0.03299992734107676,
+        "decreased": true
+       }
+      },
+      "note": "first vs last loss on the SAME sample. The raw first/last update losses are not comparable when the schedule cycles through several samples, because they score different samples."
+     },
+     "own_group_6h": {
+      "lead_hours": 6,
+      "n_issues": 7,
+      "per_issue_ratio": {
+       "iss_32d48efebee12be2": 0.9991335548549711,
+       "iss_342bd18e13bd60b8": 1.000584702435671,
+       "iss_498e78935151da92": 0.999373902568686,
+       "iss_4cef9a9654f92229": 1.000242817845068,
+       "iss_658520ec80cc7e3e": 0.9978680133011094,
+       "iss_bbd4e6e2ec71d9ca": 1.000468908621026,
+       "iss_c91b65e1183c905e": 0.9978078525243276
+      },
+      "max_ratio": 1.000584702435671,
+      "min_ratio": 0.9978078525243276,
+      "mean_initial": 0.01550004228880748,
+      "mean_final": 0.015488420726558432,
+      "mean_ratio": 0.9992502238360059
+     },
+     "own_group_72h": {
+      "lead_hours": 72,
+      "n_issues": 7,
+      "per_issue_ratio": {
+       "iss_32d48efebee12be2": 0.9884793929835392,
+       "iss_342bd18e13bd60b8": 0.9919744076697926,
+       "iss_498e78935151da92": 0.9875420431439222,
+       "iss_4cef9a9654f92229": 0.9890361196874048,
+       "iss_658520ec80cc7e3e": 0.9885634583350337,
+       "iss_bbd4e6e2ec71d9ca": 0.9950317559581954,
+       "iss_c91b65e1183c905e": 0.9926647805945005
+      },
+      "max_ratio": 0.9950317559581954,
+      "min_ratio": 0.9875420431439222,
+      "mean_initial": 0.07448468547294343,
+      "mean_final": 0.07377090534341897,
+      "mean_ratio": 0.9904170887613705
+     },
+     "own_group_24h_per_issue": {
+      "iss_32d48efebee12be2": 0.9824118676389684,
+      "iss_342bd18e13bd60b8": 0.9875523889839145,
+      "iss_498e78935151da92": 0.9852199147380882,
+      "iss_4cef9a9654f92229": 0.9822135668554354,
+      "iss_658520ec80cc7e3e": 0.9802220396822054,
+      "iss_bbd4e6e2ec71d9ca": 0.9917962449501793,
+      "iss_c91b65e1183c905e": 0.9854664145660637
+     }
+    }
+   }
+  },
+  {
+   "config_id": "BJ2_E3",
+   "expert_index": 3,
+   "dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert3",
+   "files": {
+    "bank_training_expert3.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert3/bank_training_expert3.json",
+     "sha256": "2b0a254a07d20b41c13eea19cde536668c188e69d884ccacefb0e4cfca12d0da"
+    },
+    "bank_panels_expert3.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert3/bank_panels_expert3.json",
+     "sha256": "691ec9f50a450919f4519a4d2fa7a499eedbb7711fd07e08cc5ae295f337f48c"
+    },
+    "bank_diagnostics_expert3.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert3/bank_diagnostics_expert3.json",
+     "sha256": "b1d226ff12cecb939df4a49f9412c33ca66a7cc3cbd2e0604b70d68897622879"
+    },
+    "expert_3.pt": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert3/expert_3.pt",
+     "sha256": "119baf7faeabd8acd9826109949b38334b802a34f9c9409635bc9ff56d577a54"
+    },
+    "bank_probe_expert3.pt": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert3/bank_probe_expert3.pt",
+     "sha256": "196b6493141840ff07ee27d19c8012876bc5366085059c770e6ba1d92f885808"
+    },
+    "run_record.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert3/run_record.json",
+     "sha256": "00bb3fe9538f776f53bf3d60fc99c35b340df31d34d396c0815c3ec9406c3256"
+    },
+    "provenance.json": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert3/provenance.json",
+     "sha256": "7de026e84c10829ee4c8da8fd15e09f5eb14ea33d6e0810b43881b4fc400e242"
+    },
+    "stdout.log": {
+     "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/expert3/stdout.log",
+     "sha256": "6e57c0d82e5234437a83d7fae823948e55a5c5488cdaf178c150661849abea54"
+    },
+    "binding_refused.json": null
+   },
+   "record": {
+    "mode": "formal",
+    "n_updates": 32,
+    "learning_rate": 0.0025,
+    "n_samples": 6
+   },
+   "report_only_prefix_equals_shortstep": true,
+   "qualification": {
+    "rule": "BANK-QUAL-v1",
+    "expert_index": 3,
+    "verdict": "PASS",
+    "quality_pass": true,
+    "status": {
+     "E0": "PASS",
+     "E1": "PASS",
+     "E2": "PASS",
+     "E3": "PASS",
+     "E4": "PASS",
+     "E5": "PASS",
+     "E6": "PASS"
+    },
+    "not_preregistered": [],
+    "e0": {
+     "status": "PASS",
+     "failed": [],
+     "facts": {
+      "official_backend": true,
+      "torch_version": true,
+      "xformers_version": true,
+      "tf32_off": true,
+      "s0_certificate_consumed": true,
+      "admission_consumer_pass": true,
+      "protocol_sha256_match": true,
+      "config_id_match": true,
+      "certified_fs_authorized": true,
+      "no_source_drift": true,
+      "fs_source_is_certified_bundle": true,
+      "certified_fs_identity_pass": true,
+      "certified_fs_digests_are_pinned": true,
+      "initial_bank_digest_is_pinned": true,
+      "initial_expert_digest_is_pinned": true,
+      "grouping_is_pinned": true,
+      "training_order_is_the_pinned_group": true,
+      "probe_issue_is_pinned": true,
+      "backbone_is_certified_fs": true,
+      "record_matches_declared": true,
+      "record_is_formal_full_horizon": true,
+      "expert_file_is_the_trained_expert": true,
+      "probe_file_is_recorded": true,
+      "untrained_L0_equals_Fs_bitwise": true,
+      "panels_cover_the_training_issues": true
+     }
+    },
+    "e1": {
+     "q1": {
+      "all_losses_finite": true,
+      "all_grad_norms_finite": true,
+      "n_updates": 32,
+      "required_n_updates": 32,
+      "trace_lengths_consistent": true,
+      "passed": true
+     },
+     "ab_grad_norms_finite": true,
+     "ab_trace_lengths_consistent": true,
+     "eligible": true,
+     "error": null,
+     "passed": true
+    },
+    "e2": {
+     "clip_events": 0,
+     "clip_events_from_trace": 0,
+     "clip_events_max": 0,
+     "first_clip_update": null,
+     "clip_ok": true,
+     "max_per_visit_ratio": 1.0,
+     "argmax_update": 0,
+     "argmax_issue": "iss_04eb8e8d56c68faa",
+     "per_visit_ratio_max": 1.25,
+     "ratio_ok": true,
+     "epoch_means": [
+      0.03188795331392901,
+      0.03179480523958825,
+      0.031670624722363226,
+      0.03153853512728923,
+      0.03140342894148758
+     ],
+     "epoch_onset_factor": 1.02,
+     "onset_epoch": null,
+     "onset_update": null,
+     "epoch_ok": true,
+     "passed": true,
+     "epoch_size": 6,
+     "n_full_epochs": 5
+    },
+    "e3": {
+     "own_group_24h": {
+      "lead_hours": 24,
+      "n_issues": 6,
+      "per_issue_ratio": {
+       "iss_04eb8e8d56c68faa": 0.9775822963836226,
+       "iss_053f08aae32d5ad8": 0.9809588370002884,
+       "iss_3b86043db1bbf33d": 0.9808646970808655,
+       "iss_4ea182f8369adc22": 0.9817645919134512,
+       "iss_6ea3c5d0ec7f926e": 0.9749624815020251,
+       "iss_b42c91ed1b555939": 0.9855268839199772
+      },
+      "max_ratio": 0.9855268839199772,
+      "min_ratio": 0.9749624815020251,
+      "mean_initial": 0.03189779436785826,
+      "mean_final": 0.031267532611790716,
+      "mean_ratio": 0.9802412120161317
+     },
+     "threshold_lt": 1.0
+    },
+    "e4": {
+     "nonzero_response": true,
+     "not_zero_initialized": true,
+     "expert_moved": true,
+     "trained_panel_differs_from_untrained": true,
+     "max_abs_response": 0.7806447744369507
+    },
+    "e5": {
+     "file_sha256_matches": true,
+     "expert_digest_matches": true,
+     "probe_exact": true,
+     "probe_max_abs_diff_all_zero": true
+    },
+    "e6": {
+     "other_experts_unchanged": true,
+     "other_experts_grad_free": true,
+     "backbone_digest_unchanged": true,
+     "no_leftover_hooks": true
+    },
+    "report_only": {
+     "per_visit_direction": {
+      "n_samples_with_repeats": 6,
+      "n_decreased": 6,
+      "fraction_decreased": 1.0,
+      "per_sample": {
+       "iss_04eb8e8d56c68faa": {
+        "n_observations": 6,
+        "first": 0.031027790965480705,
+        "last": 0.030400129108398212,
+        "min": 0.030400129108398212,
+        "decreased": true
+       },
+       "iss_4ea182f8369adc22": {
+        "n_observations": 6,
+        "first": 0.03104673659043051,
+        "last": 0.03051392717713663,
+        "min": 0.03051392717713663,
+        "decreased": true
+       },
+       "iss_6ea3c5d0ec7f926e": {
+        "n_observations": 5,
+        "first": 0.03250588034598361,
+        "last": 0.03182291969066138,
+        "min": 0.03182291969066138,
+        "decreased": true
+       },
+       "iss_053f08aae32d5ad8": {
+        "n_observations": 5,
+        "first": 0.031427874318166064,
+        "last": 0.03096776849271667,
+        "min": 0.03096776849271667,
+        "decreased": true
+       },
+       "iss_3b86043db1bbf33d": {
+        "n_observations": 5,
+        "first": 0.03456547305112784,
+        "last": 0.03405080382244363,
+        "min": 0.03405080382244363,
+        "decreased": true
+       },
+       "iss_b42c91ed1b555939": {
+        "n_observations": 5,
+        "first": 0.030753964612385356,
+        "last": 0.030402501978816422,
+        "min": 0.030402501978816422,
+        "decreased": true
+       }
+      },
+      "note": "first vs last loss on the SAME sample. The raw first/last update losses are not comparable when the schedule cycles through several samples, because they score different samples."
+     },
+     "own_group_6h": {
+      "lead_hours": 6,
+      "n_issues": 6,
+      "per_issue_ratio": {
+       "iss_04eb8e8d56c68faa": 0.9993091333766426,
+       "iss_053f08aae32d5ad8": 0.9999374162172279,
+       "iss_3b86043db1bbf33d": 0.9983706993762539,
+       "iss_4ea182f8369adc22": 1.0005436577596893,
+       "iss_6ea3c5d0ec7f926e": 0.997449366427747,
+       "iss_b42c91ed1b555939": 0.999841906315402
+      },
+      "max_ratio": 1.0005436577596893,
+      "min_ratio": 0.997449366427747,
+      "mean_initial": 0.014857699710525913,
+      "mean_final": 0.014844500906562133,
+      "mean_ratio": 0.9991116522597082
+     },
+     "own_group_72h": {
+      "lead_hours": 72,
+      "n_issues": 6,
+      "per_issue_ratio": {
+       "iss_04eb8e8d56c68faa": 0.9793597160426551,
+       "iss_053f08aae32d5ad8": 0.9914608172432091,
+       "iss_3b86043db1bbf33d": 0.9911218188481421,
+       "iss_4ea182f8369adc22": 0.9832125217646888,
+       "iss_6ea3c5d0ec7f926e": 0.9753372461694562,
+       "iss_b42c91ed1b555939": 0.9846714614782088
+      },
+      "max_ratio": 0.9914608172432091,
+      "min_ratio": 0.9753372461694562,
+      "mean_initial": 0.07397776698417423,
+      "mean_final": 0.0727990733198867,
+      "mean_ratio": 0.98406692020672
+     },
+     "own_group_24h_per_issue": {
+      "iss_04eb8e8d56c68faa": 0.9775822963836226,
+      "iss_053f08aae32d5ad8": 0.9809588370002884,
+      "iss_3b86043db1bbf33d": 0.9808646970808655,
+      "iss_4ea182f8369adc22": 0.9817645919134512,
+      "iss_6ea3c5d0ec7f926e": 0.9749624815020251,
+      "iss_b42c91ed1b555939": 0.9855268839199772
+     }
+    }
+   }
+  }
+ ],
+ "protocol_sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1",
+ "inputs": {
+  "protocol": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json",
+   "sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1"
+  },
+  "shortstep_decision": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ1_shortstep_decision.json",
+   "sha256": "9b441507384571b1468829e9dfff46c63a6a59a9d0f0c7818527ccdad82a5ab1"
+  }
+ },
+ "job_dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d",
+ "decided_utc": "2026-09-24T05:40:35.704727+00:00",
+ "decider_sha256": "3aae47105e235779c01ca88d4030873e9a5989071208167fda418703dea81445"
+}

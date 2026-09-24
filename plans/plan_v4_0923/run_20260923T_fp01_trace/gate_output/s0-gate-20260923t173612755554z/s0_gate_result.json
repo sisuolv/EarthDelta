@@ -1,0 +1,470 @@
+{
+  "status": "gate_failed",
+  "run_id": "s0-gate-20260923t173612755554z",
+  "hostname": "pt-7da39192d45a46568b28165b0188d9e3-worker-0",
+  "started_utc": "2026-09-23T17:36:12.755583+00:00",
+  "source_root": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source",
+  "repo_root": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source",
+  "asset_root": "/mnt/afs/260010168/EarthDelta",
+  "config_path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+  "config_digest": "6aad34b6417ebf72",
+  "reference_dir_arg": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/reference/upstream_reference_ps4_7fde884e_zd",
+  "patch_size": 4,
+  "torch_version": "2.3.1+cu121",
+  "cuda_available": true,
+  "source_identity": {
+    "source_root": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source",
+    "modules": {
+      "earthdelta.contracts": {
+        "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source/earthdelta/contracts.py",
+        "sha256": "9e711ca45077349433a64b5b9321315272e8758ed9467c2650e01b786e39589d"
+      },
+      "earthdelta.bridge.stormer_bridge": {
+        "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source/earthdelta/bridge/stormer_bridge.py",
+        "sha256": "03e9659db1416de3b2b6cade08c0f245826119ce70bb25c8594523ac8f2652c3"
+      },
+      "earthdelta.bridge.stormer_arch": {
+        "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source/earthdelta/bridge/stormer_arch.py",
+        "sha256": "366f9a9ffd03258b942b44de300a86820ecede588d94dd0d81f7c54a3a510f9e"
+      },
+      "earthdelta.lowrank": {
+        "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source/earthdelta/lowrank.py",
+        "sha256": "20fd93e6c8f922215df83b8b0a6b4604002b3dc7bfa3575eb5e078f0e77adec3"
+      },
+      "scripts.s0_gate": {
+        "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source/scripts/s0_gate.py",
+        "sha256": "cb675e98d3d730df7b0c9fb0e9b941d3c227e695defc6926c1e54b276a27e9e2"
+      }
+    }
+  },
+  "gate_criteria": {
+    "identity_config_bound": true,
+    "source_identity_match": true,
+    "variable_coordinate_identity_match": true,
+    "ckpt_sha256_bound": true,
+    "normalization_parity": true,
+    "manifest_identity_match": true,
+    "raw_input_binding": true,
+    "strict_load_zero_diff": true,
+    "version_identity_match": true,
+    "input_norm_binding": true,
+    "upstream_parity": false,
+    "multistep_reference_present": true,
+    "multistep_parity": false,
+    "zero_edit_equals_official": true,
+    "no_state_leak": true,
+    "outputs_finite": true
+  },
+  "criteria_details": {
+    "identity_config_bound": {
+      "criterion": "identity_config_bound",
+      "passed": true,
+      "config_path": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/gate_config.json",
+      "config_digest": "6aad34b6417ebf72",
+      "identity_tag": "ps4_7fde884e_zd",
+      "registered_rollouts": [
+        [
+          6,
+          1
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          6,
+          12
+        ]
+      ],
+      "missing_expected_fields": []
+    },
+    "variable_coordinate_identity_match": {
+      "criterion": "variable_coordinate_identity_match",
+      "passed": true,
+      "asset_coordinate_digest": "ea073810fd78ece3",
+      "grid_shape": [
+        128,
+        256
+      ],
+      "data_shape": [
+        124,
+        69,
+        128,
+        256
+      ],
+      "expected_variables_digest": "6b6dac3cf47ca2b5",
+      "reference_variables_digest": "6b6dac3cf47ca2b5",
+      "reference_coordinate_digest": "ea073810fd78ece3",
+      "problems": []
+    },
+    "source_identity_match": {
+      "criterion": "source_identity_match",
+      "passed": true,
+      "source_identity": {
+        "source_root": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source",
+        "modules": {
+          "earthdelta.contracts": {
+            "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source/earthdelta/contracts.py",
+            "sha256": "9e711ca45077349433a64b5b9321315272e8758ed9467c2650e01b786e39589d"
+          },
+          "earthdelta.bridge.stormer_bridge": {
+            "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source/earthdelta/bridge/stormer_bridge.py",
+            "sha256": "03e9659db1416de3b2b6cade08c0f245826119ce70bb25c8594523ac8f2652c3"
+          },
+          "earthdelta.bridge.stormer_arch": {
+            "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source/earthdelta/bridge/stormer_arch.py",
+            "sha256": "366f9a9ffd03258b942b44de300a86820ecede588d94dd0d81f7c54a3a510f9e"
+          },
+          "earthdelta.lowrank": {
+            "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source/earthdelta/lowrank.py",
+            "sha256": "20fd93e6c8f922215df83b8b0a6b4604002b3dc7bfa3575eb5e078f0e77adec3"
+          },
+          "scripts.s0_gate": {
+            "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b/source/scripts/s0_gate.py",
+            "sha256": "cb675e98d3d730df7b0c9fb0e9b941d3c227e695defc6926c1e54b276a27e9e2"
+          }
+        }
+      },
+      "expected_official_commit": "58dfee5a6037399a40fefd492bc00421e0c885a8",
+      "expected_config_digest": "6aad34b6417ebf72",
+      "upstream_dir": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/reference/upstream_reference_ps4_7fde884e_zd",
+      "manifest_official_commit": "58dfee5a6037399a40fefd492bc00421e0c885a8",
+      "manifest_config_digest": "6aad34b6417ebf72",
+      "reference_source_identity": {
+        "source_root": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-ed8-s0-official2-0922045911-018aab/source",
+        "modules": {
+          "earthdelta.contracts": {
+            "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-ed8-s0-official2-0922045911-018aab/source/earthdelta/contracts.py",
+            "sha256": "9e711ca45077349433a64b5b9321315272e8758ed9467c2650e01b786e39589d"
+          },
+          "earthdelta.bridge.stormer_bridge": {
+            "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-ed8-s0-official2-0922045911-018aab/source/earthdelta/bridge/stormer_bridge.py",
+            "sha256": "8f656e380744d78f7490b95ff1f8ea6c336e2a36108236c8d170ca0d4426d0bf"
+          },
+          "__main__": {
+            "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-ed8-s0-official2-0922045911-018aab/source/scripts/export_upstream_reference.py",
+            "sha256": "5070448c40368f88912f0f4392fb7f1c6902284d73debebb28e6f4f690cdd5f5"
+          }
+        }
+      },
+      "problems": []
+    },
+    "normalization_parity": {
+      "criterion": "normalization_parity",
+      "passed": true,
+      "computed_digest": "3e0b216bfbf34ab0",
+      "computed_identity": "ed-norm-identity/1:3e0b216bfbf34ab0",
+      "identity_schema": "ed-norm-identity/1",
+      "policy": "official_zero_diff_mean",
+      "policy_content_consistent": true,
+      "n_variables": 69,
+      "intervals_present": [
+        6,
+        24
+      ],
+      "digest_from_npz": "3e0b216bfbf34ab0",
+      "identity_from_npz": "ed-norm-identity/1:3e0b216bfbf34ab0",
+      "digests_match_npz": true,
+      "npz_content_sha256": "cfc2f0581cf92f478e2e8a89ee1b508230be45c3be11fdf6dcce16dcf3323172",
+      "expected_npz_content_sha256": "cfc2f0581cf92f478e2e8a89ee1b508230be45c3be11fdf6dcce16dcf3323172",
+      "npz_content_match": true,
+      "expected_digest": "ed-norm-identity/1:3e0b216bfbf34ab0",
+      "digests_match_expected": true
+    },
+    "ckpt_sha256_bound": {
+      "criterion": "ckpt_sha256_bound",
+      "passed": true,
+      "checkpoint": "/mnt/afs/260010168/EarthDelta/checkpoints/stormer_1.40625_patch_size_4.ckpt",
+      "computed_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+      "expected_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+      "match": true
+    },
+    "manifest_identity_match": {
+      "criterion": "manifest_identity_match",
+      "passed": true,
+      "upstream_dir": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/reference/upstream_reference_ps4_7fde884e_zd",
+      "config_mismatches": [],
+      "manifest_checkpoint_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+      "runtime_checkpoint_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+      "manifest_normalization_policy": "official_zero_diff_mean",
+      "runtime_normalization_policy": "official_zero_diff_mean",
+      "manifest_normalization_identity": "ed-norm-identity/1:3e0b216bfbf34ab0",
+      "runtime_normalization_identity": "ed-norm-identity/1:3e0b216bfbf34ab0",
+      "runtime_mismatches": []
+    },
+    "raw_input_binding": {
+      "criterion": "raw_input_binding",
+      "passed": true,
+      "computed_hash": "fe61be4c9768da26",
+      "config_expected_hash": "fe61be4c9768da26",
+      "config_match": true,
+      "expected_hash": "fe61be4c9768da26",
+      "match": true
+    },
+    "multistep_reference_present": {
+      "criterion": "multistep_reference_present",
+      "passed": true,
+      "required_steps": [
+        1,
+        4,
+        12
+      ],
+      "expected_shape": [
+        1,
+        69,
+        128,
+        256
+      ],
+      "upstream_dir": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/reference/upstream_reference_ps4_7fde884e_zd",
+      "present_files": {
+        "official_output_6h_1step.pt": true,
+        "official_output_6h_4step.pt": true,
+        "official_output_6h_12step.pt": true
+      },
+      "missing_files": [],
+      "shape_errors": []
+    },
+    "strict_load_zero_diff": {
+      "criterion": "strict_load_zero_diff",
+      "passed": true,
+      "missing_keys_count": 0,
+      "unexpected_keys_count": 0
+    },
+    "version_identity_match": {
+      "criterion": "version_identity_match",
+      "passed": true,
+      "actual_version": {
+        "backbone": "stormer_ps4_h1024_d24_nh16_mr4.0_sha256:7fde884ec85f4999",
+        "static_adapter": "none",
+        "edit_bank": "none",
+        "normalization": "3e0b216bfbf34ab0",
+        "grid": "128x256",
+        "projection": "patch4",
+        "split": "full",
+        "continuation": "reference_after_hold"
+      },
+      "expected_version": {
+        "backbone": "stormer_ps4_h1024_d24_nh16_mr4.0_sha256:7fde884ec85f4999",
+        "static_adapter": "none",
+        "edit_bank": "none",
+        "normalization": "3e0b216bfbf34ab0",
+        "grid": "128x256",
+        "projection": "patch4",
+        "split": "full",
+        "continuation": "reference_after_hold"
+      },
+      "runtime_checkpoint_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695"
+    },
+    "input_norm_binding": {
+      "criterion": "input_norm_binding",
+      "passed": true,
+      "tolerance": 1e-06,
+      "upstream_dir": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/reference/upstream_reference_ps4_7fde884e_zd",
+      "raw_shape": [
+        1,
+        69,
+        128,
+        256
+      ],
+      "saved_norm_shape": [
+        1,
+        69,
+        128,
+        256
+      ],
+      "max_abs_diff": 0.0,
+      "exact_equality": true
+    },
+    "upstream_parity": {
+      "criterion": "upstream_parity",
+      "passed": false,
+      "tolerance": 1e-05,
+      "input_norm_tolerance": 1e-06,
+      "upstream_available": true,
+      "input_norm_binding": true,
+      "upstream_dir": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/reference/upstream_reference_ps4_7fde884e_zd",
+      "upstream_manifest": {
+        "timestamp_utc": "2026-09-22T05:02:52.396028+00:00",
+        "xformers_version": "0.0.27",
+        "checkpoint_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+        "normalization_policy": "official_zero_diff_mean",
+        "normalization_digest": "3e0b216bfbf34ab0",
+        "normalization_identity": "ed-norm-identity/1:3e0b216bfbf34ab0"
+      },
+      "upstream_output_shape": [
+        1,
+        69,
+        128,
+        256
+      ],
+      "upstream_output_dtype": "torch.float32",
+      "input_norm_max_abs_diff": 0.0,
+      "max_abs_diff": 0.008567333221435547,
+      "mean_abs_diff": 0.0001988490403164178,
+      "note": "Bridge output differs from official xformers output by 8.57e-03 (tolerance: 1e-05)"
+    },
+    "multistep_parity": {
+      "criterion": "multistep_parity",
+      "passed": false,
+      "tolerance": 1e-05,
+      "registered_rollouts": [
+        [
+          6,
+          1
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          6,
+          12
+        ]
+      ],
+      "comparisons": {
+        "6h_1step": {
+          "passed": false,
+          "reference_shape": [
+            1,
+            69,
+            128,
+            256
+          ],
+          "actual_shape": [
+            1,
+            69,
+            128,
+            256
+          ],
+          "max_abs_diff": 0.008567333221435547,
+          "mean_abs_diff": 0.0001988490403164178,
+          "error": "Numeric parity failure for 6h_1step: max abs diff 8.567e-03 exceeds tolerance 1e-05"
+        },
+        "6h_4step": {
+          "passed": false,
+          "reference_shape": [
+            1,
+            69,
+            128,
+            256
+          ],
+          "actual_shape": [
+            1,
+            69,
+            128,
+            256
+          ],
+          "max_abs_diff": 0.009529590606689453,
+          "mean_abs_diff": 0.0002947426401078701,
+          "error": "Numeric parity failure for 6h_4step: max abs diff 9.530e-03 exceeds tolerance 1e-05"
+        },
+        "6h_12step": {
+          "passed": false,
+          "reference_shape": [
+            1,
+            69,
+            128,
+            256
+          ],
+          "actual_shape": [
+            1,
+            69,
+            128,
+            256
+          ],
+          "max_abs_diff": 0.017730116844177246,
+          "mean_abs_diff": 0.0004794504784513265,
+          "error": "Numeric parity failure for 6h_12step: max abs diff 1.773e-02 exceeds tolerance 1e-05"
+        }
+      },
+      "upstream_dir": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z-rerun3/s0/reference/upstream_reference_ps4_7fde884e_zd",
+      "error": "Multistep numeric parity failed: {'6h_1step': 'Numeric parity failure for 6h_1step: max abs diff 8.567e-03 exceeds tolerance 1e-05', '6h_4step': 'Numeric parity failure for 6h_4step: max abs diff 9.530e-03 exceeds tolerance 1e-05', '6h_12step': 'Numeric parity failure for 6h_12step: max abs diff 1.773e-02 exceeds tolerance 1e-05'}"
+    },
+    "zero_edit_equals_official": {
+      "criterion": "zero_edit_equals_official",
+      "passed": true,
+      "6h_1step": {
+        "criterion": "zero_edit_equals_official",
+        "note": "Internal consistency check (bridge vs bridge), NOT upstream parity",
+        "interval": 6,
+        "steps": 1,
+        "tolerance": 1e-06,
+        "passed": true,
+        "max_abs_diff": 0.0,
+        "mean_abs_diff": 0.0
+      },
+      "6h_4step": {
+        "criterion": "zero_edit_equals_official",
+        "note": "Internal consistency check (bridge vs bridge), NOT upstream parity",
+        "interval": 6,
+        "steps": 4,
+        "tolerance": 1e-06,
+        "passed": true,
+        "max_abs_diff": 0.0,
+        "mean_abs_diff": 0.0
+      },
+      "6h_12step": {
+        "criterion": "zero_edit_equals_official",
+        "note": "Internal consistency check (bridge vs bridge), NOT upstream parity",
+        "interval": 6,
+        "steps": 12,
+        "tolerance": 1e-06,
+        "passed": true,
+        "max_abs_diff": 0.0,
+        "mean_abs_diff": 0.0
+      },
+      "all_passed": true
+    },
+    "no_state_leak": {
+      "criterion": "no_state_leak",
+      "passed": true,
+      "bit_identical": true
+    },
+    "outputs_finite": {
+      "criterion": "outputs_finite",
+      "passed": true,
+      "checks": {
+        "forward_validation_6h_1step": true,
+        "controlled_rollout_6h_1step": true
+      }
+    }
+  },
+  "s0_gate_pass": false,
+  "verdict_committed": false,
+  "cleanup_warnings": [],
+  "cuda_device": "NVIDIA H100 80GB HBM3",
+  "input_dir": "/mnt/afs/260010168/EarthDelta/scripts/s0_gate_inputs",
+  "normalization_policy": "official_zero_diff_mean",
+  "normalization_digest": "3e0b216bfbf34ab0",
+  "normalization_identity": "ed-norm-identity/1:3e0b216bfbf34ab0",
+  "checkpoint_path": "/mnt/afs/260010168/EarthDelta/checkpoints/stormer_1.40625_patch_size_4.ckpt",
+  "computed_checkpoint_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+  "identity_phase_failures": [],
+  "version_match": true,
+  "rmse_sanity": {
+    "note": "Historical reference only - NOT used for gate pass/fail",
+    "historical_reference": {
+      "z500_rmse_6h": {
+        "value": 30,
+        "unit": "m^2/s^2",
+        "note": "rough estimate from paper"
+      },
+      "z500_rmse_24h": {
+        "value": 80,
+        "unit": "m^2/s^2",
+        "note": "rough estimate from paper"
+      }
+    },
+    "6h": {
+      "rmse_z500_weighted": 26.996318054199218,
+      "rmse_z500_std": 3.2445590110950455,
+      "n_samples": 5
+    },
+    "24h": {
+      "rmse_z500_weighted": 52.72368545532227,
+      "rmse_z500_std": 1.0073303711798518,
+      "n_samples": 5
+    }
+  },
+  "finished_utc": "2026-09-23T17:37:33.892272+00:00"
+}

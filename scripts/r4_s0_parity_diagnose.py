@@ -28,6 +28,65 @@ def _max_abs(a, b) -> float:
     return float((a - b).abs().max().item())
 
 
+def _tensor_stats(tensor) -> dict:
+    import torch
+
+    return {
+        "max_abs": float(tensor.abs().max().item()),
+        "mean_abs": float(tensor.abs().mean().item()),
+        "finite": bool(torch.isfinite(tensor).all().item()),
+    }
+
+
+def _rollout_trace(
+    model,
+    replace_constant,
+    x_norm,
+    variables,
+    interval,
+    steps,
+    inverse_input,
+    inverse_diff,
+    forward_input,
+    label,
+):
+    """Run one wrapper arm and retain per-step states and local operators."""
+    import torch
+
+    interval_tensor = torch.tensor([interval], device=x_norm.device, dtype=x_norm.dtype)
+    state = x_norm.clone()
+    trace = []
+    state_tensors = []
+    norm_diff_tensors = []
+    for step in range(1, steps + 1):
+        norm_diff = model(state, variables, interval_tensor)
+        norm_diff = replace_constant(norm_diff, variables)
+        diff_raw = inverse_diff(norm_diff, interval)
+        state_raw = inverse_input(state)
+        next_raw = state_raw + diff_raw
+        next_state = forward_input(next_raw)
+        trace.append({
+            "step": step,
+            "state_norm": _tensor_stats(state),
+            "norm_diff": _tensor_stats(norm_diff),
+            "diff_raw": _tensor_stats(diff_raw),
+            "state_raw": _tensor_stats(state_raw),
+            "next_raw": _tensor_stats(next_raw),
+            "next_norm": _tensor_stats(next_state),
+        })
+        state_tensors.append(state.detach().clone())
+        norm_diff_tensors.append(norm_diff.detach().clone())
+        state = next_state
+    state_tensors.append(state.detach().clone())
+    return {
+        "label": label,
+        "steps": trace,
+        "final": state,
+        "_state_tensors": state_tensors,
+        "_norm_diff_tensors": norm_diff_tensors,
+    }
+
+
 def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--run", type=Path, required=True)
@@ -97,6 +156,8 @@ def main() -> int:
         "device": torch.cuda.get_device_name(0),
         "torch": str(torch.__version__),
         "xformers": __import__("xformers").__version__,
+        "cuda_matmul_allow_tf32": bool(torch.backends.cuda.matmul.allow_tf32),
+        "cudnn_allow_tf32": bool(torch.backends.cudnn.allow_tf32),
         "state_dict_max_abs_diff": state_max,
         "rollouts": {},
         "note": "Diagnostic only; does not alter S0 gate verdict or tolerance.",
@@ -126,11 +187,18 @@ def main() -> int:
             official_next = official.inp_transform(official_raw)
             bridge_next = normalization.normalize(bridge_raw)
             key = f"{interval}h_{steps}step"
+            reference_dir = Path(config.reference_base_dir) / "upstream_reference_ps4_7fde884e_zd"
+            reference_path = reference_dir / f"official_output_{key}.pt"
+            official_reference_diff = None
+            if reference_path.exists():
+                reference = torch.load(reference_path, map_location=device)
+                official_reference_diff = _max_abs(official_a, reference)
             result["rollouts"][key] = {
                 "official_repeat_max_abs_diff": _max_abs(official_a, official_b),
                 "bridge_repeat_max_abs_diff": _max_abs(bridge_a, bridge_b),
                 "bridge_vs_official_max_abs_diff": _max_abs(bridge_a, official_a),
                 "direct_model_max_abs_diff": _max_abs(direct_bridge, direct_official),
+                "official_vs_frozen_reference_max_abs_diff": official_reference_diff,
                 "one_step_postprocess": {
                     "model_diff_max_abs_diff": _max_abs(bridge_diff, official_diff),
                     "diff_denorm_max_abs_diff": _max_abs(bridge_diff_raw, official_diff_raw),
@@ -138,6 +206,85 @@ def main() -> int:
                     "final_norm_max_abs_diff": _max_abs(bridge_next, official_next),
                 },
             }
+            if steps == 12:
+                # Four arms share the same initial normalized tensor and model
+                # weights.  This distinguishes model differences from
+                # transform/accumulation differences at the first divergent
+                # rollout step.
+                official_arm = _rollout_trace(
+                    official.net, official.replace_constant,
+                    x_norm, variables, interval, steps,
+                    official.reverse_inp_transform,
+                    lambda y, i: official.reverse_diff_transform[i](y),
+                    official.inp_transform, "official_model_official_transform",
+                )
+                official_bridge_transform = _rollout_trace(
+                    official.net, bridge.normalization.replace_constant,
+                    x_norm, variables, interval, steps,
+                    bridge.normalization.denormalize,
+                    bridge.normalization.denormalize_diff,
+                    bridge.normalization.normalize, "official_model_bridge_transform",
+                )
+                bridge_official_transform = _rollout_trace(
+                    bridge_model, official.replace_constant,
+                    x_norm, variables, interval, steps,
+                    official.reverse_inp_transform,
+                    lambda y, i: official.reverse_diff_transform[i](y),
+                    official.inp_transform, "bridge_model_official_transform",
+                )
+                bridge_arm = _rollout_trace(
+                    bridge_model, bridge.normalization.replace_constant,
+                    x_norm, variables, interval, steps,
+                    bridge.normalization.denormalize,
+                    bridge.normalization.denormalize_diff,
+                    bridge.normalization.normalize, "bridge_model_bridge_transform",
+                )
+                arms = [official_arm, official_bridge_transform,
+                        bridge_official_transform, bridge_arm]
+                first_differences = {}
+                for left in arms:
+                    for right in arms:
+                        if left["label"] >= right["label"]:
+                            continue
+                        diffs = []
+                        first_state = None
+                        first_norm_diff = None
+                        for idx, (lstate, rstate) in enumerate(
+                            zip(left["_state_tensors"], right["_state_tensors"])
+                        ):
+                            state_diff = _max_abs(lstate, rstate)
+                            row = {
+                                "state_step": idx,
+                                "state_max_abs_diff": state_diff,
+                            }
+                            if idx > 0:
+                                norm_diff = _max_abs(
+                                    left["_norm_diff_tensors"][idx - 1],
+                                    right["_norm_diff_tensors"][idx - 1],
+                                )
+                                row["norm_diff_max_abs_diff"] = norm_diff
+                                if first_norm_diff is None and norm_diff > 0.0:
+                                    first_norm_diff = idx
+                            if first_state is None and state_diff > 0.0:
+                                first_state = idx
+                            diffs.append(row)
+                        first_differences[f"{left['label']}__vs__{right['label']}"] = {
+                            "first_state_divergence_step": first_state,
+                            "first_norm_diff_divergence_step": first_norm_diff,
+                            "steps": diffs,
+                        }
+                result["rollouts"][key]["four_arm_trace"] = {
+                    "arms": [
+                        {"label": arm["label"], "steps": arm["steps"]}
+                        for arm in arms
+                    ],
+                    "comparison_note": (
+                        "Per-step operator statistics and exact same-process tensor "
+                        "differences are recorded for all four arms; this trace does "
+                        "not change the gate verdict."
+                    ),
+                    "pair_index": first_differences,
+                }
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2), flush=True)

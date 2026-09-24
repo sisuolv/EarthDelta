@@ -1,0 +1,21 @@
+{
+ "job": "J3b",
+ "job_id": "pt-n6b5uf0v",
+ "run_dir": "artifacts/round2_cci/ed-r4fs03formalb-0923213547-b7d556",
+ "label": "r4fs03formalb",
+ "label_note": "protocol names no J3b label; J3's label + 'b'",
+ "timeout_seconds": 5400,
+ "timeout_note": "same as J3 (identical configuration)",
+ "argv_file": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/jobs/J3b.argv.json",
+ "argv_file_sha256": "5fd313259bfccee7bd5d6304f48ee8b2b12fca6d6dac256c3851c7b6d2f93cf0",
+ "argv_derivation": "protocol jobs.J3.argv_template with exactly the two substitutions its note names: --config-id J3 -> J3b, lr placeholder -> J2 decision fallback_lr; token diff vs submitted J3 argv = [(0.0025, 0.00125), (J3, J3b)]; the cosmetic echo text 'J3 replica' is inherited unchanged",
+ "invocation_sha256": "8fa0125a8b7107335abc84f5289ee55bc144f60ad7d16056f358de64fd0e45f6",
+ "source_manifest_sha256": "e0b120f215f833077b5092dffba01f315921cf8e0d0129bf67269c07115ba9dd",
+ "snapshot_fs_protocol_sha256": "2b3116a1f87951d3d5549a08fd52244f23a6e2784d8378894f8736e25fdb39a2",
+ "protocol_sha256": "3c143bd7c405c9fc70edfd186c3432fce88845820f8d7fd892a4be0744a2b7af",
+ "learning_rate": 0.00125,
+ "learning_rate_source": "decisions/J2_screen_decision.json fallback_lr (arm A3)",
+ "trigger": "J3 (pt-sz6iv529) decision STOP_FITTED_FS_QUALITY, all 4 replicas FAIL (Q6) -> FS-BUDGET-v1 j3b_only_if satisfied",
+ "authorization": "coordinator authorized J3, then J3b only if J3 is FAIL (never if INCONCLUSIVE)",
+ "recorded_utc": "2026-09-23T21:36:03.183540+00:00"
+}

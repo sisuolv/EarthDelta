@@ -1,0 +1,30 @@
+{
+ "job": "B-J3 (infra retry)",
+ "job_id": "pt-831c01g4",
+ "run_dir": "artifacts/round2_cci/ed-r4bankbj3r-0924054117-185e82",
+ "label": "r4bankbj3r",
+ "timeout_seconds": 3600,
+ "retry_of": {
+  "job_id": "pt-m52qwunf",
+  "run_dir": "artifacts/round2_cci/ed-r4bankbj3-0924053507-ae0123",
+  "result": "FAILED rc=1 (DEV-FP04-001)"
+ },
+ "deviation": {
+  "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/deviations/DEV-FP04-001_relative_decision_paths.json",
+  "sha256": "32d20a509576452791a96d6d14c882dd8eadd726f282175bba1b62dda2e6cd52"
+ },
+ "argv_file": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/jobs/B-J3_retry.argv.json",
+ "argv_file_sha256": "7812d79df58f47d823b2749869c8e293f9a790afc6b512d6d6040afdb1ccdbb7",
+ "argv_differs_from_original_only_in": "<FORMAL_DECISION> = BJ2_formal_decision_r2.json",
+ "formal_decision": {
+  "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2_formal_decision_r2.json",
+  "sha256": "49feca4658405a4d0b3b5f20dcc22b02bc8980be51a4e6bcbb0f4ac8fad093d3"
+ },
+ "invocation_sha256": "af76271775bb83836d1b2b403e469117ee0a765c00cae9ece2a8310b6afa3cae",
+ "source_manifest_sha256": "a9ba6ef05f0bdc61a8a96bcf778bb492df21fd675d0ccc778f737271b86dcb72",
+ "protocol_sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1",
+ "go_ahead": "coordinator approved the DEV-FP04-001 fix and this retry",
+ "budget": "GPU job 4 of max 7; the 1 infra retry (now used)",
+ "dry_run_dir_not_submitted": "artifacts/round2_cci/DRYRUN_NOT_SUBMITTED_ed-r4bankbj3r-0924054107-6ad262",
+ "recorded_utc": "2026-09-24T05:41:32.888798+00:00"
+}

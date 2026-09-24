@@ -1,0 +1,66 @@
+{
+ "initial_bank": {
+  "call": "build_dynamic_bank(1024, (18..23), num_experts=4, rank_per_expert=4, seed=20260921)",
+  "bank_digest": "78e78848e97e15e680cdd5ceb57f4ea6fb4650e62121a3cd97b33231bb262f7c",
+  "expert_digests": [
+   "68ff1130b416b761c6a8512be5bf2d62de9477021d84636bfd53c15dc0469eca",
+   "acba60785186f99a66c8e1cbc26b19eae25eb3cdfe7e65bcde6302aff120222d",
+   "a13fff793eb4226e046968716ee52abac222c8deaa8abb6378894c8d19515b78",
+   "35ca15c89a95e5de7dfd2be651830e11af3ba1ef91ce675e3ebe29bcbb9baa09"
+  ],
+  "all_B_zero": true
+ },
+ "certified_fs_cpu_dryrun": {
+  "authorization": {
+   "check": "certified_fs_authorization",
+   "reference_manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "certify_decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "fs_adapter": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+   },
+   "fs_merged_backbone": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+   },
+   "fs_adapter_sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089",
+   "fs_protocol_sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe",
+   "checkpoint_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+   "normalization_identity": "ed-norm-identity/1:3e0b216bfbf34ab0",
+   "pinned_digests": {},
+   "bound_to_protocol": false,
+   "passed": true,
+   "failures": []
+  },
+  "loaded_identity": {
+   "merged_backbone_digest_matches": true,
+   "base_backbone_digest_matches": true,
+   "static_adapter_digest_matches": true,
+   "version_digest_matches": true,
+   "target_blocks_match": true,
+   "adapter_sha256_matches": true
+  },
+  "identity_pass": true,
+  "recomputed_digests": {
+   "merged_backbone_digest": "370bd3bcc7545755bcdb60e482e1ce1ebc201302dc710f7992a4d76c4915bb97",
+   "base_backbone_digest": "bf1eca9d48dbed9e2752678500b2a0cc1488d84627d68de33367492926aa898d",
+   "static_adapter_digest": "566d5dc116771cf96928cb5618404334a78f2a46e7aeb821bb9e141b3695d57f",
+   "artifact_version_digest": "33fcd3b3c34df722e75221c4941b8a716ff277f06f229b3b8c0a7181612c446b"
+  },
+  "bundle_recorded_digests": {
+   "merged_backbone_digest": "370bd3bcc7545755bcdb60e482e1ce1ebc201302dc710f7992a4d76c4915bb97",
+   "base_backbone_digest": "bf1eca9d48dbed9e2752678500b2a0cc1488d84627d68de33367492926aa898d",
+   "static_adapter_digest": "566d5dc116771cf96928cb5618404334a78f2a46e7aeb821bb9e141b3695d57f",
+   "artifact_version_digest": "33fcd3b3c34df722e75221c4941b8a716ff277f06f229b3b8c0a7181612c446b"
+  },
+  "recomputed_equals_bundle_record": true,
+  "model_class": "earthdelta.bridge.stormer_arch.Stormer",
+  "note": "CPU, non-official model class is fine for digests: state_dict_digest reads parameter/buffer bytes only. No rollout, no sample, no loss."
+ }
+}

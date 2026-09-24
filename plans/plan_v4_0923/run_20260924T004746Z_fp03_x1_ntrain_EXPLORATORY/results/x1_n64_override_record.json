@@ -1,0 +1,18 @@
+{
+ "status": "EXPLORATORY_X1 - not FS-QUAL-v1, not pre-registered, cannot select/freeze/certify an Fs",
+ "record": "OVERRIDE of the pre-declared decision_rule_for_N64.stop_unstable clause (written before the X1_N64 job)",
+ "config": {"path": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/x1_exploratory_config.json",
+            "sha256": "5b8244f45407238b622d5d3d624494767032580d6dff0d7acc627700447d782b", "unchanged": true},
+ "literal_rule_outcome_at_N32": {
+  "stop_unstable": true, "stop_resolved": false, "stop_no_help": false,
+  "h32": 1.006508, "run_band": "1.000 < h32 < 1.029194 -> run_N64"
+ },
+ "why_stop_unstable_is_overridden": [
+  "The clause's stability test is the FS-SCREEN-v1 epoch-mean rule with epoch = 8 updates, defined for N=8 where one epoch is one full pass over the same 8 issues.",
+  "At N=32 consecutive 8-update epochs are different issue groups; the epoch means are periodic with period 4 (one full pass) and track group loss levels, so the flagged 'onset at update 8' compares issues, not training progress (results/x1_n32_findings.json X1-F3).",
+  "Independent evidence of stability: 0 clip events; max per-visit ratio vs L0 1.0000; 32/32 issues end below their first visit; full-pass (32-update) means decrease monotonically 0.030591 -> 0.029928."
+ ],
+ "approval": "Coordinator approved in writing, after independently re-reading x1_results_X1_N32.json and job_result.json: 'run N=64, overriding the stop_unstable artifact for the same diagnosed reason'. The executor had escalated instead of overriding unilaterally.",
+ "scope": "X1_N64 is the last job of the X1 diagnostic phase regardless of its outcome (coordinator). No protocol-v2 work is started.",
+ "unchanged": "X1_N64 runs exactly as declared in the frozen config (argv = its argv_template with only <CONFIG_SHA256> substituted)."
+}

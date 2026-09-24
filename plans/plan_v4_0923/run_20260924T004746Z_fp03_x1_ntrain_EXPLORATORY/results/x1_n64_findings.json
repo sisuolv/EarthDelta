@@ -1,0 +1,41 @@
+{
+ "status": "EXPLORATORY_X1 - not FS-QUAL-v1, not pre-registered, cannot select/freeze/certify an Fs",
+ "job": {"config_id": "X1_N64", "job_id": "pt-t3bfl3e9",
+         "run_dir": "artifacts/round2_cci/ed-r4fs03x1n64-0924010930-404a65",
+         "job_result": "SUCCEEDED, returncode 0, 719.624 s; platform RUNNING observed mid-job via sco describe",
+         "authorization": "results/x1_n64_override_record.json (stop_unstable artifact overridden by the coordinator)"},
+ "numbers_file": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N64.json",
+ "table_mean_ratio_L1_over_L0": {
+  "columns": ["N=8 (J3, 256 upd)", "N=32 (256 upd)", "N=64 (256 upd)"],
+  "train_24h_all": [0.910518, 0.976910, 0.983514],
+  "train_24h_original8": [0.910518, 0.977494, 0.986464],
+  "train_6h_all": [1.032132, 1.008799, 1.006182],
+  "train_72h_all": [1.000934, 1.041810, 1.008510],
+  "holdout_6h": [1.039160, 1.012113, 1.006028],
+  "holdout_24h": [1.038925, 1.006508, 0.998170],
+  "holdout_72h": [1.099221, 1.052513, 1.030197],
+  "holdout_24h_issues_worse": ["8/8", "8/8", "2/8"],
+  "final_adapter_param_norm": [18.404, 12.391, 10.725],
+  "visits_per_training_issue": [32, 8, 4]
+ },
+ "findings": [
+  {"id": "X1-F5_N64_RESULT",
+   "text": "Holdout 24h 1.038925 -> 1.006508 -> 0.998170 (N=8 -> 32 -> 64): the degradation is gone at N=64, 6/8 holdout issues improve (per-issue 0.9947-1.0050); the point gain is 0.18% and the per-issue signs are mixed, so no reliable gain is shown. Holdout 6h and 72h stay worse at every N (72h 1.0992 -> 1.0525 -> 1.0302, 8/8 issues). The train 24h gain keeps shrinking (9.0% -> 2.3% -> 1.6%) as does the adapter norm (18.4 -> 12.4 -> 10.7). The 24h train-holdout gap: 0.128 -> 0.030 -> 0.015."},
+  {"id": "X1-F6_CORRECTION_72H_IS_NOT_MONOTONE_IN_N",
+   "text": "CORRECTION to the N=32 report (X1-F2 framing '72h harm grows with N'): train 72h is 1.000934 -> 1.041810 -> 1.008510; the SAME 24 issues that were 1.0473 at N=32 are 1.0094 at N=64. The N=32 72h regression was a one-point effect, not a trend. At N=64 the train 72h ratio is inside the FS-QUAL-v1 Q5 bound (<= 1.01) by 0.0015."},
+  {"id": "X1-F7_VISITS_PER_ISSUE_CONFOUND_CHECK_FROM_EXISTING_DATA",
+   "status": "POST HOC, existing J1 data (no new job)",
+   "text": "At fixed 256 updates, N and visits-per-issue change together (32 / 8 / 4). J1 arms A2 and A3 are bitwise the update-32 checkpoints of the N=8 runs J3 (lr 2.5e-3) and J3b (lr 1.25e-3) (losses, grad norms and parameter norms equal for all 32 updates), i.e. N=8 with 4 visits per issue, panels from the same code and holdout. J1 A2: train 24h 0.9741, holdout 24h 0.9994 (5/8 worse), holdout 72h 1.0098, train 72h 0.9924, norm 5.81. J1 A3: train 24h 0.9839, holdout 24h 0.9954 (0/8 worse), holdout 72h 0.9953, train 72h 0.9886, norm 4.42. So at equal visits per issue (4), N=8 stopped at 32 updates reaches the same holdout 24h as N=64 at 256 updates (0.9994 vs 0.9982) with better 72h ratios. The holdout harm at N=8/256 is produced by repeated fitting of the same issues; within this data, more training issues per se is not shown to add holdout benefit beyond what stopping early gives. Effect sizes are small (best holdout 24h gain seen: 0.46%, J1 A3)."},
+  {"id": "X1-F8_STABILITY_ARTIFACT_AGAIN",
+   "text": "The declared 8-update epoch rule again flags onset at update 8 (different issue groups per block). Full-pass (64-update) means decrease monotonically 0.030379 -> 0.030057; 0 clip events; max per-visit ratio 1.0000; 64/64 issues end below first visit; worst visit 0.02% above that issue's running minimum."},
+  {"id": "X1-F9_CONTINUITY",
+   "text": "First 8 losses bitwise equal to J3; holdout F0 panel and original-8 train F0 panel bitwise equal to J3."}
+ ],
+ "caveats": [
+  "SEASON CONFOUND: all 56 added issues are 2020-07-13..12-28 (required to keep the 288h purge from the Jan-Jul holdout), so N and training-season mix change together.",
+  "VISITS-PER-ISSUE CONFOUND: at fixed 256 updates each issue is visited 32 / 8 / 4 times at N = 8 / 32 / 64; X1-F7 indicates this, not N, explains most of the holdout change.",
+  "HOLDOUT EXPOSURE: the same 8 holdout issues have now been used to compare about ten configurations (J1 A0-A3 at 32 updates, J2 A0-A3 / J3 / J3b at 256, X1 N=32 / N=64); any protocol-v2 design chosen from these numbers must be qualified on NEW holdout issues.",
+  "SMALL n AND EFFECTS: 8 holdout issues; all holdout gains observed are <= 0.5%."
+ ],
+ "decision_rule_for_N64_literal_field_in_results_file": "not applicable to the N=64 run (the evaluator computes it for every run; ignore it here)"
+}

@@ -1,0 +1,17 @@
+{
+ "schema_version": "ed-fp03-deviation-outcome/1",
+ "deviation_id": "DEV-001",
+ "re_decision": {
+  "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J1_diag_decision_r2.json",
+  "decider": "scripts/r4_fs_decide.py (byte-identical to the J1 snapshot) + earthdelta/fs_protocol.py with the DEV-001 fix only",
+  "verdict": "PASS",
+  "arms": "A0-A3: every Q0 fact true (tf32_off now true from the effective getters), every code-path check passed",
+  "negative_controls": "NC0-NC3 all REJECTED; panel processes Q0-valid"
+ },
+ "original_decision_untouched": {
+  "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J1_diag_decision.json",
+  "sha256": "ed214ab0242ac66f1d88b6c30d010e6d3f8b5a43138709e149abfab8c0606acb",
+  "verdict": "STOP"
+ },
+ "consequence": "J2 is submitted with the frozen argv template, unchanged. J2's source snapshot carries the fixed earthdelta/fs_protocol.py (sha256 2b3116a1...39a2) and the extended tests/test_fs_quality_gate.py; these two files are the only drift from protocol.source_at_preregistration."
+}

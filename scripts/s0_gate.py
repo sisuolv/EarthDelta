@@ -118,6 +118,13 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+# The frozen official references were produced in strict FP32 mode.  H100's
+# default TF32 matmul path is finite and fast but changes the model output by
+# orders of magnitude above the 1e-5 parity contract.  Pin both switches for
+# the entire gate process before constructing or loading the model.
+torch.backends.cuda.matmul.allow_tf32 = False
+torch.backends.cudnn.allow_tf32 = False
+
 print(f"NumPy version: {np.__version__}", flush=True)
 print(f"PyTorch version: {torch.__version__}", flush=True)
 print(f"CUDA available: {torch.cuda.is_available()}", flush=True)
@@ -2225,14 +2232,31 @@ def run_s0_gate(
             ),
         )
 
-        # Create normalization with the configured policy (official: zero diff_mean)
+        # Create normalization with the configured policy (official: zero
+        # diff_mean).  The frozen NPY files are intentionally a public
+        # float32 projection used for input binding; they do not preserve the
+        # original mixed-dtype NPZ constants used by torchvision's reverse
+        # transform.  When the bound NPZ assets are available, load the
+        # contract from them so its private inverse source remains identical
+        # to the independently exported official reference.  Keep the NPY
+        # constructor as a fallback for legacy configurations that do not
+        # bind a normalization directory.
         policy = config.normalization_policy if config is not None else POLICY_OFFICIAL_ZERO_DIFF_MEAN
-        norm = create_normalization_from_npy(
-            inputs,
-            policy=policy,
-            variables=list(config.variables) if config is not None else None,
-            intervals=input_intervals,
-        )
+        variables = list(config.variables) if config is not None else None
+        if PATHS["norm_dir"].is_dir():
+            norm = NormalizationContract.from_npz_dir(
+                str(PATHS["norm_dir"]),
+                variables=variables,
+                intervals=input_intervals,
+                policy=policy,
+            )
+        else:
+            norm = create_normalization_from_npy(
+                inputs,
+                policy=policy,
+                variables=variables,
+                intervals=input_intervals,
+            )
         result["normalization_policy"] = norm.policy
         result["normalization_digest"] = norm.digest
         result["normalization_identity"] = norm.identity_digest
