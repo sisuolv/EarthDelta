@@ -1,0 +1,892 @@
+{
+ "background_f0": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/background_f0.json",
+  "sha256": "d483c7f8d06589344cee1d70828013b9c4f92d8ff1b9aff02afcb1b7354f9180"
+ },
+ "candidate_results": {
+  "canonical_matrix_digest": "9c364c5cac3b4011c0435ce8612c096d5496755f26172103093a9dec9bda08d4",
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/candidate_results.json",
+  "sha256": "85661990147537d3302ef4ef56b302754cc11db55fbe652369c1d0d9dbcb648e"
+ },
+ "dev_protocol": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev_protocol.json",
+  "sha256": "11cb71fa617fb900c0430fb930411e36e74607007593718227cfeffdd5e6b876"
+ },
+ "features": {
+  "iss_01a01149fbfda558": {
+   "array_sha256": "19245ab57949f593360e56f5d3f0ddd4013a9f48e1734f8a8a06065ce822ad39",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_01a01149fbfda558.npy",
+   "sha256": "372621f84cdc85ca283ed8de19a81e4c122bda63b0a1d3ea3f76e74f5672f1f1"
+  },
+  "iss_01fcb3ca76145448": {
+   "array_sha256": "d1b2de525e385b73a93018ece9c5c88e08d4ef8c5408125b186b65357464b312",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_01fcb3ca76145448.npy",
+   "sha256": "3d707accbdeca76860332318bfdbba66599afe337ad674b6276778f23c1ccd5f"
+  },
+  "iss_0488c017914b2110": {
+   "array_sha256": "e1413962da61b961e32aebaa0ef7f3c8a3ee626454a7f50bbe09cf9788a9074a",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_0488c017914b2110.npy",
+   "sha256": "524cc2d9ad6b6e18e30a1081a9eeaa11ed9d2235ed2c5ffc9526d3b843e69fd3"
+  },
+  "iss_0a1c4662e879f199": {
+   "array_sha256": "d39c9bd36fcfc4ab6f8944269b401aedd2fe78dc253629a688d9749f2d6cb297",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_0a1c4662e879f199.npy",
+   "sha256": "4f89248fa7f056d34ae08a65d90c74ff784b13b105377d11464eaf2998603ad8"
+  },
+  "iss_0c468454571eb5d7": {
+   "array_sha256": "e36dd14194d1739518b36bbeade5305aa38e905889fa1bfa63063fbebd55b1a7",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_0c468454571eb5d7.npy",
+   "sha256": "fa7fa41ce30f28735cfcafa750e59066ce136fcd9c564c7d04fe4efc76615a50"
+  },
+  "iss_13fb2e9169c2653a": {
+   "array_sha256": "129e79868446510d5654049190f99cfbed7c24230adf7f3f4eaa5df9b112103c",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_13fb2e9169c2653a.npy",
+   "sha256": "2457f535fbd4fd4c63e58319ec518f4d00802de13865a1f7d5668719ecbe4221"
+  },
+  "iss_15c9b2f164dbaeee": {
+   "array_sha256": "ab6a4a6405f5bc2183e284265a6221d92e2f72c467543c024377f2e4e7ff0e6e",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_15c9b2f164dbaeee.npy",
+   "sha256": "35ea0e28a9701d3bfc16ce0a3ee348c53e41a390032c6f2753c0594bc7304306"
+  },
+  "iss_21b8f410b401ef92": {
+   "array_sha256": "1bb1b5c2df36ce6e8d6012596415bd3ae05f329c082ec3f84ca92f866e588588",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_21b8f410b401ef92.npy",
+   "sha256": "23741a629519c8032389cb0ea046b4b9d1c0f9c3798a1c740117585a585913da"
+  },
+  "iss_2604a030c0350c97": {
+   "array_sha256": "077eaeb8a730680276e25992154fe92a2b279f03e3ace4df17e3cb4fc2436e5e",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_2604a030c0350c97.npy",
+   "sha256": "d410a073a8c204f2790ef9062ad86480ca53ee2f718a415fe49789cb6523fa25"
+  },
+  "iss_276ff32c1e63eab3": {
+   "array_sha256": "432c18952d3cca986b4f70445fa14da366903d4a6fa97eaed666aafba4bc2b8f",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_276ff32c1e63eab3.npy",
+   "sha256": "4e3248aa807c0f56635f71b2ee58d0e2709c59b6ce310c55517c99b7a8a39989"
+  },
+  "iss_2ac5cb61524ea470": {
+   "array_sha256": "37e7673d560a4b5f56cbbd71516b4b1ad581c67a144872735dd27343fdacc276",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_2ac5cb61524ea470.npy",
+   "sha256": "16390b686ec9384ae9d57b8214fff8b70d7280fae08bf408c68a9ea358bf62c3"
+  },
+  "iss_2acf0c3696ef1b13": {
+   "array_sha256": "df37a8558a80740cbcf48f2a357872502187ad0fc2a27d226d83d6209980af0c",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_2acf0c3696ef1b13.npy",
+   "sha256": "8c402aaf5758207da79ac7259cc7bd3be105ae1483dc83cefaf95c0b3aaa75d4"
+  },
+  "iss_2b9b5cf2c702c76e": {
+   "array_sha256": "cceb55600a1ef840c5dc719f182feafd40af962e3d20d7c91313cdf85ccdd5d9",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_2b9b5cf2c702c76e.npy",
+   "sha256": "1a44f584ff971fb68cf1d5198598fa99ece18ca1b8af2a5126442fdf292e2b3d"
+  },
+  "iss_2c1675cfd9fd1727": {
+   "array_sha256": "8cbdf0bbc3174651bab78a22ff69e70cd004c87fe885ed2fb211e5b98a99d7d0",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_2c1675cfd9fd1727.npy",
+   "sha256": "78f5fc27e828664961e592b6cf549b666e87fb06203039f64b98bfb8de710292"
+  },
+  "iss_2e0baf7c83b6f2c6": {
+   "array_sha256": "ff0175e0fef2046acb778a155d2ba17394ecac6ac8e0993274fe8af5a278deac",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_2e0baf7c83b6f2c6.npy",
+   "sha256": "dad06ef297ba8ceaa11f0be65a6eb8b96eaa5a78d411451de9f52fb2bed5cdec"
+  },
+  "iss_2f6fecdf4a2642ec": {
+   "array_sha256": "8c6a67b42ad6989679507f37b31d5f4bf78e48509a8049226fa2420c2eb3f088",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_2f6fecdf4a2642ec.npy",
+   "sha256": "fc2a9489bddaf4f59e348f0ec0e217ad058a51f18ff0a26528a890b5660751d1"
+  },
+  "iss_3496fb93a3c5c5b2": {
+   "array_sha256": "262c24e447ddf43a00d8878c6a7e2c18a8d5c79b4ae5a4b02919d0c341c9699f",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_3496fb93a3c5c5b2.npy",
+   "sha256": "e35113397213abc96e4b87b2b59a43917d443c8326486f9c02ca303ffe5296fb"
+  },
+  "iss_34b5e960c4f09244": {
+   "array_sha256": "483fd4718b5c66e8eaabc94eb41ce32df7976aa7c2c6328743d3d435b5320f37",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_34b5e960c4f09244.npy",
+   "sha256": "e994902a85219496e21e6b2156885ac97435af388279514d5277aa3231629729"
+  },
+  "iss_373b492cd311eb9b": {
+   "array_sha256": "77422c6a84676df1eacf41734bf51a0419fb3543f528ad07717884c0726413b5",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_373b492cd311eb9b.npy",
+   "sha256": "16a1213ad6e2e906b13a3a0cfd4a4669137de60b0161ff7e4afcc2501aa7d761"
+  },
+  "iss_37d252e0920e7f66": {
+   "array_sha256": "70599c154724d9460d5481d2d39aeb26a071460a99109a07ff939aac580bfb89",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_37d252e0920e7f66.npy",
+   "sha256": "66617c14393c077277a5e51a05b57506605a3b8d94548e47ba20e89527047b27"
+  },
+  "iss_3dd74e9b6b82d2d7": {
+   "array_sha256": "69590685cf50e180b9c0b5b26b7cb89bf77906a7c3dccdfc74a0f6dc968de192",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_3dd74e9b6b82d2d7.npy",
+   "sha256": "05c6b9f495d153a4b723769c9c4f7dbe2efe6754b31100768aa87e7dd1c63a57"
+  },
+  "iss_3f38e42ce89530c1": {
+   "array_sha256": "0140bdcf0fa6f293e0320672da831e055500c64fc9ceafdfb4ae6d670409129d",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_3f38e42ce89530c1.npy",
+   "sha256": "6b604c7820f4c5c9cb81e6ec94e12c0c9aa0481b969a82ea7acebe082fda5137"
+  },
+  "iss_41e0b14c35a40eec": {
+   "array_sha256": "65c7b83ee8630f7222682da20b2f150c236e81c6a22d49e68054e347c3d05fc3",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_41e0b14c35a40eec.npy",
+   "sha256": "11fcf702da17056bbc8cde56a8d0c6a12d4975507daafc8d7c28beaa476ff879"
+  },
+  "iss_43aabaf3d1190221": {
+   "array_sha256": "af56df899c818ad60066c7ece5deb57630878ab93f84564eaf58444b6f6dd3cb",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_43aabaf3d1190221.npy",
+   "sha256": "ff05d5410479bbf177c42f494c2f42ee64383ec98d39f9ed5ef81441fdc58e02"
+  },
+  "iss_475f37905b27cec3": {
+   "array_sha256": "70abb3cb23378d9b48e0801a954791ef2e395b3442e1ab8696c4be1e0b820d13",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_475f37905b27cec3.npy",
+   "sha256": "8142e17313da88043d13b7646a79b8d3c3af0e74b165fee91ca2593426186828"
+  },
+  "iss_48fbf25dd0a41c7c": {
+   "array_sha256": "f63ba8d766f1f80f6054ffa71d64a0e4cc7394087a01d866e38a8d21616c4c77",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_48fbf25dd0a41c7c.npy",
+   "sha256": "8dba7a3a3975783a0aa22bed88c181949d87244f4d368470fd90185f181a650f"
+  },
+  "iss_4a14ccb038ed3cd8": {
+   "array_sha256": "f54b4ae8e8ca51daa6cb7b6745044c8f2f8cc9f87c0af24fba613e4e906a4dfc",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_4a14ccb038ed3cd8.npy",
+   "sha256": "f6070d4bc1d2e5f8944b1a7c1577252733fffcd757c9276308bac8443768fc27"
+  },
+  "iss_4e2dfb3bfd3a9e92": {
+   "array_sha256": "2086185728d1c50b58cb19e6c0e477673180e431927d5a55d2129077013974e1",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_4e2dfb3bfd3a9e92.npy",
+   "sha256": "ca8630cadb2fa64c47db491b2348cc4bfa945487278276218dfd77d76126410d"
+  },
+  "iss_4e94953cd6c35183": {
+   "array_sha256": "68e257f4aff3dfae08e6717d4a21bfad2fb159e89b0d2abdbb165d2e359d987a",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_4e94953cd6c35183.npy",
+   "sha256": "56c7a9bfa40283d2caa50e61b6b75c9659ac6de2ec7021ddcc8293aa004addce"
+  },
+  "iss_4ff93cc7e4ff5f4d": {
+   "array_sha256": "1ac4bbdd96077b3e8286cb986c27dad8379f900f24acc4b7640b337d818ddac8",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_4ff93cc7e4ff5f4d.npy",
+   "sha256": "56db80d32d25c3c5ae349b27fcc5a20354c65e6f9821c56afa74e7fcc601f8fd"
+  },
+  "iss_50b1cf9d95d45724": {
+   "array_sha256": "e9f7a7c006173a11512c8c2e2533be60028bf982465b46073da1c43514ce141f",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_50b1cf9d95d45724.npy",
+   "sha256": "1d7920135fee8c7acb0317f8dae71993e563dcfc92db069cd4dcdc0b051db760"
+  },
+  "iss_50d38c19a0de1e63": {
+   "array_sha256": "c90f6cda375ca35448cb0649086b18c8088f61e07bb5fede0838dbb0e0540307",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_50d38c19a0de1e63.npy",
+   "sha256": "a123d021fc388fd6b6f5fb3e1ebd488ca3b86bb56ad6fafc7d301e5ac0edb210"
+  },
+  "iss_50e1b4dac9c81761": {
+   "array_sha256": "a5f84981946dbcdb6397cff5040cf1e41f2c3a93b82e5f38b960121a027c3a24",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_50e1b4dac9c81761.npy",
+   "sha256": "ca9d471526090bf6ea1bca2d4da7a955f44478d066b74ce867a8fac17e60eb9f"
+  },
+  "iss_54c5b0dd39acc195": {
+   "array_sha256": "0ca60529c7d7be213e550a7dd4d57296f7f67aa7c3eb7e88414f8e9024e86604",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_54c5b0dd39acc195.npy",
+   "sha256": "57735c7daa61b7a0b1c4ca98e2428a22ddd9ac882982e64dbb6950555ccd9f48"
+  },
+  "iss_5a961c025f55d230": {
+   "array_sha256": "68a65ab9f5bb8aac9827b21751015c619dd2d5364c6b76a2bc8dbcf88861e805",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_5a961c025f55d230.npy",
+   "sha256": "6705fbd0e304fa257825566b50a39c32cb45597b7679c2d5a914d110156650e8"
+  },
+  "iss_5de3372e30e878ae": {
+   "array_sha256": "ca381634be8ed032e81d1bb32446fd1ba31c56cbe3bacd17657bc3351fefce53",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_5de3372e30e878ae.npy",
+   "sha256": "cf68762e59e3e14d5e06dfaf912228c6e52ea0f0c8585bf0c2abe0af139194f9"
+  },
+  "iss_60636c1d23fb5818": {
+   "array_sha256": "d0641fd80edc23879f6f3f2190a10786f135dc34ae2b7e99dc39933436fac9f5",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_60636c1d23fb5818.npy",
+   "sha256": "a97552712bec65d5d7fcbf8227db7fc93d83e199a4a3485400d5c3e5d0106158"
+  },
+  "iss_627fda3d413b2c4f": {
+   "array_sha256": "d24e757c1ff7f18d0dc9655b1f19b6c24dffde507ec082c4acdbc7c46303283e",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_627fda3d413b2c4f.npy",
+   "sha256": "661aa0288468616ad806ee2a452e7c61911dbffb0022b279a31f4599458d62e6"
+  },
+  "iss_6637c710d67c2a0a": {
+   "array_sha256": "e322cf76a0de4c3b2165bd6110fd17e52b0e9cdad45c29fd4eec5847fafdcea0",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_6637c710d67c2a0a.npy",
+   "sha256": "eb2de3ce93e967928abe74644f04e2b2f123a053378f2014953b081f6abc7c5e"
+  },
+  "iss_684e25bce2986f7d": {
+   "array_sha256": "5d5d4ceb41e17323d218445ea31e9b2de36d96fefdfdc31ba38d6fa717bb6536",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_684e25bce2986f7d.npy",
+   "sha256": "04e8e832a4ad2a4fe092d36442a6277600df617366bbf500ab70adb56f8a0bd0"
+  },
+  "iss_68df0109e7d14df3": {
+   "array_sha256": "0d30b783de72fc5692379f941d9e158121d176552a4e05b7fe73d0aaf8f26a83",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_68df0109e7d14df3.npy",
+   "sha256": "4175bb8c1c910348f8f4bd40cb634bd2c5a8b39932cffebec0225b1ffbf6514c"
+  },
+  "iss_6d9c922c38eb4e70": {
+   "array_sha256": "b3bf2edb9721d0b4d475d9cd7dde1e454f3d8047923a5662bdaf48afb072fd3e",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_6d9c922c38eb4e70.npy",
+   "sha256": "a6636c4e55b3b256f6aca0bcdbafd1c4fceb97a281fb974cfb1ec456440b681d"
+  },
+  "iss_6da467a0709502fb": {
+   "array_sha256": "01d8f78a87a2146efec013a9c3f23eb0e76015cb1ed792a1bc29853c6e8030ad",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_6da467a0709502fb.npy",
+   "sha256": "a0764a1506142d5bc90d89d9299a1dbb2557ad0e48afe4980353b7d26161ec20"
+  },
+  "iss_6de0912e14334252": {
+   "array_sha256": "54ff0cfd731f8cf37344beb7ae875faa52a4a7faec7a27574c5b9d9cbd2a946f",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_6de0912e14334252.npy",
+   "sha256": "6fb80bbaa44be5fef49139c1dfc127bb81476ef56b93c745accd04d9604f9f6e"
+  },
+  "iss_71503bc858eb698e": {
+   "array_sha256": "73baf04755c73c0f00b48916116832c99a29056ded1d60b5ebc83a90d41e1f61",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_71503bc858eb698e.npy",
+   "sha256": "df282db1528f65622ef6fa9c9b3b65f46104f25d4d94032b542b97633c994554"
+  },
+  "iss_727d543f20a34c54": {
+   "array_sha256": "16c68af5d61b91ef251b55e7ed03ce3ccea60bc51f977da1b9f77b1202bcbf7e",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_727d543f20a34c54.npy",
+   "sha256": "31fbdb0444c468aec42644e5aa8fbd763280ec43ea106494c9d5eb2181abe4a4"
+  },
+  "iss_782c6b6838e0c419": {
+   "array_sha256": "2514726069d6a3bc09dd0ad92ea4b63ca52a7b82ff096b1bb354de901f2367f8",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_782c6b6838e0c419.npy",
+   "sha256": "9a06b4d6058f188877064cbd2f9b2a9ccfad5803622f1e1946a0f02fe8322d99"
+  },
+  "iss_7866b33e6e01a012": {
+   "array_sha256": "769531266aa6e8de85e09f64c76f18ff3c4bc86042fb973fa120d2c097162af1",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_7866b33e6e01a012.npy",
+   "sha256": "ab9df00b3828c355efaa9332f0bebad52937b002dfefd4484391a28b6dda8df4"
+  },
+  "iss_82c76cbdfe0e95da": {
+   "array_sha256": "8b0076fe3b53064c06e44876a3a3b443c58bbba4ccddda21f9c50346eb46a919",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_82c76cbdfe0e95da.npy",
+   "sha256": "749a148101591dbc33c33f4dcb92d7d6c8c73b73831c3728ebe741d2095fee09"
+  },
+  "iss_842ac794c83afc0d": {
+   "array_sha256": "d16fd441592654b3c33cb0c7b78738bad59fc42e99fcbe3c6598c851828ff85f",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_842ac794c83afc0d.npy",
+   "sha256": "459b798b4707dd161d63dbb91efb15f9b80bd677ab972c728ff0bd1deb3d0a93"
+  },
+  "iss_84e7c67aac3031e8": {
+   "array_sha256": "e75b8a983a2719ea8b250c16ff3019433889c403ca5c00b9fd2f1f6d13f6f8ff",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_84e7c67aac3031e8.npy",
+   "sha256": "b78f543b1efe80eca854555cdb90605619fd3a30e8a9cf298434938cb48d27fb"
+  },
+  "iss_86a5a87c07061e27": {
+   "array_sha256": "b90407b1298c4a5d2a8e311237a3fcee0b50495b3475541f5d3f3bdc2c41f3b4",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_86a5a87c07061e27.npy",
+   "sha256": "3e1fe3a4f5bd739483c40366e4006cbffe71b12a980254e94295c862bcb5a9dd"
+  },
+  "iss_86bf31effbc9958f": {
+   "array_sha256": "11c3f43b8e48984b0766e58af5997315aa5bd1ed888b4e9c4266d11f4c3604dc",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_86bf31effbc9958f.npy",
+   "sha256": "b8ebb81b8be43da42d1cc64d78c15ff26b2c1b0316fbbb07699984610b21c43f"
+  },
+  "iss_86cd1427a581b2ab": {
+   "array_sha256": "f5e0e861bd6818725510540a946a36426fee3af0d2e9dbece2395e39f321edab",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_86cd1427a581b2ab.npy",
+   "sha256": "2ae7c202c6879c7791324e01d2f862bb37c7df643b93a3c3c13ac4d151950180"
+  },
+  "iss_86f69db1c8ef700c": {
+   "array_sha256": "ad7beec4eb2b8025afcd99177ec5173f8d8623e657e281c3d7a65c0c97e42bfe",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_86f69db1c8ef700c.npy",
+   "sha256": "ab721e333c707928925f831f041a7572cf8856776f0312bcc251bd3b01ca803c"
+  },
+  "iss_8a7e6c9281a93e8a": {
+   "array_sha256": "6484b6717533efa0559cf59ec28378f561062301637eabeb277129dafbc466a3",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_8a7e6c9281a93e8a.npy",
+   "sha256": "95c22c7057d33d8b38df25bef11bd3ada5d38ee05da6c6db76eda31d4e39e967"
+  },
+  "iss_8f3192af542cd123": {
+   "array_sha256": "e85c09e567afd458d86c44dbe56bedb1ce4d7df1eb3e4991cc40d080491d226e",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_8f3192af542cd123.npy",
+   "sha256": "a7a2249bc331fdadb18fbe71841893c42323d7fec42c53b21ebab51877c9fde5"
+  },
+  "iss_95f4a77ef327cf27": {
+   "array_sha256": "72a68ab6585aec5f209a91ad49761a1ec7039206880328f6019b2fa91320d7db",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_95f4a77ef327cf27.npy",
+   "sha256": "9efe1bf3df22931b69049568dfd7abed391f883af8c6dadebdeffd91d68ac87d"
+  },
+  "iss_960b0ce5235d80d6": {
+   "array_sha256": "07267ccb17f608049c5d5fa539d1e513f5f5e3644b63de79abdda88d28e8e90f",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_960b0ce5235d80d6.npy",
+   "sha256": "3fa670b8d897dd17fbdde94f97dbc5d5b12e44c5e9acc07cb83d209013e12032"
+  },
+  "iss_966a612a41811683": {
+   "array_sha256": "9a0a61df9c18e9dbcb0128f6b6bd6ad0d7e8cce6a3b452bfa20f970eea0a2fcf",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_966a612a41811683.npy",
+   "sha256": "f98041df4602c1a6fbccca9fd20eacfae6657f1df4376a22309e40f7ab317c0c"
+  },
+  "iss_9b136775802bb118": {
+   "array_sha256": "70d1ad13fea6f1d9dc369fef22671ab12ce3d5c4ae5684155f4ed8bfc9b22bad",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_9b136775802bb118.npy",
+   "sha256": "5cd7a1aaf028eaf8da9e6ceba79de4ed8fa7ce6f767ed27dae592875969f7a52"
+  },
+  "iss_9b774fafd0d7048f": {
+   "array_sha256": "77cc0a3372ebce78832537fd7b0ac9a0396302d61669bb05fb1e1c5eeac46cd3",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_9b774fafd0d7048f.npy",
+   "sha256": "b0662d8057596e760d60c012fde81e1cc331e159d25adf077e2f53550c673f3e"
+  },
+  "iss_a0fc384bc7192157": {
+   "array_sha256": "7e65fe0f9c3bb938a1c00cc14a422462a7525d67bee0ef162162f438371b20f1",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_a0fc384bc7192157.npy",
+   "sha256": "c699373dd7d4d7c064eaece99639a14ce4df57bcf6d078cad4af60c9c45e74fd"
+  },
+  "iss_a804698202e365bf": {
+   "array_sha256": "f7c8219bd157ea4aedce9867462c1ceb3e4a39ba1e192ff1231e30e065892127",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_a804698202e365bf.npy",
+   "sha256": "e1eb5d2c88b81df27f3034f497aa459190728cb13b3f75ab7803c0f2a45e8aba"
+  },
+  "iss_ac7fea7ad0011edc": {
+   "array_sha256": "6baa6d389c241554575a324f69d09501c970a470e5880487ac9e1f2625ea3538",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_ac7fea7ad0011edc.npy",
+   "sha256": "358e161c0040ea0cb1d17db91795956dc738844f28613de8984b1eaac4d439dd"
+  },
+  "iss_acb55877418f617c": {
+   "array_sha256": "72f05b6e471eec7f70566ca80f552a3b6c882af43985d305cdc3e23d743cb3b7",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_acb55877418f617c.npy",
+   "sha256": "34f7857f5e5430904b9aa9d0b53da0cca7bcbc103101813d0a734658933a8aec"
+  },
+  "iss_ae0ef3d206525f07": {
+   "array_sha256": "8d9cc6f0a96b5cc17aef0fdc6a638b019df47ce7c26911b9bea04f06ef94d936",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_ae0ef3d206525f07.npy",
+   "sha256": "f6b5a5940b4751e48a0990553e7f9eced46897160d7eae46f4d36f2b396124e2"
+  },
+  "iss_ae750cdc15874668": {
+   "array_sha256": "f228e59eb485bea310e63573edd13b1516f31f0a0838f1622e10eb0699941216",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_ae750cdc15874668.npy",
+   "sha256": "6c48ca3e2509b03922caf4711527697ad83581b92cb2d761b730c575bc9b2d2c"
+  },
+  "iss_b18ebee5261fa15a": {
+   "array_sha256": "c94a0f67a45c4f8dec81dea998808c220c9068fe4b29183c40c555821e16a3f0",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_b18ebee5261fa15a.npy",
+   "sha256": "d159311ee5fa9314ad21dc7481f446e6288fbe34f68bc6c8322fdff442382c47"
+  },
+  "iss_b4162321ba8300fd": {
+   "array_sha256": "bf25765ed93b73d5fe2c38a5991c6a2bb67cee2c655c7c73e217ca117d5ae01c",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_b4162321ba8300fd.npy",
+   "sha256": "c75285693875e6d9ae64be4c711aab9a5ed8f2dd21096f989743c4f88d4029c4"
+  },
+  "iss_b4e7d4f08040c49d": {
+   "array_sha256": "2436245f22ce13c3c9c6746b0a0540b758b765cc22134c1f72988835bbd0874a",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_b4e7d4f08040c49d.npy",
+   "sha256": "92ecced3fca7beb42fd5b9c66bd5dbd7cd2a29c6e2f52932a83f8f97038d60a7"
+  },
+  "iss_b725877ace62e548": {
+   "array_sha256": "012d61a22955b6986ea44e1ca69e6fd47d76abc265b1c962412521d6adaa93ec",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_b725877ace62e548.npy",
+   "sha256": "1f78cba09edf0a5c4a788965bbfe660300d48760a8b0f320cec8c55c3504be99"
+  },
+  "iss_b92424f6ea622122": {
+   "array_sha256": "833b13222538a278efe32244e25158722a087a5d29f06d5d320d1ba017dac5f8",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_b92424f6ea622122.npy",
+   "sha256": "d05017ec2ebcbcad988f17340c2440e3fd5dea2c3731e16911d0650fff5163b5"
+  },
+  "iss_b9946d55873b4cd3": {
+   "array_sha256": "b29bbb676173f6bb845308270e2c2ec897059ff73800e81e71c8d0ad86898184",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_b9946d55873b4cd3.npy",
+   "sha256": "7db280243f1cf190a8713864c3d4c8716b6c225c80ebd653e53201e74370a146"
+  },
+  "iss_ba4e6908d8b4b40f": {
+   "array_sha256": "de7ac345227f246f3a0bf7343c2acdd3961081127651aa6cf288693540692deb",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_ba4e6908d8b4b40f.npy",
+   "sha256": "3cf9327918e02e5b88c80dca5f30e6f69ac14813c36215fcdb7344ef12776ec6"
+  },
+  "iss_bac1ad011118a51e": {
+   "array_sha256": "a9d75a03f59afd26f6acd99b97548e74ed22a897f89ed86fe6b0c20c51705ab0",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_bac1ad011118a51e.npy",
+   "sha256": "90284d0e7894923952a4f0d35bbae9caf119287c53004c1f11c29441c30967e6"
+  },
+  "iss_bcb2d16746bb4a54": {
+   "array_sha256": "a061afeda2b4d7f9cd6c550387786995179b4c6d74d17e41357e98dda06bf18f",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_bcb2d16746bb4a54.npy",
+   "sha256": "ebf0a6bc45f8d3ab98ab2e556932963bc625aacd7bf23cb38cebf74481b24428"
+  },
+  "iss_bd0927261870e22a": {
+   "array_sha256": "1b656fa232ee7b3a9f54fb71c03fcd0520a9d5e781e7c8d65dba277eeb95d542",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_bd0927261870e22a.npy",
+   "sha256": "09ad5e31cfe785a1e8818271745b1186c9226919321bdde37dbaf859e507694b"
+  },
+  "iss_be9c832814477cd4": {
+   "array_sha256": "bf3b0f795b703e41f183166b4e0f43435f44a741aa1bc16a153aa21d25aac262",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_be9c832814477cd4.npy",
+   "sha256": "ebf0ee46cf701fe034cdc02a3f183714ae4dfe7ec4816811c229826d7fb562c7"
+  },
+  "iss_c09ec55ae5525d10": {
+   "array_sha256": "25ae11b68cc294487647c92f5ad71b270bbd7ccbbc0fc42135d18d0792de367f",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_c09ec55ae5525d10.npy",
+   "sha256": "3ab4733418b6b6cc47a9187f719d4b304483aa1a71330e17aad6133997c34834"
+  },
+  "iss_c1f3c5dcf522818b": {
+   "array_sha256": "f034a757821e3f19991a908b5f4501792f7fb0f95f445fa2ed28a82a631c7441",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_c1f3c5dcf522818b.npy",
+   "sha256": "2e10ff4993ff7640f28db4b1bee6e5b7c4b4c6069f43b3a44fbb3a9cbde50df2"
+  },
+  "iss_c3a188328ea9c3f9": {
+   "array_sha256": "67248d929e05f8a92a6fe47bb793e1434a86590e2a2e25042193c748a2568f91",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_c3a188328ea9c3f9.npy",
+   "sha256": "68e52c9c617ac6d5cacaeba10b5c7e317226a49d11120eedd8285bd9c790a1fc"
+  },
+  "iss_c434742e9e38f43f": {
+   "array_sha256": "0a37d25bb71c6a646c7d70714928a6e2c03ebf8e6761f7988109e2d480481597",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_c434742e9e38f43f.npy",
+   "sha256": "26f355ef9957f0f8c0a29b190ca82f7f94acf7919a100c88f8060941eec44c84"
+  },
+  "iss_c586b956b321dda0": {
+   "array_sha256": "f4b9b336996cd2647b9963bb8f2fc66f35d9bea8dc2464854cdf70d4a4b82723",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_c586b956b321dda0.npy",
+   "sha256": "2aeeb2dcba1099ed880b46f2ee7f1122f343803d17cf0a1b00246f6b67fa9ae5"
+  },
+  "iss_c657aaa139821880": {
+   "array_sha256": "6f8d0e6a70a6b050319aa500e1d7687457da1813749d489e098425711dcedcc3",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_c657aaa139821880.npy",
+   "sha256": "fb5336570ecae3072e529afe0ca411fe976041c1e5d5750f4b98c4c57a0d8c69"
+  },
+  "iss_cda3f0487e20dabe": {
+   "array_sha256": "229cb03a827cb314c0b86babab015e1f50ea12bf3fbbbc1dc2b5191c40a7c008",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_cda3f0487e20dabe.npy",
+   "sha256": "8c4de8e74e3c3781e4f42457a1a40489672d25869f220f7cfa4801a61c1262b7"
+  },
+  "iss_ce840092a9b1bb35": {
+   "array_sha256": "726d2f5c5b36e5928d9791689ad31c50aacf2949623221c281ce771ed9eed0db",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_ce840092a9b1bb35.npy",
+   "sha256": "cd9856b327711dde03159469ed4ab89a9d0b12a07456ca2c9902121cdab09a8b"
+  },
+  "iss_d0b2628a73664937": {
+   "array_sha256": "690ad36887bfb742fa9d6673106011e658238ee8f05adf6d58cb83706a171036",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_d0b2628a73664937.npy",
+   "sha256": "1c7accf1d6e95e34e4fab14a9350adb2daf968bc094da03f944176b20beb7c8a"
+  },
+  "iss_d1412a0211f2e1d7": {
+   "array_sha256": "5aa455efd5642e17280f10a3f6abecd7725a57e6ffdbde75284ca6cbfeb051bd",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_d1412a0211f2e1d7.npy",
+   "sha256": "4f49f71dbce3ed95092e0d565f88696b37ca6b1b2492f4953698c1c50b3d8252"
+  },
+  "iss_d1e98f0ea65b634d": {
+   "array_sha256": "046312b27fe88901401b4bd2f0d0bcc35524089dc651d8b9e144c3295e635cfa",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_d1e98f0ea65b634d.npy",
+   "sha256": "bea33a198133f40461d60bf1699ca8109f9011488d7bd8c6b581f861f7627504"
+  },
+  "iss_d37387807d6c9bb1": {
+   "array_sha256": "e11df36536b7b0daec119742bfb3bf123fcc53a6552685ec78c58c392257f777",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_d37387807d6c9bb1.npy",
+   "sha256": "df0deedefa3e10c287de1b5ba1140b5ba5fe8078ed82ef96b66f65ecac8aa31f"
+  },
+  "iss_d3ff93a9e1e27f9d": {
+   "array_sha256": "c77367916fb3e59e8fc1a09d63598f9bc771b65fe2fc8756bd4ae29db17794b9",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_d3ff93a9e1e27f9d.npy",
+   "sha256": "85406cde1dcad979bf67cfc19094a5aa67fad69eddacda97c1022464e2fb7241"
+  },
+  "iss_d4622c7bbc965f42": {
+   "array_sha256": "2816450a1ed8bef987430541dc977cd6b9868ce1f11c436554703a1b3f71559e",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_d4622c7bbc965f42.npy",
+   "sha256": "0351c8968893113e989e2ab49efb1d91876565a0083697d75b57010de6974a66"
+  },
+  "iss_d58d6107e6280d9e": {
+   "array_sha256": "b346dec374ef155a1d79489a84be9cf3e2b3c6e3f63b2e62ca88004d1744c11a",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_d58d6107e6280d9e.npy",
+   "sha256": "92ef6e1d550eb8ea1165269ca4d8ec8e8ee22eb616ad256dd42d9e21923d4b02"
+  },
+  "iss_dae37382cb05ee7f": {
+   "array_sha256": "145376c137461d5f27ef5f33e6070594d246abc156d436a63c319f7208fc5793",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_dae37382cb05ee7f.npy",
+   "sha256": "0e5d3289a8f785a40a21d75ac26bd48b2866dd1c5d6cde71bf97b513cf04758a"
+  },
+  "iss_e1acb8c3ff037455": {
+   "array_sha256": "3988c5f97d5ac9492d718e0117122dbb9dec68d1e4fd76a7f1ce7c3d261cef58",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_e1acb8c3ff037455.npy",
+   "sha256": "8b89077d65c4feaf472bf71fbf1d37d1c44653b789722483daa3876a173bd1e9"
+  },
+  "iss_e3ea742de86844c5": {
+   "array_sha256": "ff3af363d2005b9bf6619c97575e15f85fc109420b5ad90841994e6d25f9db09",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_e3ea742de86844c5.npy",
+   "sha256": "bac50ef80274ecacfd9e8d37eeb170fb4a0721f5cbcb9114d2528c3e7c2da28b"
+  },
+  "iss_e597f7bc093e9613": {
+   "array_sha256": "6cc0d43363af402968f645f41a1afa051b7d3b0e27d4845369c632b39b99f06a",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_e597f7bc093e9613.npy",
+   "sha256": "29177ab1d2dcfad620a4fe41d4b2ef42017435488d04a3d4b254a69b202269a0"
+  },
+  "iss_e5beb9cba4e59d1e": {
+   "array_sha256": "d6d98286385706795f2b469b3d7a98c8d1a3f74ab61407232cff9ff81488d4a9",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_e5beb9cba4e59d1e.npy",
+   "sha256": "b321176b501dacc7f11d8768492dc1d0ef730d657a503172b19a3bdc11cd1a84"
+  },
+  "iss_e6f0d63cfb1fdc56": {
+   "array_sha256": "73a1c9740e5297ead453b066ee362f78433d47795e3e381fc7798fd5877bcf46",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_e6f0d63cfb1fdc56.npy",
+   "sha256": "c3a029bda39baa9acf45935ae1db4f6f3549c15e013d5d704690735c6f6bbbc0"
+  },
+  "iss_e85bd458b3e2d1d9": {
+   "array_sha256": "cfcab2f3b744d63a8245d7e5474d5e5bd964d443ad9b038f63feaab824609124",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_e85bd458b3e2d1d9.npy",
+   "sha256": "9b8ce1975b35463167bfb3774abd55ea2f21f283bc1d06718030349c5e6aaa0a"
+  },
+  "iss_ef116f59720719b5": {
+   "array_sha256": "824045feb6a86ef3645ab76072dbd9fa117227a15ac0abfad650278cfd44ea88",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_ef116f59720719b5.npy",
+   "sha256": "5eb1690e49cead8288bac324be8b6a3f696240f1d12369c7fa4b38b651859b93"
+  },
+  "iss_f2c0dda099f87092": {
+   "array_sha256": "51c19cef7657f23e3f5e6187450e5ef4afd9c548ed674e43ea735b9b7f222457",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_f2c0dda099f87092.npy",
+   "sha256": "0a83de11e81080a103f2e049ecc09670f7bb1dbfc893f1db9949840e5bebb751"
+  },
+  "iss_f4e64ef3850d3161": {
+   "array_sha256": "22aa1eb43d602a59cb6707dde66d4cb1747aa6695dc429b27c8e1049f80a4e98",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_f4e64ef3850d3161.npy",
+   "sha256": "efb630e4a5087e7123d612282b36a64c53a9a546d91cb55b6f163ce3eb3e1afb"
+  },
+  "iss_f528763f6cf30695": {
+   "array_sha256": "5961f3bead0f801383994e5d02246a1cd6e74d295d81a5d6abfe80bfbe0b88c5",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_f528763f6cf30695.npy",
+   "sha256": "3a6d2224760e3dff00f3cb7fd5880aab5467af86df6c2b3e5f2a28b332f470c1"
+  },
+  "iss_f537a6bd93c63856": {
+   "array_sha256": "4fe237af73ae806773028d1690ab6e3ceb81185e490bc1383f96303397e37013",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_f537a6bd93c63856.npy",
+   "sha256": "2209fcc0092ac421526c7d3cfcec4129e30662b5506fd6c93886441a8aaafd13"
+  },
+  "iss_f5461d509432a1f1": {
+   "array_sha256": "08e0e347a5e706d6a2f8ac44bc45c0ecd16b5fa8aa37aba5b235b59b866d4efe",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_f5461d509432a1f1.npy",
+   "sha256": "de63b86b561ee0bed6ca959052ca2cb7992dba1610fb1b7e88a99e9c648886fb"
+  },
+  "iss_f57a23a1ef84b057": {
+   "array_sha256": "4591bd4a090631b33de2b29ef815cf53bce3e0927f7df0d6fe808665b4028395",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_f57a23a1ef84b057.npy",
+   "sha256": "b6772ab83752e99ad59d84b666d7737d58253f7590ef82d65d2582b14b9b0434"
+  },
+  "iss_f5cccca09bd6e732": {
+   "array_sha256": "b24af17403aadf7dd64dab1f80a9f06f8757216c6e65cc62ee1e1cf6dd215f3f",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_f5cccca09bd6e732.npy",
+   "sha256": "f6f5b26157001cb179fb83c6769ff6d947ef54fcabb51fad5dfb9eab7d989015"
+  },
+  "iss_fdeb54b32ca65e0b": {
+   "array_sha256": "904f6aef7eac4f84b8ac509c4939359613fb178430ca50ab3fe7ac83d88f51f4",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_fdeb54b32ca65e0b.npy",
+   "sha256": "6be23116d7e4515380b0c38fa41c734aab5c8a747d42834592b4b0219602dafe"
+  },
+  "iss_feb4a0f14b077d93": {
+   "array_sha256": "5072f3e5b3a83e16cb8f53d65147c584d784dda1f38968b11a65c20c73cad56c",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_feb4a0f14b077d93.npy",
+   "sha256": "bdbbcee3824648ba45b7e61d9a4002578e0eddc649042527b99f8e495b52183d"
+  },
+  "iss_fef7ba15b020612c": {
+   "array_sha256": "a3937ac1a7750d368d7bc3477a288db1f05f7fbdacd39fd9b672153a638851f9",
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/features/iss_fef7ba15b020612c.npy",
+   "sha256": "753ace3278a32adabd98955fc5d3ad4a1dbf7b684b4a2925aadca2c0479dd5bc"
+  }
+ },
+ "identity": {
+  "admission_sha256": "0dba4d97c3cdb978558e6e0cc679bd073f072155612999bdeb3174dc60f39a12",
+  "bank_digest": "13bc905444e4af1008b95d8820f0db4a5585621c712b1330d096b027df9cb33b",
+  "continuation": "reference_after_hold",
+  "fs_digests": {
+   "artifact_version_digest": "33fcd3b3c34df722e75221c4941b8a716ff277f06f229b3b8c0a7181612c446b",
+   "base_backbone_digest": "bf1eca9d48dbed9e2752678500b2a0cc1488d84627d68de33367492926aa898d",
+   "merged_backbone_digest": "370bd3bcc7545755bcdb60e482e1ce1ebc201302dc710f7992a4d76c4915bb97",
+   "static_adapter_digest": "566d5dc116771cf96928cb5618404334a78f2a46e7aeb821bb9e141b3695d57f"
+  },
+  "hold_steps": 4,
+  "normalization_identity": "ed-norm-identity/1:3e0b216bfbf34ab0",
+  "protocol_sha256": "a42c11dc68d9ede158370a6ba77c4ef8b54cb5cecde30358ee2424fc18ae96d8",
+  "registry_sha256": "c480684df1e9068387d347e00f6afa16f2b08db2d137d23175fb3933d944affd",
+  "rho": 0.25,
+  "role": "policy_dev",
+  "store": "2019.zarr"
+ },
+ "identity_sha256": "1997f221be38d4f1ec259b3666bcb86f153d851eafb7d132e39319eda498e09d",
+ "issue_ids": [
+  "iss_b4162321ba8300fd",
+  "iss_475f37905b27cec3",
+  "iss_842ac794c83afc0d",
+  "iss_50e1b4dac9c81761",
+  "iss_86bf31effbc9958f",
+  "iss_fef7ba15b020612c",
+  "iss_c3a188328ea9c3f9",
+  "iss_2e0baf7c83b6f2c6",
+  "iss_e6f0d63cfb1fdc56",
+  "iss_3496fb93a3c5c5b2",
+  "iss_5a961c025f55d230",
+  "iss_ae0ef3d206525f07",
+  "iss_d4622c7bbc965f42",
+  "iss_43aabaf3d1190221",
+  "iss_50b1cf9d95d45724",
+  "iss_d37387807d6c9bb1",
+  "iss_86cd1427a581b2ab",
+  "iss_b9946d55873b4cd3",
+  "iss_6637c710d67c2a0a",
+  "iss_2f6fecdf4a2642ec",
+  "iss_f57a23a1ef84b057",
+  "iss_a0fc384bc7192157",
+  "iss_f2c0dda099f87092",
+  "iss_21b8f410b401ef92",
+  "iss_01fcb3ca76145448",
+  "iss_6d9c922c38eb4e70",
+  "iss_86a5a87c07061e27",
+  "iss_e85bd458b3e2d1d9",
+  "iss_95f4a77ef327cf27",
+  "iss_e1acb8c3ff037455",
+  "iss_0488c017914b2110",
+  "iss_41e0b14c35a40eec",
+  "iss_feb4a0f14b077d93",
+  "iss_8a7e6c9281a93e8a",
+  "iss_b725877ace62e548",
+  "iss_4e2dfb3bfd3a9e92",
+  "iss_2acf0c3696ef1b13",
+  "iss_f537a6bd93c63856",
+  "iss_2b9b5cf2c702c76e",
+  "iss_3dd74e9b6b82d2d7",
+  "iss_4ff93cc7e4ff5f4d",
+  "iss_ef116f59720719b5",
+  "iss_c09ec55ae5525d10",
+  "iss_276ff32c1e63eab3",
+  "iss_acb55877418f617c",
+  "iss_bac1ad011118a51e",
+  "iss_e3ea742de86844c5",
+  "iss_6de0912e14334252",
+  "iss_68df0109e7d14df3",
+  "iss_c434742e9e38f43f",
+  "iss_a804698202e365bf",
+  "iss_782c6b6838e0c419",
+  "iss_48fbf25dd0a41c7c",
+  "iss_f5cccca09bd6e732",
+  "iss_be9c832814477cd4",
+  "iss_7866b33e6e01a012",
+  "iss_2ac5cb61524ea470",
+  "iss_01a01149fbfda558",
+  "iss_2c1675cfd9fd1727",
+  "iss_54c5b0dd39acc195",
+  "iss_4a14ccb038ed3cd8",
+  "iss_b18ebee5261fa15a",
+  "iss_82c76cbdfe0e95da",
+  "iss_8f3192af542cd123",
+  "iss_15c9b2f164dbaeee",
+  "iss_e597f7bc093e9613",
+  "iss_d58d6107e6280d9e",
+  "iss_84e7c67aac3031e8",
+  "iss_d1e98f0ea65b634d",
+  "iss_2604a030c0350c97",
+  "iss_ae750cdc15874668",
+  "iss_bcb2d16746bb4a54",
+  "iss_e5beb9cba4e59d1e",
+  "iss_0a1c4662e879f199",
+  "iss_627fda3d413b2c4f",
+  "iss_34b5e960c4f09244",
+  "iss_bd0927261870e22a",
+  "iss_c1f3c5dcf522818b",
+  "iss_d0b2628a73664937",
+  "iss_f528763f6cf30695",
+  "iss_f4e64ef3850d3161",
+  "iss_373b492cd311eb9b",
+  "iss_50d38c19a0de1e63",
+  "iss_c586b956b321dda0",
+  "iss_684e25bce2986f7d",
+  "iss_0c468454571eb5d7",
+  "iss_86f69db1c8ef700c",
+  "iss_13fb2e9169c2653a",
+  "iss_ce840092a9b1bb35",
+  "iss_d1412a0211f2e1d7",
+  "iss_cda3f0487e20dabe",
+  "iss_9b774fafd0d7048f",
+  "iss_f5461d509432a1f1",
+  "iss_966a612a41811683",
+  "iss_9b136775802bb118",
+  "iss_dae37382cb05ee7f",
+  "iss_c657aaa139821880",
+  "iss_b4e7d4f08040c49d",
+  "iss_5de3372e30e878ae",
+  "iss_4e94953cd6c35183",
+  "iss_727d543f20a34c54",
+  "iss_b92424f6ea622122",
+  "iss_fdeb54b32ca65e0b",
+  "iss_ac7fea7ad0011edc",
+  "iss_6da467a0709502fb",
+  "iss_d3ff93a9e1e27f9d",
+  "iss_71503bc858eb698e",
+  "iss_60636c1d23fb5818",
+  "iss_ba4e6908d8b4b40f",
+  "iss_3f38e42ce89530c1",
+  "iss_960b0ce5235d80d6",
+  "iss_37d252e0920e7f66"
+ ],
+ "kind": "dev",
+ "merge_reads": 336,
+ "n_features": 1660,
+ "parquet_convenience_copy": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/cache/dev/candidate_results.parquet",
+ "passed": true,
+ "protocol_sha256": "a42c11dc68d9ede158370a6ba77c4ef8b54cb5cecde30358ee2424fc18ae96d8",
+ "read_set": {
+  "check": "V8_read_set",
+  "n_reads": 784,
+  "passed": true,
+  "violations": []
+ },
+ "schema": "ed-fp05-cache/1",
+ "shard_map": {
+  "iss_01a01149fbfda558": 1,
+  "iss_01fcb3ca76145448": 0,
+  "iss_0488c017914b2110": 2,
+  "iss_0a1c4662e879f199": 1,
+  "iss_0c468454571eb5d7": 1,
+  "iss_13fb2e9169c2653a": 3,
+  "iss_15c9b2f164dbaeee": 0,
+  "iss_21b8f410b401ef92": 3,
+  "iss_2604a030c0350c97": 1,
+  "iss_276ff32c1e63eab3": 3,
+  "iss_2ac5cb61524ea470": 0,
+  "iss_2acf0c3696ef1b13": 0,
+  "iss_2b9b5cf2c702c76e": 2,
+  "iss_2c1675cfd9fd1727": 2,
+  "iss_2e0baf7c83b6f2c6": 3,
+  "iss_2f6fecdf4a2642ec": 3,
+  "iss_3496fb93a3c5c5b2": 1,
+  "iss_34b5e960c4f09244": 3,
+  "iss_373b492cd311eb9b": 1,
+  "iss_37d252e0920e7f66": 3,
+  "iss_3dd74e9b6b82d2d7": 3,
+  "iss_3f38e42ce89530c1": 1,
+  "iss_41e0b14c35a40eec": 3,
+  "iss_43aabaf3d1190221": 1,
+  "iss_475f37905b27cec3": 1,
+  "iss_48fbf25dd0a41c7c": 0,
+  "iss_4a14ccb038ed3cd8": 0,
+  "iss_4e2dfb3bfd3a9e92": 3,
+  "iss_4e94953cd6c35183": 3,
+  "iss_4ff93cc7e4ff5f4d": 0,
+  "iss_50b1cf9d95d45724": 2,
+  "iss_50d38c19a0de1e63": 2,
+  "iss_50e1b4dac9c81761": 3,
+  "iss_54c5b0dd39acc195": 3,
+  "iss_5a961c025f55d230": 2,
+  "iss_5de3372e30e878ae": 2,
+  "iss_60636c1d23fb5818": 3,
+  "iss_627fda3d413b2c4f": 2,
+  "iss_6637c710d67c2a0a": 2,
+  "iss_684e25bce2986f7d": 0,
+  "iss_68df0109e7d14df3": 0,
+  "iss_6d9c922c38eb4e70": 1,
+  "iss_6da467a0709502fb": 0,
+  "iss_6de0912e14334252": 3,
+  "iss_71503bc858eb698e": 2,
+  "iss_727d543f20a34c54": 0,
+  "iss_782c6b6838e0c419": 3,
+  "iss_7866b33e6e01a012": 3,
+  "iss_82c76cbdfe0e95da": 2,
+  "iss_842ac794c83afc0d": 2,
+  "iss_84e7c67aac3031e8": 3,
+  "iss_86a5a87c07061e27": 2,
+  "iss_86bf31effbc9958f": 0,
+  "iss_86cd1427a581b2ab": 0,
+  "iss_86f69db1c8ef700c": 2,
+  "iss_8a7e6c9281a93e8a": 1,
+  "iss_8f3192af542cd123": 3,
+  "iss_95f4a77ef327cf27": 0,
+  "iss_960b0ce5235d80d6": 2,
+  "iss_966a612a41811683": 1,
+  "iss_9b136775802bb118": 2,
+  "iss_9b774fafd0d7048f": 3,
+  "iss_a0fc384bc7192157": 1,
+  "iss_a804698202e365bf": 2,
+  "iss_ac7fea7ad0011edc": 3,
+  "iss_acb55877418f617c": 0,
+  "iss_ae0ef3d206525f07": 3,
+  "iss_ae750cdc15874668": 2,
+  "iss_b18ebee5261fa15a": 1,
+  "iss_b4162321ba8300fd": 0,
+  "iss_b4e7d4f08040c49d": 1,
+  "iss_b725877ace62e548": 2,
+  "iss_b92424f6ea622122": 1,
+  "iss_b9946d55873b4cd3": 1,
+  "iss_ba4e6908d8b4b40f": 0,
+  "iss_bac1ad011118a51e": 1,
+  "iss_bcb2d16746bb4a54": 3,
+  "iss_bd0927261870e22a": 0,
+  "iss_be9c832814477cd4": 2,
+  "iss_c09ec55ae5525d10": 2,
+  "iss_c1f3c5dcf522818b": 1,
+  "iss_c3a188328ea9c3f9": 2,
+  "iss_c434742e9e38f43f": 1,
+  "iss_c586b956b321dda0": 3,
+  "iss_c657aaa139821880": 0,
+  "iss_cda3f0487e20dabe": 2,
+  "iss_ce840092a9b1bb35": 0,
+  "iss_d0b2628a73664937": 2,
+  "iss_d1412a0211f2e1d7": 1,
+  "iss_d1e98f0ea65b634d": 0,
+  "iss_d37387807d6c9bb1": 3,
+  "iss_d3ff93a9e1e27f9d": 1,
+  "iss_d4622c7bbc965f42": 0,
+  "iss_d58d6107e6280d9e": 2,
+  "iss_dae37382cb05ee7f": 3,
+  "iss_e1acb8c3ff037455": 1,
+  "iss_e3ea742de86844c5": 2,
+  "iss_e597f7bc093e9613": 1,
+  "iss_e5beb9cba4e59d1e": 0,
+  "iss_e6f0d63cfb1fdc56": 0,
+  "iss_e85bd458b3e2d1d9": 3,
+  "iss_ef116f59720719b5": 1,
+  "iss_f2c0dda099f87092": 2,
+  "iss_f4e64ef3850d3161": 0,
+  "iss_f528763f6cf30695": 3,
+  "iss_f537a6bd93c63856": 1,
+  "iss_f5461d509432a1f1": 0,
+  "iss_f57a23a1ef84b057": 0,
+  "iss_f5cccca09bd6e732": 1,
+  "iss_fdeb54b32ca65e0b": 2,
+  "iss_feb4a0f14b077d93": 0,
+  "iss_fef7ba15b020612c": 1
+ },
+ "shards": [
+  {
+   "config_id": "CJ2_S0",
+   "digests_unchanged": true,
+   "dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4cachecj2-0924125702-926f58/s0",
+   "e0_passed": true,
+   "passed": true,
+   "shard_json_sha256": "5171ca11d130f9e32dfb0ea0bbfecb86a70f4fd6dcbde7a82ab50a4f7ba36aa1"
+  },
+  {
+   "config_id": "CJ2_S1",
+   "digests_unchanged": true,
+   "dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4cachecj2-0924125702-926f58/s1",
+   "e0_passed": true,
+   "passed": true,
+   "shard_json_sha256": "25f2b89b2295ff3652bad1fcea0e2211b49958c8f6f8504b1639f77de4a7a50b"
+  },
+  {
+   "config_id": "CJ2_S2",
+   "digests_unchanged": true,
+   "dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4cachecj2-0924125702-926f58/s2",
+   "e0_passed": true,
+   "passed": true,
+   "shard_json_sha256": "d4437758116a8a50e29d96041fedc2cd0265caf620c73ffb252c1fda7352a026"
+  },
+  {
+   "config_id": "CJ2_S3",
+   "digests_unchanged": true,
+   "dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4cachecj2-0924125702-926f58/s3",
+   "e0_passed": true,
+   "passed": true,
+   "shard_json_sha256": "5a7c29f4709fda9eb8b47487c1bb6e839fcb22d5afd39ac2f04b2937cfeb8ef2"
+  }
+ ],
+ "split_freeze_sha256": "20273225b07e0498d144dbec39029de2e5f9b573fedb6207f144063af5706cf5",
+ "validation": {
+  "check": "CACHE-VALID-v1",
+  "failures": {},
+  "max_abs_cpu_gpu_relative": 4.661240584341172e-16,
+  "n_expected": 1680,
+  "n_nonfinite": 0,
+  "n_rows": 1680,
+  "nonfinite_fraction": 0.0,
+  "passed": true,
+  "v_pass": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true,
+   "V6": true,
+   "V7": true,
+   "V8": true
+  }
+ }
+}

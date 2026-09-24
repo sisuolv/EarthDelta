@@ -1,0 +1,328 @@
+{
+  "schema": "earthdelta-plan-execution-audit/20260924",
+  "overall_verdict": "PARTIALLY_EXECUTED",
+  "status": "OBSERVED",
+  "actual_branch_head": "08093650ba56e8cf709d75a61c26c50a0c35f6f7",
+  "reviewed_commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+  "previous_implementation": "a3596e6b804e9d23b72d1247b08c47129d6b50b1",
+  "fp00_04_disposition": {
+    "FP-00": {
+      "status": "DONE",
+      "scope": "OBSERVED inventory/acceptance read",
+      "evidence": [
+        "E01",
+        "E02",
+        "E03"
+      ],
+      "cpu": "entry commands executed; no new model claim",
+      "gpu": "NOT_APPLICABLE",
+      "scientific_goal": "NOT_APPLICABLE"
+    },
+    "FP-01": {
+      "status": "DONE",
+      "scope": "registered S0 1/4/12 numeric parity",
+      "evidence": [
+        "E04",
+        "E05"
+      ],
+      "cpu": "source precision regression exists; current audit did not rerun",
+      "gpu": "detailed committed S0 and four-arm output observed; scheduler receipt gap remains",
+      "scientific_goal": "official numerical equivalence only, not utility"
+    },
+    "FP-02": {
+      "status": "PARTIALLY_DONE",
+      "completed_components": [
+        {
+          "scope": "Fs-stage fail-stop and certified admission consumer",
+          "status": "DONE",
+          "evidence": [
+            "E12"
+          ]
+        },
+        {
+          "scope": "profile/horizon deep-copy immutability added during FP04",
+          "status": "DONE",
+          "evidence": [
+            "E10",
+            "E11",
+            "E12"
+          ]
+        }
+      ],
+      "remaining": [
+        "thin followup CLI",
+        "full historical exposure ledger",
+        "policy_dev/OOF/freeze/scoring split gate"
+      ],
+      "evidence": [
+        "E12",
+        "E16"
+      ]
+    },
+    "FP-03": {
+      "status": "DONE",
+      "scope": "v2 H32 finite-panel Fs qualification and freeze",
+      "historical_v1": "FAILED_PRESERVED",
+      "universal_divergence_root_cause": "INCONCLUSIVE_NOT_UNIQUE_TF32",
+      "evidence": [
+        "E06",
+        "E07",
+        "E08",
+        "E09"
+      ],
+      "scientific_goal": "observed qualification-panel loss increase within registered 2% allowance; no population safety or beneficial OOS claim"
+    },
+    "FP-04": {
+      "status": "DONE",
+      "scope": "one common Fs; K4/r4 own-group qualification; one-probe exact assembly/reload",
+      "evidence": [
+        "E10",
+        "E11",
+        "E12",
+        "E13"
+      ],
+      "scientific_goal": "bank exists; OOS utility MISSING"
+    }
+  },
+  "s0_parity_verdict": "PASS_SCOPED_REGISTERED_1_4_12_AT_UNCHANGED_1e-5",
+  "fs_fit_divergence_verdict": "V2_FS_QUALIFIED_H32; OLD_V1_FAIL_PRESERVED; UNIQUE_ROOT_CAUSE_NOT_ESTABLISHED",
+  "bank_certification_verdict": "BANK_CERTIFIED_SCOPED; OOS_VALUE_INCONCLUSIVE",
+  "fp05_plan_soundness_verdict": "REQUIRES_REVISION_BEFORE_GPU_CACHE; 2020_H2_CONFIRM_EXPOSURE_CONTRADICTED",
+  "novelty_claim_status": "INCONCLUSIVE_NOT_TESTED_BY_FP00_04",
+  "weather_utility_claim_status": "INCONCLUSIVE; FS_QUALIFICATION_SET_POINT_HARM; BANK_OOS_NOT_RUN",
+  "findings": [
+    {
+      "id": "FA-01",
+      "priority": "P0",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "disposition": "CLOSED_SCOPED",
+      "finding": "S0三个注册rollout已在详细结果中全部0.0，原1e-5未变。",
+      "sources": [
+        "E04",
+        "E05"
+      ],
+      "minimal_action": "不重复训练或重跑已过S0；新增源码/资产漂移才重新认证。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-02",
+      "priority": "P1",
+      "evidence_status": "STATIC_CONFIRMED",
+      "disposition": "CLAIM_CORRECTION",
+      "finding": "认证后端的lr=.01正控制仍失稳；不能把历史全部退化归因于TF32。",
+      "sources": [
+        "E06"
+      ],
+      "minimal_action": "保留高LR正控制、v1失败；只宣称新H32 recipe可重复且过资格门。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-03",
+      "priority": "P1",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "disposition": "CLOSED_BOUNDED",
+      "finding": "Fs v2训练24h改善2.594%，16例资格集差0.3393%但在2%门槛内。",
+      "sources": [
+        "E08",
+        "E09"
+      ],
+      "minimal_action": "称有限面板资格通过；不得称统计证明无害或有益。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-04",
+      "priority": "P0",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "disposition": "CLOSED_SCOPED",
+      "finding": "共同Fs与K4 bank的源/组装/独立重载A1-A5有精确检查；probe仅一个。",
+      "sources": [
+        "E10",
+        "E11",
+        "E12"
+      ],
+      "minimal_action": "保留认证库；新debug扩展行为核对，不用它推导样本外价值。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-05",
+      "priority": "P0",
+      "evidence_status": "STATIC_CONFIRMED",
+      "disposition": "PARTIAL",
+      "finding": "FP02真实dispatch、Fs准入子集及profile深拷贝已做；通用薄runner与跨角色曝光闸门未闭合。",
+      "sources": [
+        "E12",
+        "E16"
+      ],
+      "minimal_action": "FP05a/b新增薄包装与所有新消费者的split/admission检查，不重写17个pin文件。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-06",
+      "priority": "P0",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "disposition": "BLOCKS_PROTOCOL_FREEZE",
+      "finding": "X1-N64真实训练包含2020-07-13..12-28的56个issue；FP05的2020H2 untouched confirm声明错误。",
+      "sources": [
+        "E14",
+        "E15"
+      ],
+      "minimal_action": "撤销整个2020H2清洁确认标签；登记所有探索/失败/筛选曝光；confirm_window=null并禁止confirm执行。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-07",
+      "priority": "P0",
+      "evidence_status": "STATIC_CONFIRMED",
+      "disposition": "REQUIRES_AMENDMENT",
+      "finding": "0.34%旧面板损害不是新季节的回本线，也不是dynamic-vs-static阈值。",
+      "sources": [
+        "E09",
+        "E15"
+      ],
+      "minimal_action": "仅保留为预先声明的Fs-relative工程门槛；另报同批F0净值与OOF static增量。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-08",
+      "priority": "P1",
+      "evidence_status": "STATIC_CONFIRMED",
+      "disposition": "SCOPE_LIMIT",
+      "finding": "Fs/bank训练在2020而dev拟取2019H2；双向OOF只支持回顾性、purged开发评估。",
+      "sources": [
+        "E09",
+        "E10",
+        "E15"
+      ],
+      "minimal_action": "不得称实时历史部署回测；季节/年份迁移限制和条件CI范围显式报告。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-09",
+      "priority": "P0",
+      "evidence_status": "STATIC_CONFIRMED",
+      "disposition": "BLOCKS_FITTING",
+      "finding": "OOF需嵌套HPO和fold内变换；验证标签毒化应比较对应fold预测，不要求整个OOF文件不变。",
+      "sources": [
+        "E15"
+      ],
+      "minimal_action": "真实入口覆盖fit/innerCV/PCA/scaler/regime/freeze/score；加入精确作用域的毒化测试。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-10",
+      "priority": "P1",
+      "evidence_status": "STATIC_CONFIRMED",
+      "disposition": "REQUIRES_AMENDMENT",
+      "finding": "8个debug只有各自own-group专家的历史panel锚点，不具备所有专家对全部8例的历史真值锚点。",
+      "sources": [
+        "E10",
+        "E11",
+        "E15"
+      ],
+      "minimal_action": "做anchor coverage map；其他组合只做本轮跨worker/独立重算，不伪造旧对照。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-11",
+      "priority": "P0",
+      "evidence_status": "MISSING",
+      "disposition": "BLOCKS_FINAL_DECISION",
+      "finding": "K4样本外价值、FP05固定预测、完整成本、72h开发损害门和有效block数尚无证据。",
+      "sources": [
+        "E11",
+        "E15"
+      ],
+      "minimal_action": "它们是FP05待测目标，不是要求先证明才允许运行FP05；FP06不得先得科学结论。",
+      "status": "MISSING"
+    },
+    {
+      "id": "FA-12",
+      "priority": "P1",
+      "evidence_status": "MISSING",
+      "disposition": "EVIDENCE_COMPLETENESS",
+      "finding": "当前关键formal作业有逐项数值与job摘要，但ignored artifacts下多数job_result/log/weights本轮未取得。",
+      "sources": [
+        "E04",
+        "E09",
+        "E11"
+      ],
+      "minimal_action": "只补原始小型receipt和本地重哈希，不因缺上传而把数值证据抹除或重跑全部GPU。",
+      "status": "MISSING"
+    }
+  ],
+  "blocking_items": [
+    {
+      "id": "FA-05",
+      "priority": "P0",
+      "evidence_status": "STATIC_CONFIRMED",
+      "disposition": "PARTIAL",
+      "finding": "FP02真实dispatch、Fs准入子集及profile深拷贝已做；通用薄runner与跨角色曝光闸门未闭合。",
+      "sources": [
+        "E12",
+        "E16"
+      ],
+      "minimal_action": "FP05a/b新增薄包装与所有新消费者的split/admission检查，不重写17个pin文件。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-06",
+      "priority": "P0",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "disposition": "BLOCKS_PROTOCOL_FREEZE",
+      "finding": "X1-N64真实训练包含2020-07-13..12-28的56个issue；FP05的2020H2 untouched confirm声明错误。",
+      "sources": [
+        "E14",
+        "E15"
+      ],
+      "minimal_action": "撤销整个2020H2清洁确认标签；登记所有探索/失败/筛选曝光；confirm_window=null并禁止confirm执行。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-07",
+      "priority": "P0",
+      "evidence_status": "STATIC_CONFIRMED",
+      "disposition": "REQUIRES_AMENDMENT",
+      "finding": "0.34%旧面板损害不是新季节的回本线，也不是dynamic-vs-static阈值。",
+      "sources": [
+        "E09",
+        "E15"
+      ],
+      "minimal_action": "仅保留为预先声明的Fs-relative工程门槛；另报同批F0净值与OOF static增量。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-09",
+      "priority": "P0",
+      "evidence_status": "STATIC_CONFIRMED",
+      "disposition": "BLOCKS_FITTING",
+      "finding": "OOF需嵌套HPO和fold内变换；验证标签毒化应比较对应fold预测，不要求整个OOF文件不变。",
+      "sources": [
+        "E15"
+      ],
+      "minimal_action": "真实入口覆盖fit/innerCV/PCA/scaler/regime/freeze/score；加入精确作用域的毒化测试。",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "FA-10",
+      "priority": "P1",
+      "evidence_status": "STATIC_CONFIRMED",
+      "disposition": "REQUIRES_AMENDMENT",
+      "finding": "8个debug只有各自own-group专家的历史panel锚点，不具备所有专家对全部8例的历史真值锚点。",
+      "sources": [
+        "E10",
+        "E11",
+        "E15"
+      ],
+      "minimal_action": "做anchor coverage map；其他组合只做本轮跨worker/独立重算，不伪造旧对照。",
+      "status": "OBSERVED"
+    }
+  ],
+  "audit_limitations": [
+    "当前审计只读，没有修改远端代码或运行仓库pytest/GPU。",
+    "实际S0/Fs/bank数值输出已读；原始调度receipt的缺口按字段保留。",
+    "没有宣称重哈希本轮未取得的权重/数据。",
+    "X1-N64的嵌入job_result、逐issue结果可核实执行，不是argv替代。"
+  ],
+  "next_authorized_task": "FP-05a",
+  "downstream_authorized": false
+}

@@ -1,0 +1,5 @@
+{
+ "gpu_seconds_per_rollout_mean": 0.8125044813741364,
+ "offline_cost_note": "cache (5 rollouts/issue + plain-Fs + F0 report-only) + CPU fitting; FP-04 job seconds in its ledger",
+ "online_cost": "features (CPU, 3 slabs) + 1 rollout"
+}

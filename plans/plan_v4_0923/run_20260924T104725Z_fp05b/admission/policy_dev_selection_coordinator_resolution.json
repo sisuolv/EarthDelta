@@ -1,0 +1,44 @@
+{
+ "schema_version": "ed-fp05b-coordinator-resolution/1",
+ "resolves": {
+  "path": "admission/policy_dev_selection_STOP.json",
+  "sha256": "4f1b36bcb40e342f5c54af0d98f8c7c8dc033eccdfacb5442a0c8df692221976",
+  "verdict": "STOP_POLICY_DEV_SELECTION_DROPS_EXCEED_8",
+  "kept_unmodified": true
+ },
+ "declaration": {
+  "path": "admission/policy_dev_selection_declaration.json",
+  "sha256": "6ff5769580fd6eeb940d96fe2991503dc2bf1a487981bd8037b9746586430b0e"
+ },
+ "recorded_utc": "2026-09-24T11:00:19.223107+00:00",
+ "decision": "ACCEPT the outcome of the EXACT declared POLICY-DEV-SELECT-v1 rule as-is: the 112 surviving targets, 16 dropped, N_target = 112, 23 of 25 strata represented. The >8-drop stop rule is RESOLVED by the coordinator (not overridden by the executor, not replaced by any alternative).",
+ "not_applied": [
+  "same_stratum_without_strict_time_order",
+  "original_FP05_PLAN_nearest_anywhere_60h_cap",
+  "nearest_anywhere_no_cap"
+ ],
+ "why": "Strata 16 and 19 contain zero clean candidates (they sit inside the 16- and 24-step non-finite runs of 2019.zarr): a structural data gap no same-stratum rule can fill. nearest_anywhere_no_cap would drift picks up to 192h out of their credited stratum, breaking the block balance the stratification exists for. Running the pre-registered rule to its real conclusion and documenting the shortfall is preferred over changing the rule after seeing the scan.",
+ "coordinator_text": "Decision: accept the outcome under the exact declared rule as-is. N_target = 112, 16 drops, 23/25 strata represented. ... Do NOT switch to any of the three NOT_APPLIED alternatives.",
+ "consequences": {
+  "N_target": 112,
+  "unrepresented_strata": [
+   {
+    "stratum": 16,
+    "utc": [
+     "2019-10-26T12Z",
+     "2019-11-02T06Z"
+    ]
+   },
+   {
+    "stratum": 19,
+    "utc": [
+     "2019-11-16T12Z",
+     "2019-11-23T06Z"
+    ]
+   }
+  ],
+  "unrepresented_reason": "REAL_DATA_GAP (non-finite values in 2019.zarr; no clean t-12h..t+72h window in the stratum)",
+  "must_be_reported_with_every_DEV_result": true,
+  "DEV_SCALE_v1_ceiling": "N_target = 112; nested subsets N/2 = surviving even i, N/4 = surviving i % 4 == 0 (sizes fixed by the declaration's i-index rule, computed in the manifest record)"
+ }
+}

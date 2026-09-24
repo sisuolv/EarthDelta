@@ -1,0 +1,286 @@
+{
+ "schema_version": "ed-fp05b-policy-dev-selection-stop/1",
+ "verdict": "STOP_POLICY_DEV_SELECTION_DROPS_EXCEED_8",
+ "created_utc": "2026-09-24T10:55:22.094349+00:00",
+ "declaration": {
+  "path": "admission/policy_dev_selection_declaration.json",
+  "sha256": "6ff5769580fd6eeb940d96fe2991503dc2bf1a487981bd8037b9746586430b0e"
+ },
+ "scan": {
+  "path": "splits/finiteness_scan_2019_H2.json",
+  "sha256": "e46cbc7afba3d445c97e3d31f72e02a4dbc7f9e82220b226fc9df0c3388cbac2"
+ },
+ "computed_from": "the finiteness scan and calendar arithmetic only (no value, no model output)",
+ "nonfinite_step_runs": [
+  {
+   "steps": [
+    828,
+    835
+   ],
+   "utc": [
+    "2019-07-27T00Z",
+    "2019-07-28T18Z"
+   ],
+   "n_steps": 8
+  },
+  {
+   "steps": [
+    1004,
+    1019
+   ],
+   "utc": [
+    "2019-09-09T00Z",
+    "2019-09-12T18Z"
+   ],
+   "n_steps": 16
+  },
+  {
+   "steps": [
+    1204,
+    1219
+   ],
+   "utc": [
+    "2019-10-29T00Z",
+    "2019-11-01T18Z"
+   ],
+   "n_steps": 16
+  },
+  {
+   "steps": [
+    1284,
+    1307
+   ],
+   "utc": [
+    "2019-11-18T00Z",
+    "2019-11-23T18Z"
+   ],
+   "n_steps": 24
+  },
+  {
+   "steps": [
+    1396,
+    1403
+   ],
+   "utc": [
+    "2019-12-16T00Z",
+    "2019-12-17T18Z"
+   ],
+   "n_steps": 8
+  },
+  {
+   "steps": [
+    1444,
+    1459
+   ],
+   "utc": [
+    "2019-12-28T00Z",
+    "2019-12-31T18Z"
+   ],
+   "n_steps": 16
+  }
+ ],
+ "pool_slots": 698,
+ "clean_candidates": 544,
+ "unusable_slots": 154,
+ "strata_without_any_clean_candidate": [
+  {
+   "stratum": 16,
+   "utc": [
+    "2019-10-26T12Z",
+    "2019-11-02T06Z"
+   ]
+  },
+  {
+   "stratum": 19,
+   "utc": [
+    "2019-11-16T12Z",
+    "2019-11-23T06Z"
+   ]
+  }
+ ],
+ "clean_candidates_per_stratum": {
+  "0": 28,
+  "1": 28,
+  "2": 14,
+  "3": 20,
+  "4": 28,
+  "5": 28,
+  "6": 28,
+  "7": 28,
+  "8": 22,
+  "9": 4,
+  "10": 28,
+  "11": 28,
+  "12": 28,
+  "13": 28,
+  "14": 28,
+  "15": 26,
+  "16": 0,
+  "17": 28,
+  "18": 22,
+  "19": 0,
+  "20": 24,
+  "21": 28,
+  "22": 22,
+  "23": 12,
+  "24": 14
+ },
+ "declared_rule_outcome": {
+  "n_drops": 16,
+  "drop_cap": 8,
+  "drops": [
+   {
+    "i": 14,
+    "target_step": 823,
+    "target_utc": "2019-07-25T18Z",
+    "stratum": 2
+   },
+   {
+    "i": 15,
+    "target_step": 828,
+    "target_utc": "2019-07-27T00Z",
+    "stratum": 2
+   },
+   {
+    "i": 50,
+    "target_step": 1020,
+    "target_utc": "2019-09-13T00Z",
+    "stratum": 9
+   },
+   {
+    "i": 82,
+    "target_step": 1196,
+    "target_utc": "2019-10-27T00Z",
+    "stratum": 16
+   },
+   {
+    "i": 83,
+    "target_step": 1202,
+    "target_utc": "2019-10-28T12Z",
+    "stratum": 16
+   },
+   {
+    "i": 84,
+    "target_step": 1207,
+    "target_utc": "2019-10-29T18Z",
+    "stratum": 16
+   },
+   {
+    "i": 85,
+    "target_step": 1212,
+    "target_utc": "2019-10-31T00Z",
+    "stratum": 16
+   },
+   {
+    "i": 86,
+    "target_step": 1218,
+    "target_utc": "2019-11-01T12Z",
+    "stratum": 16
+   },
+   {
+    "i": 97,
+    "target_step": 1278,
+    "target_utc": "2019-11-16T12Z",
+    "stratum": 19
+   },
+   {
+    "i": 98,
+    "target_step": 1284,
+    "target_utc": "2019-11-18T00Z",
+    "stratum": 19
+   },
+   {
+    "i": 99,
+    "target_step": 1289,
+    "target_utc": "2019-11-19T06Z",
+    "stratum": 19
+   },
+   {
+    "i": 100,
+    "target_step": 1295,
+    "target_utc": "2019-11-20T18Z",
+    "stratum": 19
+   },
+   {
+    "i": 101,
+    "target_step": 1300,
+    "target_utc": "2019-11-22T00Z",
+    "stratum": 19
+   },
+   {
+    "i": 117,
+    "target_step": 1388,
+    "target_utc": "2019-12-14T00Z",
+    "stratum": 22
+   },
+   {
+    "i": 126,
+    "target_step": 1438,
+    "target_utc": "2019-12-26T12Z",
+    "stratum": 24
+   },
+   {
+    "i": 127,
+    "target_step": 1443,
+    "target_utc": "2019-12-27T18Z",
+    "stratum": 24
+   }
+  ],
+  "n_kept": 112
+ },
+ "alternatives_for_the_coordinator_NOT_APPLIED": {
+  "same_stratum_without_strict_time_order": {
+   "rule": "declared rule minus the strictly-later-than-previous-pick clause",
+   "n_drops": 11,
+   "dropped_i": [
+    50,
+    82,
+    83,
+    84,
+    85,
+    86,
+    97,
+    98,
+    99,
+    100,
+    101
+   ],
+   "max_shift_hours": 144,
+   "n_strata_with_picks": 23
+  },
+  "original_FP05_PLAN_nearest_anywhere_60h_cap": {
+   "rule": "pre-FP-05a POLICY-DEV-SELECT-v1: nearest clean candidate anywhere, STOP if any shift > 60h (counted here as drops)",
+   "n_drops": 15,
+   "dropped_i": [
+    14,
+    46,
+    47,
+    48,
+    82,
+    83,
+    84,
+    97,
+    98,
+    99,
+    100,
+    117,
+    118,
+    126,
+    127
+   ],
+   "max_shift_hours": 60,
+   "n_strata_with_picks": 23
+  },
+  "nearest_anywhere_no_cap": {
+   "rule": "nearest unused clean candidate anywhere, time order kept, no shift cap",
+   "n_drops": 2,
+   "dropped_i": [
+    126,
+    127
+   ],
+   "max_shift_hours": 192,
+   "n_strata_with_picks": 23
+  }
+ },
+ "action": "STOP per the declared stop rule. No manifest built, no admission run, no reselection. Coordinator decision required."
+}

@@ -1,0 +1,36 @@
+{
+ "fs_q4": 0.9740596738133418,
+ "fs_q5": 0.9923692175341733,
+ "fs_q6": 1.003392558352125,
+ "fs_q6_worse": 14,
+ "fs_within": true,
+ "thresholds": {
+  "Q4_pass": true,
+  "Q5_pass": true,
+  "Q6_pass": true
+ },
+ "delta": {
+  "holdout24_harm_F0_denominator": 0.0033925583521250413,
+  "holdout24_harm_Fs_denominator": 0.0033810878144209864,
+  "note": "Both measured on the 16-issue 2019H1 Fs-certification holdout. Retained only as a pre-declared engineering screen scale; must not be re-derived from new DEV outcomes."
+ },
+ "bank_ratios": [
+  0.9900749343807109,
+  0.9908935846168573,
+  0.9849826740404125,
+  0.9802412120161317
+ ],
+ "bank_sizes": [
+  15,
+  16,
+  7,
+  6
+ ],
+ "bank_within": true,
+ "A1_A5_exact": true,
+ "violations": [],
+ "registry_passed": true,
+ "zarr_imported": false,
+ "cuda_initialized": false,
+ "pass": true
+}

@@ -1,0 +1,109 @@
+{
+  "schema": "ed-fp05-review-proposal/1",
+  "status": "TO_BE_RUN",
+  "execution_ready": false,
+  "not_an_executed_preregistration": true,
+  "reference": {
+    "kind": "certified_fitted_Fs",
+    "fs_manifest": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "bank_manifest": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank_manifest.json",
+    "registry": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/registry.json",
+    "protected_source_manifest_source": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json"
+  },
+  "split": {
+    "dev_window": [
+      "2019-07-01T00:00:00Z",
+      "2020-01-01T00:00:00Z"
+    ],
+    "support_offsets_hours": [
+      -12,
+      72
+    ],
+    "history_offsets_hours": [
+      -12,
+      -6,
+      0
+    ],
+    "exposure_buffer_hours": 24,
+    "confirm_window": null,
+    "confirm_access_authorized": false,
+    "2020_H2_status": "EXPOSED_NOT_CLEAN_CONFIRM",
+    "exposure_ledger": "MISSING_MUST_INCLUDE_X1_AND_ALL_FAILED_OR_EXPLORATORY_RUNS"
+  },
+  "actions": {
+    "num_candidates": 5,
+    "reference": "Fs",
+    "singleton_expert_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "alpha": 0.25,
+    "rho": 0.25,
+    "max_active": 1,
+    "hold_steps": 4,
+    "step_hours": 6,
+    "continuation": "Fs_from_edited_state",
+    "F0_report_only": true
+  },
+  "evaluation": {
+    "primary_lead_hours": 24,
+    "diagnostic_lead_hours": 6,
+    "harm_lead_hours": 72,
+    "hurdle_gain_vs_Fs": 0.0034,
+    "hurdle_interpretation": "fixed_engineering_target_not_proven_break_even_or_application_value",
+    "dynamic_increment_direction_reference": 0.0,
+    "net_F0_direction_reference": 0.0,
+    "harm72_margin": null,
+    "harm72_margin_status": "TO_BE_PREREGISTERED_BEFORE_CJ1",
+    "confidence_level": 0.95,
+    "confidence_status": "proposal_to_freeze_before_any_new_performance",
+    "bootstrap_repeats": null,
+    "block_days": null,
+    "block_sensitivity_days": null,
+    "outer_folds": null,
+    "inner_folds": null,
+    "inference_scope": "retrospective purged OOF; primary frozen-OOF block interval conditional on fitted models; refit sensitivity separately",
+    "MDE": null,
+    "target_power": null,
+    "delta_dynamic_practical": null
+  },
+  "sampling": {
+    "debug_issues": 8,
+    "max_dev_issues": 128,
+    "fixed_once_from_blind_cost_and_integrity": true,
+    "outcome_based_expansion_allowed": false,
+    "replacement_rule": "TO_BE_FROZEN_BEFORE_INTEGRITY_SCAN",
+    "selection_declaration_before_integrity_read": true
+  },
+  "models": {
+    "primary": "ridge_direct_gain",
+    "secondary": "regime",
+    "baselines": [
+      "no_edit_Fs",
+      "outer_train_best_static",
+      "hindsight_oracle_offline"
+    ],
+    "F0_candidate": false,
+    "nested_HPO_required": true,
+    "all_transform_fit_within_outer_and_inner_train": true,
+    "dual_head_or_E3_allowed": false
+  },
+  "budget": {
+    "forecast_jobs_planned": [
+      "C-J1_debug",
+      "C-J2_complete_cache"
+    ],
+    "infrastructure_retry_max": 1,
+    "total_job_ceiling": 4,
+    "fourth_job_requires_new_explicit_scope_without_new_statistical_samples": true,
+    "estimated_minutes": null,
+    "time_estimate_status": "MISSING_NEEDS_MEASURED_PROFILE"
+  },
+  "authorization": {
+    "current_task": "FP-05a",
+    "gpu_authorized": false,
+    "new_scientific_run_authorized": false
+  }
+}

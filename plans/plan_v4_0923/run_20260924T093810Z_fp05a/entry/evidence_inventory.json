@@ -1,0 +1,277 @@
+{
+  "schema": "ed-read-only-inventory/1",
+  "state": "OBSERVED",
+  "scope": "INVENTORY_NOT_GATE_NOT_GPU_NOT_SCIENCE",
+  "created_utc": "2026-09-24T09:38:35.085420+00:00",
+  "repo": "/mnt/afs/260010168/EarthDelta",
+  "commands": {
+    "head": {
+      "argv": [
+        "git",
+        "-C",
+        "/mnt/afs/260010168/EarthDelta",
+        "rev-parse",
+        "HEAD"
+      ],
+      "returncode": 128,
+      "stdout": "",
+      "stderr": "fatal: detected dubious ownership in repository at '/mnt/afs/260010168/EarthDelta'\nTo add an exception for this directory, call:\n\n\tgit config --global --add safe.directory /mnt/afs/260010168/EarthDelta\n"
+    },
+    "status": {
+      "argv": [
+        "git",
+        "-C",
+        "/mnt/afs/260010168/EarthDelta",
+        "status",
+        "--porcelain=v1"
+      ],
+      "returncode": 128,
+      "stdout": "",
+      "stderr": "fatal: detected dubious ownership in repository at '/mnt/afs/260010168/EarthDelta'\nTo add an exception for this directory, call:\n\n\tgit config --global --add safe.directory /mnt/afs/260010168/EarthDelta\n"
+    },
+    "diff": {
+      "argv": [
+        "git",
+        "-C",
+        "/mnt/afs/260010168/EarthDelta",
+        "diff",
+        "--stat"
+      ],
+      "returncode": 129,
+      "stdout": "",
+      "stderr": "warning: Not a git repository. Use --no-index to compare two paths outside a working tree\nusage: git diff --no-index [<options>] <path> <path>\n\nDiff output format options\n    -p, --patch           generate patch\n    -s, --no-patch        suppress diff output\n    -u                    generate patch\n    -U, --unified[=<n>]   generate diffs with <n> lines context\n    -W, --function-context\n                          generate diffs with <n> lines context\n    --raw                 generate the diff in raw format\n    --patch-with-raw      synonym for '-p --raw'\n    --patch-with-stat     synonym for '-p --stat'\n    --numstat             machine friendly --stat\n    --shortstat           output only the last line of --stat\n    -X, --dirstat[=<param1,param2>...]\n                          output the distribution of relative amount of changes for each sub-directory\n    --cumulative          synonym for --dirstat=cumulative\n    --dirstat-by-file[=<param1,param2>...]\n                          synonym for --dirstat=files,param1,param2...\n    --check               warn if changes introduce conflict markers or whitespace errors\n    --summary             condensed summary such as creations, renames and mode changes\n    --name-only           show only names of changed files\n    --name-status         show only names and status of changed files\n    --stat[=<width>[,<name-width>[,<count>]]]\n                          generate diffstat\n    --stat-width <width>  generate diffstat with a given width\n    --stat-name-width <width>\n                          generate diffstat with a given name width\n    --stat-graph-width <width>\n                          generate diffstat with a given graph width\n    --stat-count <count>  generate diffstat with limited lines\n    --compact-summary     generate compact summary in diffstat\n    --binary              output a binary diff that can be applied\n    --full-index          show full pre- and post-image object names on the \"index\" lines\n    --color[=<when>]      show colored diff\n    --ws-error-highlight <kind>\n                          highlight whitespace errors in the 'context', 'old' or 'new' lines in the diff\n    -z                    do not munge pathnames and use NULs as output field terminators in --raw or --numstat\n    --abbrev[=<n>]        use <n> digits to display object names\n    --src-prefix <prefix>\n                          show the given source prefix instead of \"a/\"\n    --dst-prefix <prefix>\n                          show the given destination prefix instead of \"b/\"\n    --line-prefix <prefix>\n                          prepend an additional prefix to every line of output\n    --no-prefix           do not show any source or destination prefix\n    --inter-hunk-context <n>\n                          show context between diff hunks up to the specified number of lines\n    --output-indicator-new <char>\n                          specify the character to indicate a new line instead of '+'\n    --output-indicator-old <char>\n                          specify the character to indicate an old line instead of '-'\n    --output-indicator-context <char>\n                          specify the character to indicate a context instead of ' '\n\nDiff rename options\n    -B, --break-rewrites[=<n>[/<m>]]\n                          break complete rewrite changes into pairs of delete and create\n    -M, --find-renames[=<n>]\n                          detect renames\n    -D, --irreversible-delete\n                          omit the preimage for deletes\n    -C, --find-copies[=<n>]\n                          detect copies\n    --find-copies-harder  use unmodified files as source to find copies\n    --no-renames          disable rename detection\n    --rename-empty        use empty blobs as rename source\n    --follow              continue listing the history of a file beyond renames\n    -l <n>                prevent rename/copy detection if the number of rename/copy targets exceeds given limit\n\nDiff algorithm options\n    --minimal             produce the smallest possible diff\n    -w, --ignore-all-space\n                          ignore whitespace when comparing lines\n    -b, --ignore-space-change\n                          ignore changes in amount of whitespace\n    --ignore-space-at-eol\n                          ignore changes in whitespace at EOL\n    --ignore-cr-at-eol    ignore carrier-return at the end of line\n    --ignore-blank-lines  ignore changes whose lines are all blank\n    -I, --ignore-matching-lines <regex>\n                          ignore changes whose all lines match <regex>\n    --indent-heuristic    heuristic to shift diff hunk boundaries for easy reading\n    --patience            generate diff using the \"patience diff\" algorithm\n    --histogram           generate diff using the \"histogram diff\" algorithm\n    --diff-algorithm <algorithm>\n                          choose a diff algorithm\n    --anchored <text>     generate diff using the \"anchored diff\" algorithm\n    --word-diff[=<mode>]  show word diff, using <mode> to delimit changed words\n    --word-diff-regex <regex>\n                          use <regex> to decide what a word is\n    --color-words[=<regex>]\n                          equivalent to --word-diff=color --word-diff-regex=<regex>\n    --color-moved[=<mode>]\n                          moved lines of code are colored differently\n    --color-moved-ws <mode>\n                          how white spaces are ignored in --color-moved\n\nOther diff options\n    --relative[=<prefix>]\n                          when run from subdir, exclude changes outside and show relative paths\n    -a, --text            treat all files as text\n    -R                    swap two inputs, reverse the diff\n    --exit-code           exit with 1 if there were differences, 0 otherwise\n    --quiet               disable all output of the program\n    --ext-diff            allow an external diff helper to be executed\n    --textconv            run external text conversion filters when comparing binary files\n    --ignore-submodules[=<when>]\n                          ignore changes to submodules in the diff generation\n    --submodule[=<format>]\n                          specify how differences in submodules are shown\n    --ita-invisible-in-index\n                          hide 'git add -N' entries from the index\n    --ita-visible-in-index\n                          treat 'git add -N' entries as real in the index\n    -S <string>           look for differences that change the number of occurrences of the specified string\n    -G <regex>            look for differences that change the number of occurrences of the specified regex\n    --pickaxe-all         show all changes in the changeset with -S or -G\n    --pickaxe-regex       treat <string> in -S as extended POSIX regular expression\n    -O <file>             control the order in which files appear in the output\n    --rotate-to <path>    show the change in the specified path first\n    --skip-to <path>      skip the output to the specified path\n    --find-object <object-id>\n                          look for differences that change the number of occurrences of the specified object\n    --diff-filter [(A|C|D|M|R|T|U|X|B)...[*]]\n                          select files by diff type\n    --output <file>       Output to a specific file\n\n"
+    }
+  },
+  "inputs": [
+    {
+      "id": "s0_certificate",
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+      "kind": "tracked_json",
+      "required_for": "FP-05a",
+      "expected_sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438",
+      "state": "HASH_VERIFIED_NOT_SEMANTIC_GATE",
+      "semantic_gate_certified": false,
+      "size_bytes": 16996,
+      "computed_sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+    },
+    {
+      "id": "fs_protocol_v2",
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/fs_protocol_v2.json",
+      "kind": "tracked_json",
+      "required_for": "FP-05a",
+      "expected_sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe",
+      "state": "HASH_VERIFIED_NOT_SEMANTIC_GATE",
+      "semantic_gate_certified": false,
+      "size_bytes": 27951,
+      "computed_sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe"
+    },
+    {
+      "id": "bank_protocol_v1",
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json",
+      "kind": "tracked_json",
+      "required_for": "FP-05a",
+      "expected_sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1",
+      "state": "HASH_VERIFIED_NOT_SEMANTIC_GATE",
+      "semantic_gate_certified": false,
+      "size_bytes": 75719,
+      "computed_sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1"
+    },
+    {
+      "id": "fs_adapter",
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+      "kind": "large_asset",
+      "required_for": "before GPU cache",
+      "expected_sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089",
+      "state": "HASH_VERIFIED_NOT_SEMANTIC_GATE",
+      "semantic_gate_certified": false,
+      "size_bytes": 200802,
+      "computed_sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089"
+    },
+    {
+      "id": "fs_merged_backbone",
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+      "kind": "large_asset",
+      "required_for": "before GPU cache",
+      "expected_sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b",
+      "state": "HASH_VERIFIED_NOT_SEMANTIC_GATE",
+      "semantic_gate_certified": false,
+      "size_bytes": 1856789295,
+      "computed_sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b"
+    },
+    {
+      "id": "bank",
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank.pt",
+      "kind": "large_asset",
+      "required_for": "before GPU cache",
+      "expected_sha256": "c3e3e34b60b463b41a6c824fa680d844a2830cd2c7b40d3fc4544dc985b85f81",
+      "state": "HASH_VERIFIED_NOT_SEMANTIC_GATE",
+      "semantic_gate_certified": false,
+      "size_bytes": 798442,
+      "computed_sha256": "c3e3e34b60b463b41a6c824fa680d844a2830cd2c7b40d3fc4544dc985b85f81"
+    },
+    {
+      "id": "bank_registry",
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/registry.json",
+      "kind": "tracked_json",
+      "required_for": "FP-05a",
+      "expected_sha256": "c480684df1e9068387d347e00f6afa16f2b08db2d137d23175fb3933d944affd",
+      "state": "HASH_VERIFIED_NOT_SEMANTIC_GATE",
+      "semantic_gate_certified": false,
+      "size_bytes": 16129,
+      "computed_sha256": "c480684df1e9068387d347e00f6afa16f2b08db2d137d23175fb3933d944affd"
+    },
+    {
+      "id": "bank_manifest",
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank_manifest.json",
+      "kind": "tracked_json",
+      "required_for": "FP-05a",
+      "expected_sha256": "6946ec0bd7fd57b17d144c80f97e66ef46187bb60967aeffb35c0d1e5bf4275f",
+      "state": "HASH_VERIFIED_NOT_SEMANTIC_GATE",
+      "semantic_gate_certified": false,
+      "size_bytes": 10362,
+      "computed_sha256": "6946ec0bd7fd57b17d144c80f97e66ef46187bb60967aeffb35c0d1e5bf4275f"
+    },
+    {
+      "id": "receipt_pt-g3344e9z",
+      "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4gate0923e-0923174024-32e8c7/job_result.json",
+      "kind": "raw_job_receipt",
+      "required_for": "FP-05a receipt closure",
+      "expected_sha256": null,
+      "state": "OBSERVED_RECEIPT_FIELDS",
+      "semantic_gate_certified": false,
+      "size_bytes": 294,
+      "computed_sha256": "8c46e28c02fe5aac6cdbe0649f2afaf5f7700cbb08ec3da5f8c6f109fd325f68",
+      "errors": [],
+      "job_identity_join": "TO_VERIFY_WITH_ORIGINAL_SUBMISSION_AND_INVOCATION",
+      "raw_job_id": null,
+      "run_id": "ed-r4gate0923e-0923174024-32e8c7"
+    },
+    {
+      "id": "receipt_pt-fuiqqeau",
+      "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b/job_result.json",
+      "kind": "raw_job_receipt",
+      "required_for": "FP-05a receipt closure",
+      "expected_sha256": null,
+      "state": "OBSERVED_RECEIPT_FIELDS",
+      "semantic_gate_certified": false,
+      "size_bytes": 292,
+      "computed_sha256": "1734134bf1580f079b451a14a1501ae67a89318018e294623288494c1e68dbcb",
+      "errors": [],
+      "job_identity_join": "TO_VERIFY_WITH_ORIGINAL_SUBMISSION_AND_INVOCATION",
+      "raw_job_id": null,
+      "run_id": "ed-r4fs03v2p-0924020931-71716b"
+    },
+    {
+      "id": "receipt_pt-gr3rrmdg",
+      "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4fs03v2j4-0924021935-be0786/job_result.json",
+      "kind": "raw_job_receipt",
+      "required_for": "FP-05a receipt closure",
+      "expected_sha256": null,
+      "state": "OBSERVED_RECEIPT_FIELDS",
+      "semantic_gate_certified": false,
+      "size_bytes": 293,
+      "computed_sha256": "ce6128920df01cd260702a8fded6fdeb07279788f811d6b72c677eeb4313cece",
+      "errors": [],
+      "job_identity_join": "TO_VERIFY_WITH_ORIGINAL_SUBMISSION_AND_INVOCATION",
+      "raw_job_id": null,
+      "run_id": "ed-r4fs03v2j4-0924021935-be0786"
+    },
+    {
+      "id": "receipt_pt-ycpvyb6n",
+      "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/job_result.json",
+      "kind": "raw_job_receipt",
+      "required_for": "FP-05a receipt closure",
+      "expected_sha256": null,
+      "state": "OBSERVED_RECEIPT_FIELDS",
+      "semantic_gate_certified": false,
+      "size_bytes": 292,
+      "computed_sha256": "442c008c891ae053a750609a0c57c805c7cc0742340c101f4a3df3cab540a87f",
+      "errors": [],
+      "job_identity_join": "TO_VERIFY_WITH_ORIGINAL_SUBMISSION_AND_INVOCATION",
+      "raw_job_id": null,
+      "run_id": "ed-r4bankbj1-0924051352-a9732c"
+    },
+    {
+      "id": "receipt_pt-vt003lhm",
+      "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/job_result.json",
+      "kind": "raw_job_receipt",
+      "required_for": "FP-05a receipt closure",
+      "expected_sha256": null,
+      "state": "OBSERVED_RECEIPT_FIELDS",
+      "semantic_gate_certified": false,
+      "size_bytes": 292,
+      "computed_sha256": "49b737ae19def0ca7c44e427637f085f44e7db3eaedd1b89fb8427fd99f0e571",
+      "errors": [],
+      "job_identity_join": "TO_VERIFY_WITH_ORIGINAL_SUBMISSION_AND_INVOCATION",
+      "raw_job_id": null,
+      "run_id": "ed-r4bankbj2-0924052624-dde08d"
+    },
+    {
+      "id": "receipt_pt-m52qwunf",
+      "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj3-0924053507-ae0123/job_result.json",
+      "kind": "raw_job_receipt",
+      "required_for": "FP-05a receipt closure",
+      "expected_sha256": null,
+      "state": "OBSERVED_RECEIPT_FIELDS",
+      "semantic_gate_certified": false,
+      "size_bytes": 289,
+      "computed_sha256": "feafdd4aa6853a38f2e5f9987e029a3beff53481d6f68584ed0c25dd932e58d0",
+      "errors": [],
+      "job_identity_join": "TO_VERIFY_WITH_ORIGINAL_SUBMISSION_AND_INVOCATION",
+      "raw_job_id": null,
+      "run_id": "ed-r4bankbj3-0924053507-ae0123"
+    },
+    {
+      "id": "receipt_pt-831c01g4",
+      "path": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4bankbj3r-0924054117-185e82/job_result.json",
+      "kind": "raw_job_receipt",
+      "required_for": "FP-05a receipt closure",
+      "expected_sha256": null,
+      "state": "OBSERVED_RECEIPT_FIELDS",
+      "semantic_gate_certified": false,
+      "size_bytes": 293,
+      "computed_sha256": "893dfd024ec610083299aaefa7dff802b9866bd51719e9c6fad449ab1b7467ce",
+      "errors": [],
+      "job_identity_join": "TO_VERIFY_WITH_ORIGINAL_SUBMISSION_AND_INVOCATION",
+      "raw_job_id": null,
+      "run_id": "ed-r4bankbj3r-0924054117-185e82"
+    },
+    {
+      "id": "fs_reference_manifest",
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+      "kind": "tracked_json",
+      "required_for": "FP-05a",
+      "expected_sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972",
+      "state": "HASH_VERIFIED_NOT_SEMANTIC_GATE",
+      "semantic_gate_certified": false,
+      "size_bytes": 1280,
+      "computed_sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+    },
+    {
+      "id": "fs_certify_decision",
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+      "kind": "tracked_json",
+      "required_for": "FP-05a",
+      "expected_sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d",
+      "state": "HASH_VERIFIED_NOT_SEMANTIC_GATE",
+      "semantic_gate_certified": false,
+      "size_bytes": 1270,
+      "computed_sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+    },
+    {
+      "id": "bank_certify_decision",
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/BJ3_certify_decision.json",
+      "kind": "tracked_json",
+      "required_for": "FP-05a",
+      "expected_sha256": "101ebc3b0e4d410fff2e8bf5a9e43f238a2b5f08b6dfde957ce744ea53d8e921",
+      "state": "HASH_VERIFIED_NOT_SEMANTIC_GATE",
+      "semantic_gate_certified": false,
+      "size_bytes": 3218,
+      "computed_sha256": "101ebc3b0e4d410fff2e8bf5a9e43f238a2b5f08b6dfde957ce744ea53d8e921"
+    }
+  ],
+  "scientific_gate_pass": false,
+  "missing_or_unverified_now": [],
+  "later_gpu_inputs_pending": [],
+  "status": "INVENTORY_COLLECTED_REQUIRES_SEMANTIC_REVIEW"
+}

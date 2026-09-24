@@ -1,0 +1,278 @@
+{
+ "schema": "ed-fp05a-task-result/1",
+ "created_utc": "2026-09-24T09:57:12.895046+00:00",
+ "task": "FP-05a",
+ "run_dir": "plans/plan_v4_0923/run_20260924T093810Z_fp05a",
+ "verdict": "FP05A_COMPLETE",
+ "repo_head": "4289985ad843d6ab3e18c59cca2e0b144bf76b64",
+ "git_status_porcelain": "?? plans/plan_v4_0923/run_20260924T093810Z_fp05a/\n?? plans/plans_v5_0924/",
+ "scope": "read-only, CPU-only; no GPU, no .zarr read, no model forward, no pinned-file change, no commit",
+ "deliverables": {
+  "1_package_validation": [
+   "entry/package_v2_validation.json",
+   "logs/package_v2_validate.stdout.log",
+   "logs/package_v1_validate.stdout.log",
+   "entry/evidence_inventory.json",
+   "entry/package_v2_arithmetic.json"
+  ],
+  "2_job_receipts": [
+   "entry/job_receipts_index.json"
+  ],
+  "3_certificate_recompute": [
+   "entry/certificate_recompute.json",
+   "logs/verify_bank_bundle.child.log"
+  ],
+  "4_exposure": [
+   "entry/exposure_ledger.json",
+   "entry/exposure_reconstruction_report.json"
+  ],
+  "5_fp02": [
+   "entry/fp02_remaining.json"
+  ],
+  "6_protocol_draft": [
+   "protocol/fp05_protocol.DRAFT.json",
+   "entry/protocol_draft_structural_check.json"
+  ],
+  "7_close": [
+   "entry/decision.json",
+   "task_result_FP-05a.json"
+  ],
+  "pins": [
+   "entry/core_source_pin_check_before.json",
+   "entry/core_source_pin_check_after.json"
+  ]
+ },
+ "headline_numbers": {
+  "jobs_receipt_verified": "20/20",
+  "fs_q4_q5_q6": [
+   0.9740596738133418,
+   0.9923692175341733,
+   1.003392558352125
+  ],
+  "bank_own_group24": [
+   0.9900749343807109,
+   0.9908935846168573,
+   0.9849826740404125,
+   0.9802412120161317
+  ],
+  "x1_h2_issues": 56,
+  "h2_free_after_buffer": [
+   [
+    "2020-07-06T00Z",
+    "2020-07-12T00Z",
+    144
+   ]
+  ],
+  "h2_max_disjoint_candidates_after_buffer": 1,
+  "policy_dev_pool_variants": {
+   "with_S0_aggregate_result_and_full_cross_year_buffer": {
+    "count": 698,
+    "first": "2019-07-06T12Z",
+    "last": "2019-12-27T18Z"
+   },
+   "without_S0_aggregate_result_(only_certified_row_exposure)_full_buffer": {
+    "count": 700,
+    "first": "2019-07-06T12Z",
+    "last": "2019-12-28T06Z"
+   },
+   "ignoring_cross_year_buffer_(2019_exposure_only)": {
+    "count": 702,
+    "first": "2019-07-06T12Z",
+    "last": "2019-12-28T18Z"
+   }
+  },
+  "sharedF0_2019H2": {
+   "admitted_rows_with_issue_in_2019H2": 147,
+   "admitted_rows_with_any_read_timestep_in_2019H2": 147,
+   "roles_of_2019H2_admitted_rows": {
+    "calibration": 64,
+    "policy_fit": 83
+   },
+   "excluded_rows_with_issue_in_2019H2_(read_attempted,_failed_nonfinite)": 37,
+   "exposure_kind": "INTEGRITY_READ_ONLY (no gradient, no model result: sprint stopped at S0, downstream NOT_STARTED)",
+   "treatment": "DISCLOSED_NOT_EXCLUDED (FP05A accepted decision 3); retrospective-transfer evaluation label"
+  }
+ },
+ "hash_manifest": [
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/certificate_recompute.json",
+   "sha256": "67466929ee6e241b891966db1425b2d57968dd904ea402779af9c17ae9005f43",
+   "bytes": 21339
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/core_source_pin_check_after.json",
+   "sha256": "456473087df6592264c712a462d2ca1ad1aabd0772f37b0fb07a86d403c903a5",
+   "bytes": 5006
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/core_source_pin_check_before.json",
+   "sha256": "bf1b3f072d1a93b987ba5a8e9479f7c805bf179d3bdf8b4b5e8ea278d71446e0",
+   "bytes": 5007
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/decision.json",
+   "sha256": "9b53c922f3a80c182c0586efe815a72d03107f3aa1de6199208d35c61fa2a10b",
+   "bytes": 6809
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/evidence_inventory.json",
+   "sha256": "3472d7197ae5e2bec453551c8f0a9b92d2e2056e72a8fd037defc630cc68d2a3",
+   "bytes": 19381
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/exposure_ledger.json",
+   "sha256": "d8ee631fca47c79859a01bc4ac4b74e6b962c0347c00c4cf30632b16cf3446bb",
+   "bytes": 600143
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/exposure_reconstruction_report.json",
+   "sha256": "7aee5ceb3b35a9c9458bd2e5b37216b67048109191ec3fb8ae68399bc8c8bf9d",
+   "bytes": 6868
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/fp02_remaining.json",
+   "sha256": "a84c6196cd9c101a4b8a0a3ae562eaac831f9ec6b6dc8b32dad73208d8f82954",
+   "bytes": 3929
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/job_receipts_index.json",
+   "sha256": "35dcd4a27f6851cd7c7ccbb969853a6fb9229f606ef63d08f7c70f662cb62bd1",
+   "bytes": 57750
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/package_v2_arithmetic.json",
+   "sha256": "fa19402be4037b31c01dd3d02dce733adacfb97251f650c3082c92818722b33d",
+   "bytes": 573
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/package_v2_validation.json",
+   "sha256": "ab795d733a1812545e70d4f71db499dd737b8dffdff42096f6fd2e3895b29954",
+   "bytes": 923
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/protocol_draft_structural_check.json",
+   "sha256": "8a6875c7ea8a1cb504ec28371d7e32fdf27e51836bf88112239243598aa821b1",
+   "bytes": 2359
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/logs/build_exposure_ledger.stdout.log",
+   "sha256": "7aee5ceb3b35a9c9458bd2e5b37216b67048109191ec3fb8ae68399bc8c8bf9d",
+   "bytes": 6868
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/logs/build_job_receipts_index.stdout.log",
+   "sha256": "30160c16f8c157fc08717a45b348850c495d70ebbcb854f4ffb03d802aff9a0e",
+   "bytes": 2105
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/logs/build_protocol_draft.stdout.log",
+   "sha256": "be9cabe59fb0323b40afd5bb83f220575f8bc44d8d5b3ab74fc5a7ef85cef8fb",
+   "bytes": 193
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/logs/check_fp02_remaining.stdout.log",
+   "sha256": "221aba5e8aad50cafb626c98427581a8e5822de45b420c7c876b0cbce26376ef",
+   "bytes": 668
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/logs/check_protocol_draft.stdout.log",
+   "sha256": "30ddaad7165cd5f44d68dfd6196e21dcd5ee768d1cf6472e95db90ed8da08eba",
+   "bytes": 720
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/logs/finalize.stdout.log",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "bytes": 0
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/logs/package_v1_validate.stdout.log",
+   "sha256": "cca5e70097e73ff11ad8e47ae742764de3e303cc3b9783cec33ef4d188be4ec7",
+   "bytes": 1312
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/logs/package_v2_validate.stdout.log",
+   "sha256": "d9a0b522e24040a26fcd7ab811dd675e431347c9f68b3c3acd62ee861c8c968b",
+   "bytes": 931
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/logs/read_only_preflight.stdout.log",
+   "sha256": "4323b4f4c083f55562ba3445ef9e011bc49783a721795bae38999b68962fe26a",
+   "bytes": 224
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/logs/recompute_certificates.stdout.log",
+   "sha256": "03412a8171f905805768b85925fe2decaa1eec2bb31f23e5c734af62c6b2c9fa",
+   "bytes": 828
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/logs/recompute_report_arithmetic.stdout.log",
+   "sha256": "02c20bd99e7b142a836c92cbedb0cb3a3f3764ad434e996846726c606b68054d",
+   "bytes": 584
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/logs/verify_bank_bundle.child.log",
+   "sha256": "e859c02a7938d49dad282de5731a510e91fa5b8ae2b429ccfc328d10dcfc64e7",
+   "bytes": 2060
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/protocol/fp05_protocol.DRAFT.json",
+   "sha256": "79940c7dcabea2fc632d3b0057cc491f61e671356e5b22050a2d2d60d3b19c8b",
+   "bytes": 18925
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/tools/__pycache__/build_exposure_ledger.cpython-310.pyc",
+   "sha256": "bcd2ad3efa04d89c9304d8cda19ed7252f4776a558a87509a227531bc0ff3788",
+   "bytes": 27277
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/tools/__pycache__/build_job_receipts_index.cpython-310.pyc",
+   "sha256": "ba4446bbfa5a3cb067d27c0ceeacedfc20bd0d3440b70ea6bbaaec126e436f7d",
+   "bytes": 16448
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/tools/__pycache__/recompute_certificates.cpython-310.pyc",
+   "sha256": "8bc214dba91fb74df0accb59b611f948a3e49695484240ce7add123cd2e539d4",
+   "bytes": 15734
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/tools/build_exposure_ledger.py",
+   "sha256": "d45c9a17fb77f70a6a3bab56e41ae94b82febb8ab2794e1facae40aaf5a35b1a",
+   "bytes": 29207
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/tools/build_job_receipts_index.py",
+   "sha256": "913c7b97ca99443b6dc27b1a93fafc1e326a33761974fd512a811490351f9594",
+   "bytes": 18483
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/tools/build_protocol_draft.py",
+   "sha256": "6d4c0ce18532d7a560962c06f56ca70703f9b08faaa93783b66eccfafdef960e",
+   "bytes": 15562
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/tools/check_fp02_remaining.py",
+   "sha256": "b90d7a3dd08650ce9455863086c4e9a724981745213c67469cd94b77ff768d37",
+   "bytes": 5265
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/tools/check_protocol_draft.py",
+   "sha256": "89cd8f8106aee51088a8c8214083aee98156b0381e6fccddd6d3913861bb29b6",
+   "bytes": 6069
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/tools/finalize.py",
+   "sha256": "6cd2bd21c934f8720b8fd20a6eb73f13838a40ccb6ff10b85b4e401e5aea1e77",
+   "bytes": 14003
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/tools/pin_check.py",
+   "sha256": "5586a7b9a79e7754a439ad55fe20f94ab62d6b0f0cd47bb7b1730122c23cebcb",
+   "bytes": 2216
+  },
+  {
+   "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/tools/recompute_certificates.py",
+   "sha256": "0b8ecb6cc5abb65cd1d43e17b19d4709c8e3226b6a958e560d7a601987e91511",
+   "bytes": 16764
+  }
+ ]
+}

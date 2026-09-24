@@ -1,0 +1,131 @@
+{
+  "schema": "package-file-sha256/1",
+  "hash_scope": "All deliverable files except this manifest and VALIDATION_REPORT.json; final ZIP SHA covers everything",
+  "files": [
+    {
+      "path": "ARTIFACT_CONTRACT.md",
+      "sha256": "f903bf3baa55787ee442b4a2115ef931165311e95731c16d30fa5b5e22950509",
+      "bytes": 4170
+    },
+    {
+      "path": "CODEX_TASKS.json",
+      "sha256": "8011ba62b0889951f8a41bd2d61ae205e2d65b3def69a2f240303116ad87361b",
+      "bytes": 29402
+    },
+    {
+      "path": "CURRENT_GAP_ANALYSIS.md",
+      "sha256": "f44ba895f7b63b5ee6fc5bfc873262a281fc50ea4fbaec3c3981dc5d2685be9d",
+      "bytes": 13698
+    },
+    {
+      "path": "EXECUTION_DAG.md",
+      "sha256": "a1db96d3ebbfdc61250a0be702163d000bd6bc4d6e38870f243d548ac8b91672",
+      "bytes": 2223
+    },
+    {
+      "path": "FOLLOWUP_PLAN.md",
+      "sha256": "086051b4a99a03e0949bcd3d383a79f2cedbb0d9cab29cd7db181f758d374693",
+      "bytes": 22876
+    },
+    {
+      "path": "PLAN_EXECUTION_AUDIT.md",
+      "sha256": "8477aacdaa3a66c981b4eb897b7ecc268c81486e5fc675c3fefa85556ce600d5",
+      "bytes": 27643
+    },
+    {
+      "path": "REPRODUCIBILITY.md",
+      "sha256": "0e78370bc38f04575f0b376f51d413f102601298cd3bbce64af038e5ed067705",
+      "bytes": 3139
+    },
+    {
+      "path": "START_HERE_FOR_CODEX.md",
+      "sha256": "d236873aa4e0dc1e648d667083f406d3f04f578f96d301206b1a16028ef0c389",
+      "bytes": 2012
+    },
+    {
+      "path": "STOP_CONDITIONS.md",
+      "sha256": "4c9417bccfd159c9df2f39137f1cd57cbe01df3fba786472f2211b0011d11af5",
+      "bytes": 5492
+    },
+    {
+      "path": "TEST_PLAN.md",
+      "sha256": "e3102102f1b3828bdfef5a66614dfa446f804ce6417dfa0636bef76f849a8580",
+      "bytes": 3512
+    },
+    {
+      "path": "evidence/EVIDENCE_MANIFEST.json",
+      "sha256": "8a49d4b84cbe14b1c9ca5963ad3993fbb5ea68646f7f76099218ac19f2fdb711",
+      "bytes": 1708
+    },
+    {
+      "path": "evidence/EXPECTED_INPUTS.json",
+      "sha256": "8298bf1a3d8ad8eedaf2f5be7bd82db08873cc9af7c4bad64d4be4dc3768f3e5",
+      "bytes": 5394
+    },
+    {
+      "path": "evidence/FINDINGS.json",
+      "sha256": "8dcec2d89a772541b21bd6742f9797e5c49acd62b5dbc66d21898d43e57fa817",
+      "bytes": 13768
+    },
+    {
+      "path": "evidence/FP05_PROTOCOL_TEMPLATE.json",
+      "sha256": "ee3a2063942e8c68633cbd697685dc29f17f527359d7a42ca0f2a4fb37eb7778",
+      "bytes": 8090
+    },
+    {
+      "path": "evidence/INDEPENDENT_ARITHMETIC.json",
+      "sha256": "e0c2b1357742c55ece4ece228433ed6ae1c4fad1b9bf8779dd0327a1c0fa2f40",
+      "bytes": 1612
+    },
+    {
+      "path": "evidence/INITIAL_AUTHORIZATION.json",
+      "sha256": "a4d0101ef92956c66e55d2d1be8ef084cd01824df94227c91a8418ae091cd5ee",
+      "bytes": 541
+    },
+    {
+      "path": "evidence/JOB_EVIDENCE_REGISTER.json",
+      "sha256": "b2252d574a30c58a3c1e0d2072c4c2eeded50b7e0ca1400737dd405b563e7568",
+      "bytes": 10119
+    },
+    {
+      "path": "evidence/OBSERVATIONS.json",
+      "sha256": "3879340adefb5d97b191df1a0dad9ad14112bc8c52e5f02378295741c992c0f6",
+      "bytes": 4427
+    },
+    {
+      "path": "evidence/PLAN_AUDIT_RESULT.json",
+      "sha256": "f11390cf5539042dd1989627c31dea271bab119de3b61fbf70a9a76179641c61",
+      "bytes": 27256
+    },
+    {
+      "path": "evidence/REQUIRED_INPUTS.md",
+      "sha256": "923edb8472d3ddf38c9f3d5b4966900eb853f14a9883ccd5c85b0a6f888351d0",
+      "bytes": 3437
+    },
+    {
+      "path": "evidence/SOURCE_INDEX.json",
+      "sha256": "0ebfab97405fb64e98012394b33578f08256608c684b2cac070e2c152a822678",
+      "bytes": 27183
+    },
+    {
+      "path": "prompts/CODEX_EXECUTION_PROMPT.md",
+      "sha256": "9c006215262f629a973087f5e4f8d4e454ccb96b02833b3ff7fde93697bcec20",
+      "bytes": 1402
+    },
+    {
+      "path": "tools/read_only_preflight.py",
+      "sha256": "ca3cec519e82edc1d0bd89c64586de10763f4d0547b81e090dca40e978045ad2",
+      "bytes": 6767
+    },
+    {
+      "path": "tools/recompute_report_arithmetic.py",
+      "sha256": "44c03a3d0f42ac733a5f15f3d7840da27c61daf776fb3ab9ee2954755dab349f",
+      "bytes": 2078
+    },
+    {
+      "path": "tools/validate_package.py",
+      "sha256": "2ff60f8b69e4eaa9fbd12f49db6d0bf99fff7546a07391bd63fc13ee711abbed",
+      "bytes": 4689
+    }
+  ]
+}

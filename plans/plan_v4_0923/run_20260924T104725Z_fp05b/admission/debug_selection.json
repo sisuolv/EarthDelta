@@ -1,0 +1,117 @@
+{
+ "schema_version": "ed-fp05b-debug-selection/1",
+ "rule": "DEBUG-SELECT-v1: first and last issue, in time order, of each FP-04 expert group G_k (bank_fit_grouping.json)",
+ "source": "split_freeze_v1.json roles.debug (recomputed there from FP-04 bank_fit_grouping.json)",
+ "split_freeze_sha256": "20273225b07e0498d144dbec39029de2e5f9b573fedb6207f144063af5706cf5",
+ "source_admission": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+  "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea",
+  "tag_on_every_row": "bank_fit (tag != clearance)"
+ },
+ "grouping": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_grouping.json",
+  "sha256": "ede23fb9859971b1a06c8fa1df27facdc21a6a5e7ff4e4355c0822d871cefe25"
+ },
+ "issues": [
+  {
+   "expert_group": 0,
+   "position": "first",
+   "issue_id": "iss_292517fb189ee1bd",
+   "issue_utc": "2020-01-02T00Z",
+   "issue_index": 4,
+   "certificate_slice": [
+    2,
+    16
+   ]
+  },
+  {
+   "expert_group": 0,
+   "position": "last",
+   "issue_id": "iss_039add2d41f5c08a",
+   "issue_utc": "2020-02-23T12Z",
+   "issue_index": 214,
+   "certificate_slice": [
+    212,
+    226
+   ]
+  },
+  {
+   "expert_group": 1,
+   "position": "first",
+   "issue_id": "iss_4f2b54d7e8953451",
+   "issue_utc": "2020-03-02T00Z",
+   "issue_index": 244,
+   "certificate_slice": [
+    242,
+    256
+   ]
+  },
+  {
+   "expert_group": 1,
+   "position": "last",
+   "issue_id": "iss_6361e4cdd8050ae3",
+   "issue_utc": "2020-04-27T06Z",
+   "issue_index": 469,
+   "certificate_slice": [
+    467,
+    481
+   ]
+  },
+  {
+   "expert_group": 2,
+   "position": "first",
+   "issue_id": "iss_32d48efebee12be2",
+   "issue_utc": "2020-05-04T18Z",
+   "issue_index": 499,
+   "certificate_slice": [
+    497,
+    511
+   ]
+  },
+  {
+   "expert_group": 2,
+   "position": "last",
+   "issue_id": "iss_bbd4e6e2ec71d9ca",
+   "issue_utc": "2020-05-27T06Z",
+   "issue_index": 589,
+   "certificate_slice": [
+    587,
+    601
+   ]
+  },
+  {
+   "expert_group": 3,
+   "position": "first",
+   "issue_id": "iss_04eb8e8d56c68faa",
+   "issue_utc": "2020-06-03T18Z",
+   "issue_index": 619,
+   "certificate_slice": [
+    617,
+    631
+   ]
+  },
+  {
+   "expert_group": 3,
+   "position": "last",
+   "issue_id": "iss_b42c91ed1b555939",
+   "issue_utc": "2020-06-22T12Z",
+   "issue_index": 694,
+   "certificate_slice": [
+    692,
+    706
+   ]
+  }
+ ],
+ "allowed_issue_ids": [
+  "iss_292517fb189ee1bd",
+  "iss_039add2d41f5c08a",
+  "iss_4f2b54d7e8953451",
+  "iss_6361e4cdd8050ae3",
+  "iss_32d48efebee12be2",
+  "iss_bbd4e6e2ec71d9ca",
+  "iss_04eb8e8d56c68faa",
+  "iss_b42c91ed1b555939"
+ ],
+ "tag_on_rows": "bank_fit (tag != clearance; cleared by the freeze allow-list)",
+ "exposure": "already GRADIENT_AND_RESULT exposed; reveals nothing new"
+}

@@ -1,0 +1,1658 @@
+{
+ "schema": "ed-fp05a-job-receipts-index/1",
+ "created_utc": "2026-09-24T09:47:42.708296+00:00",
+ "builder": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/tools/build_job_receipts_index.py",
+ "builder_sha256": "913c7b97ca99443b6dc27b1a93fafc1e326a33761974fd512a811490351f9594",
+ "scope": "every GPU job of the 2026-09-23/24 r4 session (FP-01, historical Fs formal, FP-03 v1, X1, FP-03 v2, FP-04). Older r3/sprint jobs are ledger-only (exposure ledger), not receipt-audited here.",
+ "completeness": {
+  "r4_run_dirs_on_disk": 25,
+  "r4_run_dirs_not_in_index": [],
+  "tracked_submission_records": 12,
+  "submission_records_not_linked": [],
+  "decision_files_job_dir": {
+   "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J1_diag_decision.json": "ed-r4fs03diag-0923203433-4127c2",
+   "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J1_diag_decision_r2.json": "ed-r4fs03diag-0923203433-4127c2",
+   "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J2_screen_decision.json": "ed-r4fs03scrn-0923210334-9fca4b",
+   "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J3_formal_decision.json": "ed-r4fs03formal-0923212136-800630",
+   "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J3b_formal_decision.json": "ed-r4fs03formalb-0923213547-b7d556",
+   "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/decisions/V2_J3_formal_decision.json": "ed-r4fs03v2p-0924020931-71716b",
+   "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ1_shortstep_decision.json": "ed-r4bankbj1-0924051352-a9732c",
+   "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2_formal_decision.json": "ed-r4bankbj2-0924052624-dde08d",
+   "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2_formal_decision_r2.json": "ed-r4bankbj2-0924052624-dde08d",
+   "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json": null,
+   "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/BJ3_certify_decision.json": null
+  },
+  "decision_job_dirs_not_in_index": []
+ },
+ "n_jobs": 20,
+ "n_core_named_in_dispatch": 14,
+ "n_receipt_verified": 20,
+ "n_missing": 0,
+ "n_mismatch": 0,
+ "jobs": [
+  {
+   "key": "FP01-trace-a",
+   "stage": "FP-01 four-arm trace attempt 1",
+   "core_named_in_dispatch": false,
+   "run_dir": "artifacts/round2_cci/ed-r4trace0923-0923171440-894e7d",
+   "files": {
+    "job_result.json": {
+     "sha256": "4c053a6aee83030f32ed3148d0c2d77e0339feb8aa53f80ae237ae17346ef4e5",
+     "bytes": 290
+    },
+    "job-id.txt": {
+     "sha256": "9beb9b6fdbd488f9ac681ceb7a986082928c11cb38154716c4cf738c240c5186",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "c7da108c43564df5c12eebeb2006b80c4064c5ed5d9c5ebb2d694becdeb2bb0a",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "c51d9df61b1d858c6004504d8fe8457825f149aea35a5f84c4bd474fde8e98cc",
+     "bytes": 768
+    },
+    "source_manifest.json": {
+     "sha256": "668ea50bbf80854cc31f059df2245d6f338ab1fff3ac01a71b86d0010b5ad21f",
+     "bytes": 12197
+    },
+    "create_argv.json": {
+     "sha256": "f937ebabff888a5c96beb46aaee0f9286b7da5a89306d072ec70851e7af2b626",
+     "bytes": 835
+    },
+    "worker.log": {
+     "sha256": "9e94d62e72a8cec1dc11ec95a980bc07b06f768504aab34622c2b70836c8d8de",
+     "bytes": 696
+    }
+   },
+   "job_id_from_job-id.txt": "pt-4up0ayzr",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4trace0923-0923171440-894e7d",
+    "hostname": "pt-8fc8d98d279742a2885d9bd8ad59caa0-worker-0",
+    "status": "FAILED",
+    "returncode": 1,
+    "elapsed_seconds": 89.966,
+    "started_utc": "2026-09-23T17:16:18.855469+00:00",
+    "finished_utc": "2026-09-23T17:17:48.821837+00:00"
+   },
+   "finished_minus_started_s": 89.966,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": null,
+   "identity_join": "NO_TRACKED_SUBMISSION_RECORD (FP-01/historical jobs predate the per-job record convention)",
+   "decisions_naming_run_dir": [],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/CLAUDE_OPUSPLAN_EXECUTION_PROMPT.md",
+     "excerpt": "- 失败的 `pt-4up0ayzr` 是诊断脚本局部 `torch` 作用域错误；`pt-sydww8eu`/`pt-hyhzzdsc` 是 ACP 镜像缺失 `timm`；这些失败要保留，不得删除或改写。",
+     "claimed_status": "FAILED",
+     "claimed_rc": null,
+     "claimed_elapsed_s": null,
+     "elapsed_precision_s": null,
+     "kind": "execution_prompt_statement",
+     "check": {
+      "status_match": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": false,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP01-trace-b",
+   "stage": "FP-01 four-arm trace (S0 gate trace)",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4trace0923b-0923171903-9d0b5d",
+   "files": {
+    "job_result.json": {
+     "sha256": "0fd13a39e02a3d230098d5154765db478c3fcca15f820d571932d4bd7b77c59f",
+     "bytes": 294
+    },
+    "job-id.txt": {
+     "sha256": "799803903d1d795bfe237831c2e83c8aaa0f7cbd8ed25e5cdc8354c002c598f1",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "5b2942eeb61aa82349583b4e4017deee08526eaf158b51029119dbf26ade3d3f",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "d9fe7051658c548b55f88038874a4e219f321c2c370a1fb76570c10b20783aa0",
+     "bytes": 771
+    },
+    "source_manifest.json": {
+     "sha256": "74718b6701d29919a9dd166624b135ff3028471a9791655a4337485af41ca3c2",
+     "bytes": 12197
+    },
+    "create_argv.json": {
+     "sha256": "b58a1605d435dba68cb87d8a0a2d06c859bf7a2643558b11fe76adc7277217d7",
+     "bytes": 838
+    },
+    "worker.log": {
+     "sha256": "8b0f5034821b575ad613e058b213137f61d63b7bdb99511989e1e709f315cea5",
+     "bytes": 69518
+    }
+   },
+   "job_id_from_job-id.txt": "pt-fq60ld30",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4trace0923b-0923171903-9d0b5d",
+    "hostname": "pt-320e184b7c9b4a40a1d6757d38a1cd4b-worker-0",
+    "status": "SUCCEEDED",
+    "returncode": 0,
+    "elapsed_seconds": 92.504,
+    "started_utc": "2026-09-23T17:19:18.094152+00:00",
+    "finished_utc": "2026-09-23T17:20:50.598542+00:00"
+   },
+   "finished_minus_started_s": 92.504,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": null,
+   "identity_join": "NO_TRACKED_SUBMISSION_RECORD (FP-01/historical jobs predate the per-job record convention)",
+   "decisions_naming_run_dir": [],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/CLAUDE_OPUSPLAN_EXECUTION_PROMPT.md",
+     "excerpt": "- 真实四臂 H100 诊断 `pt-fq60ld30` 已成功；官方/桥接模型与变换组合的逐步差异为零。它是诊断证据，不替代正式 gate。",
+     "claimed_status": "SUCCEEDED",
+     "claimed_rc": null,
+     "claimed_elapsed_s": null,
+     "elapsed_precision_s": null,
+     "kind": "execution_prompt_statement",
+     "check": {
+      "status_match": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": false,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP01-gate-a",
+   "stage": "FP-01 S0 gate attempt a",
+   "core_named_in_dispatch": false,
+   "run_dir": "artifacts/round2_cci/ed-r4gate0923-0923172324-303cae",
+   "files": {
+    "job_result.json": {
+     "sha256": "ef9a36200c8ab3979b07595f6d5d992c0a01741bf34ce686da5e967a43f6cce8",
+     "bytes": 288
+    },
+    "job-id.txt": {
+     "sha256": "ab74af78575083e1a80aa1293203552d47dfa5a7d18eb9de27fae180313e0be8",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "3b051a5170c0877ba920088be01ae369f355efa7ed49c3dd9aa7080851292526",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "fa27dbe6f8d780771089f66f317263d3698d3c7d58c9432057dc581a59b0122f",
+     "bytes": 874
+    },
+    "source_manifest.json": {
+     "sha256": "74718b6701d29919a9dd166624b135ff3028471a9791655a4337485af41ca3c2",
+     "bytes": 12197
+    },
+    "create_argv.json": {
+     "sha256": "b8b844e95928b5ae20b350b22f12b66a7f41ab38503b3fe0145af2202e736e4a",
+     "bytes": 832
+    },
+    "worker.log": {
+     "sha256": "367e712d500b54ea091499e86d0b1d889980d9744ae32e80a5081bfedaf8dd86",
+     "bytes": 543
+    }
+   },
+   "job_id_from_job-id.txt": "pt-sydww8eu",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4gate0923-0923172324-303cae",
+    "hostname": "pt-b0bf77b983364f028b14f9b56346a9f3-worker-0",
+    "status": "FAILED",
+    "returncode": 1,
+    "elapsed_seconds": 3.517,
+    "started_utc": "2026-09-23T17:23:46.448929+00:00",
+    "finished_utc": "2026-09-23T17:23:49.966371+00:00"
+   },
+   "finished_minus_started_s": 3.517,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": null,
+   "identity_join": "NO_TRACKED_SUBMISSION_RECORD (FP-01/historical jobs predate the per-job record convention)",
+   "decisions_naming_run_dir": [],
+   "s0_gate_result_linked_by_hostname": [],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/CLAUDE_OPUSPLAN_EXECUTION_PROMPT.md",
+     "excerpt": "- 失败的 `pt-4up0ayzr` 是诊断脚本局部 `torch` 作用域错误；`pt-sydww8eu`/`pt-hyhzzdsc` 是 ACP 镜像缺失 `timm`；这些失败要保留，不得删除或改写。",
+     "claimed_status": "FAILED",
+     "claimed_rc": null,
+     "claimed_elapsed_s": null,
+     "elapsed_precision_s": null,
+     "kind": "execution_prompt_statement",
+     "check": {
+      "status_match": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": false,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP01-gate-b",
+   "stage": "FP-01 S0 gate attempt b",
+   "core_named_in_dispatch": false,
+   "run_dir": "artifacts/round2_cci/ed-r4gate0923b-0923172525-bb0400",
+   "files": {
+    "job_result.json": {
+     "sha256": "8636cafc80997046012e2b1ebae37710249183a188a03489fbaa4e18cffd9c3c",
+     "bytes": 290
+    },
+    "job-id.txt": {
+     "sha256": "222bd1b6874d3628110b32c0cd620c5a7f9b68af3e6e5942679fa8689bc8307a",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "f8ef9a3b08be9cea3a77e38e1544f982295cc8502f2dd8b94c99f96771963d92",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "2ca57e617c89c4db11d2e3228a677c435078e2a8bf55abd4f084c3b3e0cc55b1",
+     "bytes": 966
+    },
+    "source_manifest.json": {
+     "sha256": "74718b6701d29919a9dd166624b135ff3028471a9791655a4337485af41ca3c2",
+     "bytes": 12197
+    },
+    "create_argv.json": {
+     "sha256": "48161c10b926ede5d1971378c73a167ff3a9e98b9bd8c283322653e06233d358",
+     "bytes": 835
+    },
+    "worker.log": {
+     "sha256": "2b12e00cdceb437389db9acd2c0a3fef53d4fd29c518d14af8226dc5e535eb16",
+     "bytes": 530
+    }
+   },
+   "job_id_from_job-id.txt": "pt-hyhzzdsc",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4gate0923b-0923172525-bb0400",
+    "hostname": "pt-d9fc74444297439caf25b8f4bf3688c0-worker-0",
+    "status": "FAILED",
+    "returncode": 1,
+    "elapsed_seconds": 12.711,
+    "started_utc": "2026-09-23T17:26:13.037172+00:00",
+    "finished_utc": "2026-09-23T17:26:25.748329+00:00"
+   },
+   "finished_minus_started_s": 12.711,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": null,
+   "identity_join": "NO_TRACKED_SUBMISSION_RECORD (FP-01/historical jobs predate the per-job record convention)",
+   "decisions_naming_run_dir": [],
+   "s0_gate_result_linked_by_hostname": [],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/CLAUDE_OPUSPLAN_EXECUTION_PROMPT.md",
+     "excerpt": "- 失败的 `pt-4up0ayzr` 是诊断脚本局部 `torch` 作用域错误；`pt-sydww8eu`/`pt-hyhzzdsc` 是 ACP 镜像缺失 `timm`；这些失败要保留，不得删除或改写。",
+     "claimed_status": "FAILED",
+     "claimed_rc": null,
+     "claimed_elapsed_s": null,
+     "elapsed_precision_s": null,
+     "kind": "execution_prompt_statement",
+     "check": {
+      "status_match": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": false,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP01-gate-c",
+   "stage": "FP-01 S0 gate attempt c",
+   "core_named_in_dispatch": false,
+   "run_dir": "artifacts/round2_cci/ed-r4gate0923c-0923172842-5fe203",
+   "files": {
+    "job_result.json": {
+     "sha256": "7f8e68c1df3610c4c5c8d9bd6d6b3a90db456140c3f9503d15720f98665fb342",
+     "bytes": 291
+    },
+    "job-id.txt": {
+     "sha256": "0233f92b9ee4066e9df5eaae5904f6c9aca15b6e0a9a8aae64edfc77041e5c17",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "628e429985fc7117eae3fd590ccf9b47e017c2515e77ac88bf7a848b3776fcc5",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "11615db40859041168eab79846f405d06712fe80c92a87af16d2191ae818363d",
+     "bytes": 1004
+    },
+    "source_manifest.json": {
+     "sha256": "74718b6701d29919a9dd166624b135ff3028471a9791655a4337485af41ca3c2",
+     "bytes": 12197
+    },
+    "create_argv.json": {
+     "sha256": "747003540f814366d0b1654f48070e1bd48d70eac35fedec079224a72c778b4e",
+     "bytes": 835
+    },
+    "worker.log": {
+     "sha256": "e76999b8c854fb2345fa1d093c29d8048506b33298da81514904005d1a7677bd",
+     "bytes": 2783
+    }
+   },
+   "job_id_from_job-id.txt": "pt-1duayj7y",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4gate0923c-0923172842-5fe203",
+    "hostname": "pt-57755fbbd30648e3bbc35d3d345d3848-worker-0",
+    "status": "FAILED",
+    "returncode": 1,
+    "elapsed_seconds": 100.702,
+    "started_utc": "2026-09-23T17:30:44.613793+00:00",
+    "finished_utc": "2026-09-23T17:32:25.315667+00:00"
+   },
+   "finished_minus_started_s": 100.702,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": null,
+   "identity_join": "NO_TRACKED_SUBMISSION_RECORD (FP-01/historical jobs predate the per-job record convention)",
+   "decisions_naming_run_dir": [],
+   "s0_gate_result_linked_by_hostname": [
+    {
+     "gate_result": "plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t173102850748z/s0_gate_result.json",
+     "sha256": "0a6d20e19f6ccd82baceadb6f982f059ce230b2547dfb2ce76e206e11fce3dab",
+     "status": "gate_failed",
+     "s0_gate_pass": false,
+     "verdict_committed": false,
+     "gate_started_within_job": true,
+     "source_root_is_this_run_dir": true
+    }
+   ],
+   "tracked_claims": [],
+   "tracked_rc_or_elapsed_claim_present": false,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP01-gate-d",
+   "stage": "FP-01 S0 gate attempt d",
+   "core_named_in_dispatch": false,
+   "run_dir": "artifacts/round2_cci/ed-r4gate0923d-0923173532-685f1b",
+   "files": {
+    "job_result.json": {
+     "sha256": "a7f14a5d503d98ad1473b2c8aa8346fd2f739ca46be47280861c3707238c2b3c",
+     "bytes": 291
+    },
+    "job-id.txt": {
+     "sha256": "bf02c400a387054e4f3f0dc29cd0256986c55d4ca3bffc12b2b4b3e99a55969e",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "f40813592fdae6253148749da3b4a0690de5e0dbaeb93bd6259d2846a4a6ea7d",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "00a7cba73c30d9ffb972e503276e184221875fbe44ef5922840d56dc03c0bc83",
+     "bytes": 1004
+    },
+    "source_manifest.json": {
+     "sha256": "14613d3f10b3a6bcbc228b58344336e7a4cfb90219e1e39edffbfb29ad94b49d",
+     "bytes": 12251
+    },
+    "create_argv.json": {
+     "sha256": "cd33f9b42d92d60539106a23d23ab794872c6df98f6261aaef3ae7f4737674d3",
+     "bytes": 835
+    },
+    "worker.log": {
+     "sha256": "d2531f2b04c01432ca6707eab0f821b281c93a9ef9c77025cf6a70c3297f1ed4",
+     "bytes": 2783
+    }
+   },
+   "job_id_from_job-id.txt": "pt-hzes3yla",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4gate0923d-0923173532-685f1b",
+    "hostname": "pt-7da39192d45a46568b28165b0188d9e3-worker-0",
+    "status": "FAILED",
+    "returncode": 1,
+    "elapsed_seconds": 101.051,
+    "started_utc": "2026-09-23T17:35:54.120794+00:00",
+    "finished_utc": "2026-09-23T17:37:35.171631+00:00"
+   },
+   "finished_minus_started_s": 101.051,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": null,
+   "identity_join": "NO_TRACKED_SUBMISSION_RECORD (FP-01/historical jobs predate the per-job record convention)",
+   "decisions_naming_run_dir": [],
+   "s0_gate_result_linked_by_hostname": [
+    {
+     "gate_result": "plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t173612755554z/s0_gate_result.json",
+     "sha256": "b90abc0973b3bbe35f68167c724802736cd6017c32de8274389bc4f77cee39ae",
+     "status": "gate_failed",
+     "s0_gate_pass": false,
+     "verdict_committed": false,
+     "gate_started_within_job": true,
+     "source_root_is_this_run_dir": true
+    }
+   ],
+   "tracked_claims": [],
+   "tracked_rc_or_elapsed_claim_present": false,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP01-gate-e",
+   "stage": "FP-01 S0 gate (committed PASS)",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4gate0923e-0923174024-32e8c7",
+   "files": {
+    "job_result.json": {
+     "sha256": "8c46e28c02fe5aac6cdbe0649f2afaf5f7700cbb08ec3da5f8c6f109fd325f68",
+     "bytes": 294
+    },
+    "job-id.txt": {
+     "sha256": "6deafdb6c5b250c94d53773187610a3451ccf578339f6840ed068da9c643d448",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "2bcef18e7d7135140e3da006e3e1d071bcfb0423f04a4467b2c09e42eefea755",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "3652899d98da7e85507993b6ab41bed32fd4292e978b217a48cda77a4331e88a",
+     "bytes": 1004
+    },
+    "source_manifest.json": {
+     "sha256": "cf17d28329bc5012f4a553aa5244ee1f3217d8c123759916afd7700b4fdfe066",
+     "bytes": 12253
+    },
+    "create_argv.json": {
+     "sha256": "6547828e8e6bcffdf37675c380555774758e04b5649d9123a860849467a85581",
+     "bytes": 835
+    },
+    "worker.log": {
+     "sha256": "253a0a80453c020e1e7cf2cb6c7fbdb7071818411b60647876cab225e168dbd8",
+     "bytes": 2918
+    }
+   },
+   "job_id_from_job-id.txt": "pt-g3344e9z",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4gate0923e-0923174024-32e8c7",
+    "hostname": "pt-3e0efa44a87b42d4a886ec60e6162560-worker-0",
+    "status": "SUCCEEDED",
+    "returncode": 0,
+    "elapsed_seconds": 103.978,
+    "started_utc": "2026-09-23T17:41:17.254176+00:00",
+    "finished_utc": "2026-09-23T17:43:01.232627+00:00"
+   },
+   "finished_minus_started_s": 103.978,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": null,
+   "identity_join": "NO_TRACKED_SUBMISSION_RECORD (FP-01/historical jobs predate the per-job record convention)",
+   "decisions_naming_run_dir": [],
+   "s0_gate_result_linked_by_hostname": [
+    {
+     "gate_result": "plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+     "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438",
+     "status": "ok",
+     "s0_gate_pass": true,
+     "verdict_committed": true,
+     "gate_started_within_job": true,
+     "source_root_is_this_run_dir": true
+    }
+   ],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/CLAUDE_OPUSPLAN_EXECUTION_PROMPT.md",
+     "excerpt": "- 真实 ACP/H100 S0 gate 作业 `pt-g3344e9z` 已 `job_result.status=SUCCEEDED`，其 gate 输出中 16 项 criteria 全部 PASS，注册 rollout 为 `(6h,1),(6h,4),(6h,12)`，阈值为 `1e-5`。",
+     "claimed_status": "SUCCEEDED",
+     "claimed_rc": null,
+     "claimed_elapsed_s": null,
+     "elapsed_precision_s": null,
+     "kind": "execution_prompt_statement",
+     "check": {
+      "status_match": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": false,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "HIST-fsformal0923",
+   "stage": "pre-FP03 historical Fs formal (ledger-only, INELIGIBLE_AS_FS)",
+   "core_named_in_dispatch": false,
+   "run_dir": "artifacts/round2_cci/ed-r4fsformal0923-0923180756-7b1776",
+   "files": {
+    "job_result.json": {
+     "sha256": "85cfd9501d72e51cc94310db599ddcacc81aaed473f3b453ab6ab93a78bfab27",
+     "bytes": 294
+    },
+    "job-id.txt": {
+     "sha256": "8b5876d26dfa752ea68c2a31a896bbc07a1964626caf1817eaf2d5394dd26501",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "0e4ebaa52f78d4a99dea670af6bd91b3f7e294bb3f548493bbfacf705e14d094",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "d15018b9c1fe72ce6794cb04bae553066b950cd284784a4cde18ed9d31721fac",
+     "bytes": 1530
+    },
+    "source_manifest.json": {
+     "sha256": "88a6b35ff63ae02a1899816eeaa1b39c9fd46ab5f369bcba836cf8f3aeaad621",
+     "bytes": 12407
+    },
+    "create_argv.json": {
+     "sha256": "cfefa5296c37cc1d104b8a3e453f3673dab8b29c289d4d070ff87a9897b471e9",
+     "bytes": 844
+    },
+    "worker.log": {
+     "sha256": "14fab224f705b9cc481525020147a49bcba3fb5bfb3b3434878c4567530c8c99",
+     "bytes": 52
+    }
+   },
+   "job_id_from_job-id.txt": "pt-e8y7ib01",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4fsformal0923-0923180756-7b1776",
+    "hostname": "pt-478bcec2963f4952b4286b154547a4d7-worker-0",
+    "status": "FAILED",
+    "returncode": 1,
+    "elapsed_seconds": 425.176,
+    "started_utc": "2026-09-23T18:08:43.138355+00:00",
+    "finished_utc": "2026-09-23T18:15:48.314583+00:00"
+   },
+   "finished_minus_started_s": 425.176,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": null,
+   "identity_join": "NO_TRACKED_SUBMISSION_RECORD (FP-01/historical jobs predate the per-job record convention)",
+   "decisions_naming_run_dir": [],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/ledger/fs_attempts_ledger.json#entries[pt-e8y7ib01]",
+     "excerpt": {
+      "job_status": "FAILED",
+      "job_returncode": 1
+     },
+     "claimed_status": "FAILED",
+     "claimed_rc": 1,
+     "claimed_elapsed_s": null,
+     "elapsed_precision_s": null,
+     "kind": "summary_string",
+     "check": {
+      "status_match": true,
+      "rc_match": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": true,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP03v1-J1",
+   "stage": "FP-03 v1 J1 diagnostic",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4fs03diag-0923203433-4127c2",
+   "files": {
+    "job_result.json": {
+     "sha256": "44ddcd5af169df2214f7164e49201dc42a7514f33c9f5b729a94e23d49cb208e",
+     "bytes": 293
+    },
+    "job-id.txt": {
+     "sha256": "ec41cc9f2ec8a4d1e9f6f4037ec3134a9f73f02cb77333932034548c5e4c31e6",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "f514cb3b7fe97ac4075eed1b746a0020feee8056ffe1c59925f3d2a963b91e38",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "5891c278ffde47c354c57f7d15e7926cc19d96248f16864d5011aa51612969ae",
+     "bytes": 4998
+    },
+    "source_manifest.json": {
+     "sha256": "7d25757f53e31eb214d0d8125cbad6764c9b3d075f848e88184a54bd3d72265f",
+     "bytes": 13037
+    },
+    "create_argv.json": {
+     "sha256": "b68321580cfb008bcb7d30dcb1694bbfc4ccf9c9f11a4a5b5081a9332a2250b7",
+     "bytes": 832
+    },
+    "worker.log": {
+     "sha256": "d1230c35219782040b93653769854ed83337d9bf6094a2579b59c3d0bbc8b1ea",
+     "bytes": 954
+    }
+   },
+   "job_id_from_job-id.txt": "pt-56auspj8",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4fs03diag-0923203433-4127c2",
+    "hostname": "pt-9e5083b388514571836b1b73fea98cd7-worker-0",
+    "status": "SUCCEEDED",
+    "returncode": 0,
+    "elapsed_seconds": 481.069,
+    "started_utc": "2026-09-23T20:34:47.269764+00:00",
+    "finished_utc": "2026-09-23T20:42:48.339247+00:00"
+   },
+   "finished_minus_started_s": 481.069,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": {
+    "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/jobs/J1.submission_record.json",
+    "sha256": "a028849fffb244a7ec8ad054867c917275b0d83c47ed25e4c103403282b7d857"
+   },
+   "identity_join": {
+    "job_id_match": true,
+    "run_dir_match": true,
+    "invocation_sha256_match": true,
+    "source_manifest_sha256_match": true,
+    "argv_file_sha256_match": true
+   },
+   "decisions_naming_run_dir": [
+    "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J1_diag_decision.json",
+    "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J1_diag_decision_r2.json"
+   ],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/jobs/J2.submission_record.json#preconditions[0]",
+     "excerpt": "J1 pt-56auspj8 SUCCEEDED",
+     "claimed_status": "SUCCEEDED",
+     "claimed_rc": null,
+     "claimed_elapsed_s": null,
+     "elapsed_precision_s": null,
+     "kind": "summary_string",
+     "check": {
+      "status_match": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": false,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP03v1-J2",
+   "stage": "FP-03 v1 J2 screen",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4fs03scrn-0923210334-9fca4b",
+   "files": {
+    "job_result.json": {
+     "sha256": "d4efbe0927d561341d1872e4ce9736a85fa98d09da42a5b028171c15855df314",
+     "bytes": 293
+    },
+    "job-id.txt": {
+     "sha256": "afb140809892ca622db93c27f7d2ec446e7a26797e854065d92d0ad893f3db9f",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "cf65c7a4d46c449cd0a6c707c52c3c3089b2c9247a670318d417385539288e16",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "3370b011111f2b6c2a98e739668c88c339a4a566d44490f300ab141947c6ba2d",
+     "bytes": 2802
+    },
+    "source_manifest.json": {
+     "sha256": "e0b120f215f833077b5092dffba01f315921cf8e0d0129bf67269c07115ba9dd",
+     "bytes": 13037
+    },
+    "create_argv.json": {
+     "sha256": "b319be8eecb87eba46b820b8ad087c2152ce63f15e94deb859cc333c57b2be87",
+     "bytes": 832
+    },
+    "worker.log": {
+     "sha256": "ed5074673ecc09983afdf991ca547d04edb558a0156f1609ad9de09bce4d2438",
+     "bytes": 874
+    }
+   },
+   "job_id_from_job-id.txt": "pt-z07uway9",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4fs03scrn-0923210334-9fca4b",
+    "hostname": "pt-6841b93a048a4a9f81cc18c1af9005d6-worker-0",
+    "status": "SUCCEEDED",
+    "returncode": 0,
+    "elapsed_seconds": 599.269,
+    "started_utc": "2026-09-23T21:03:49.693885+00:00",
+    "finished_utc": "2026-09-23T21:13:48.962477+00:00"
+   },
+   "finished_minus_started_s": 599.269,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": {
+    "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/jobs/J2.submission_record.json",
+    "sha256": "8d8c943bf39771a0677b8ad5bca7c9ab7bd8412572b8ff8b7c4890ccbb2422d0"
+   },
+   "identity_join": {
+    "job_id_match": true,
+    "run_dir_match": true,
+    "invocation_sha256_match": true,
+    "source_manifest_sha256_match": true,
+    "argv_file_sha256_match": true
+   },
+   "decisions_naming_run_dir": [
+    "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J2_screen_decision.json"
+   ],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/jobs/J3.submission_record.json#preconditions[0]",
+     "excerpt": "J2 pt-z07uway9 SUCCEEDED",
+     "claimed_status": "SUCCEEDED",
+     "claimed_rc": null,
+     "claimed_elapsed_s": null,
+     "elapsed_precision_s": null,
+     "kind": "summary_string",
+     "check": {
+      "status_match": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": false,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP03v1-J3",
+   "stage": "FP-03 v1 J3 formal",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4fs03formal-0923212136-800630",
+   "files": {
+    "job_result.json": {
+     "sha256": "b5c417475a96fd9144b90ae6f6e2864baf390c8a322b7efdb646bff5cf1a6081",
+     "bytes": 295
+    },
+    "job-id.txt": {
+     "sha256": "a3671c4a9e515ee8b43639414fe9f2ae6eb938e953250b888576f260ffa9df09",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "d6d1174452124fdad03ed6b0ee25e547e5969209784c20da990a7b6e55c3e856",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "9e2924b2a16d7d1122660c14219735013f7749596d5d023a907ac21e3e1731fe",
+     "bytes": 2896
+    },
+    "source_manifest.json": {
+     "sha256": "e0b120f215f833077b5092dffba01f315921cf8e0d0129bf67269c07115ba9dd",
+     "bytes": 13037
+    },
+    "create_argv.json": {
+     "sha256": "caaa41bc64ae2020bb426faab627f1cb2a8c995a5cf9617e8b23aa5011aa5a80",
+     "bytes": 838
+    },
+    "worker.log": {
+     "sha256": "fe2fbbb911c2e73a14466165daa14086653848eb220095acf0de850aaa896e47",
+     "bytes": 882
+    }
+   },
+   "job_id_from_job-id.txt": "pt-sz6iv529",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4fs03formal-0923212136-800630",
+    "hostname": "pt-ab2843e05a514391857a6d47773b1289-worker-0",
+    "status": "SUCCEEDED",
+    "returncode": 0,
+    "elapsed_seconds": 597.617,
+    "started_utc": "2026-09-23T21:22:22.088941+00:00",
+    "finished_utc": "2026-09-23T21:32:19.705664+00:00"
+   },
+   "finished_minus_started_s": 597.617,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": {
+    "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/jobs/J3.submission_record.json",
+    "sha256": "7d328a561c2da151f3edd11f13a40fbe6828431583ae1a72247e6c3b6141e3fb"
+   },
+   "identity_join": {
+    "job_id_match": true,
+    "run_dir_match": true,
+    "invocation_sha256_match": true,
+    "source_manifest_sha256_match": true,
+    "argv_file_sha256_match": true
+   },
+   "decisions_naming_run_dir": [
+    "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J3_formal_decision.json"
+   ],
+   "tracked_claims": [],
+   "tracked_rc_or_elapsed_claim_present": false,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP03v1-J3b",
+   "stage": "FP-03 v1 J3b formal fallback",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4fs03formalb-0923213547-b7d556",
+   "files": {
+    "job_result.json": {
+     "sha256": "db9c69ad7ec588bcbf8f4ce1bf07453490ce9a6d4cbbd9b60b436fd97e355b77",
+     "bytes": 296
+    },
+    "job-id.txt": {
+     "sha256": "01f293b94002a53c4b774f96fb7503188b18533c1feb69556fa266336871e0cf",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "eb4e5377b88384e1fb7430f3ff78d0a1f235cd38515807071dbd5e1ba95ab896",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "8fa0125a8b7107335abc84f5289ee55bc144f60ad7d16056f358de64fd0e45f6",
+     "bytes": 2902
+    },
+    "source_manifest.json": {
+     "sha256": "e0b120f215f833077b5092dffba01f315921cf8e0d0129bf67269c07115ba9dd",
+     "bytes": 13037
+    },
+    "create_argv.json": {
+     "sha256": "3fcf73ba33ef6eb10c35981605bfdaa4c3cad7a9ed103db881f233c25f6c760c",
+     "bytes": 841
+    },
+    "worker.log": {
+     "sha256": "fe2fbbb911c2e73a14466165daa14086653848eb220095acf0de850aaa896e47",
+     "bytes": 882
+    }
+   },
+   "job_id_from_job-id.txt": "pt-n6b5uf0v",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4fs03formalb-0923213547-b7d556",
+    "hostname": "pt-ff27eb16dbd541dbbafdedf90060ae5e-worker-0",
+    "status": "SUCCEEDED",
+    "returncode": 0,
+    "elapsed_seconds": 592.663,
+    "started_utc": "2026-09-23T21:36:30.745721+00:00",
+    "finished_utc": "2026-09-23T21:46:23.408372+00:00"
+   },
+   "finished_minus_started_s": 592.663,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": {
+    "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/jobs/J3b.submission_record.json",
+    "sha256": "58dbfeaa3035b17ee9974526db8ab8836df4d5da217b73ecb24c004869477e18"
+   },
+   "identity_join": {
+    "job_id_match": true,
+    "run_dir_match": true,
+    "invocation_sha256_match": true,
+    "source_manifest_sha256_match": true,
+    "argv_file_sha256_match": true
+   },
+   "decisions_naming_run_dir": [
+    "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/decisions/J3b_formal_decision.json"
+   ],
+   "tracked_claims": [],
+   "tracked_rc_or_elapsed_claim_present": false,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "X1-N32",
+   "stage": "EXPLORATORY X1 N=32",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4fs03x1n32-0924005248-503e5b",
+   "files": {
+    "job_result.json": {
+     "sha256": "c54878557d9720bdb5b219aa6bdbeaa50c7208b767ab292984f1fed4c92ef8b2",
+     "bytes": 294
+    },
+    "job-id.txt": {
+     "sha256": "dd265c3cbcc1ca162d1e2c7e1ca0fe4b820513748b0a37898bfa411d376cd896",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "5b50f10d8c2da167441ab39f01e0eb8450533e3ca94029a43f84d38f302e0216",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "94a09adbd1e074788da563b5a8718e0b02435ddf9b1b45ea7874eae9fbe253bd",
+     "bytes": 2732
+    },
+    "source_manifest.json": {
+     "sha256": "e0b120f215f833077b5092dffba01f315921cf8e0d0129bf67269c07115ba9dd",
+     "bytes": 13037
+    },
+    "create_argv.json": {
+     "sha256": "f36b3aa030512d01ca8546054a33935328e0558ba1bfa4768475f19d3b519920",
+     "bytes": 835
+    },
+    "worker.log": {
+     "sha256": "9090977e446b7063ada27173daa65aa5b821336288058c146f51be490707ffd1",
+     "bytes": 919
+    }
+   },
+   "job_id_from_job-id.txt": "pt-jbhf3z73",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4fs03x1n32-0924005248-503e5b",
+    "hostname": "pt-3c769e068912478791ddb5adfcb2e297-worker-0",
+    "status": "SUCCEEDED",
+    "returncode": 0,
+    "elapsed_seconds": 624.669,
+    "started_utc": "2026-09-24T00:53:05.616499+00:00",
+    "finished_utc": "2026-09-24T01:03:30.285064+00:00"
+   },
+   "finished_minus_started_s": 624.669,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": {
+    "path": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/jobs/X1_N32.submission_record.json",
+    "sha256": "61e93bd55db03ab2a9fe40161749057be4df18870583976534bb14eae67e789e"
+   },
+   "identity_join": {
+    "job_id_match": true,
+    "run_dir_match": true,
+    "invocation_sha256_match": true,
+    "source_manifest_sha256_match": true,
+    "argv_file_sha256_match": true
+   },
+   "decisions_naming_run_dir": [],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n32_findings.json#job.job_result",
+     "excerpt": "SUCCEEDED, returncode 0, 624.669 s; platform state RUNNING observed at 00:57Z via sco describe",
+     "claimed_status": "SUCCEEDED",
+     "claimed_rc": 0,
+     "claimed_elapsed_s": 624.669,
+     "elapsed_precision_s": 0.0005,
+     "kind": "summary_string",
+     "check": {
+      "status_match": true,
+      "rc_match": true,
+      "elapsed_abs_diff_s": 0.0,
+      "elapsed_match_within_rounding": true
+     }
+    },
+    {
+     "source": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N32.json#job_result (embedded copy)",
+     "excerpt": {
+      "run_id": "ed-r4fs03x1n32-0924005248-503e5b",
+      "status": "SUCCEEDED",
+      "returncode": 0,
+      "elapsed_seconds": 624.669,
+      "started_utc": "2026-09-24T00:53:05.616499+00:00",
+      "finished_utc": "2026-09-24T01:03:30.285064+00:00",
+      "hostname": "pt-3c769e068912478791ddb5adfcb2e297-worker-0"
+     },
+     "claimed_status": "SUCCEEDED",
+     "claimed_rc": 0,
+     "claimed_elapsed_s": 624.669,
+     "elapsed_precision_s": 0.0,
+     "kind": "embedded_job_result",
+     "check": {
+      "status_match": true,
+      "rc_match": true,
+      "elapsed_abs_diff_s": 0.0,
+      "elapsed_match_within_rounding": true,
+      "embedded_equals_raw_all_fields": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": true,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "X1-N64",
+   "stage": "EXPLORATORY X1 N=64",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4fs03x1n64-0924010930-404a65",
+   "files": {
+    "job_result.json": {
+     "sha256": "947e73b8e90867f6382f22ece07cfb7954022a9b0a2d1b7f74ae65bc2e72a016",
+     "bytes": 294
+    },
+    "job-id.txt": {
+     "sha256": "40d768c9f6242d61e4e89ae4448ff400f525c86509e9db808ec4127f05fc87ee",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "97bd2f5454638b776d489e3f82e85440c2f8439519eaa9c9dc6902e814e6d7e2",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "5b1420c2409f180da5424be148b049d93a4871917f489510e21bd1a488ba211c",
+     "bytes": 2732
+    },
+    "source_manifest.json": {
+     "sha256": "e0b120f215f833077b5092dffba01f315921cf8e0d0129bf67269c07115ba9dd",
+     "bytes": 13037
+    },
+    "create_argv.json": {
+     "sha256": "c457e282ccf6226d5d57a601ea7608f8f899a7b0b43fe5d190a3e89ed8190bbb",
+     "bytes": 835
+    },
+    "worker.log": {
+     "sha256": "adaf884c988ce1be110223ff0b8063473ee6931af046757d05a0b396be92f34a",
+     "bytes": 919
+    }
+   },
+   "job_id_from_job-id.txt": "pt-t3bfl3e9",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4fs03x1n64-0924010930-404a65",
+    "hostname": "pt-e27520107ad84dc1a47e5274bc93ec74-worker-0",
+    "status": "SUCCEEDED",
+    "returncode": 0,
+    "elapsed_seconds": 719.624,
+    "started_utc": "2026-09-24T01:10:15.303397+00:00",
+    "finished_utc": "2026-09-24T01:22:14.927708+00:00"
+   },
+   "finished_minus_started_s": 719.624,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": {
+    "path": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/jobs/X1_N64.submission_record.json",
+    "sha256": "e56fa5f0fe8a7ee036c3e206862a1eb60a3bfb1b61db1b0d8d243be2e0f6c7df"
+   },
+   "identity_join": {
+    "job_id_match": true,
+    "run_dir_match": true,
+    "invocation_sha256_match": true,
+    "source_manifest_sha256_match": true,
+    "argv_file_sha256_match": true
+   },
+   "decisions_naming_run_dir": [],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n64_findings.json#job.job_result",
+     "excerpt": "SUCCEEDED, returncode 0, 719.624 s; platform RUNNING observed mid-job via sco describe",
+     "claimed_status": "SUCCEEDED",
+     "claimed_rc": 0,
+     "claimed_elapsed_s": 719.624,
+     "elapsed_precision_s": 0.0005,
+     "kind": "summary_string",
+     "check": {
+      "status_match": true,
+      "rc_match": true,
+      "elapsed_abs_diff_s": 0.0,
+      "elapsed_match_within_rounding": true
+     }
+    },
+    {
+     "source": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N64.json#job_result (embedded copy)",
+     "excerpt": {
+      "run_id": "ed-r4fs03x1n64-0924010930-404a65",
+      "status": "SUCCEEDED",
+      "returncode": 0,
+      "elapsed_seconds": 719.624,
+      "started_utc": "2026-09-24T01:10:15.303397+00:00",
+      "finished_utc": "2026-09-24T01:22:14.927708+00:00",
+      "hostname": "pt-e27520107ad84dc1a47e5274bc93ec74-worker-0"
+     },
+     "claimed_status": "SUCCEEDED",
+     "claimed_rc": 0,
+     "claimed_elapsed_s": 719.624,
+     "elapsed_precision_s": 0.0,
+     "kind": "embedded_job_result",
+     "check": {
+      "status_match": true,
+      "rc_match": true,
+      "elapsed_abs_diff_s": 0.0,
+      "elapsed_match_within_rounding": true,
+      "embedded_equals_raw_all_fields": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": true,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP03v2-J3",
+   "stage": "FP-03 v2 V2-J3 formal fit",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b",
+   "files": {
+    "job_result.json": {
+     "sha256": "1734134bf1580f079b451a14a1501ae67a89318018e294623288494c1e68dbcb",
+     "bytes": 292
+    },
+    "job-id.txt": {
+     "sha256": "fa82b82ba7ad452d3363dc1f4262c8d3a56b557840ad16e2b97ab2766a9896f6",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "608e0c83f4add76708409e7176dcc0e07245eb7ebc6e29140d95e8126f1c788e",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "82429c7eff04de16b0b59b9f28dcf4724ab3b9cdda5fbcc27a799c61e8cff58c",
+     "bytes": 2748
+    },
+    "source_manifest.json": {
+     "sha256": "488f26217ac0cd36d7b21d5dc681df920646d559f77cae9d7881e9ef9d5f9f48",
+     "bytes": 13138
+    },
+    "create_argv.json": {
+     "sha256": "ab6ab9371c70a47a607140672f7ec8da7c91cfa5e18354d80bff93ac355215ba",
+     "bytes": 829
+    },
+    "worker.log": {
+     "sha256": "b3789495ce4b343f387f72cdb1008524a1139d95f8b8194117ea54603a19cf6b",
+     "bytes": 881
+    }
+   },
+   "job_id_from_job-id.txt": "pt-fuiqqeau",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4fs03v2p-0924020931-71716b",
+    "hostname": "pt-e583f058d0b74bba85eb2db68bb5ce71-worker-0",
+    "status": "SUCCEEDED",
+    "returncode": 0,
+    "elapsed_seconds": 306.846,
+    "started_utc": "2026-09-24T02:09:52.736947+00:00",
+    "finished_utc": "2026-09-24T02:14:59.582557+00:00"
+   },
+   "finished_minus_started_s": 306.846,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": {
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/jobs/V2_J3.submission_record.json",
+    "sha256": "84b892eb81c6d4c990bb245c20092c00b525584bcb5e67939390b48ae3abbd0d"
+   },
+   "identity_join": {
+    "job_id_match": true,
+    "run_dir_match": true,
+    "invocation_sha256_match": true,
+    "source_manifest_sha256_match": true,
+    "argv_file_sha256_match": true
+   },
+   "decisions_naming_run_dir": [
+    "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/decisions/V2_J3_formal_decision.json"
+   ],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/task_result_fp03_v2.json#jobs.V2-J3.result",
+     "excerpt": "SUCCEEDED rc=0 306.8s",
+     "claimed_status": "SUCCEEDED",
+     "claimed_rc": 0,
+     "claimed_elapsed_s": 306.8,
+     "elapsed_precision_s": 0.05,
+     "kind": "summary_string",
+     "check": {
+      "status_match": true,
+      "rc_match": true,
+      "elapsed_abs_diff_s": 0.046,
+      "elapsed_match_within_rounding": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": true,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP03v2-J4",
+   "stage": "FP-03 v2 V2-J4 freeze+verify",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4fs03v2j4-0924021935-be0786",
+   "files": {
+    "job_result.json": {
+     "sha256": "ce6128920df01cd260702a8fded6fdeb07279788f811d6b72c677eeb4313cece",
+     "bytes": 293
+    },
+    "job-id.txt": {
+     "sha256": "8c91abdba77c55503f26e16a5c58b8de819a511540632ba81000d5449bd53a74",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "9be0b183f8d01d666018271898c834a44b8b232468f6a2eabb7284ecfdcffab5",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "6880ae499de9d51ad87c6a6445ecd440da1a7b7fefd26452cab76d94f53d33b5",
+     "bytes": 4468
+    },
+    "source_manifest.json": {
+     "sha256": "488f26217ac0cd36d7b21d5dc681df920646d559f77cae9d7881e9ef9d5f9f48",
+     "bytes": 13138
+    },
+    "create_argv.json": {
+     "sha256": "3c0202df2e553d3c0154d07d53c44b5c4304934c611c5713f74541d254b86fa4",
+     "bytes": 832
+    },
+    "worker.log": {
+     "sha256": "faafd02aac428f2ee165e2613dd2c05bd4b171bf1b3dce3115ff0973e84c7689",
+     "bytes": 837
+    }
+   },
+   "job_id_from_job-id.txt": "pt-gr3rrmdg",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4fs03v2j4-0924021935-be0786",
+    "hostname": "pt-7b72fb5a7c3643f388db5b396f6a2cd9-worker-0",
+    "status": "SUCCEEDED",
+    "returncode": 0,
+    "elapsed_seconds": 263.675,
+    "started_utc": "2026-09-24T02:20:24.828341+00:00",
+    "finished_utc": "2026-09-24T02:24:48.503693+00:00"
+   },
+   "finished_minus_started_s": 263.675,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": {
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/jobs/V2_J4.submission_record.json",
+    "sha256": "17ec831f380d738c6dd049a038a0e26594dfc14c4deeb728534dcfd27ffa3680"
+   },
+   "identity_join": {
+    "job_id_match": true,
+    "run_dir_match": true,
+    "invocation_sha256_match": true,
+    "source_manifest_sha256_match": true,
+    "argv_file_sha256_match": true
+   },
+   "decisions_naming_run_dir": [],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/task_result_fp03_v2.json#jobs.V2-J4.result",
+     "excerpt": "SUCCEEDED rc=0 263.7s",
+     "claimed_status": "SUCCEEDED",
+     "claimed_rc": 0,
+     "claimed_elapsed_s": 263.7,
+     "elapsed_precision_s": 0.05,
+     "kind": "summary_string",
+     "check": {
+      "status_match": true,
+      "rc_match": true,
+      "elapsed_abs_diff_s": 0.025,
+      "elapsed_match_within_rounding": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": true,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP04-BJ1",
+   "stage": "FP-04 B-J1 shortstep/profile",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c",
+   "files": {
+    "job_result.json": {
+     "sha256": "442c008c891ae053a750609a0c57c805c7cc0742340c101f4a3df3cab540a87f",
+     "bytes": 292
+    },
+    "job-id.txt": {
+     "sha256": "07768f88d63ef8dff523c6f6e7283b85cd328d342223d294887edc84ab00c41f",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "91524a145ce03873249fad9564eed4f36cda598ce8cb32b4dddf0bcb327950c4",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "e4df72b3d483885ccaf5398d88203fb91a98005f97d3630ca6acd5bdbcb788b8",
+     "bytes": 7800
+    },
+    "source_manifest.json": {
+     "sha256": "a9ba6ef05f0bdc61a8a96bcf778bb492df21fd675d0ccc778f737271b86dcb72",
+     "bytes": 13683
+    },
+    "create_argv.json": {
+     "sha256": "cfcafe1095ad6cfc597124142cc47b4373a245e5a866d2866534c7ce40930821",
+     "bytes": 829
+    },
+    "worker.log": {
+     "sha256": "52cbbb24ec257c8255f3e8f4d004099bcd166ad94d7e51afa1fcae1cfe1a25e8",
+     "bytes": 1061
+    }
+   },
+   "job_id_from_job-id.txt": "pt-ycpvyb6n",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4bankbj1-0924051352-a9732c",
+    "hostname": "pt-29ed23c40d56491585818ff244e1c771-worker-0",
+    "status": "SUCCEEDED",
+    "returncode": 0,
+    "elapsed_seconds": 561.707,
+    "started_utc": "2026-09-24T05:14:38.068619+00:00",
+    "finished_utc": "2026-09-24T05:23:59.775425+00:00"
+   },
+   "finished_minus_started_s": 561.707,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/jobs/B-J1.submission_record.json",
+    "sha256": "c4a24d522b68951e11707186e8df76d1efbbd40db17225c227340fc93aa040ee"
+   },
+   "identity_join": {
+    "job_id_match": true,
+    "run_dir_match": true,
+    "invocation_sha256_match": true,
+    "source_manifest_sha256_match": true,
+    "argv_file_sha256_match": true
+   },
+   "decisions_naming_run_dir": [
+    "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ1_shortstep_decision.json"
+   ],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/task_result_fp04.json#jobs.B-J1.result",
+     "excerpt": "SUCCEEDED rc=0 561.7s",
+     "claimed_status": "SUCCEEDED",
+     "claimed_rc": 0,
+     "claimed_elapsed_s": 561.7,
+     "elapsed_precision_s": 0.05,
+     "kind": "summary_string",
+     "check": {
+      "status_match": true,
+      "rc_match": true,
+      "elapsed_abs_diff_s": 0.007,
+      "elapsed_match_within_rounding": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": true,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP04-BJ2",
+   "stage": "FP-04 B-J2 formal",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d",
+   "files": {
+    "job_result.json": {
+     "sha256": "49b737ae19def0ca7c44e427637f085f44e7db3eaedd1b89fb8427fd99f0e571",
+     "bytes": 292
+    },
+    "job-id.txt": {
+     "sha256": "6c001c9b2774e3bc3d47d2c619a29a2e5e2c8c4b22e562eb87e68f8aa539844e",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "686914a581734f2cad2fea239e9396aa090887be45dff8259ddd6d9d8d9d6ea4",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "7057b5571df35ae32be01b28c7a4c345b2aa11927ccbbe0f095ff0bc2a7acb59",
+     "bytes": 3396
+    },
+    "source_manifest.json": {
+     "sha256": "a9ba6ef05f0bdc61a8a96bcf778bb492df21fd675d0ccc778f737271b86dcb72",
+     "bytes": 13683
+    },
+    "create_argv.json": {
+     "sha256": "e7070e9a46b58ccbee4e67e5ada5691d455cb1e6280e107469ada1016034027b",
+     "bytes": 829
+    },
+    "worker.log": {
+     "sha256": "b8e1e1a4fa7bf8874d9fe1ff126d9fd81a25f1a82b24c0e15510bde1f66b608b",
+     "bytes": 1027
+    }
+   },
+   "job_id_from_job-id.txt": "pt-vt003lhm",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4bankbj2-0924052624-dde08d",
+    "hostname": "pt-211ea48935924db2a202976b47363798-worker-0",
+    "status": "SUCCEEDED",
+    "returncode": 0,
+    "elapsed_seconds": 364.382,
+    "started_utc": "2026-09-24T05:27:10.936215+00:00",
+    "finished_utc": "2026-09-24T05:33:15.318556+00:00"
+   },
+   "finished_minus_started_s": 364.382,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/jobs/B-J2.submission_record.json",
+    "sha256": "ddd1d5d4c4eddb765a5e643a2c9ef20d939924353984198688b70b619ebb2511"
+   },
+   "identity_join": {
+    "job_id_match": true,
+    "run_dir_match": true,
+    "invocation_sha256_match": true,
+    "source_manifest_sha256_match": true,
+    "argv_file_sha256_match": true
+   },
+   "decisions_naming_run_dir": [
+    "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2_formal_decision.json",
+    "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/decisions/BJ2_formal_decision_r2.json"
+   ],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/task_result_fp04.json#jobs.B-J2.result",
+     "excerpt": "SUCCEEDED rc=0 364.4s",
+     "claimed_status": "SUCCEEDED",
+     "claimed_rc": 0,
+     "claimed_elapsed_s": 364.4,
+     "elapsed_precision_s": 0.05,
+     "kind": "summary_string",
+     "check": {
+      "status_match": true,
+      "rc_match": true,
+      "elapsed_abs_diff_s": 0.018,
+      "elapsed_match_within_rounding": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": true,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP04-BJ3",
+   "stage": "FP-04 B-J3 assemble (failed)",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4bankbj3-0924053507-ae0123",
+   "files": {
+    "job_result.json": {
+     "sha256": "feafdd4aa6853a38f2e5f9987e029a3beff53481d6f68584ed0c25dd932e58d0",
+     "bytes": 289
+    },
+    "job-id.txt": {
+     "sha256": "6e0c299ca8ab1803519e0b869e99d374519e8bb2e18a0f88ae87e9e602e5b601",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "20d6274cb104693801e9cc17e054cd84db193f18ad444908197270f98ce69f09",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "34b07ab6ef86209d57e2b118936ab30bbe92d1f2280d2cc74f62c22b3f19a412",
+     "bytes": 5698
+    },
+    "source_manifest.json": {
+     "sha256": "a9ba6ef05f0bdc61a8a96bcf778bb492df21fd675d0ccc778f737271b86dcb72",
+     "bytes": 13683
+    },
+    "create_argv.json": {
+     "sha256": "10ce03223d1b702e07357169ab3a78be0212990fa66ee2283710cebc2e381d49",
+     "bytes": 829
+    },
+    "worker.log": {
+     "sha256": "8a6c9f7b2427aec385979596fa3264987abf26bc133e14a7436338013474b156",
+     "bytes": 997
+    }
+   },
+   "job_id_from_job-id.txt": "pt-m52qwunf",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4bankbj3-0924053507-ae0123",
+    "hostname": "pt-5f2c07b0afdf4d40919c751678eea6fc-worker-0",
+    "status": "FAILED",
+    "returncode": 1,
+    "elapsed_seconds": 180.225,
+    "started_utc": "2026-09-24T05:35:22.759056+00:00",
+    "finished_utc": "2026-09-24T05:38:22.984359+00:00"
+   },
+   "finished_minus_started_s": 180.225,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/jobs/B-J3.submission_record.json",
+    "sha256": "f90bee864ff6f0b80794d3dc166d2d08a910eab95591d1bf814df4d5a6463d42"
+   },
+   "identity_join": {
+    "job_id_match": true,
+    "run_dir_match": true,
+    "invocation_sha256_match": true,
+    "source_manifest_sha256_match": true,
+    "argv_file_sha256_match": true
+   },
+   "decisions_naming_run_dir": [],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/task_result_fp04.json#jobs.B-J3.result",
+     "excerpt": "FAILED rc=1 180.2s",
+     "claimed_status": "FAILED",
+     "claimed_rc": 1,
+     "claimed_elapsed_s": 180.2,
+     "elapsed_precision_s": 0.05,
+     "kind": "summary_string",
+     "check": {
+      "status_match": true,
+      "rc_match": true,
+      "elapsed_abs_diff_s": 0.025,
+      "elapsed_match_within_rounding": true
+     }
+    },
+    {
+     "source": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/deviations/DEV-FP04-001_relative_decision_paths.json#...result",
+     "excerpt": "FAILED rc=1 180.2s: bank_assemble ASSEMBLY_NOT_AUTHORIZED (4 expert files 'hash to None' = not found); fail-closed; no bank.pt written; bank_verify never ran",
+     "claimed_status": "FAILED",
+     "claimed_rc": 1,
+     "claimed_elapsed_s": 180.2,
+     "elapsed_precision_s": 0.05,
+     "kind": "summary_string",
+     "check": {
+      "status_match": true,
+      "rc_match": true,
+      "elapsed_abs_diff_s": 0.025,
+      "elapsed_match_within_rounding": true
+     }
+    },
+    {
+     "source": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/jobs/B-J3_retry.submission_record.json#retry_of.result",
+     "excerpt": "FAILED rc=1 (DEV-FP04-001)",
+     "claimed_status": "FAILED",
+     "claimed_rc": 1,
+     "claimed_elapsed_s": null,
+     "elapsed_precision_s": null,
+     "kind": "summary_string",
+     "check": {
+      "status_match": true,
+      "rc_match": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": true,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  },
+  {
+   "key": "FP04-BJ3r",
+   "stage": "FP-04 B-J3 infra retry",
+   "core_named_in_dispatch": true,
+   "run_dir": "artifacts/round2_cci/ed-r4bankbj3r-0924054117-185e82",
+   "files": {
+    "job_result.json": {
+     "sha256": "893dfd024ec610083299aaefa7dff802b9866bd51719e9c6fad449ab1b7467ce",
+     "bytes": 293
+    },
+    "job-id.txt": {
+     "sha256": "45a017b812b2c38dca279dfcdd38c71ad9930c911f35b416a60a9c2094ddc163",
+     "bytes": 12
+    },
+    "submission.json": {
+     "sha256": "8eb73a4652ccee6cd21f13763e26b5229eb02a84a282624cd1dbe31b1bc0ee54",
+     "bytes": 169
+    },
+    "invocation.json": {
+     "sha256": "af76271775bb83836d1b2b403e469117ee0a765c00cae9ece2a8310b6afa3cae",
+     "bytes": 5715
+    },
+    "source_manifest.json": {
+     "sha256": "a9ba6ef05f0bdc61a8a96bcf778bb492df21fd675d0ccc778f737271b86dcb72",
+     "bytes": 13683
+    },
+    "create_argv.json": {
+     "sha256": "e2912f016ad345ca4b4d88ced9ede9f974dba940ceec0e7505591361da7c5fce",
+     "bytes": 832
+    },
+    "worker.log": {
+     "sha256": "9f10237fb600a8ee47d5c60ced6cce3ba0f9b5ea08fe16cced0d341afd2c4a20",
+     "bytes": 1013
+    }
+   },
+   "job_id_from_job-id.txt": "pt-831c01g4",
+   "job_id_in_submission_stdout": true,
+   "receipt": {
+    "run_id": "ed-r4bankbj3r-0924054117-185e82",
+    "hostname": "pt-c3027e7807cf49d08fea3c8b0f5ee1dd-worker-0",
+    "status": "SUCCEEDED",
+    "returncode": 0,
+    "elapsed_seconds": 357.257,
+    "started_utc": "2026-09-24T05:41:41.048380+00:00",
+    "finished_utc": "2026-09-24T05:47:38.305318+00:00"
+   },
+   "finished_minus_started_s": 357.257,
+   "receipt_state": "OBSERVED_RAW_RECEIPT",
+   "submission_record": {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/jobs/B-J3_retry.submission_record.json",
+    "sha256": "cd48b09266c83d30a916ad1906cd583c1633f8f130c841952a220bfe54536a23"
+   },
+   "identity_join": {
+    "job_id_match": true,
+    "run_dir_match": true,
+    "invocation_sha256_match": true,
+    "source_manifest_sha256_match": true,
+    "argv_file_sha256_match": true
+   },
+   "decisions_naming_run_dir": [],
+   "tracked_claims": [
+    {
+     "source": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/task_result_fp04.json#jobs.B-J3_retry.result",
+     "excerpt": "SUCCEEDED rc=0 357.3s",
+     "claimed_status": "SUCCEEDED",
+     "claimed_rc": 0,
+     "claimed_elapsed_s": 357.3,
+     "elapsed_precision_s": 0.05,
+     "kind": "summary_string",
+     "check": {
+      "status_match": true,
+      "rc_match": true,
+      "elapsed_abs_diff_s": 0.043,
+      "elapsed_match_within_rounding": true
+     }
+    }
+   ],
+   "tracked_rc_or_elapsed_claim_present": true,
+   "errors": [],
+   "verdict": "RECEIPT_VERIFIED"
+  }
+ ],
+ "prepared_not_submitted": [
+  {
+   "run_dir": "artifacts/round2_cci/ed-r4trace0923-0923171427-377787",
+   "has_job-id.txt": false,
+   "has_job_result.json": false,
+   "classification": "PREPARED_NOT_SUBMITTED (no job id, no GPU execution)"
+  },
+  {
+   "run_dir": "artifacts/round2_cci/DRYRUN_NOT_SUBMITTED_ed-r4bankbj1-0924051336-ee3c78",
+   "has_job-id.txt": false,
+   "has_job_result.json": false,
+   "classification": "PREPARED_NOT_SUBMITTED (no job id, no GPU execution)"
+  },
+  {
+   "run_dir": "artifacts/round2_cci/DRYRUN_NOT_SUBMITTED_ed-r4bankbj2-0924052615-4a9651",
+   "has_job-id.txt": false,
+   "has_job_result.json": false,
+   "classification": "PREPARED_NOT_SUBMITTED (no job id, no GPU execution)"
+  },
+  {
+   "run_dir": "artifacts/round2_cci/DRYRUN_NOT_SUBMITTED_ed-r4bankbj3-0924053458-e089e8",
+   "has_job-id.txt": false,
+   "has_job_result.json": false,
+   "classification": "PREPARED_NOT_SUBMITTED (no job id, no GPU execution)"
+  },
+  {
+   "run_dir": "artifacts/round2_cci/DRYRUN_NOT_SUBMITTED_ed-r4bankbj3r-0924054107-6ad262",
+   "has_job-id.txt": false,
+   "has_job_result.json": false,
+   "classification": "PREPARED_NOT_SUBMITTED (no job id, no GPU execution)"
+  }
+ ],
+ "overall": "ALL_RECEIPTS_VERIFIED"
+}

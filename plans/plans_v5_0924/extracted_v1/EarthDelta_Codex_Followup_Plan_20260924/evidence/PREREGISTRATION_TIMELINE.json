@@ -1,0 +1,27 @@
+{
+  "status": "OBSERVED",
+  "evidence_status": "STATIC_CONFIRMED",
+  "fs_v2": {
+    "protocol_sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe",
+    "protocol_created_utc": "2026-09-24T02:04:04.565793+00:00",
+    "sha_file_frozen_utc": "2026-09-24T02:04:13Z",
+    "submission_record_utc": "2026-09-24T02:09:45.019981+00:00",
+    "job_id": "pt-fuiqqeau",
+    "decision_utc": "2026-09-24T02:18:15.554179+00:00",
+    "sources": [
+      "E08",
+      "E09"
+    ]
+  },
+  "bank": {
+    "protocol_sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1",
+    "sha_file_frozen_utc": "2026-09-24T05:10:07Z",
+    "B_J1_submission_record_utc": "2026-09-24T05:14:05.617230+00:00",
+    "certify_utc": "2026-09-24T05:48:15.169488+00:00",
+    "sources": [
+      "E10",
+      "E11"
+    ]
+  },
+  "interpretation": "本地记录支持freeze先于提交，job/decider消费同SHA；.sha256确有frozen_utc文本。它不是外部可信时间戳或首次公开预注册证明。v2在v1失败与X1探索后制定，不能称整个设计从最初一直未改。"
+}

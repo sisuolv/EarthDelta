@@ -1,0 +1,648 @@
+{
+  "schema_version": "earthdelta-followup-plan-audit/20260924",
+  "evidence_state": "OBSERVED",
+  "overall_verdict": "PARTIALLY_EXECUTED",
+  "baseline": {
+    "acceptance_contract": "plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/CODEX_TASKS.json",
+    "implementation_ref": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "observed_branch_head": "08093650ba56e8cf709d75a61c26c50a0c35f6f7",
+    "latest_head_scope": "docs-only addition confirmed by compare; no implementation progress implied",
+    "previous_implementation": "a3596e6b804e9d23b72d1247b08c47129d6b50b1"
+  },
+  "fp00_04_disposition": {
+    "FP-00": {
+      "status": "DONE",
+      "scope": "READ_ONLY_INVENTORY",
+      "code": "OBSERVED",
+      "cpu": "OBSERVED_READ_ONLY_COMMANDS",
+      "gpu": "NOT_REQUIRED",
+      "scientific": "NOT_APPLICABLE",
+      "evidence": [
+        "plans/plan_v4_0923/run_20260923T164722Z_fp00/entry/entry_evidence.json"
+      ],
+      "remaining": "Raw execution receipt archive not complete; tracked as FP05a, not a new FP00 run"
+    },
+    "FP-01": {
+      "status": "DONE",
+      "scope": "NUMERICAL_S0_FOR_PINNED_CONFIG",
+      "code": "STATIC_CONFIRMED",
+      "cpu": "OBSERVED_HISTORICAL_LOGS",
+      "gpu": "EXECUTION_CONFIRMED_COMPUTATIONAL_REPORT; PLATFORM_RECEIPT_MISSING",
+      "scientific": "OFFICIAL_PARITY_SUPPORTED_IN_REGISTERED_SCOPE_ONLY",
+      "evidence": [
+        "plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+        "plans/plan_v4_0923/run_20260923T_fp01_trace/four_arm_trace.json"
+      ],
+      "remaining": "Preserve original tolerance; no weight/output re-run here; obtain job_result and source bindings before next launch"
+    },
+    "FP-02": {
+      "status": "PARTIAL",
+      "scope": "PLANNED_COMMON_CONSUMER_CHAIN",
+      "code": "SUBSETS_STATIC_CONFIRMED",
+      "cpu": "OBSERVED_SUBSET_TEST_LOGS",
+      "gpu": "SUBSET_CONSUMED_IN_FP03_FP04; NO_COMPLETE_FP02_GATE",
+      "scientific": "NOT_APPLICABLE",
+      "done_subparts": [
+        "stage failure blocks successors",
+        "certified-Fs authorization",
+        "loaded-admission Fs subset",
+        "profile immutability added in FP04"
+      ],
+      "missing_subparts": [
+        "thin common runner",
+        "project-wide frozen split/exposure enforcement",
+        "complete FP05 fit/predict/cache/evaluate consumption checks"
+      ],
+      "evidence": [
+        "tests/test_plan_gate_chain.py",
+        "tests/test_profile_immutability.py",
+        "plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/CODEX_TASKS.json"
+      ]
+    },
+    "FP-03": {
+      "status": "DONE",
+      "scope": "FS_QUALIFICATION_V2_H32",
+      "code": "STATIC_CONFIRMED",
+      "cpu": "EXECUTION_CONFIRMED_HISTORICAL_LOG",
+      "gpu": "EXECUTION_CONFIRMED_COMPUTATIONAL_REPORT; PLATFORM_RECEIPTS_MISSING",
+      "scientific": "POINT_MEAN_LIMITED_HARM_QUALIFICATION_NOT_OUT_OF_SAMPLE_BENEFIT",
+      "evidence": [
+        "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/task_result_fp03_v2.json",
+        "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/qualification.json"
+      ],
+      "remaining": "v1 STOP remains; unique-cause diagnosis unproven; whole-project split exposures must include X1"
+    },
+    "FP-04": {
+      "status": "DONE",
+      "scope": "COMMON_FS_BANK_TRAINING_QUALIFICATION_AND_ASSEMBLY",
+      "code": "STATIC_CONFIRMED",
+      "cpu": "EXECUTION_CONFIRMED_HISTORICAL_LOG",
+      "gpu": "EXECUTION_CONFIRMED_COMPUTATIONAL_REPORT; PLATFORM_RECEIPTS_MISSING",
+      "scientific": "TRAINING_GROUP_DIRECTION_AND_ONE_PROBE_EXACTNESS_ONLY",
+      "evidence": [
+        "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/task_result_fp04.json",
+        "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank_assembly.json",
+        "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank_verify.json",
+        "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/BJ3_certify_decision.json"
+      ],
+      "remaining": "OOS utility unknown; weights not independently rehashed here"
+    }
+  },
+  "s0_parity_verdict": "PASS_FOR_REGISTERED_PINNED_CONFIG; RAW_PLATFORM_RECEIPT_MISSING",
+  "fs_fit_divergence_verdict": "QUALIFIED_FS_V2_H32_SELECTED; V1_FAILURE_PRESERVED; UNIQUE_CAUSE_INCONCLUSIVE",
+  "bank_certification_verdict": "BANK_CERTIFIED_WITHIN_TRAINING_AND_SINGLE_PROBE_SCOPE; OOS_VALUE_INCONCLUSIVE",
+  "fp05_plan_soundness_verdict": "NEEDS_MANDATORY_AMENDMENTS_BEFORE_DEV_DISPATCH",
+  "novelty_claim_status": "INCONCLUSIVE_NOT_ESTABLISHED",
+  "weather_utility_claim_status": "INCONCLUSIVE_NOT_ESTABLISHED",
+  "key_observations": {
+    "schema": "earthdelta-fp-followup-observations/1",
+    "state": "OBSERVED",
+    "scope": "Excerpts transcribed from read source artifacts; not fabricated raw job records; no experiments rerun",
+    "audit_commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "observed_branch_head": "08093650ba56e8cf709d75a61c26c50a0c35f6f7",
+    "s0": {
+      "job_id": "pt-g3344e9z",
+      "artifact": "plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+      "tolerance": 1e-05,
+      "steps": [
+        1,
+        4,
+        12
+      ],
+      "max_abs_diff": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "s0_gate_pass": true,
+      "verdict_committed": true,
+      "config_digest": "6aad34b6417ebf72",
+      "checkpoint_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+      "normalization_identity": "ed-norm-identity/1:3e0b216bfbf34ab0",
+      "certificate_sha256_recorded_by_bank_protocol": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438",
+      "raw_platform_receipt": "MISSING",
+      "large_output_tensors_recomputed_here": false
+    },
+    "fs_v1": {
+      "formal_horizon": 256,
+      "verdict": "STOP_FITTED_FS_QUALITY",
+      "primary_holdout24_ratio": 1.038925,
+      "fallback_holdout24_ratio": 1.020438,
+      "q6_threshold": 1.02,
+      "q6_threshold_already_present_in_v1": true
+    },
+    "fs_v2": {
+      "protocol_sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe",
+      "recorded_freeze_utc": "2026-09-24T02:04:13Z",
+      "recorded_submission_utc": "2026-09-24T02:09:45.019981+00:00",
+      "external_timestamp_attestation": "MISSING",
+      "n_train": 8,
+      "n_holdout": 16,
+      "horizon": 32,
+      "learning_rate": 0.0025,
+      "train24_F0_mean": 0.03187907820466652,
+      "train24_Fs_mean": 0.03105212451750749,
+      "train24_ratio": 0.974059673813342,
+      "train72_ratio": 0.9923692175341735,
+      "holdout24_F0_mean": 0.03127357741727903,
+      "holdout24_Fs_mean": 0.03137967485354686,
+      "holdout24_ratio": 1.0033925583521255,
+      "holdout24_worse_count": 14,
+      "holdout24_q6_cap": 1.02,
+      "q6_is_point_mean_not_a_noninferiority_test": true,
+      "verdict": "FS_SELECTED",
+      "scientific_scope": "Qualified limited-harm reference under FS-QUAL-v2; no established out-of-sample benefit",
+      "adapter_file_sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089",
+      "merged_file_sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b",
+      "merged_state_digest": "370bd3bcc7545755bcdb60e482e1ce1ebc201302dc710f7992a4d76c4915bb97"
+    },
+    "bank": {
+      "protocol_sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1",
+      "num_experts": 4,
+      "rank": 4,
+      "target_blocks": [
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "alpha": 0.25,
+      "rho": 0.25,
+      "hold_steps": 4,
+      "group_sizes": [
+        15,
+        16,
+        7,
+        6
+      ],
+      "formal_updates": 32,
+      "learning_rate": 0.0025,
+      "own_group24_ratios": [
+        0.9900749343807109,
+        0.9908935846168572,
+        0.9849826740404127,
+        0.9802412120161317
+      ],
+      "own_group24_hard_cap_strict_lt": 1.0,
+      "out_of_sample_gate": "NOT_PERFORMED",
+      "verdict": "BANK_CERTIFIED",
+      "probe_issue_id": "iss_292517fb189ee1bd",
+      "probe_steps": [
+        1,
+        4,
+        12
+      ],
+      "A1_A5_tolerance": 0.0,
+      "bank_file_sha256": "c3e3e34b60b463b41a6c824fa680d844a2830cd2c7b40d3fc4544dc985b85f81",
+      "bank_state_digest": "13bc905444e4af1008b95d8820f0db4a5585621c712b1330d096b027df9cb33b",
+      "registry_sha256": "c480684df1e9068387d347e00f6afa16f2b08db2d137d23175fb3933d944affd",
+      "bank_manifest_sha256": "6946ec0bd7fd57b17d144c80f97e66ef46187bb60967aeffb35c0d1e5bf4275f",
+      "large_weights_rehashed_here": false
+    },
+    "cpu_records": [
+      {
+        "artifact": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/tests/pytest_full_suite_v2_prereg.log",
+        "passed": 766,
+        "skipped": 7,
+        "reported_seconds": 413.96,
+        "exit": 0
+      },
+      {
+        "artifact": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/tests/pytest_full_suite_fp04_prereg_refreeze.log",
+        "passed": 861,
+        "skipped": 7,
+        "reported_seconds": 743.11,
+        "exit": 0
+      }
+    ],
+    "current_review_execution": {
+      "repository_pytest_runs": 0,
+      "gpu_jobs": 0,
+      "weight_rehashes": 0,
+      "performed": "Document/source audit, scalar arithmetic and package validation only"
+    }
+  },
+  "fp05_six_proposals": [
+    {
+      "item": 1,
+      "verdict": "MODIFY_REQUIRED",
+      "proposal": "2019H2 DEV / 2020H2 confirm",
+      "decision": "2019H2 provisional retrospective DEV with full support/ledger purge. 2020H2 EXPOSED_NOT_CONFIRM because X1 used it. Do not select or read a new confirm in this iteration.",
+      "evidence_ids": [
+        "R18",
+        "R19",
+        "R21",
+        "R39"
+      ]
+    },
+    {
+      "item": 2,
+      "verdict": "MODIFY_REQUIRED",
+      "proposal": "delta_min=0.34% because it exactly recovers Fs harm",
+      "decision": "Retain 0.0034 as explicitly chosen Fs-normalized engineering screen only. Same-panel F0 break-even must be separately measured, and dynamic-vs-static evaluated.",
+      "evidence_ids": [
+        "R25",
+        "R39"
+      ]
+    },
+    {
+      "item": 3,
+      "verdict": "ADOPT_WITH_QUALIFICATIONS",
+      "proposal": "F0 background trajectory",
+      "decision": "Add F0 as reporting-only, never the sixth selector/oracle candidate. Six versus five rollouts implies 20% more trajectory count, not a measured GPU-time guarantee.",
+      "evidence_ids": [
+        "R39"
+      ]
+    },
+    {
+      "item": 4,
+      "verdict": "ADOPT_WITH_POWER_CAVEAT",
+      "proposal": "one-shot N, nominal128",
+      "decision": "Choose N once via a predeclared integrity/profile-only rule, freeze exact list before DEV outputs; do not add samples after effect/CI. Report effective blocks and MDE separately.",
+      "evidence_ids": [
+        "R39",
+        "R01"
+      ]
+    },
+    {
+      "item": 5,
+      "verdict": "ADOPT_WITH_NESTED_HPO",
+      "proposal": "ridge primary, regime secondary",
+      "decision": "Use training-fold static including no-edit; all transforms and HPO within inner training folds; no-head/response/JEPA expansion.",
+      "evidence_ids": [
+        "R39",
+        "R01"
+      ]
+    },
+    {
+      "item": 6,
+      "verdict": "ADOPT_FOR_RETROSPECTIVE_DEV_ONLY",
+      "proposal": "bidirectional blocked cross-fit + purge",
+      "decision": "Supported for retrospective transfer; cannot claim chronological deployment. Complete-support purge, fold-specific label access and exactly-once OOF prediction are required.",
+      "evidence_ids": [
+        "R39"
+      ]
+    }
+  ],
+  "blocking_items": [
+    {
+      "id": "F24-01",
+      "priority": "P0",
+      "status": "STATIC_CONFIRMED",
+      "title": "2020H2 is not an untouched confirm reservation",
+      "evidence": [
+        {
+          "path": "plans/plan_v4_0923/FP05_PLAN.md",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            19,
+            20
+          ]
+        },
+        {
+          "path": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n32_findings.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": ""
+        },
+        {
+          "path": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n64_findings.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": ""
+        },
+        {
+          "path": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/admission/x1_n64_manifest.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            21,
+            140
+          ]
+        },
+        {
+          "path": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N64.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "EXECUTION_CONFIRMED",
+          "note": "Embedded completed job and 64-issue numeric training panel",
+          "lines": [
+            1,
+            105
+          ]
+        }
+      ],
+      "conclusion": "X1 N32/N64 trained and analyzed additional 2020-07-13..12-28 issues. The full support of the 56 N64 issues overlaps continuously. Rejected/exploratory models still count as project exposure.",
+      "blocks": "Any clean-confirm claim; FP05 split release until the ledger includes these exposures",
+      "minimal_action": "Retain 2019H2 as a provisional retrospective DEV pool after full exposure checks. Mark 2020H2 EXPOSED_NOT_CONFIRM, do not read it in FP05. New untouched confirm assignment is a later authorized task, not automatic extra data collection."
+    },
+    {
+      "id": "F24-02",
+      "priority": "P0",
+      "status": "STATIC_CONFIRMED",
+      "title": "Global split enforcement is not implemented, and the planned entrance list is incomplete",
+      "evidence": [
+        {
+          "path": "plans/plan_v4_0923/FP05_PLAN.md",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            19,
+            39
+          ]
+        },
+        {
+          "path": "earthdelta/split_freeze.py",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "MISSING",
+          "note": "404 at fixed ref"
+        },
+        {
+          "path": "tests/test_plan_gate_chain.py",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            1,
+            137
+          ]
+        }
+      ],
+      "conclusion": "Existing certified-Fs and admission checks are real but do not enforce a project-wide exposure ledger across fit, predict, cache merge and evaluation. Calendar half-year labels are insufficient; July support overlaps remain.",
+      "blocks": "FP05 real DEV reads/cache/fit/score",
+      "minimal_action": "Add capability-based split checks before every actual data read, including worker entry, fit/scaler/PCA/HPO, validation prediction, resume/merge, and evaluator. Keep model source pins untouched."
+    },
+    {
+      "id": "F24-03",
+      "priority": "P1",
+      "status": "STATIC_CONFIRMED",
+      "title": "The 0.34% historical harm is not a new-panel F0 break-even theorem",
+      "evidence": [
+        {
+          "path": "plans/plan_v4_0923/FP05_PLAN.md",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            20,
+            23
+          ]
+        },
+        {
+          "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/qualification.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            160,
+            278
+          ]
+        }
+      ],
+      "conclusion": "The measured 0.3392558% is normalized by historical F0 loss; Fs-relative recovery on that same panel is 0.3381088%. On another panel the break-even harm is a new paired estimate, not this fixed number.",
+      "blocks": "FP05 decision protocol",
+      "minimal_action": "Keep 0.0034 only as an explicitly chosen Fs-relative engineering screen, not a proven utility threshold. Report same-DEV paired Fs/F0/policy contrasts after prediction freeze and separate dynamic-versus-static evidence."
+    },
+    {
+      "id": "F24-04",
+      "priority": "P1",
+      "status": "MISSING",
+      "title": "Raw GPU completion receipts are not present in the evidence read",
+      "evidence": [
+        {
+          "path": "artifacts/round2_cci/ed-r4gate0923e-0923174024-32e8c7/job_result.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "MISSING",
+          "note": "pt-g3344e9z"
+        },
+        {
+          "path": "artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b/job_result.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "MISSING",
+          "note": "pt-fuiqqeau"
+        },
+        {
+          "path": "artifacts/round2_cci/ed-r4fs03v2j4-0924021935-be0786/job_result.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "MISSING",
+          "note": "pt-gr3rrmdg"
+        },
+        {
+          "path": "artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/job_result.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "MISSING",
+          "note": "pt-vt003lhm"
+        },
+        {
+          "path": "artifacts/round2_cci/ed-r4bankbj3r-0924054117-185e82/job_result.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "MISSING",
+          "note": "pt-831c01g4"
+        }
+      ],
+      "conclusion": "Computational outputs support actual numerical work. Submission records and rc/elapsed strings in summaries are not independently read platform job_result.json records.",
+      "blocks": "Full execution-receipt closure and next resource-consuming dispatch, not a retroactive assertion that numerical records failed",
+      "minimal_action": "Supply the small original job_result/invocation/source-manifest/stdout records or read-only mounts; join by job_id/run_id. Do not rerun passed S0/Fs/bank merely to replace paperwork."
+    },
+    {
+      "id": "F24-05",
+      "priority": "P1",
+      "status": "STATIC_CONFIRMED",
+      "title": "FP02 acceptance contract remains partially executed",
+      "evidence": [
+        {
+          "path": "plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/CODEX_TASKS.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            111,
+            177
+          ]
+        },
+        {
+          "path": "tests/test_plan_gate_chain.py",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            1,
+            137
+          ]
+        },
+        {
+          "path": "tests/test_profile_immutability.py",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            1,
+            178
+          ]
+        },
+        {
+          "path": "scripts/plan_followup_runner.py",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "MISSING",
+          "note": "Not found among current added execution files; must be checked by entry inventory"
+        }
+      ],
+      "conclusion": "STOP/loaded-admission subsets exist; profile immutability was added in FP04. A thin common runner, global split gates and the complete planned consumption contract are not thereby DONE.",
+      "blocks": "Unrestricted downstream launch",
+      "minimal_action": "Carry FP02 as PARTIAL; implement only its remaining FP05-facing wrapper and contract tests under FP05a/b. Do not retrain finished assets."
+    },
+    {
+      "id": "F24-06",
+      "priority": "P1",
+      "status": "PLAUSIBLE_UNVERIFIED",
+      "title": "Backend/TF32 is not established as the unique cause of all Fs failures",
+      "evidence": [
+        {
+          "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/j3_j3b_findings.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": ""
+        },
+        {
+          "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/protocol/PREREGISTRATION.md",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": ""
+        },
+        {
+          "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/PREREGISTRATION_v2.md",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": ""
+        }
+      ],
+      "conclusion": "Certified runs are reproducible in the observed configurations; historical kernel-level causality is not isolated. H=256 fails holdout even after certified execution, while H=32 passes the 2% point-mean cap.",
+      "blocks": "Unique-root-cause or universal stability claims, not use of the certified H32 Fs",
+      "minimal_action": "Report three separate changes: reproducible execution, quality rejection, and a shorter registered fit. Preserve v1 failures and exploratory lineage."
+    },
+    {
+      "id": "F24-07",
+      "priority": "P1",
+      "status": "STATIC_CONFIRMED",
+      "title": "FP05 needs a complete statistical and nested-validation contract",
+      "evidence": [
+        {
+          "path": "plans/plan_v4_0923/FP05_PLAN.md",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            19,
+            48
+          ]
+        },
+        {
+          "path": "plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/CODEX_TASKS.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            282,
+            339
+          ]
+        }
+      ],
+      "conclusion": "Fixed N avoids one optional-stopping route but does not establish power. Bidirectional CV is retrospective, not forward-in-time deployment. Inner HPO/feature transforms and policy72 safety are unspecified.",
+      "blocks": "DEV label access and positive FP06 decision",
+      "minimal_action": "Freeze outer/inner folds, support purge, training-only preprocessors, fixed tie rules, paired block bootstrap, denominator, safety margin and decision sequence before outcomes. Keep confirm disabled."
+    },
+    {
+      "id": "F24-08",
+      "priority": "P1",
+      "status": "STATIC_CONFIRMED",
+      "title": "Assembly evaluator does not itself require the full registered trace key set",
+      "evidence": [
+        {
+          "path": "earthdelta/bank_training.py",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            2930,
+            3005
+          ]
+        },
+        {
+          "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank_verify.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            1,
+            250
+          ]
+        }
+      ],
+      "conclusion": "Current records contain full 1/4/12 comparisons. However, the generic numeric evaluator accepts nonempty zero maps without explicitly requiring all step keys, and all(empty boolean map) is true. This is a future-consumer robustness gap, not evidence the observed certificate skipped steps.",
+      "blocks": "Admitting incomplete future certificates",
+      "minimal_action": "In the new wrapper require exact experts0..3, step keys1/4/12 and eight post-hold comparisons, then consume unchanged pinned certifier. No modification of the 17 certified files by default."
+    },
+    {
+      "id": "F24-09",
+      "priority": "P1",
+      "status": "MISSING",
+      "title": "Bank out-of-sample utility and dynamic selection value remain unknown",
+      "evidence": [
+        {
+          "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            9,
+            90
+          ]
+        },
+        {
+          "path": "plans/plan_v4_0923/FP05_PLAN.md",
+          "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+          "evidence_status": "STATIC_CONFIRMED",
+          "note": "",
+          "lines": [
+            1,
+            50
+          ]
+        }
+      ],
+      "conclusion": "E3 is training-group direction, A1-A5 are implementation tests. Neither is policy_dev utility, selector superiority, response-model novelty or final confirmation.",
+      "blocks": "Positive FP06 utility/novelty conclusion, NOT the controlled FP05 experiment designed to answer it",
+      "minimal_action": "Complete fixed five-candidate DEV cache and OOF no-edit/static/regime/ridge comparison. Do not make lack of OOS evidence a circular prerequisite to obtaining OOS evidence."
+    }
+  ],
+  "audit_limitations": [
+    "No GPU submission or repository pytest rerun in this review",
+    "Large weights and parity tensors not rehashed/recomputed here",
+    "Internal preregistration timestamps and matching hashes support recorded order, not externally attested chronology",
+    "Raw standalone receipt files for current S0/Fs-v2/bank jobs were not read; their rc/elapsed summaries are distinguished. X1 N32/N64 embedded job_result objects WERE read."
+  ],
+  "current_allowed_work": [
+    "FP-05a CPU-only evidence/exposure reconciliation"
+  ],
+  "not_authorized": [
+    "new Fs fit",
+    "expert retraining",
+    "DEV candidate rollout",
+    "final confirm",
+    "dual-head/response novelty experiment"
+  ],
+  "must_not_claim": [
+    "FP02 fully executed",
+    "backend/TF32 uniquely explains every historical failure",
+    "Fs statistically proven harmless or beneficial out of sample",
+    "bank certified implies out-of-sample benefit",
+    "2020H2 untouched confirm",
+    "bidirectional CV demonstrates chronological deployment",
+    "0.34% fixed threshold proves new-panel F0 recovery",
+    "novelty or weather utility already established"
+  ]
+}

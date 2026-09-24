@@ -1,0 +1,532 @@
+[
+  {
+    "path": "plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/CODEX_TASKS.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Actual FP-00..FP-06 acceptance contract, not a reconstruction from earlier chat",
+    "lines": [
+      1,
+      379
+    ],
+    "id": "R01",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/CODEX_TASKS.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/FOLLOWUP_PLAN.md",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Read scope and staged acceptance; future CLI remains a planned interface",
+    "lines": [
+      1,
+      390
+    ],
+    "id": "R02",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/FOLLOWUP_PLAN.md",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/STOP_CONDITIONS.md",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Frozen predecessor and scientific stop conditions",
+    "id": "R03",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/STOP_CONDITIONS.md",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/CLAUDE_OPUSPLAN_EXECUTION_PROMPT.md",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Actual executor prompt",
+    "id": "R04",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/CLAUDE_OPUSPLAN_EXECUTION_PROMPT.md",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260923T164722Z_fp00/entry/entry_evidence.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Actual read-only inventory with git command returncodes",
+    "lines": [
+      1,
+      40
+    ],
+    "id": "R05",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260923T164722Z_fp00/entry/entry_evidence.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "EXECUTION_CONFIRMED",
+    "note": "Raw gate computational report, not a platform job_result.json; confirmation is from the read computational/log record, not a rerun",
+    "lines": [
+      1,
+      435
+    ],
+    "id": "R06",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260923T_fp01_trace/four_arm_trace.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Read trace header and first-arm portion; full trace must be rechecked by consumer",
+    "lines": [
+      1,
+      180
+    ],
+    "id": "R07",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260923T_fp01_trace/four_arm_trace.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "earthdelta/bridge/stormer_bridge.py",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Raw input inverse sources preserved; denormalize consumes them",
+    "lines": [
+      145,
+      415
+    ],
+    "id": "R08",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/earthdelta/bridge/stormer_bridge.py",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "scripts/s0_gate.py",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "TF32 explicitly disabled",
+    "lines": [
+      118,
+      128
+    ],
+    "id": "R09",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/scripts/s0_gate.py",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "scripts/s0_gate.py",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Formal gate uses bound NPZ factory rather than float32-only NPY path",
+    "lines": [
+      2200,
+      2260
+    ],
+    "id": "R10",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/scripts/s0_gate.py",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "earthdelta/fs_protocol.py",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Protocol hash, config, actual imported source and S0 certificate consumed",
+    "lines": [
+      60,
+      218
+    ],
+    "id": "R11",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/earthdelta/fs_protocol.py",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "tests/test_plan_gate_chain.py",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Real dispatcher failure spies and certified-Fs preconditions",
+    "lines": [
+      1,
+      137
+    ],
+    "id": "R12",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/tests/test_plan_gate_chain.py",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "tests/test_profile_immutability.py",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Deep-copy profile test with discriminating mutating direct call",
+    "lines": [
+      1,
+      178
+    ],
+    "id": "R13",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/tests/test_profile_immutability.py",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/protocol/PREREGISTRATION.md",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "v1 Q6 already <=1.02; H=256; designated replica; bounded fallback",
+    "id": "R14",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/protocol/PREREGISTRATION.md",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/deviation_DEV-001_tf32_checker.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Effective TF32 getter correction; original invalid decision retained",
+    "id": "R15",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/deviation_DEV-001_tf32_checker.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/deviation_DEV-002_f0_reference_decision_file.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Reference carrier filename changed; numeric reference asserted identical",
+    "id": "R16",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/deviation_DEV-002_f0_reference_decision_file.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/j3_j3b_findings.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Certified-backend H=256 remains a holdout quality failure; no unique-kernel causal identification",
+    "id": "R17",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/j3_j3b_findings.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n32_findings.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Exploratory N32; actual use of Jul-Dec 2020 training",
+    "id": "R18",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n32_findings.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n64_findings.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Exploratory N64, training-season and visits-per-issue confounds, holdout reuse",
+    "id": "R19",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n64_findings.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n64_override_record.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Declared exploratory override, not a formal certification",
+    "id": "R20",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n64_override_record.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/admission/x1_n64_manifest.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "56 extra 2020 issues, indices 779..1451; actual execution separately supported by results",
+    "lines": [
+      1,
+      160
+    ],
+    "id": "R21",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/admission/x1_n64_manifest.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/PREREGISTRATION_v2.md",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Fresh qualification holdout; H32; original thresholds retained",
+    "id": "R22",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/PREREGISTRATION_v2.md",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/fs_protocol_v2.sha256",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Recorded freeze time 02:04:13Z; not an external timestamp authority",
+    "lines": [
+      1,
+      2
+    ],
+    "id": "R23",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/fs_protocol_v2.sha256",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/jobs/V2_J3.submission_record.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Recorded submission 02:09:45Z and matching protocol SHA",
+    "id": "R24",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/jobs/V2_J3.submission_record.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/qualification.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "EXECUTION_CONFIRMED",
+    "note": "Raw numeric per-issue qualification fields and fixed-panel means; confirmation is from the read computational/log record, not a rerun",
+    "lines": [
+      1,
+      280
+    ],
+    "id": "R25",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/qualification.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/task_result_fp03_v2.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Run completion summary, selected artifact, scope and exposure windows",
+    "id": "R26",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/task_result_fp03_v2.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/tests/pytest_full_suite_v2_prereg.log",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "EXECUTION_CONFIRMED",
+    "note": "Historical executed suite: 766 passed, 7 skipped; not rerun here; confirmation is from the read computational/log record, not a rerun",
+    "id": "R27",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/tests/pytest_full_suite_v2_prereg.log",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "E3 strict <1, exact A1-A5 and certified-Fs chain",
+    "lines": [
+      1,
+      160
+    ],
+    "id": "R28",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.sha256",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "05:10:07Z freeze; prior unsubmitted version superseded",
+    "lines": [
+      1,
+      3
+    ],
+    "id": "R29",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.sha256",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/task_result_fp04.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Formal job completion summaries and per-expert qualification",
+    "id": "R30",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/task_result_fp04.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank_assembly.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "EXECUTION_CONFIRMED",
+    "note": "Four decided factors, file SHAs, identical certified Fs digests; confirmation is from the read computational/log record, not a rerun",
+    "lines": [
+      1,
+      200
+    ],
+    "id": "R31",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank_assembly.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank_verify.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "EXECUTION_CONFIRMED",
+    "note": "Per-expert 1/4/12 exact comparisons; single probe scope; confirmation is from the read computational/log record, not a rerun",
+    "lines": [
+      1,
+      250
+    ],
+    "id": "R32",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank_verify.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/BJ3_certify_decision.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "EXECUTION_CONFIRMED",
+    "note": "Certifier verdict and A1-A5 numeric decision, registry/bundle checks; confirmation is from the read computational/log record, not a rerun",
+    "id": "R33",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/BJ3_certify_decision.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "earthdelta/bank_training.py",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Hard E3, no partial bank, exact assembly evaluator; required step-key set hardening remains",
+    "lines": [
+      2730,
+      3005
+    ],
+    "id": "R34",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/earthdelta/bank_training.py",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "scripts/r2_fs_bank_train.py",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Actual independent assembly verification path",
+    "lines": [
+      1670,
+      1780
+    ],
+    "id": "R35",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/scripts/r2_fs_bank_train.py",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/deviations/DEV-FP04-001_relative_decision_paths.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Fail-closed path failure, original decision retained, same-weight retry",
+    "id": "R36",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/deviations/DEV-FP04-001_relative_decision_paths.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/jobs/B-J3_retry.submission_record.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Retry job ID, recorded time, invariant protocol hash",
+    "id": "R37",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/jobs/B-J3_retry.submission_record.json",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/tests/pytest_full_suite_fp04_prereg_refreeze.log",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "EXECUTION_CONFIRMED",
+    "note": "Historical executed suite: 861 passed, 7 skipped, exit0; confirmation is from the read computational/log record, not a rerun",
+    "id": "R38",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/tests/pytest_full_suite_fp04_prereg_refreeze.log",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "plans/plan_v4_0923/FP05_PLAN.md",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Six proposals, new split gate, proposed cache/OOF implementation",
+    "lines": [
+      15,
+      50
+    ],
+    "id": "R39",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/FP05_PLAN.md",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "path": "earthdelta/split_freeze.py",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "MISSING",
+    "note": "Requested at fixed commit: Not Found; currently a planned file",
+    "id": "R40",
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/earthdelta/split_freeze.py",
+    "content_hash_verified_in_this_review": false,
+    "scope": "specified lines/fields were read; not a complete repository execution"
+  },
+  {
+    "id": "R41",
+    "path": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N32.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "EXECUTION_CONFIRMED",
+    "note": "Embedded real job_result and numeric training result",
+    "lines": [
+      1,
+      26
+    ],
+    "content_hash_verified_in_this_review": false,
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N32.json"
+  },
+  {
+    "id": "R42",
+    "path": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N64.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "EXECUTION_CONFIRMED",
+    "note": "Embedded real job_result and numeric training result",
+    "lines": [
+      1,
+      150
+    ],
+    "content_hash_verified_in_this_review": false,
+    "url": "https://github.com/sisuolv/EarthDelta/blob/e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a/plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N64.json"
+  },
+  {
+    "id": "R43",
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "lines": [
+      145,
+      189
+    ],
+    "evidence_status": "STATIC_CONFIRMED",
+    "note": "Exact certified Fs paths, file hashes and common content digests",
+    "content_hash_verified_in_this_review": false
+  },
+  {
+    "id": "R44",
+    "path": "scripts/plan_followup_runner.py",
+    "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+    "evidence_status": "MISSING",
+    "note": "Explicit fetch returned 404; not an implemented production wrapper",
+    "content_hash_verified_in_this_review": false
+  }
+]

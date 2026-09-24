@@ -1,0 +1,12 @@
+Running 153 items in this shard
+........................................................................ [ 47%]
+........................................................................ [ 94%]
+.........                                                                [100%]
+=============================== warnings summary ===============================
+../../../../usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py:619
+  /usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py:619: UserWarning: Can't initialize NVML
+    warnings.warn("Can't initialize NVML")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+153 passed, 1 warning in 328.01s (0:05:28)
+exit=0

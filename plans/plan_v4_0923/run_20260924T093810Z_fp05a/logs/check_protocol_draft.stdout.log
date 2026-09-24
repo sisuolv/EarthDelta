@@ -1,0 +1,25 @@
+{
+ "protocol_predicates": {
+  "confirm_not_h2_clean": true,
+  "five_candidates": true,
+  "protocol_not_falsely_frozen_LITERAL": false,
+  "protocol_not_falsely_frozen_GENERALISED": true,
+  "safety_margin_unbound_visible": true
+ },
+ "fp05a_checks": {
+  "status_is_DRAFT_NOT_FROZEN": true,
+  "final_protocol_sha256_null": true,
+  "confirm_null": true,
+  "confirm_status_UNASSIGNED_NO_ACCESS": true,
+  "2020H2_EXPOSED_NOT_CONFIRM": true,
+  "no_undecided_field_carries_a_value": true,
+  "block_resample_fold_gpu_mde_all_null": true,
+  "gpu_not_authorized": true
+ },
+ "literal_failed_checks": [
+  "manifest_hashes_match",
+  "protocol_not_falsely_frozen"
+ ],
+ "literal_only_expected_failures": true,
+ "structural_pass": true
+}

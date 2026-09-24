@@ -1,0 +1,45 @@
+{
+ "checks": {
+  "N_is_112_unique": true,
+  "coverage_caveat_in_dev_protocol": true,
+  "dev_protocol_chained": true,
+  "every_issue_exactly_once": true,
+  "ids_admitted": true,
+  "ids_on_allow_list": true,
+  "n_blocks_represented": 23,
+  "shard_map_is_i_mod_4_time_order": true,
+  "strata_16_19_absent": true,
+  "worker_reads_total": 448
+ },
+ "dev_protocol_sha256": "11cb71fa617fb900c0430fb930411e36e74607007593718227cfeffdd5e6b876",
+ "failures": [],
+ "job_dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4cachecj2-0924125702-926f58",
+ "loss_values_read": false,
+ "passed": true,
+ "per_shard": {
+  "CJ2_S0": {
+   "model_load_seconds": 134.77864613500424,
+   "n_issues": 28,
+   "ok": true,
+   "peak_gpu_gib": 7.002204895019531
+  },
+  "CJ2_S1": {
+   "model_load_seconds": 134.7439127410762,
+   "n_issues": 28,
+   "ok": true,
+   "peak_gpu_gib": 7.002204895019531
+  },
+  "CJ2_S2": {
+   "model_load_seconds": 134.80711019597948,
+   "n_issues": 28,
+   "ok": true,
+   "peak_gpu_gib": 7.002204895019531
+  },
+  "CJ2_S3": {
+   "model_load_seconds": 134.839753506938,
+   "n_issues": 28,
+   "ok": true,
+   "peak_gpu_gib": 7.002204895019531
+  }
+ }
+}

@@ -1,0 +1,67 @@
+{
+ "schema": "ed-fp05a-protocol-draft-check/1",
+ "created_utc": "2026-09-24T09:55:39.373306+00:00",
+ "draft": {
+  "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/protocol/fp05_protocol.DRAFT.json",
+  "sha256": "79940c7dcabea2fc632d3b0057cc491f61e671356e5b22050a2d2d60d3b19c8b"
+ },
+ "literal_v2_validate_package_on_substituted_copy": {
+  "scope": "DELIVERY_ONLY_NOT_REPOSITORY_TESTS_OR_GPU",
+  "passed": false,
+  "checks": {
+   "all_required_files_exist": true,
+   "task_list": true,
+   "required_task_fields": true,
+   "unique_task_ids": true,
+   "all_dependencies_exist": true,
+   "acyclic": true,
+   "historical_done_retained": true,
+   "fp02_not_falsely_closed": true,
+   "no_historical_reexecution": true,
+   "only_fp05a_ready": true,
+   "future_states_to_be_run": true,
+   "estimates_not_invented": true,
+   "no_initial_gpu_or_training": true,
+   "confirm_not_h2_clean": true,
+   "five_candidates": true,
+   "protocol_not_falsely_frozen": false,
+   "safety_margin_unbound_visible": true,
+   "audit_verdict_allowed": true,
+   "science_not_claimed": true,
+   "S0_threshold_not_relaxed": true,
+   "X1_exposure_documented": true,
+   "FP06_depends_on_real_evaluation": true,
+   "manifest_hashes_match": false
+  },
+  "check_count": 23,
+  "returncode": 1
+ },
+ "literal_expected_failures_explained": {
+  "manifest_hashes_match": "the substituted template file no longer matches PACKAGE_MANIFEST.json (by construction)",
+  "protocol_not_falsely_frozen": "v2 hard-codes status=='TO_BE_RUN'; the dispatch mandates 'DRAFT_NOT_FROZEN'. execution_ready=false and final_protocol_sha256=null both hold."
+ },
+ "protocol_predicates": {
+  "confirm_not_h2_clean": true,
+  "five_candidates": true,
+  "protocol_not_falsely_frozen_LITERAL": false,
+  "protocol_not_falsely_frozen_GENERALISED": true,
+  "safety_margin_unbound_visible": true
+ },
+ "fp05a_checks": {
+  "status_is_DRAFT_NOT_FROZEN": true,
+  "final_protocol_sha256_null": true,
+  "confirm_null": true,
+  "confirm_status_UNASSIGNED_NO_ACCESS": true,
+  "2020H2_EXPOSED_NOT_CONFIRM": true,
+  "no_undecided_field_carries_a_value": true,
+  "block_resample_fold_gpu_mde_all_null": true,
+  "gpu_not_authorized": true
+ },
+ "undecided_fields_with_values": [],
+ "structural_pass": true,
+ "literal_failed_checks": [
+  "manifest_hashes_match",
+  "protocol_not_falsely_frozen"
+ ],
+ "literal_only_expected_failures": true
+}

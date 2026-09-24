@@ -1,0 +1,1 @@
+{"passed": true, "n_failures": 0, "failures": [], "n_anchor_values_compared": 144, "anchor_max_relative_diff_is_zero": true, "checks": {"debug_set_equals_freeze_allow_list": true, "own_partition_equals_debug_set": true}}

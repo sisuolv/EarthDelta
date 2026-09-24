@@ -1,0 +1,91 @@
+{
+  "status": "OBSERVED",
+  "verdict": "PASS_PACKAGE_TOOLS_ONLY",
+  "tests": [
+    {
+      "test": "baseline_contract_checks_pass",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "duplicate_task_ids",
+      "passed": true,
+      "detail": "unique_task_ids"
+    },
+    {
+      "test": "unknown_dependency",
+      "passed": true,
+      "detail": "existing_dependencies"
+    },
+    {
+      "test": "cycle_is_rejected",
+      "passed": true,
+      "detail": "cycle"
+    },
+    {
+      "test": "extra_task_authorization",
+      "passed": true,
+      "detail": "only_FP05a_authorized"
+    },
+    {
+      "test": "FP02_false_done",
+      "passed": true,
+      "detail": "FP02_partial_preserved"
+    },
+    {
+      "test": "old_done_rescheduled",
+      "passed": true,
+      "detail": "historical_done_scoped"
+    },
+    {
+      "test": "confirm_exposure_laundering",
+      "passed": true,
+      "detail": "confirm_not_laundered"
+    },
+    {
+      "test": "GPU_unauthorized_unlock",
+      "passed": true,
+      "detail": "no_gpu_authorization"
+    },
+    {
+      "test": "F0_silently_added_as_candidate",
+      "passed": true,
+      "detail": "five_candidates_F0_report_only"
+    },
+    {
+      "test": "S0_tolerance_relaxed",
+      "passed": true,
+      "detail": "S0_frozen_tolerance"
+    },
+    {
+      "test": "future_duration_invented",
+      "passed": true,
+      "detail": "no_invented_minutes"
+    },
+    {
+      "test": "content_tamper_rejected",
+      "passed": true,
+      "detail": "manifest_complete_and_hashes_equal"
+    },
+    {
+      "test": "collector_missing_receipts_not_certified",
+      "passed": true,
+      "detail": "Synthetic empty git workspace only; not EarthDelta repository execution."
+    },
+    {
+      "test": "collector_output_overwrite_refused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "all_json_and_python_parse",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "passed": 16,
+  "failed": 0,
+  "repository_tests_run": false,
+  "gpu_jobs_run": false,
+  "scope": "Local delivery-tool and synthetic receipt-collector self-tests only."
+}

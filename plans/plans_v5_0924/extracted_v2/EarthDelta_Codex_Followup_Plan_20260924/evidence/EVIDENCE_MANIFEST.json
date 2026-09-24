@@ -1,0 +1,48 @@
+{
+  "schema": "ed-evidence-manifest/20260924",
+  "state": "OBSERVED",
+  "audit_ref": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+  "observed_head": "08093650ba56e8cf709d75a61c26c50a0c35f6f7",
+  "source_index": "SOURCE_INDEX.json",
+  "findings": "FINDINGS.json",
+  "job_register": "JOB_EVIDENCE_REGISTER.json",
+  "observations": "OBSERVATIONS.json",
+  "supplied_material_scope": "GitHub read/search at pinned commits and already mounted historical packages; no new weights supplied",
+  "read_order": [
+    "prior FP acceptance files",
+    "actual executor prompt",
+    "S0 trace/certificate",
+    "Fs v1 and deviations",
+    "X1 and v2 protocol/qualification",
+    "bank protocol/assembly/verify/deviation",
+    "FP05 plan"
+  ],
+  "independently_executed_here": [
+    "scalar ratio and interval arithmetic from explicitly transcribed records",
+    "generated-package structure/hash validation"
+  ],
+  "not_executed_here": [
+    "repository pytest",
+    "GPU forward/backward",
+    "expert or Fs training",
+    "full raw weight rehash",
+    "candidate cache",
+    "holdout evaluation"
+  ],
+  "raw_receipts_read": [
+    "X1 N32 and N64 embedded job_result"
+  ],
+  "raw_receipts_missing": [
+    "S0 pt-g3344e9z",
+    "Fs-v2 fit/certify",
+    "bank shortstep/formal/assembly/retry standalone platform receipts"
+  ],
+  "large_assets_missing_here": [
+    "F0/Fs/bank weights",
+    "official output tensors",
+    "training probes"
+  ],
+  "chronology_statement": "Local recorded times and matching protocol SHAs support recorded pre-submission order; not an independent timestamp attestation.",
+  "future_results": "TO_BE_RUN; none generated in this package",
+  "no_sandbox_path_inferred_from_repo_reference": true
+}

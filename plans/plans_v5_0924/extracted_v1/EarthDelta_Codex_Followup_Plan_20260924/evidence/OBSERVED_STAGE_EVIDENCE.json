@@ -1,0 +1,145 @@
+{
+  "schema": "earthdelta-stage-evidence/1",
+  "status": "OBSERVED",
+  "not_new_experiments": true,
+  "s0": {
+    "job_id_reported": "pt-g3344e9z",
+    "job_id_link_status": "RECEIPT_NOT_RETRIEVED",
+    "run_dir": "artifacts/round2_cci/ed-r4gate0923e-0923174024-32e8c7",
+    "artifact": "plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "max_abs_diff": {
+      "6h_1step": 0.0,
+      "6h_4step": 0.0,
+      "6h_12step": 0.0
+    },
+    "tolerance": 1e-05,
+    "verdict_committed": true,
+    "s0_sha256_recorded": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438",
+    "raw_job_result": "MISSING",
+    "source": "E04/E05"
+  },
+  "fs_v2": {
+    "status": "OBSERVED",
+    "verdict": "FS_SELECTED",
+    "updates": 32,
+    "learning_rate": 0.0025,
+    "train_issues": 8,
+    "holdout_issues": 16,
+    "train24_mean_initial": 0.03187907820466652,
+    "train24_mean_final": 0.03105212451750749,
+    "train24_ratio": 0.974059673813342,
+    "train72_ratio": 0.9923692175341735,
+    "holdout24_initial": 0.03127357741727903,
+    "holdout24_final": 0.03137967485354686,
+    "holdout24_ratio": 1.0033925583521255,
+    "holdout24_worse_count": 14,
+    "holdout24_max_ratio_allowed": 1.02,
+    "scope": "通过有限面板资格规则，不是总体无害/有益证明",
+    "jobs": [
+      {
+        "id": "pt-fuiqqeau",
+        "run_dir": "artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b",
+        "reported_returncode": 0,
+        "reported_elapsed_seconds": 306.8,
+        "raw_job_result": "MISSING"
+      },
+      {
+        "id": "pt-gr3rrmdg",
+        "run_dir": "artifacts/round2_cci/ed-r4fs03v2j4-0924021935-be0786",
+        "reported_returncode": 0,
+        "reported_elapsed_seconds": 263.7,
+        "raw_job_result": "MISSING"
+      }
+    ]
+  },
+  "bank": {
+    "verdict": "BANK_CERTIFIED",
+    "num_experts": 4,
+    "rank_per_expert": 4,
+    "groups": [
+      15,
+      16,
+      7,
+      6
+    ],
+    "mean_own_group_24h_ratios": [
+      0.9900749343807109,
+      0.9908935846168572,
+      0.9849826740404127,
+      0.9802412120161317
+    ],
+    "own_group_threshold": "strict < 1.00",
+    "probe_issue_id": "iss_292517fb189ee1bd",
+    "probe_steps": [
+      1,
+      4,
+      12
+    ],
+    "A1_A5_exact": true,
+    "zero_vs_Fs": 0.0,
+    "zero_vs_F0": 1.1939021348953247,
+    "out_of_sample_utility": "MISSING",
+    "all_workers_fs_digest": "370bd3bcc7545755bcdb60e482e1ce1ebc201302dc710f7992a4d76c4915bb97",
+    "bank_digest": "13bc905444e4af1008b95d8820f0db4a5585621c712b1330d096b027df9cb33b",
+    "bank_file_sha256_recorded": "c3e3e34b60b463b41a6c824fa680d844a2830cd2c7b40d3fc4544dc985b85f81",
+    "jobs": [
+      {
+        "id": "pt-ycpvyb6n",
+        "run_dir": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c",
+        "reported_returncode": 0,
+        "reported_elapsed_seconds": 561.7,
+        "raw_job_result": "MISSING"
+      },
+      {
+        "id": "pt-vt003lhm",
+        "run_dir": "artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d",
+        "reported_returncode": 0,
+        "reported_elapsed_seconds": 364.4,
+        "raw_job_result": "MISSING"
+      },
+      {
+        "id": "pt-m52qwunf",
+        "run_dir": "artifacts/round2_cci/ed-r4bankbj3-0924053507-ae0123",
+        "reported_returncode": 1,
+        "reported_elapsed_seconds": 180.2,
+        "raw_job_result": "MISSING",
+        "scope": "preserved failed relative-path assembly"
+      },
+      {
+        "id": "pt-831c01g4",
+        "run_dir": "artifacts/round2_cci/ed-r4bankbj3r-0924054117-185e82",
+        "reported_returncode": 0,
+        "reported_elapsed_seconds": 357.3,
+        "raw_job_result": "MISSING"
+      }
+    ]
+  },
+  "x1_n64": {
+    "job_id": "pt-t3bfl3e9",
+    "run_dir": "artifacts/round2_cci/ed-r4fs03x1n64-0924010930-404a65",
+    "job_result_embedded_in": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N64.json:6-15",
+    "returncode": 0,
+    "elapsed_seconds": 719.624,
+    "started_utc": "2026-09-24T01:10:15.303397+00:00",
+    "finished_utc": "2026-09-24T01:22:14.927708+00:00",
+    "n_train": 64,
+    "new_h2_issues": 56,
+    "source": "E14"
+  },
+  "cpu_logs": [
+    {
+      "source": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/tests/pytest_full_suite_v2_prereg.log",
+      "passed": 766,
+      "skipped": 7,
+      "seconds": 413.96,
+      "new_audit_rerun": false
+    },
+    {
+      "source": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/tests/pytest_full_suite_fp04_prereg_refreeze.log",
+      "passed": 861,
+      "skipped": 7,
+      "seconds": 743.11,
+      "new_audit_rerun": false
+    }
+  ]
+}

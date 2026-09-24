@@ -1,0 +1,401 @@
+{
+ "M5_static_choice": "expert_0",
+ "coverage_caveat": {
+  "N_target": 112,
+  "coordinator_resolution": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/admission/policy_dev_selection_coordinator_resolution.json",
+   "sha256": "bc34ac618c8e8325e8c3e524fd7dfae8d7024bef1011c566a879d90cbdb98004"
+  },
+  "n_strata_represented": 23,
+  "short": "strata 16 and 19 (2019-10-26..11-02, 2019-11-16..11-23) have no policy_dev issue: real data gap",
+  "strata": [
+   {
+    "n_policy_dev_issues": 0,
+    "reason": "REAL_DATA_GAP: no clean t-12h..t+72h window (non-finite runs in 2019.zarr)",
+    "stratum": 16,
+    "utc": [
+     "2019-10-26T12Z",
+     "2019-11-02T06Z"
+    ]
+   },
+   {
+    "n_policy_dev_issues": 0,
+    "reason": "REAL_DATA_GAP: no clean t-12h..t+72h window (non-finite runs in 2019.zarr)",
+    "stratum": 19,
+    "utc": [
+     "2019-11-16T12Z",
+     "2019-11-23T06Z"
+    ]
+   }
+  ],
+  "text": "policy_dev covers 23 of 25 weekly strata: strata 16 (2019-10-26T12Z..11-02T06Z) and 19 (2019-11-16T12Z..11-23T06Z) have zero issues because 2019.zarr holds non-finite values there (no clean t-12h..t+72h window). N_target = 112 of 128 (16 targets dropped by the declared POLICY-DEV-SELECT-v1 rule; outcome accepted by the coordinator). A data-availability gap, not a selection choice; every DEV result and every FP-06 statement must carry this caveat."
+ },
+ "prediction_freeze_sha256": "d2fdc2853cf2902a38c2a6afebdb5ccc363d57a78e6c9faa7f6e9e5565e1d5cd",
+ "primary_7day_blocks": {
+  "G_F0_note": "G_F0(M) = G_Fs(M) - H_Fs, reported per comparison",
+  "H_Fs_24h": {
+   "ci": [
+    0.0014975268352890169,
+    0.0023419606037218717
+   ],
+   "definition": "(sum L_Fs - sum L_F0) / sum L_Fs (Fs harm vs F0; >0 = Fs worse)",
+   "point": 0.0019134760154940148
+  },
+  "blocks": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   17,
+   18,
+   20,
+   21,
+   22,
+   23,
+   24
+  ],
+  "comparisons": {
+   "F0_vs_Fs_background": {
+    "G_F0_point": 0.0,
+    "baseline": "M0",
+    "ci_high": 0.0023419606037218717,
+    "ci_low": 0.0014975268352890169,
+    "lead_hours": 24,
+    "method": "F0",
+    "point": 0.0019134760154940148,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M1_vs_Fs": {
+    "G_F0_point": 0.0007009751598276177,
+    "baseline": "M0",
+    "ci_high": 0.003008140910381153,
+    "ci_low": 0.0022565028962615867,
+    "lead_hours": 24,
+    "method": "M1",
+    "point": 0.0026144511753216325,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M1_vs_Fs_6h": {
+    "G_F0_point": -0.0013925135696004208,
+    "baseline": "M0",
+    "ci_high": 0.0006539277263242694,
+    "ci_low": 0.00038521979758782636,
+    "lead_hours": 6,
+    "method": "M1",
+    "point": 0.0005209624458935941,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M1_vs_Fs_72h": {
+    "G_F0_point": 0.0027732860220447495,
+    "baseline": "M0",
+    "ci_high": 0.00586413064870002,
+    "ci_low": 0.0037562634181281833,
+    "harm72_guard_pass": true,
+    "lead_hours": 72,
+    "method": "M1",
+    "point": 0.004686762037538764,
+    "status_vs_delta_min": "ABOVE"
+   },
+   "M2_vs_Fs": {
+    "G_F0_point": 0.0007594730692856082,
+    "baseline": "M0",
+    "ci_high": 0.0030609526759210375,
+    "ci_low": 0.002327408220757035,
+    "lead_hours": 24,
+    "method": "M2",
+    "point": 0.002672949084779623,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M2_vs_Fs_6h": {
+    "G_F0_point": -0.00140246726015348,
+    "baseline": "M0",
+    "ci_high": 0.0006456804084035158,
+    "ci_low": 0.00037702525448269584,
+    "lead_hours": 6,
+    "method": "M2",
+    "point": 0.0005110087553405347,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M2_vs_Fs_72h": {
+    "G_F0_point": 0.002565838750530491,
+    "baseline": "M0",
+    "ci_high": 0.005682101088977525,
+    "ci_low": 0.003508794617926039,
+    "harm72_guard_pass": true,
+    "lead_hours": 72,
+    "method": "M2",
+    "point": 0.004479314766024506,
+    "status_vs_delta_min": "ABOVE"
+   },
+   "M2_vs_M1": {
+    "G_F0_point": null,
+    "baseline": "M1",
+    "ci_high": 0.00015095017380521594,
+    "ci_low": -2.3466263158549587e-05,
+    "lead_hours": 24,
+    "method": "M2",
+    "point": 5.849790945799061e-05,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M3_vs_Fs": {
+    "G_F0_point": 0.0006979558835859979,
+    "baseline": "M0",
+    "ci_high": 0.0028437429947231604,
+    "ci_low": 0.002389265466412697,
+    "lead_hours": 24,
+    "method": "M3",
+    "point": 0.0026114318990800127,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M3_vs_Fs_6h": {
+    "G_F0_point": -0.001333965848041677,
+    "baseline": "M0",
+    "ci_high": 0.0007107118712064784,
+    "ci_low": 0.0004515504519716079,
+    "lead_hours": 6,
+    "method": "M3",
+    "point": 0.0005795101674523379,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M3_vs_Fs_72h": {
+    "G_F0_point": 0.002475999984517605,
+    "baseline": "M0",
+    "ci_high": 0.0049515285523487875,
+    "ci_low": 0.0038095863175784234,
+    "harm72_guard_pass": true,
+    "lead_hours": 72,
+    "method": "M3",
+    "point": 0.00438947600001162,
+    "status_vs_delta_min": "ABOVE"
+   },
+   "M3_vs_M1": {
+    "G_F0_point": null,
+    "baseline": "M1",
+    "ci_high": 0.00018101310838171305,
+    "ci_low": -0.00020659132804764705,
+    "lead_hours": 24,
+    "method": "M3",
+    "point": -3.0192762416195793e-06,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M5_vs_Fs": {
+    "G_F0_point": 0.0007009751598276177,
+    "baseline": "M0",
+    "ci_high": 0.003008140910381153,
+    "ci_low": 0.0022565028962615867,
+    "lead_hours": 24,
+    "method": "M5",
+    "point": 0.0026144511753216325,
+    "status_vs_delta_min": "BELOW"
+   },
+   "oracle_vs_Fs": {
+    "G_F0_point": 0.0012365781159258426,
+    "baseline": "M0",
+    "ci_high": 0.0035073360723953512,
+    "ci_low": 0.0028240021001966847,
+    "lead_hours": 24,
+    "method": "M4",
+    "point": 0.0031500541314198574,
+    "status_vs_delta_min": "STRADDLE"
+   },
+   "oracle_vs_M1": {
+    "G_F0_point": null,
+    "baseline": "M1",
+    "ci_high": 0.0006669270416558893,
+    "ci_low": 0.0004134062170108022,
+    "lead_hours": 24,
+    "method": "M4",
+    "point": 0.000535602956098225,
+    "status_vs_delta_min": "BELOW"
+   }
+  },
+  "confidence": 0.95,
+  "delta_min": 0.0034,
+  "draws": 10000,
+  "n_blocks": 23,
+  "seed": 20260924
+ },
+ "sensitivity_14day_blocks_report_only": {
+  "G_F0_note": "G_F0(M) = G_Fs(M) - H_Fs, reported per comparison",
+  "H_Fs_24h": {
+   "ci": [
+    0.0014786272183200794,
+    0.0023559652242185355
+   ],
+   "definition": "(sum L_Fs - sum L_F0) / sum L_Fs (Fs harm vs F0; >0 = Fs worse)",
+   "point": 0.0019134760154941445
+  },
+  "blocks": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "comparisons": {
+   "F0_vs_Fs_background": {
+    "baseline": "M0",
+    "ci_high": 0.0023559652242185355,
+    "ci_low": 0.0014786272183200794,
+    "lead_hours": 24,
+    "method": "F0",
+    "point": 0.0019134760154941445,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M1_vs_Fs": {
+    "baseline": "M0",
+    "ci_high": 0.003062201037021833,
+    "ci_low": 0.002217947841817264,
+    "lead_hours": 24,
+    "method": "M1",
+    "point": 0.002614451175321892,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M1_vs_Fs_6h": {
+    "baseline": "M0",
+    "ci_high": 0.0006724452335999558,
+    "ci_low": 0.00036393701730747235,
+    "lead_hours": 6,
+    "method": "M1",
+    "point": 0.0005209624458934537,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M1_vs_Fs_72h": {
+    "baseline": "M0",
+    "ci_high": 0.006033043109610981,
+    "ci_low": 0.003710092397205813,
+    "harm72_guard_pass": true,
+    "lead_hours": 72,
+    "method": "M1",
+    "point": 0.004686762037538985,
+    "status_vs_delta_min": "ABOVE"
+   },
+   "M2_vs_Fs": {
+    "baseline": "M0",
+    "ci_high": 0.003089702404099006,
+    "ci_low": 0.0022954092052847866,
+    "lead_hours": 24,
+    "method": "M2",
+    "point": 0.0026729490847797526,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M2_vs_Fs_6h": {
+    "baseline": "M0",
+    "ci_high": 0.0006603776231700819,
+    "ci_low": 0.00035654447261034645,
+    "lead_hours": 6,
+    "method": "M2",
+    "point": 0.0005110087553403943,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M2_vs_Fs_72h": {
+    "baseline": "M0",
+    "ci_high": 0.00588307286566181,
+    "ci_low": 0.0034308179171508805,
+    "harm72_guard_pass": true,
+    "lead_hours": 72,
+    "method": "M2",
+    "point": 0.004479314766024506,
+    "status_vs_delta_min": "ABOVE"
+   },
+   "M2_vs_M1": {
+    "baseline": "M1",
+    "ci_high": 0.0001334095126714355,
+    "ci_low": -8.126809194985415e-06,
+    "lead_hours": 24,
+    "method": "M2",
+    "point": 5.849790945786071e-05,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M3_vs_Fs": {
+    "baseline": "M0",
+    "ci_high": 0.0029102577874813894,
+    "ci_low": 0.0023413519729426676,
+    "lead_hours": 24,
+    "method": "M3",
+    "point": 0.0026114318990801424,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M3_vs_Fs_6h": {
+    "baseline": "M0",
+    "ci_high": 0.0007144568884783296,
+    "ci_low": 0.0004416892745061363,
+    "lead_hours": 6,
+    "method": "M3",
+    "point": 0.0005795101674521976,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M3_vs_Fs_72h": {
+    "baseline": "M0",
+    "ci_high": 0.004931167004242013,
+    "ci_low": 0.0038207849680942634,
+    "harm72_guard_pass": true,
+    "lead_hours": 72,
+    "method": "M3",
+    "point": 0.00438947600001162,
+    "status_vs_delta_min": "ABOVE"
+   },
+   "M3_vs_M1": {
+    "baseline": "M1",
+    "ci_high": 0.000175955553174459,
+    "ci_low": -0.00017754405745929038,
+    "lead_hours": 24,
+    "method": "M3",
+    "point": -3.0192762417494714e-06,
+    "status_vs_delta_min": "BELOW"
+   },
+   "M5_vs_Fs": {
+    "baseline": "M0",
+    "ci_high": 0.003062201037021833,
+    "ci_low": 0.002217947841817264,
+    "lead_hours": 24,
+    "method": "M5",
+    "point": 0.002614451175321892,
+    "status_vs_delta_min": "BELOW"
+   },
+   "oracle_vs_Fs": {
+    "baseline": "M0",
+    "ci_high": 0.003571173334881794,
+    "ci_low": 0.0027915468668362857,
+    "lead_hours": 24,
+    "method": "M4",
+    "point": 0.003150054131419987,
+    "status_vs_delta_min": "STRADDLE"
+   },
+   "oracle_vs_M1": {
+    "baseline": "M1",
+    "ci_high": 0.0006759270527970952,
+    "ci_low": 0.00042278580592154045,
+    "lead_hours": 24,
+    "method": "M4",
+    "point": 0.000535602956098095,
+    "status_vs_delta_min": "BELOW"
+   }
+  },
+  "confidence": 0.95,
+  "delta_min": 0.0034,
+  "draws": 10000,
+  "n_blocks": 13,
+  "seed": 20260924
+ }
+}

@@ -1,0 +1,4 @@
+/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py:619: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")
+{"verdict": "PASS", "checks": {"e0_all_workers": true, "matrix_8x5x3_valid": true, "anchors_present_for_8": true, "duplicates_byte_identical": true, "reference_equals_plain_fs": true}, "anchors_exact": true}
+{"dev_scale": "CHOSEN", "N": 112}

@@ -1,0 +1,127 @@
+{
+ "schema": "ed-fp05a-fp02-remaining/1",
+ "created_utc": "2026-09-24T09:53:23.009706+00:00",
+ "builder": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/tools/check_fp02_remaining.py",
+ "builder_sha256": "b90d7a3dd08650ce9455863086c4e9a724981745213c67469cd94b77ff768d37",
+ "fp02_status": "PARTIAL (not upgraded to DONE by FP-03/FP-04 progress)",
+ "required_still_missing": [
+  {
+   "path": "scripts/plan_followup_runner.py",
+   "exists": false,
+   "git_tracked": false,
+   "find_by_basename_outside_artifacts": []
+  },
+  {
+   "path": "earthdelta/split_freeze.py",
+   "exists": false,
+   "git_tracked": false,
+   "find_by_basename_outside_artifacts": []
+  }
+ ],
+ "all_required_still_missing": true,
+ "fp05b_named_new_entry_points": [
+  {
+   "path": "earthdelta/candidate_cache.py",
+   "exists": false
+  },
+  {
+   "path": "earthdelta/policy_oof.py",
+   "exists": false
+  },
+  {
+   "path": "scripts/r4_candidate_cache.py",
+   "exists": false
+  },
+  {
+   "path": "scripts/r4_cache_decide.py",
+   "exists": false
+  },
+  {
+   "path": "scripts/r4_policy_oof.py",
+   "exists": false
+  },
+  {
+   "path": "tests/test_split_freeze.py",
+   "exists": false
+  },
+  {
+   "path": "tests/test_plan_cache_evaluation.py",
+   "exists": false
+  },
+  {
+   "path": "tests/test_fp05_consumption_chain.py",
+   "exists": false
+  },
+  {
+   "path": "tests/test_policy_oof_isolation.py",
+   "exists": false
+  }
+ ],
+ "done_subparts_with_evidence": [
+  {
+   "subpart": "stage failure blocks successors",
+   "evidence": "tests/test_plan_gate_chain.py",
+   "exists": true,
+   "sha256": "a2d9424453b2c323375723de9fc1b2cf121321112cc4930033038dfb8f7617f2"
+  },
+  {
+   "subpart": "loaded-admission binding (Fs subset)",
+   "evidence": "tests/test_loaded_admission_binding.py",
+   "exists": true,
+   "sha256": "6e4476db16768b3346ae9a037f7bd6ccd138363efbeb24962295cdb1cc1a8d24"
+  },
+  {
+   "subpart": "profile immutability (added in FP-04)",
+   "evidence": "tests/test_profile_immutability.py",
+   "exists": true,
+   "sha256": "ac90e0066e1ae407d874ca87720bf2c0947ee4b589ad07ca1fdd8b0c976d2659"
+  },
+  {
+   "subpart": "certified-Fs authorization / single Fs identity",
+   "evidence": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/task_result_fp04.json",
+   "exists": true,
+   "sha256": "038b421f172e06fd2e2a4b93d5a67521f935fc3a12b525364cfe217f00048169"
+  }
+ ],
+ "missing_subparts": [
+  "thin common runner (scripts/plan_followup_runner.py)",
+  "project-wide frozen split / exposure enforcement (earthdelta/split_freeze.py) consuming entry/exposure_ledger.json",
+  "complete FP-05 fit/predict/cache/evaluate consumption checks (tests named above)"
+ ],
+ "observation_role_tags": {
+  "finding": "Every admission consumed so far carries data_role='bank_fit', including the v1 holdout panel and the FP-03 v2 2019 holdout (A1); split_id is 'test' on 2020 rows. Role tags therefore do not currently distinguish training from evaluation exposure; the exposure ledger (not the role tag) is the authority until split_freeze exists.",
+  "admissions": {
+   "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/admission/bank_fit_admission.json": {
+    "data_role": "bank_fit",
+    "split_ids": [
+     "test"
+    ]
+   },
+   "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/admission/holdout_panel_admission.json": {
+    "data_role": "bank_fit",
+    "split_ids": [
+     "test"
+    ]
+   },
+   "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/holdout/v2_holdout_admission_A1.json": {
+    "data_role": "bank_fit",
+    "split_ids": [
+     "val"
+    ]
+   },
+   "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/admission/x1_n64_admission.json": {
+    "data_role": "bank_fit",
+    "split_ids": [
+     "test"
+    ]
+   },
+   "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json": {
+    "data_role": "bank_fit",
+    "split_ids": [
+     "test"
+    ]
+   }
+  }
+ },
+ "fp05a_action": "RECORD_ONLY (creating these entry points is FP-05b scope)"
+}

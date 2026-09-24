@@ -1,0 +1,20 @@
+{
+  "state": "OBSERVED",
+  "scope": "SCALAR_ARITHMETIC_NOT_NEW_MODEL_RESULTS",
+  "n_x1_extra": 56,
+  "largest_gap_hours": 78,
+  "support_start": "2020-07-13T06:00:00+00:00",
+  "support_end": "2020-12-31T18:00:00+00:00",
+  "support_union_contiguous": true,
+  "train24_ratio_from_means": 0.974059673813342,
+  "holdout24_ratio_from_means": 1.0033925583521255,
+  "same_panel_break_even_Fs_fraction": 0.003381087814421428,
+  "checks": {
+    "n56": true,
+    "support_connected": true,
+    "train_ratio": true,
+    "holdout_ratio": true,
+    "denominator_conversion": true
+  }
+}
+arith rc=0

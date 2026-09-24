@@ -1,0 +1,149 @@
+[
+  {
+    "id": "s0_certificate",
+    "path": "plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "expected_sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438",
+    "kind": "tracked_json",
+    "required_for": "FP-05a"
+  },
+  {
+    "id": "fs_protocol_v2",
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/fs_protocol_v2.json",
+    "expected_sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe",
+    "kind": "tracked_json",
+    "required_for": "FP-05a"
+  },
+  {
+    "id": "bank_protocol_v1",
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json",
+    "expected_sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1",
+    "kind": "tracked_json",
+    "required_for": "FP-05a"
+  },
+  {
+    "id": "fs_adapter",
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_adapter.pt",
+    "expected_sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089",
+    "kind": "large_asset",
+    "required_for": "before GPU cache"
+  },
+  {
+    "id": "fs_merged_backbone",
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/fs_merged_backbone.pt",
+    "expected_sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b",
+    "kind": "large_asset",
+    "required_for": "before GPU cache"
+  },
+  {
+    "id": "bank",
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank.pt",
+    "expected_sha256": "c3e3e34b60b463b41a6c824fa680d844a2830cd2c7b40d3fc4544dc985b85f81",
+    "kind": "large_asset",
+    "required_for": "before GPU cache"
+  },
+  {
+    "id": "bank_registry",
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/registry.json",
+    "expected_sha256": "c480684df1e9068387d347e00f6afa16f2b08db2d137d23175fb3933d944affd",
+    "kind": "tracked_json",
+    "required_for": "FP-05a"
+  },
+  {
+    "id": "bank_manifest",
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank_manifest.json",
+    "expected_sha256": "6946ec0bd7fd57b17d144c80f97e66ef46187bb60967aeffb35c0d1e5bf4275f",
+    "kind": "tracked_json",
+    "required_for": "FP-05a"
+  },
+  {
+    "id": "receipt_pt-g3344e9z",
+    "path": "artifacts/round2_cci/ed-r4gate0923e-0923174024-32e8c7/job_result.json",
+    "expected_sha256": null,
+    "kind": "raw_job_receipt",
+    "job_id": "pt-g3344e9z",
+    "expected_returncode": 0,
+    "required_for": "FP-05a receipt closure",
+    "state_at_audit": "MISSING"
+  },
+  {
+    "id": "receipt_pt-fuiqqeau",
+    "path": "artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b/job_result.json",
+    "expected_sha256": null,
+    "kind": "raw_job_receipt",
+    "job_id": "pt-fuiqqeau",
+    "expected_returncode": 0,
+    "required_for": "FP-05a receipt closure",
+    "state_at_audit": "MISSING"
+  },
+  {
+    "id": "receipt_pt-gr3rrmdg",
+    "path": "artifacts/round2_cci/ed-r4fs03v2j4-0924021935-be0786/job_result.json",
+    "expected_sha256": null,
+    "kind": "raw_job_receipt",
+    "job_id": "pt-gr3rrmdg",
+    "expected_returncode": 0,
+    "required_for": "FP-05a receipt closure",
+    "state_at_audit": "MISSING"
+  },
+  {
+    "id": "receipt_pt-ycpvyb6n",
+    "path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/job_result.json",
+    "expected_sha256": null,
+    "kind": "raw_job_receipt",
+    "job_id": "pt-ycpvyb6n",
+    "expected_returncode": 0,
+    "required_for": "FP-05a receipt closure",
+    "state_at_audit": "MISSING"
+  },
+  {
+    "id": "receipt_pt-vt003lhm",
+    "path": "artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/job_result.json",
+    "expected_sha256": null,
+    "kind": "raw_job_receipt",
+    "job_id": "pt-vt003lhm",
+    "expected_returncode": 0,
+    "required_for": "FP-05a receipt closure",
+    "state_at_audit": "MISSING"
+  },
+  {
+    "id": "receipt_pt-m52qwunf",
+    "path": "artifacts/round2_cci/ed-r4bankbj3-0924053507-ae0123/job_result.json",
+    "expected_sha256": null,
+    "kind": "raw_job_receipt",
+    "job_id": "pt-m52qwunf",
+    "expected_returncode": 1,
+    "required_for": "FP-05a receipt closure",
+    "state_at_audit": "MISSING"
+  },
+  {
+    "id": "receipt_pt-831c01g4",
+    "path": "artifacts/round2_cci/ed-r4bankbj3r-0924054117-185e82/job_result.json",
+    "expected_sha256": null,
+    "kind": "raw_job_receipt",
+    "job_id": "pt-831c01g4",
+    "expected_returncode": 0,
+    "required_for": "FP-05a receipt closure",
+    "state_at_audit": "MISSING"
+  },
+  {
+    "id": "fs_reference_manifest",
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "expected_sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972",
+    "kind": "tracked_json",
+    "required_for": "FP-05a"
+  },
+  {
+    "id": "fs_certify_decision",
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "expected_sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d",
+    "kind": "tracked_json",
+    "required_for": "FP-05a"
+  },
+  {
+    "id": "bank_certify_decision",
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/BJ3_certify_decision.json",
+    "expected_sha256": "101ebc3b0e4d410fff2e8bf5a9e43f238a2b5f08b6dfde957ce744ea53d8e921",
+    "kind": "tracked_json",
+    "required_for": "FP-05a"
+  }
+]

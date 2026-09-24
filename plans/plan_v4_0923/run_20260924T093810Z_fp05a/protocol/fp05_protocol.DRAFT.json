@@ -1,0 +1,725 @@
+{
+ "schema": "ed-fp05-protocol-draft/1",
+ "status": "DRAFT_NOT_FROZEN",
+ "execution_ready": false,
+ "final_protocol_sha256": null,
+ "frozen_utc": null,
+ "created_utc": "2026-09-24T09:55:11.427604+00:00",
+ "created_by": "FP-05a (read-only, CPU-only)",
+ "authorization": {
+  "gpu_jobs_authorized": false,
+  "training_authorized": false,
+  "policy_dev_admission_authorized": false,
+  "confirm_access_authorized": false
+ },
+ "supersedes": {
+  "document": {
+   "path": "plans/plan_v4_0923/FP05_PLAN.md",
+   "sha256": "c978d44c13a06e11a8a04abd3b84af553c24a906776f4fcf5596d9790c6f337d"
+  },
+  "withdrawn_claims": [
+   {
+    "id": "FP05_PLAN.D1.confirm",
+    "claim": "2020H2 is an untouched confirm reservation",
+    "status": "WITHDRAWN",
+    "reason": "X1_N64 (pt-t3bfl3e9) trained on 56 issues 2020-07-13T18Z..2020-12-28T18Z; their t-12h..t+72h supports form one contiguous run 2020-07-13T06Z..2020-12-31T18Z (this run's exposure ledger). The v1 holdout issue 2020-07-01T18Z also exposes 2020-07-01T06Z..07-04T18Z to model results.",
+    "evidence": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/exposure_reconstruction_report.json#2020H2"
+   },
+   {
+    "id": "FP05_PLAN.D1.policy_dev_window",
+    "claim": "policy_dev = 2019H2 (whole half-year)",
+    "status": "REPLACED_BY_LEDGER_DERIVED_CANDIDATE_POOL"
+   },
+   {
+    "id": "FP05_PLAN.D2.delta_min",
+    "claim": "delta_min = 0.34% decided",
+    "status": "DOWNGRADED_TO_PROPOSED_NOT_FROZEN"
+   }
+  ]
+ },
+ "baseline_bindings": {
+  "s0": {
+   "job_id": "pt-g3344e9z",
+   "certificate": {
+    "path": "plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json",
+    "sha256": "5afbe78601afa5caa938ed4b8a606d3b98e633719f4b204f0fdd48594135d438"
+   },
+   "s0_gate_pass": true,
+   "verdict_committed": true,
+   "config_digest": "6aad34b6417ebf72",
+   "checkpoint_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+   "normalization_identity": "ed-norm-identity/1:3e0b216bfbf34ab0",
+   "raw_platform_receipt": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/job_receipts_index.json#FP01-gate-e"
+  },
+  "fs": {
+   "reference_manifest": {
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/reference_manifest.json",
+    "sha256": "45c09e1a98f976a617bea351f1a6db7873fdb1ae73c1e8a96fbdd3f71706c972"
+   },
+   "certify_decision": {
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/V2_certify_decision.json",
+    "sha256": "fd2c829cb2ff0f31022dfb85dec1d13328981936f34622f3c5eb1c6a98c1b41d"
+   },
+   "protocol": {
+    "path": "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/fs_protocol_v2.json",
+    "sha256": "3d6a3be6f4552c0f2530a8a9262ae5ff36940b62e08af917ca0fc3cc74d88cbe"
+   },
+   "adapter_sha256": "7b39226b550a2795b1ed85020057bec46064f132b1c36d77a4db9b5682323089",
+   "merged_backbone_sha256": "1e48438ee98dc72552786011d25d9db3cc208672ceb8a7fc725c7f8fde77a79b",
+   "recomputed_in_fp05a": {
+    "q4_train_24h": 0.9740596738133418,
+    "q5_train_72h": 0.9923692175341733,
+    "q6_holdout_24h": 1.003392558352125
+   },
+   "holdout24_worse_count": 14,
+   "scientific_scope": "limited-harm static reference; no established out-of-sample benefit"
+  },
+  "bank": {
+   "bank_manifest": {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank_manifest.json",
+    "sha256": "6946ec0bd7fd57b17d144c80f97e66ef46187bb60967aeffb35c0d1e5bf4275f"
+   },
+   "registry": {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/registry.json",
+    "sha256": "c480684df1e9068387d347e00f6afa16f2b08db2d137d23175fb3933d944affd"
+   },
+   "certify_decision": {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/BJ3_certify_decision.json",
+    "sha256": "101ebc3b0e4d410fff2e8bf5a9e43f238a2b5f08b6dfde957ce744ea53d8e921"
+   },
+   "protocol": {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json",
+    "sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1"
+   },
+   "bank_file_sha256": "c3e3e34b60b463b41a6c824fa680d844a2830cd2c7b40d3fc4544dc985b85f81",
+   "bank_digest": "13bc905444e4af1008b95d8820f0db4a5585621c712b1330d096b027df9cb33b",
+   "own_group24_ratios_recomputed_in_fp05a": [
+    0.9900749343807109,
+    0.9908935846168573,
+    0.9849826740404125,
+    0.9802412120161317
+   ],
+   "group_sizes": [
+    15,
+    16,
+    7,
+    6
+   ],
+   "A1_A5_exact_zero_recomputed": true,
+   "registry_verify_deep_passed": true,
+   "out_of_sample_gate": "NOT_PERFORMED"
+  },
+  "protected_source": {
+   "source": {
+    "path": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json",
+    "sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1"
+   },
+   "field": "source_at_preregistration",
+   "n_files": 17,
+   "fp05a_check_before": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/core_source_pin_check_before.json"
+  }
+ },
+ "data_roles": {
+  "authority": {
+   "exposure_ledger": {
+    "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/exposure_ledger.json",
+    "sha256": "d8ee631fca47c79859a01bc4ac4b74e6b962c0347c00c4cf30632b16cf3446bb"
+   },
+   "exposure_reconstruction_report": {
+    "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/exposure_reconstruction_report.json",
+    "sha256": "7aee5ceb3b35a9c9458bd2e5b37216b67048109191ec3fb8ae68399bc8c8bf9d"
+   }
+  },
+  "support_convention": "issue t on 6h grid; support t-12h..t+72h; exposure buffer 24h each side",
+  "exposed_gradient_or_result_unbuffered": {
+   "2015": [],
+   "2018": [],
+   "2019": [
+    [
+     "2019-01-01T12Z",
+     "2019-01-05T00Z",
+     84
+    ],
+    [
+     "2019-01-16T00Z",
+     "2019-01-19T12Z",
+     84
+    ],
+    [
+     "2019-01-25T12Z",
+     "2019-01-29T00Z",
+     84
+    ],
+    [
+     "2019-02-03T06Z",
+     "2019-02-06T18Z",
+     84
+    ],
+    [
+     "2019-02-18T18Z",
+     "2019-02-22T06Z",
+     84
+    ],
+    [
+     "2019-03-05T00Z",
+     "2019-03-08T12Z",
+     84
+    ],
+    [
+     "2019-03-14T18Z",
+     "2019-03-18T06Z",
+     84
+    ],
+    [
+     "2019-03-29T00Z",
+     "2019-04-01T12Z",
+     84
+    ],
+    [
+     "2019-04-08T00Z",
+     "2019-04-11T12Z",
+     84
+    ],
+    [
+     "2019-04-20T00Z",
+     "2019-04-23T12Z",
+     84
+    ],
+    [
+     "2019-05-02T00Z",
+     "2019-05-05T12Z",
+     84
+    ],
+    [
+     "2019-05-10T06Z",
+     "2019-05-13T18Z",
+     84
+    ],
+    [
+     "2019-05-26T00Z",
+     "2019-05-29T12Z",
+     84
+    ],
+    [
+     "2019-06-07T06Z",
+     "2019-06-10T18Z",
+     84
+    ],
+    [
+     "2019-06-19T06Z",
+     "2019-06-22T18Z",
+     84
+    ],
+    [
+     "2019-07-01T06Z",
+     "2019-07-04T18Z",
+     84
+    ]
+   ],
+   "2020": [
+    [
+     "2020-01-01T00Z",
+     "2020-06-25T12Z",
+     4236
+    ],
+    [
+     "2020-06-29T12Z",
+     "2020-07-04T18Z",
+     126
+    ],
+    [
+     "2020-07-13T06Z",
+     "2020-12-31T18Z",
+     4116
+    ]
+   ]
+  },
+  "exposed_gradient_or_result_24h_buffered": {
+   "2015": [],
+   "2018": [
+    [
+     "2018-12-31T12Z",
+     "2019-01-06T00Z",
+     132
+    ]
+   ],
+   "2019": [
+    [
+     "2018-12-31T12Z",
+     "2019-01-06T00Z",
+     132
+    ],
+    [
+     "2019-01-15T00Z",
+     "2019-01-20T12Z",
+     132
+    ],
+    [
+     "2019-01-24T12Z",
+     "2019-01-30T00Z",
+     132
+    ],
+    [
+     "2019-02-02T06Z",
+     "2019-02-07T18Z",
+     132
+    ],
+    [
+     "2019-02-17T18Z",
+     "2019-02-23T06Z",
+     132
+    ],
+    [
+     "2019-03-04T00Z",
+     "2019-03-09T12Z",
+     132
+    ],
+    [
+     "2019-03-13T18Z",
+     "2019-03-19T06Z",
+     132
+    ],
+    [
+     "2019-03-28T00Z",
+     "2019-04-02T12Z",
+     132
+    ],
+    [
+     "2019-04-07T00Z",
+     "2019-04-12T12Z",
+     132
+    ],
+    [
+     "2019-04-19T00Z",
+     "2019-04-24T12Z",
+     132
+    ],
+    [
+     "2019-05-01T00Z",
+     "2019-05-06T12Z",
+     132
+    ],
+    [
+     "2019-05-09T06Z",
+     "2019-05-14T18Z",
+     132
+    ],
+    [
+     "2019-05-25T00Z",
+     "2019-05-30T12Z",
+     132
+    ],
+    [
+     "2019-06-06T06Z",
+     "2019-06-11T18Z",
+     132
+    ],
+    [
+     "2019-06-18T06Z",
+     "2019-06-23T18Z",
+     132
+    ],
+    [
+     "2019-06-30T06Z",
+     "2019-07-05T18Z",
+     132
+    ],
+    [
+     "2019-12-31T00Z",
+     "2020-06-26T12Z",
+     4284
+    ]
+   ],
+   "2020": [
+    [
+     "2019-12-31T00Z",
+     "2020-06-26T12Z",
+     4284
+    ],
+    [
+     "2020-06-28T12Z",
+     "2020-07-05T18Z",
+     174
+    ],
+    [
+     "2020-07-12T06Z",
+     "2021-01-01T18Z",
+     4164
+    ]
+   ]
+  },
+  "2020H2": {
+   "label": "EXPOSED_NOT_CONFIRM",
+   "residual_free_runs_after_24h_buffer": [
+    [
+     "2020-07-06T00Z",
+     "2020-07-12T00Z",
+     144
+    ]
+   ],
+   "max_support_disjoint_candidates_after_buffer": 1,
+   "usable_for_confirm": false
+  },
+  "policy_dev_candidate_pool": {
+   "status": "CANDIDATE_POOL_INTEGRITY_NOT_SCANNED",
+   "store": "2019.zarr",
+   "bounds_by_boundary_rule": {
+    "conservative_full_24h_buffer_incl_S0_aggregate_result_2020-01-01T00Z": {
+     "count": 698,
+     "first": "2019-07-06T12Z",
+     "last": "2019-12-27T18Z"
+    },
+    "full_24h_buffer_certified_rows_only": {
+     "count": 700,
+     "first": "2019-07-06T12Z",
+     "last": "2019-12-28T06Z"
+    },
+    "no_cross_year_buffer": {
+     "count": 702,
+     "first": "2019-07-06T12Z",
+     "last": "2019-12-28T18Z"
+    }
+   },
+   "boundary_rule": {
+    "value": null,
+    "status": "PROPOSED_NOT_FROZEN",
+    "proposals_for_reference": {
+     "fp05a_recommendation": "conservative_full_24h_buffer_incl_S0_aggregate_result_2020-01-01T00Z",
+     "FP05A_PLAN.md_stated": "[2019-07-06T12Z, 2019-12-28T18Z], 702 points (equals the no_cross_year_buffer variant)"
+    },
+    "note": ""
+   },
+   "integrity_scan": {
+    "done": false,
+    "existing_scan_ends": "2019-07-03T18Z",
+    "owner": "FP-05b"
+   },
+   "disclosure_sharedF0_sprint": {
+    "admitted_rows_with_issue_in_2019H2": 147,
+    "admitted_rows_with_any_read_timestep_in_2019H2": 147,
+    "roles_of_2019H2_admitted_rows": {
+     "calibration": 64,
+     "policy_fit": 83
+    },
+    "excluded_rows_with_issue_in_2019H2_(read_attempted,_failed_nonfinite)": 37,
+    "exposure_kind": "INTEGRITY_READ_ONLY (no gradient, no model result: sprint stopped at S0, downstream NOT_STARTED)",
+    "treatment": "DISCLOSED_NOT_EXCLUDED (FP05A accepted decision 3); retrospective-transfer evaluation label"
+   },
+   "label": "RETROSPECTIVE_HELD_PERIOD_DEV_NOT_HISTORICAL_DEPLOYMENT"
+  },
+  "confirm": null,
+  "confirm_status": "UNASSIGNED_NO_ACCESS",
+  "confirm_rule": "Any consumer that finds confirm_status UNASSIGNED_NO_ACCESS must refuse to read. No automatic fetch of 2021 data. Naming a confirm window is a separate, explicitly authorised decision outside FP-05a.",
+  "other_years": {
+   "2015": "backbone pretraining year - not usable (CARRIED_FROM_FP05A_PLAN, not re-verified in FP-05a)",
+   "2018": "backbone pretraining year - not usable (CARRIED_FROM_FP05A_PLAN, not re-verified in FP-05a)",
+   "2016": "store reported empty - not usable (CARRIED_FROM_FP05A_PLAN; verifying would require opening the .zarr store, out of FP-05a scope)",
+   "2017": "store reported empty - not usable (CARRIED_FROM_FP05A_PLAN; same caveat)",
+   "2021": "no 2021.zarr locally; a 2021_intermediate.zarr directory name exists under data/era5_1p40625/ (not opened; presumably the separate download task) - NOT usable/authorised",
+   "2022": "not present locally"
+  }
+ },
+ "split": {
+  "policy_dev_pool": "see data_roles.policy_dev_candidate_pool",
+  "confirm": {
+   "status": "UNASSIGNED_NO_ACCESS",
+   "window": null,
+   "rejected_reservation": "2020H2_EXPOSED_BY_X1 (EXPOSED_NOT_CONFIRM)",
+   "new_window": null
+  },
+  "confirm_window": null,
+  "exposure_buffer_hours": 24,
+  "all_readers_must_verify_before_io": true
+ },
+ "candidates": {
+  "ids": [
+   "reference",
+   "expert_0",
+   "expert_1",
+   "expert_2",
+   "expert_3"
+  ],
+  "count": 5,
+  "reference": "certified Fs (no-edit)",
+  "background_F0_not_a_candidate": true,
+  "F0_background_trajectory": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "FP05_PLAN.md": "report-only F0 trajectory (+~20% GPU)"
+   },
+   "note": ""
+  },
+  "alpha_a0": 0.25,
+  "rho": 0.25,
+  "hold_steps": 4,
+  "max_active": 1,
+  "continuation": "Fs_from_edited_state",
+  "source": "bank_manifest binding (certified); not a new decision"
+ },
+ "objective": {
+  "primary_lead_hours": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": 24,
+    "v1": 24,
+    "FP05_PLAN.md": "24h (implicit)"
+   },
+   "note": ""
+  },
+  "report_leads_hours": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": [
+     6,
+     24,
+     72
+    ],
+    "v1": {
+     "diagnostic": 6,
+     "harm": 72
+    }
+   },
+   "note": ""
+  },
+  "scoring": "reuse certified float64 full-objective evaluator (exact identities to be pinned at freeze)",
+  "gain_normalizer": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": "mean Fs loss over same issues, recomputed inside each bootstrap draw"
+   },
+   "note": ""
+  }
+ },
+ "decision": {
+  "delta_min_fs_relative": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "FP05_PLAN.md": 0.0034,
+    "v1": 0.0034,
+    "v2": 0.0034
+   },
+   "note": "Scale anchors recomputed in FP-05a from the 2019H1 Fs-certification holdout: harm/F0 = 0.0033925583521250413, harm/Fs = 0.0033810878144209864. Engineering screen only, not a break-even proof; must not be re-derived after DEV outcomes are seen."
+  },
+  "report_H_Fs_and_G_F0": "G_F0 = G_Fs - H_Fs must be reported alongside any gain vs Fs",
+  "max_harm72_vs_Fs": null,
+  "max_harm72_status": "PROPOSED_NOT_FROZEN",
+  "dynamic_over_static_required": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": true
+   },
+   "note": ""
+  },
+  "CI_crosses_threshold": "INCONCLUSIVE_STOP_AT_FIXED_CAP"
+ },
+ "sampling": {
+  "N_final": null,
+  "N_status": "PROPOSED_NOT_FROZEN",
+  "proposals_for_reference": {
+   "FP05_PLAN.md": 128,
+   "v2_nominal_N": 128,
+   "v1_max_dev_issues": 128
+  },
+  "debug_issues": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v1": 8,
+    "FP05_PLAN.md": "8 from FP-04 trained data"
+   },
+   "note": ""
+  },
+  "choose_N_once_before_dev_outcomes": true,
+  "outcome_based_expansion_allowed": false,
+  "replacement_rule": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": "nearest eligible unused slot in same 7-day stratum, tie earlier"
+   },
+   "note": ""
+  },
+  "declaration_before_integrity_scan": true
+ },
+ "validation": {
+  "outer_mode": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": "bidirectional blocked cross-fit",
+    "FP05_PLAN.md": "bidirectional blocked cross-fit"
+   },
+   "note": ""
+  },
+  "outer_folds": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": 5,
+    "v1": null
+   },
+   "note": ""
+  },
+  "inner_folds": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": 3,
+    "v1": null
+   },
+   "note": ""
+  },
+  "base_block_days": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": 7,
+    "v1": null
+   },
+   "note": ""
+  },
+  "ridge_grid": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": "<= 4 configs, grid TO_BE_FROZEN"
+   },
+   "note": ""
+  },
+  "poisoned_validation_label_test_scope": "must be confined to that fold's own OOF predictions (v1 FULL_REVIEW caution, accepted by FP05A)",
+  "all_fitted_transforms_inner_fold_local": true
+ },
+ "inference": {
+  "confidence_level": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": 0.95,
+    "v1": 0.95
+   },
+   "note": ""
+  },
+  "bootstrap_unit": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": "paired whole 7-day UTC block"
+   },
+   "note": ""
+  },
+  "bootstrap_draws": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": 10000,
+    "v1": null
+   },
+   "note": ""
+  },
+  "block_days": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": 7,
+    "v1": null
+   },
+   "note": ""
+  },
+  "sensitivity_block_days": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": [
+     14
+    ],
+    "v1": null
+   },
+   "note": "v1 caution: only ~12-13 blocks of 14 days in a half-year; independence not guaranteed"
+  },
+  "seed": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v2": 20260924
+   },
+   "note": ""
+  },
+  "MDE": null,
+  "MDE_status": "PROPOSED_NOT_FROZEN"
+ },
+ "resource": {
+  "max_gpu_jobs_total": null,
+  "max_gpu_jobs_status": "PROPOSED_NOT_FROZEN",
+  "proposals_for_reference": {
+   "v1_total_job_ceiling": 4,
+   "v2_max_total_submissions": 3,
+   "FP05_PLAN.md": "2 planned, cap 4",
+   "FP05A_PLAN.md": "decide at FP-05b freeze, leaning 3"
+  },
+  "infra_retries_total": {
+   "value": null,
+   "status": "PROPOSED_NOT_FROZEN",
+   "proposals_for_reference": {
+    "v1": 1,
+    "v2": 1,
+    "FP05_PLAN.md": 1
+   },
+   "note": ""
+  },
+  "gpu_budget_authorized": false,
+  "gpu_budget_seconds": null,
+  "profile": "MISSING_NEEDS_MEASURED_PROFILE"
+ },
+ "new_source_manifest_sha256": null,
+ "forbidden": [
+  "new Fs fit",
+  "bank retraining or altered alpha",
+  "F0 in selector candidate set",
+  "read confirm",
+  "read validation labels during fit/predict",
+  "unregistered extra runs",
+  "modify any of the 17 FP-04-pinned source files",
+  "claim dual-head novelty"
+ ],
+ "undecided_fields_index": [
+  "candidates.F0_background_trajectory",
+  "data_roles.confirm = null",
+  "data_roles.policy_dev_candidate_pool.boundary_rule",
+  "decision.delta_min_fs_relative",
+  "decision.dynamic_over_static_required",
+  "decision.max_harm72_vs_Fs = null",
+  "final_protocol_sha256 = null",
+  "frozen_utc = null",
+  "inference.MDE = null",
+  "inference.block_days",
+  "inference.bootstrap_draws",
+  "inference.bootstrap_unit",
+  "inference.confidence_level",
+  "inference.seed",
+  "inference.sensitivity_block_days",
+  "new_source_manifest_sha256 = null",
+  "objective.gain_normalizer",
+  "objective.primary_lead_hours",
+  "objective.report_leads_hours",
+  "resource.gpu_budget_seconds = null",
+  "resource.infra_retries_total",
+  "resource.max_gpu_jobs_total = null",
+  "sampling.N_final = null",
+  "sampling.debug_issues",
+  "sampling.replacement_rule",
+  "split.confirm.new_window = null",
+  "split.confirm.window = null",
+  "split.confirm_window = null",
+  "validation.base_block_days",
+  "validation.inner_folds",
+  "validation.outer_folds",
+  "validation.outer_mode",
+  "validation.ridge_grid"
+ ]
+}

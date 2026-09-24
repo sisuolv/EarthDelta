@@ -1,0 +1,17 @@
+{
+ "N_target": 112,
+ "dropped": 16,
+ "strata_empty": [
+  16,
+  19
+ ],
+ "nested": {
+  "N": 112,
+  "N/2": 56,
+  "N/4": 30
+ },
+ "first": "2019070612_L072",
+ "last": "2019122418_L072",
+ "max_abs_shift_hours": 144,
+ "manifest_sha256": "985273574fa89527e136f411337a81c9e34d1cf9e3bd3cb472efcac9067a2fd4"
+}

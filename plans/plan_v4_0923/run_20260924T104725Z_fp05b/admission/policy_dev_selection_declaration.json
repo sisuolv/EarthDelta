@@ -1,0 +1,48 @@
+{
+ "schema_version": "ed-fp05b-policy-dev-selection-declaration/1",
+ "rule_id": "POLICY-DEV-SELECT-v1 (FP-05b amended)",
+ "status": "policy_dev selection rule, declared BEFORE the 2019H2 finiteness scan, BEFORE the manifest is built and BEFORE any value of any 2019H2 timestep is read by FP-05b",
+ "created_utc": "2026-09-24T10:53:11.813777+00:00",
+ "declaration_before_integrity_scan": true,
+ "written_from": "calendar arithmetic on the pinned split freeze only (no store value read)",
+ "split_freeze": {
+  "path": "plans/plan_v4_0923/run_20260924T104725Z_fp05b/splits/split_freeze_v1.json",
+  "sha256": "20273225b07e0498d144dbec39029de2e5f9b573fedb6207f144063af5706cf5"
+ },
+ "pool": {
+  "definition": "the 6h issue slots t whose support t-12h..t+72h lies inside 2019.zarr and does not touch any gradient/result exposure run of the FP-05a ledger widened by 24h (closed intervals; conservative rule incl. the S0 aggregate result from 2020-01-01T00Z), restricted to 2019 H2",
+  "store": "2019.zarr",
+  "store_steps": [
+   746,
+   1443
+  ],
+  "n_slots": 698,
+  "issue_window_utc": [
+   "2019-07-06T12Z",
+   "2019-12-27T18Z"
+  ]
+ },
+ "strata": {
+  "definition": "7-day UTC blocks starting at 2019-07-06T12Z: block(t) = floor((t - 2019-07-06T12Z) / 168h)",
+  "n_blocks": 25,
+  "last_block_days": 6.25,
+  "note": "the same blocks are the OOF-v1 blocks and the bootstrap unit"
+ },
+ "targets": {
+  "n": 128,
+  "formula": "target_i = 746 + floor(i * 697 / 127 + 0.5), i = 0..127 (store step index; no exact .5 case exists since 127 is odd)"
+ },
+ "candidates": "slots t in the pool whose store steps t-2 .. t+12 are ALL absent from splits/finiteness_scan_2019_H2.json steps_with_nonfinite (finiteness only)",
+ "pick": "targets are processed in increasing i. For target_i: among UNUSED candidates in the SAME stratum as target_i and strictly later than the previous kept pick (time order is kept), take the one nearest to target_i; ties go to the earlier slot. If no such candidate exists, target_i is DROPPED.",
+ "stop_rule": "more than 8 DROPPED targets -> STOP (no reselection without the coordinator). If any picked row is then rejected by the admission gate (B09 time join or B08 content certificate) -> STOP and report; no replacement, no reselection without the coordinator.",
+ "n_target": "N_target = 128 - drops",
+ "nested_subsets_for_DEV_SCALE_v1_only": {
+  "N/2": "surviving targets with even i",
+  "N/4": "surviving targets with i % 4 == 0"
+ },
+ "rows": "the library's own build_manifest(years=[2019], lead_hours=[72], normalization_hash='3e0b216bfbf34ab0', formal=True) rows at exactly the picked issue times, in time order; nothing hand-constructed; each row must pass split_freeze.assert_rows_clear(role='policy_dev', pre_admission=True) before the manifest is written",
+ "admission_command": "PYTHONPATH=.pydeps python3 scripts/r2_admission_gate.py --manifest <run>/admission/policy_dev_manifest.json --formal --data-role policy_dev --history-steps 2 --limit <N_target> --verify-content --content-samples <N_target> --normalization-dir reference/stormer/normalization_constants --json <run>/admission/policy_dev_admission.json (certificates span t-12h..t+72h = steps t-2..t+12)",
+ "disclosure": "147 pool-period issue times were integrity-read (content hashes/finiteness, no model, no gradient) by the stopped shared-F0 sprint; DISCLOSED_NOT_EXCLUDED; label RETROSPECTIVE_HELD_PERIOD_DEV_NOT_HISTORICAL_DEPLOYMENT",
+ "why_this_is_not_skill_selection": "targets are a fixed calendar grid; the only data-dependent step is raw-data finiteness (integrity), and admission's integrity certificate; no model output, loss, gain or weather statistic exists for these rows or is consulted",
+ "use_restriction": "no model output is computed on these rows before the pre-registered FP-05b job C-J2"
+}

@@ -1,0 +1,33 @@
+{
+ "freeze": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/splits/split_freeze_v1.json",
+ "sha256": "20273225b07e0498d144dbec39029de2e5f9b573fedb6207f144063af5706cf5",
+ "pool": {
+  "store_year": 2019,
+  "first_index": 746,
+  "last_index": 1443,
+  "n_slots": 698,
+  "first_issue_utc": "2019-07-06T12Z",
+  "last_issue_utc": "2019-12-27T18Z",
+  "certificate_span_indices": [
+   744,
+   1455
+  ]
+ },
+ "debug_ids": [
+  "iss_292517fb189ee1bd",
+  "iss_039add2d41f5c08a",
+  "iss_4f2b54d7e8953451",
+  "iss_6361e4cdd8050ae3",
+  "iss_32d48efebee12be2",
+  "iss_bbd4e6e2ec71d9ca",
+  "iss_04eb8e8d56c68faa",
+  "iss_b42c91ed1b555939"
+ ],
+ "crosschecks": {
+  "runs_equal_ledger_runs_by_year_unbuffered": true,
+  "pool_equals_fp05a_report": true,
+  "certified_rows_only_equals_fp05a_report": true,
+  "no_cross_year_equals_fp05a_report": true
+ },
+ "reloaded_with_ledger_consistency": true
+}

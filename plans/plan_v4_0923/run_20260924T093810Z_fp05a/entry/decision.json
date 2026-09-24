@@ -1,0 +1,115 @@
+{
+ "schema": "ed-fp05a-decision/1",
+ "created_utc": "2026-09-24T09:57:12.820711+00:00",
+ "task": "FP-05a",
+ "verdict": "FP05A_COMPLETE",
+ "acceptance_criteria": {
+  "C1_17_pins_match_before_and_after": true,
+  "C2_8_tracked_input_hashes_match": true,
+  "C2b_3_large_assets_rehashed_match": true,
+  "C3_every_job_receipt_matches": true,
+  "C4_certificates_recomputed_within_1e-12": true,
+  "C4b_assembly_equivalence_exactly_zero": true,
+  "C4c_verify_bank_bundle_deep_passed_no_zarr": true,
+  "C5_ledger_has_all_56_X1_H2_issues": true,
+  "C5b_ledger_has_sharedF0_616_reads": true,
+  "C6_2020H2_EXPOSED_NOT_CONFIRM": true,
+  "C7_confirm_null": true,
+  "C8_protocol_draft_v2_structural_check": true,
+  "C9_package_validators_pass": true,
+  "C10_fp02_gaps_recorded": true
+ },
+ "acceptance_notes": {
+  "C8": "the unmodified v2 validator, run on a copy with the draft substituted, fails only manifest_hashes_match (by construction) and protocol_not_falsely_frozen (it hard-codes status 'TO_BE_RUN'; the dispatch mandates 'DRAFT_NOT_FROZEN'). All other protocol predicates pass literally.",
+  "C3": "receipts verified = raw job_result.json present, run_id/hostname/timestamps consistent, rc/status/elapsed equal to every tracked claim within its printed rounding, and (where a submission record exists) job_id/run_dir/invocation/source_manifest/argv hashes joined."
+ },
+ "withdrawn_claim": {
+  "claim": "FP05_PLAN.md D1: 2020H2 = untouched confirm reservation",
+  "status": "WITHDRAWN",
+  "basis": "entry/exposure_reconstruction_report.json#2020H2 (independently recomputed from raw admission certificates)"
+ },
+ "data_role_summary": {
+  "2020H2": "EXPOSED_NOT_CONFIRM",
+  "policy_dev": "CANDIDATE_POOL_INTEGRITY_NOT_SCANNED (2019H2; boundary rule PROPOSED_NOT_FROZEN)",
+  "confirm": null,
+  "confirm_status": "UNASSIGNED_NO_ACCESS"
+ },
+ "disagreements_with_FP05A_PLAN": [
+  {
+   "id": "D-1",
+   "severity": "REAL_DISAGREEMENT (conclusion unchanged)",
+   "FP05A_PLAN_states": "2020H2 residual gap holds at most 2 non-overlapping candidates",
+   "fp05a_recomputed": "after the 24h buffer the only free H2 timesteps are [['2020-07-06T00Z', '2020-07-12T00Z', 144]]; issues with full t-12h..t+72h support there: {'count': 11, 'first': '2020-07-06T12Z', 'last': '2020-07-09T00Z'}; max support-disjoint candidates = 1 (even allowing touching supports: 1). 2 is reached only with NO buffer (2).",
+   "impact": "none on the verdict: 2020H2 cannot host a confirm set either way"
+  },
+  {
+   "id": "D-2",
+   "severity": "CONVENTION_ONLY",
+   "FP05A_PLAN_states": "gap 2020-07-05T18Z..2020-07-12T06Z (156 h)",
+   "fp05a_recomputed": "those are the last/first BUFFERED timesteps (exclusive bounds); the free timesteps themselves are 2020-07-06T00Z..2020-07-12T00Z inclusive (144 h span, 25 grid points)",
+   "impact": "none"
+  },
+  {
+   "id": "D-3",
+   "severity": "REAL_DISAGREEMENT (small)",
+   "FP05A_PLAN_states": "policy_dev candidate pool [2019-07-06T12Z, 2019-12-28T18Z], 702 grid points",
+   "fp05a_recomputed": "702/[..12-28T18Z] only if no 24h buffer is applied across the 2019/2020 year boundary. Honouring the 24h buffer against the 2020-01-01T12Z certified-row exposure: {'count': 700, 'first': '2019-07-06T12Z', 'last': '2019-12-28T06Z'}; additionally honouring the S0 gate's aggregate-result exposure from 2020-01-01T00Z: {'count': 698, 'first': '2019-07-06T12Z', 'last': '2019-12-27T18Z'}",
+   "impact": "pool end moves 12-18 h earlier (2-4 grid points); boundary rule left PROPOSED_NOT_FROZEN in the draft, conservative variant recommended"
+  },
+  {
+   "id": "D-4",
+   "severity": "ADDITIONAL_EXPOSURE_NOT_IN_FP05A",
+   "FP05A_PLAN_states": "exposed 2020 starts 2020-01-01T12Z",
+   "fp05a_recomputed": "S0 gate compute_rmse_sanity scores model vs truth on jan2020_full.npy indices 0..8 (2020-01-01T00Z..01-03T00Z, time axis assumed from file name/shape, not byte-verified) and loads the whole file (2020-01-01T00Z..01-31T18Z). Unbuffered 2020 gradient/result runs: [['2020-01-01T00Z', '2020-06-25T12Z', 4236], ['2020-06-29T12Z', '2020-07-04T18Z', 126], ['2020-07-13T06Z', '2020-12-31T18Z', 4116]]",
+   "impact": "2020H1 was already exposed; only affects the 2019H2 pool end (D-3)"
+  },
+  {
+   "id": "D-5",
+   "severity": "PRECISION_NOTE",
+   "FP05A_PLAN_states": "exposed = 2020-01-01T12Z~07-04T18Z and 2019-01-01T12Z~07-04T18Z",
+   "fp05a_recomputed": "these are envelopes, not unions: 2019H1 is 16 disjoint 84 h runs (A1 holdout); 2020H1 has a hole at the dropped FP-04 slot 47 (free 2020-06-25T18Z..06-29T06Z unbuffered, 06-26T18Z..06-28T06Z buffered, integrity-read by FP-04 attempt1/replacements). The v1 holdout issue 2020-07-01T18Z puts 2020-07-01T06Z..07-04T18Z (inside H2) under result exposure.",
+   "impact": "none on roles (all envelope-internal gaps are too short or already integrity-read)"
+  },
+  {
+   "id": "D-6",
+   "severity": "ADDITIONAL_DISCLOSURE",
+   "FP05A_PLAN_states": "shared-F0 sprint read 147 time points in 2019H2",
+   "fp05a_recomputed": "147 admitted rows confirmed ({'calibration': 64, 'policy_fit': 83}); in addition 37 EXCLUDED sprint rows with 2019H2 issue times were read and rejected as non-finite (sprint total: 616 admitted + 256 excluded). Integrity-only; no gradient/result.",
+   "impact": "disclosure only (FP05A decision 3: disclosed, not excluded)"
+  },
+  {
+   "id": "D-7",
+   "severity": "MINOR_FACT",
+   "FP05A_PLAN_states": "2021/2022 not present locally",
+   "fp05a_recomputed": "no 2021.zarr, no 2022 store; but a directory named 2021_intermediate.zarr exists under data/era5_1p40625/ (not opened)",
+   "impact": "none (not usable/authorised; download is a separate task)"
+  },
+  {
+   "id": "AGREE",
+   "severity": "INDEPENDENTLY_CONFIRMED",
+   "items": [
+    "17/17 pins unchanged (before and after)",
+    "8/8 tracked input hashes (+3 large assets) match",
+    "X1_N64 adds exactly 56 issues 2020-07-13T18Z..2020-12-28T18Z (store indices 779..1451, spacing 72-78 h); contiguous support run 2020-07-13T06Z..2020-12-31T18Z",
+    "delta scale anchors: harm/F0 = 0.0033925584, harm/Fs = 0.0033810878",
+    "raw platform receipts exist locally for every r4-session job (20 jobs; 14 named in the dispatch + 6 failed/aux attempts)"
+   ]
+  }
+ ],
+ "fp02": "PARTIAL; scripts/plan_followup_runner.py and earthdelta/split_freeze.py still absent",
+ "next": {
+  "FP-05b": "ELIGIBLE_NOT_AUTHORIZED (requires explicit user go-ahead; first steps: 2019H2 integrity scan + selection declaration, split_freeze/runner, protocol freeze)",
+  "gpu": "NOT_AUTHORIZED",
+  "confirm": "NO_ACCESS"
+ },
+ "forbidden_actions_observed": {
+  "gpu_job_submitted": false,
+  "zarr_opened": false,
+  "model_forward": false,
+  "pinned_file_modified": false,
+  "policy_dev_admission_built": false,
+  "2019H2_integrity_scan": false,
+  "confirm_window_named": false,
+  "git_commit_or_push": false
+ }
+}

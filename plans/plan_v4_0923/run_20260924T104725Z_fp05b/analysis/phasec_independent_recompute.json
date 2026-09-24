@@ -1,0 +1,130 @@
+{
+ "n_issues": 112,
+ "n_blocks": 23,
+ "M5_choice": "expert_0",
+ "comparisons": {
+  "oracle_vs_Fs": {
+   "point": 0.0031500541314199867,
+   "ci_low_alt_rng": 0.002836505107257543,
+   "ci_high_alt_rng": 0.0035027493643103786,
+   "status_alt_rng": "STRADDLE",
+   "official_status": "STRADDLE",
+   "point_abs_diff_vs_official": 1.2923689896027213e-16
+  },
+  "oracle_vs_M1": {
+   "point": 0.0005356029560979652,
+   "ci_low_alt_rng": 0.0004156683382363746,
+   "ci_high_alt_rng": 0.0006651118489154407,
+   "status_alt_rng": "BELOW",
+   "official_status": "BELOW",
+   "point_abs_diff_vs_official": 2.598832607447754e-16
+  },
+  "M5_vs_Fs": {
+   "point": 0.0026144511753220215,
+   "ci_low_alt_rng": 0.0022722543106031357,
+   "ci_high_alt_rng": 0.0030032148851908847,
+   "status_alt_rng": "BELOW",
+   "official_status": "BELOW",
+   "point_abs_diff_vs_official": 3.89011739487799e-16
+  },
+  "M1_vs_Fs": {
+   "point": 0.0026144511753220215,
+   "ci_low_alt_rng": 0.0022722543106031357,
+   "ci_high_alt_rng": 0.0030032148851908847,
+   "status_alt_rng": "BELOW",
+   "official_status": "BELOW",
+   "point_abs_diff_vs_official": 3.89011739487799e-16
+  },
+  "M2_vs_Fs": {
+   "point": 0.002672949084779882,
+   "ci_low_alt_rng": 0.002343483669549915,
+   "ci_high_alt_rng": 0.003056214829185908,
+   "status_alt_rng": "BELOW",
+   "official_status": "BELOW",
+   "point_abs_diff_vs_official": 2.5890747878953846e-16
+  },
+  "M2_vs_M1": {
+   "point": 5.8497909457860704e-05,
+   "ci_low_alt_rng": -2.0998498833811485e-05,
+   "ci_high_alt_rng": 0.00015271945816440634,
+   "status_alt_rng": "BELOW",
+   "official_status": "BELOW",
+   "point_abs_diff_vs_official": 1.2990774905449753e-16
+  },
+  "M3_vs_Fs": {
+   "point": 0.0026114318990804017,
+   "ci_low_alt_rng": 0.0023942353257922246,
+   "ci_high_alt_rng": 0.0028402504331712366,
+   "status_alt_rng": "BELOW",
+   "official_status": "BELOW",
+   "point_abs_diff_vs_official": 3.89011739487799e-16
+  },
+  "M3_vs_M1": {
+   "point": -3.0192762416195785e-06,
+   "ci_low_alt_rng": -0.00020973654919837368,
+   "ci_high_alt_rng": 0.00017394362532602192,
+   "status_alt_rng": "BELOW",
+   "official_status": "BELOW",
+   "point_abs_diff_vs_official": 8.470329472543003e-22
+  },
+  "M1_vs_Fs_72h": {
+   "point": 0.004686762037538985,
+   "ci_low_alt_rng": 0.0037647083800031807,
+   "ci_high_alt_rng": 0.005902342579217087,
+   "status_alt_rng": "ABOVE",
+   "official_status": "ABOVE",
+   "point_abs_diff_vs_official": 2.203098814490545e-16
+  },
+  "M2_vs_Fs_72h": {
+   "point": 0.004479314766024506,
+   "ci_low_alt_rng": 0.003499326168657055,
+   "ci_high_alt_rng": 0.005737146299276642,
+   "status_alt_rng": "ABOVE",
+   "official_status": "ABOVE",
+   "point_abs_diff_vs_official": 0.0
+  },
+  "M3_vs_Fs_72h": {
+   "point": 0.004389476000011841,
+   "ci_low_alt_rng": 0.003807259243899894,
+   "ci_high_alt_rng": 0.004956349347504242,
+   "status_alt_rng": "ABOVE",
+   "official_status": "ABOVE",
+   "point_abs_diff_vs_official": 2.211772431870429e-16
+  },
+  "M1_vs_Fs_6h": {
+   "point": 0.0005209624458934538,
+   "ci_low_alt_rng": 0.0003893242108696833,
+   "ci_high_alt_rng": 0.0006540242316825362,
+   "status_alt_rng": "BELOW",
+   "official_status": "BELOW",
+   "point_abs_diff_vs_official": 1.4029576111962427e-16
+  },
+  "M2_vs_Fs_6h": {
+   "point": 0.0005110087553403944,
+   "ci_low_alt_rng": 0.0003796433164801108,
+   "ci_high_alt_rng": 0.0006436908045144145,
+   "status_alt_rng": "BELOW",
+   "official_status": "BELOW",
+   "point_abs_diff_vs_official": 1.4029576111962427e-16
+  },
+  "M3_vs_Fs_6h": {
+   "point": 0.0005795101674521977,
+   "ci_low_alt_rng": 0.0004517674444375713,
+   "ci_high_alt_rng": 0.0007081582466438707,
+   "status_alt_rng": "BELOW",
+   "official_status": "BELOW",
+   "point_abs_diff_vs_official": 1.4018734090237572e-16
+  },
+  "F0_vs_Fs_background": {
+   "point": 0.0019134760154942742,
+   "ci_low_alt_rng": 0.0014968676115279767,
+   "ci_high_alt_rng": 0.0023552022028511866,
+   "status_alt_rng": "BELOW",
+   "official_status": "BELOW",
+   "point_abs_diff_vs_official": 2.5934115965853266e-16
+  }
+ },
+ "H_Fs_24h_point": 0.0019134760154942742,
+ "max_point_abs_diff_vs_official": 3.89011739487799e-16,
+ "status_agreement": true
+}

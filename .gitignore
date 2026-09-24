@@ -31,6 +31,9 @@ __pycache__/
 # Local pip --target install dir (persistent-AFS workaround for /root wipe on
 # container restart); not source code, reinstalled from PyPI as needed.
 /.pydeps/
+# Separate CPU-jax install for the WeatherBench-X/WB2 evaluation path only
+# (earthdelta/wbx). Kept apart so the frozen .pydeps above is never modified.
+/.pydeps_wbx/
 
 # Ephemeral run logs
 checkpoints/*.log

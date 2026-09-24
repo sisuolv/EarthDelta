@@ -1,0 +1,73 @@
+{
+  "status": "OBSERVED",
+  "verdict": "PASS_PACKAGE_STRUCTURE",
+  "generated_at_utc": "2026-09-24T08:50:38.011065+00:00",
+  "checks": [
+    {
+      "check": "required_files",
+      "passed": true
+    },
+    {
+      "check": "unique_task_ids",
+      "passed": true
+    },
+    {
+      "check": "required_task_fields",
+      "passed": true
+    },
+    {
+      "check": "existing_dependencies",
+      "passed": true
+    },
+    {
+      "check": "acyclic_DAG",
+      "passed": true
+    },
+    {
+      "check": "only_FP05a_authorized",
+      "passed": true
+    },
+    {
+      "check": "historical_done_scoped",
+      "passed": true
+    },
+    {
+      "check": "FP02_partial_preserved",
+      "passed": true
+    },
+    {
+      "check": "no_gpu_authorization",
+      "passed": true
+    },
+    {
+      "check": "confirm_not_laundered",
+      "passed": true
+    },
+    {
+      "check": "five_candidates_F0_report_only",
+      "passed": true
+    },
+    {
+      "check": "S0_frozen_tolerance",
+      "passed": true
+    },
+    {
+      "check": "no_fake_repo_test_execution",
+      "passed": true
+    },
+    {
+      "check": "audit_required_fields",
+      "passed": true
+    },
+    {
+      "check": "no_invented_minutes",
+      "passed": true
+    }
+  ],
+  "structure_checks_passed": 15,
+  "tool_tests_passed": 16,
+  "tool_tests_failed": 0,
+  "repository_tests_run": false,
+  "gpu_experiments_run": false,
+  "note": "Byte-integrity is checked again after generating SHA256SUMS and the ZIP. No future research results are represented as execution."
+}

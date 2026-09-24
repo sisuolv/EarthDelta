@@ -1,0 +1,173 @@
+{
+ "checks": {
+  "anchor_max_relative_diff": 0.0,
+  "debug_set_equals_freeze_allow_list": true,
+  "group_membership_by_panel": {
+   "iss_039add2d41f5c08a": 0,
+   "iss_04eb8e8d56c68faa": 3,
+   "iss_292517fb189ee1bd": 0,
+   "iss_32d48efebee12be2": 2,
+   "iss_4f2b54d7e8953451": 1,
+   "iss_6361e4cdd8050ae3": 1,
+   "iss_b42c91ed1b555939": 3,
+   "iss_bbd4e6e2ec71d9ca": 2
+  },
+  "n_anchor_values_compared": 144,
+  "own_partition_equals_debug_set": true
+ },
+ "failures": [],
+ "job_dir": "/mnt/afs/260010168/EarthDelta/artifacts/round2_cci/ed-r4cachecj1-0924123848-4457b0",
+ "passed": true,
+ "per_issue": {
+  "iss_039add2d41f5c08a": {
+   "anchors_exact_by_copy": {
+    "CJ1_W0": true,
+    "CJ1_W3": true
+   },
+   "duplicate_bytes_identical": true,
+   "file_sha256": {
+    "endpoints": "757860afd2abdf4ca1f3b6ec2b8121b280d851bee9929d90c8be4761ad43e368",
+    "f0_endpoints": "2408682b11803bdf3fce7a388e2282443fd59ccc8060a87f6cf9d20d6073a380",
+    "gpu_losses": "b79e2aa3659f14ebc0761bf65b31273c1b6110a8a31b8e061e6d9bca516577c9",
+    "truth": "aa8727a9a7a66fba1af222f84ef57c8a171a888c0d99c28a5050f8d2589442df"
+   },
+   "group": 0,
+   "n_copies": 2
+  },
+  "iss_04eb8e8d56c68faa": {
+   "anchors_exact_by_copy": {
+    "CJ1_W2": true,
+    "CJ1_W3": true
+   },
+   "duplicate_bytes_identical": true,
+   "file_sha256": {
+    "endpoints": "dc0a9c7cee7f8b85fa6b612f8aaf84b2a352cbb99628b09a389de56e6ca94f4b",
+    "f0_endpoints": "593e0873fbe699743ca0603fe38c639a5412b56398562ce636c128349f3d59a1",
+    "gpu_losses": "05eb6b0d095ae6613863058cc7e52ea9557b6c8fcfe30644a28cba6297297a3f",
+    "truth": "a6d897ac9213d1fc8e2429602ec5f639933e633064f05445aefbddf1295a00e4"
+   },
+   "group": 3,
+   "n_copies": 2
+  },
+  "iss_292517fb189ee1bd": {
+   "anchors_exact_by_copy": {
+    "CJ1_W0": true,
+    "CJ1_W3": true
+   },
+   "duplicate_bytes_identical": true,
+   "file_sha256": {
+    "endpoints": "dc15b701cb5b24b79ef8af09fcadbf939a7f42a93705c6fad8b656d6fdc0a114",
+    "f0_endpoints": "c14b37aca0aaec64203351ea7db7c2474584dd1a1ec99a75aabef7204c878ecb",
+    "gpu_losses": "7bc564c889b36033cfa6446a7804d58cd747196d98b3e1204a732247e9c0a2bf",
+    "truth": "c47753c892b7cf3cda404ff43839b10ed7af08df194b771f868a42d416ca2d01"
+   },
+   "group": 0,
+   "n_copies": 2
+  },
+  "iss_32d48efebee12be2": {
+   "anchors_exact_by_copy": {
+    "CJ1_W1": true,
+    "CJ1_W2": true
+   },
+   "duplicate_bytes_identical": true,
+   "file_sha256": {
+    "endpoints": "1d2de94bcfc030b9b98852553a8c17c263e0d277aff8f3a445ce5c6ca2adf653",
+    "f0_endpoints": "ad183cab4001fa51da50468292a59f95e99fcfc7483f0111fb837879632d7dc0",
+    "gpu_losses": "3a8b42da4706925c1c543459f454bc0233c0ae361534487ca761e84fef3bd641",
+    "truth": "d2cb4cb3bd57411cc31ee8f5a324bfad5b3499665a46b7ac68ff14092e05a375"
+   },
+   "group": 2,
+   "n_copies": 2
+  },
+  "iss_4f2b54d7e8953451": {
+   "anchors_exact_by_copy": {
+    "CJ1_W0": true,
+    "CJ1_W1": true
+   },
+   "duplicate_bytes_identical": true,
+   "file_sha256": {
+    "endpoints": "042b963394b2121c3e11ad53acebfab18f52f4d911537f0f04bc3138a77f1d54",
+    "f0_endpoints": "dab34aa81ce5780f40cac1151de9da0d1abbab0550d73c16358b60e1de45aca1",
+    "gpu_losses": "56f20100c72de7321ef76feb098bebc01f2311e27992931e25a22650d64fafb4",
+    "truth": "373b633a238c965640634fd4b29d554d264e1a0dead61f5d80cdcb1ef88d3bb3"
+   },
+   "group": 1,
+   "n_copies": 2
+  },
+  "iss_6361e4cdd8050ae3": {
+   "anchors_exact_by_copy": {
+    "CJ1_W0": true,
+    "CJ1_W1": true
+   },
+   "duplicate_bytes_identical": true,
+   "file_sha256": {
+    "endpoints": "397bce382dc641ddf4f27366d02b284377f3b08350de58ced966ae74b87b7d77",
+    "f0_endpoints": "9b8e02b324bfb07472a78c8aed9c6194665d208586f99af0f881712ecb195070",
+    "gpu_losses": "aa26953445aad233c8e6db390803e465cc04c5ee50d867e19c9db06d207fc66b",
+    "truth": "fa6fb101aa323f339a7694a24d0152bf8bbc5dbaa79b8fa07c8ae2d25aa537f7"
+   },
+   "group": 1,
+   "n_copies": 2
+  },
+  "iss_b42c91ed1b555939": {
+   "anchors_exact_by_copy": {
+    "CJ1_W2": true,
+    "CJ1_W3": true
+   },
+   "duplicate_bytes_identical": true,
+   "file_sha256": {
+    "endpoints": "5c4dc891279c0c0c3d1cd309629ad16cf5d74f4b8643a73baf037405b720576f",
+    "f0_endpoints": "3f0c835c379bae4172eec5e48996b3bb071b1702deab0a41c481273351505bed",
+    "gpu_losses": "3fa079b381601cd945c8c1649918ca04ec2c8c82cee1f55ff587bf70cb146d92",
+    "truth": "59f372c8b1236afacc3cad2c6d83384f0f00e22a6b453dfe491b63d4bf59ec39"
+   },
+   "group": 3,
+   "n_copies": 2
+  },
+  "iss_bbd4e6e2ec71d9ca": {
+   "anchors_exact_by_copy": {
+    "CJ1_W1": true,
+    "CJ1_W2": true
+   },
+   "duplicate_bytes_identical": true,
+   "file_sha256": {
+    "endpoints": "54457f7e37e087c60acad7d1bd45ab6654739429b6ce31860d71aabe6089c4f0",
+    "f0_endpoints": "2340dfe40237031f92557327322688ec0aabf26e127efc198111a6e7956cfdfa",
+    "gpu_losses": "b16fb3c8aa68ddc807ac5e48502564dc1482dc636a8cb3c64d2e14a1e114b3c9",
+    "truth": "47ba3b474fd8b900479ec5c3646fd68cae73f188ddbeef91d251687756d2f65b"
+   },
+   "group": 2,
+   "n_copies": 2
+  }
+ },
+ "per_worker": {
+  "CJ1_W0": {
+   "device": "cuda:0",
+   "device_name": "NVIDIA H100 80GB HBM3",
+   "model_load_seconds": 136.6089251600206,
+   "ok": true,
+   "peak_gpu_gib": 7.002204895019531
+  },
+  "CJ1_W1": {
+   "device": "cuda:1",
+   "device_name": "NVIDIA H100 80GB HBM3",
+   "model_load_seconds": 136.58849704638124,
+   "ok": true,
+   "peak_gpu_gib": 7.002204895019531
+  },
+  "CJ1_W2": {
+   "device": "cuda:2",
+   "device_name": "NVIDIA H100 80GB HBM3",
+   "model_load_seconds": 136.8441927023232,
+   "ok": true,
+   "peak_gpu_gib": 7.002204895019531
+  },
+  "CJ1_W3": {
+   "device": "cuda:3",
+   "device_name": "NVIDIA H100 80GB HBM3",
+   "model_load_seconds": 136.5875374302268,
+   "ok": true,
+   "peak_gpu_gib": 7.002204895019531
+  }
+ }
+}

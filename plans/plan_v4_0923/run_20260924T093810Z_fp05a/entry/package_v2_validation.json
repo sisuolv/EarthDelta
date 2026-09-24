@@ -1,0 +1,30 @@
+{
+  "scope": "DELIVERY_ONLY_NOT_REPOSITORY_TESTS_OR_GPU",
+  "passed": true,
+  "checks": {
+    "all_required_files_exist": true,
+    "task_list": true,
+    "required_task_fields": true,
+    "unique_task_ids": true,
+    "all_dependencies_exist": true,
+    "acyclic": true,
+    "historical_done_retained": true,
+    "fp02_not_falsely_closed": true,
+    "no_historical_reexecution": true,
+    "only_fp05a_ready": true,
+    "future_states_to_be_run": true,
+    "estimates_not_invented": true,
+    "no_initial_gpu_or_training": true,
+    "confirm_not_h2_clean": true,
+    "five_candidates": true,
+    "protocol_not_falsely_frozen": true,
+    "safety_margin_unbound_visible": true,
+    "audit_verdict_allowed": true,
+    "science_not_claimed": true,
+    "S0_threshold_not_relaxed": true,
+    "X1_exposure_documented": true,
+    "FP06_depends_on_real_evaluation": true,
+    "manifest_hashes_match": true
+  },
+  "check_count": 23
+}

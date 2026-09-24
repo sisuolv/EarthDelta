@@ -1,0 +1,51 @@
+{
+ "all_required_still_missing": true,
+ "required": [
+  [
+   "scripts/plan_followup_runner.py",
+   false
+  ],
+  [
+   "earthdelta/split_freeze.py",
+   false
+  ]
+ ],
+ "other": [
+  [
+   "earthdelta/candidate_cache.py",
+   false
+  ],
+  [
+   "earthdelta/policy_oof.py",
+   false
+  ],
+  [
+   "scripts/r4_candidate_cache.py",
+   false
+  ],
+  [
+   "scripts/r4_cache_decide.py",
+   false
+  ],
+  [
+   "scripts/r4_policy_oof.py",
+   false
+  ],
+  [
+   "tests/test_split_freeze.py",
+   false
+  ],
+  [
+   "tests/test_plan_cache_evaluation.py",
+   false
+  ],
+  [
+   "tests/test_fp05_consumption_chain.py",
+   false
+  ],
+  [
+   "tests/test_policy_oof_isolation.py",
+   false
+  ]
+ ]
+}

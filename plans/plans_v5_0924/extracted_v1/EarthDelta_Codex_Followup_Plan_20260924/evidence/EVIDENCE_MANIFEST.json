@@ -1,0 +1,331 @@
+{
+  "schema": "earthdelta-followup-evidence/20260924",
+  "status": "OBSERVED",
+  "review_date": "2026-09-24",
+  "actual_branch_head": "08093650ba56e8cf709d75a61c26c50a0c35f6f7",
+  "reviewed_implementation": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+  "repo": "sisuolv/EarthDelta",
+  "branch": "audit/round2-review-20260921",
+  "evidence": [
+    {
+      "id": "E00",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "Git refs audit/round2-review-20260921",
+        "Git root trees 08093650ba56e8cf709d75a61c26c50a0c35f6f7 / e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a"
+      ],
+      "tool_citations": [
+        "turn159file0",
+        "turn160file0",
+        "turn161file0"
+      ],
+      "reading_scope": "实际branch读取；核心代码树相同，08093650为后续文档提交。未把文档变更视为新代码。",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E01",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/START_HERE_FOR_CODEX.md",
+        "plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/FOLLOWUP_PLAN.md",
+        "plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/STOP_CONDITIONS.md",
+        "plans/plan_v4_0923/extracted_followup/EarthDelta_Codex_Followup_Plan_20260923/CODEX_TASKS.json"
+      ],
+      "tool_citations": [
+        "turn154file0"
+      ],
+      "reading_scope": "四份验收合同全文；同时读取挂载的上一轮ZIP。",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E02",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/CLAUDE_OPUSPLAN_EXECUTION_PROMPT.md"
+      ],
+      "tool_citations": [
+        "turn156file0"
+      ],
+      "reading_scope": "全文，作为本轮执行指令，不把指令当结果。",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E03",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/run_20260923T164722Z_fp00/entry/entry_evidence.json:1-55",
+        "plans/plan_v4_0923/run_20260923T164722Z_fp00/entry/source_files.json",
+        "plans/plan_v4_0923/run_20260923T164722Z_fp00/delivery_validation.json"
+      ],
+      "tool_citations": [
+        "turn211file0",
+        "turn166file0"
+      ],
+      "reading_scope": "入口命令结果、目录与工件索引；未将库存清单解释为GPU/S0。",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E04",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json:1-620"
+      ],
+      "tool_citations": [
+        "turn164file0",
+        "turn165file0"
+      ],
+      "reading_scope": "详细S0机器结果；1/4/12步、身份与committed判定。原始scheduler job_result及大tensor未取得。",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E05",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/run_20260923T_fp01_trace/four_arm_trace.json:1-145,1550-1900",
+        "earthdelta/bridge/stormer_bridge.py:125-400",
+        "scripts/s0_gate.py:115-130",
+        "tests/test_input_inverse_source_precision.py:1-60"
+      ],
+      "tool_citations": [
+        "turn200file0",
+        "turn201file0",
+        "turn212file0",
+        "turn213file0",
+        "turn214file0"
+      ],
+      "reading_scope": "修复代码与四臂结果相关部分；不是整个69KB trace逐行重算。",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E06",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/protocol/PREREGISTRATION.md",
+        "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/j1_findings.json",
+        "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/j2_findings.json",
+        "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/j3_j3b_findings.json"
+      ],
+      "tool_citations": [
+        "turn169file0",
+        "turn172file0",
+        "turn173file0",
+        "turn174file0"
+      ],
+      "reading_scope": "v1协议及正控制/正式失败的记录；正控制在认证后端仍失稳。",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E07",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/deviation_DEV-001_tf32_checker.json",
+        "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/deviation_DEV-002_f0_reference_decision_file.json",
+        "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n64_override_record.json",
+        "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/deviations/DEV-FP04-001_relative_decision_paths.json"
+      ],
+      "tool_citations": [
+        "turn170file0",
+        "turn171file0",
+        "turn178file0",
+        "turn192file0"
+      ],
+      "reading_scope": "偏差记录全文；DEV-001有效TF32分类、DEV-002/r2绝对路径、X1探索性override。",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E08",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/PREREGISTRATION_v2.md",
+        "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/fs_protocol_v2.json:1-430",
+        "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/protocol/fs_protocol_v2.sha256",
+        "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/jobs/V2_J3.submission_record.json"
+      ],
+      "tool_citations": [
+        "turn179file0",
+        "turn180file0",
+        "turn181file0",
+        "turn185file0",
+        "turn226file0"
+      ],
+      "reading_scope": "本地冻结时间、job提交时间、SHA一致性；不把本地时间声明称为可信时间戳服务。",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E09",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/decisions/V2_J3_formal_decision.json:1-190,700-1020",
+        "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/panel_initial_final.json",
+        "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/task_result_fp03_v2.json"
+      ],
+      "tool_citations": [
+        "turn188file0",
+        "turn196file0",
+        "turn186file0",
+        "turn187file0",
+        "turn182file0"
+      ],
+      "reading_scope": "正式逐面板数值及独立认证摘要；二进制权重不在本次容器内。",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E10",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/PREREGISTRATION.md",
+        "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.sha256",
+        "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/jobs/B-J1.submission_record.json"
+      ],
+      "tool_citations": [
+        "turn197file0",
+        "turn227file0",
+        "turn225file0"
+      ],
+      "reading_scope": "BANK-QUAL/E3与A1-A5规则全文；最终freeze先于B-J1，初版refreeze在提交前。",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E11",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/BJ3_certify_decision.json",
+        "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/bank/bank_verify.json:1-420",
+        "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/task_result_fp04.json:1-295"
+      ],
+      "tool_citations": [
+        "turn191file0",
+        "turn193file0",
+        "turn215file0",
+        "turn195file0",
+        "turn224file0"
+      ],
+      "reading_scope": "实际逐专家probe比较、继续Fs/F0辨别、重载摘要、own-group结果；不是重新运行GPU。",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E12",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "earthdelta/bank_training.py:2260-2500",
+        "earthdelta/fs_protocol.py:1-379",
+        "scripts/r2_fs_bank_train.py:2170-2394",
+        "tests/test_plan_gate_chain.py",
+        "tests/test_loaded_admission_binding.py",
+        "tests/test_profile_immutability.py"
+      ],
+      "tool_citations": [
+        "turn202file0",
+        "turn203file0",
+        "turn204file0",
+        "turn206file0",
+        "turn207file0",
+        "turn208file0",
+        "turn221file0",
+        "turn222file0"
+      ],
+      "reading_scope": "消费链、实际dispatch及三份相关测试全文。未逐行审查125KB/129KB模块全部内容。",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E13",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/tests/pytest_full_suite_v2_prereg.log",
+        "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/tests/pytest_full_suite_fp04_prereg_refreeze.log"
+      ],
+      "tool_citations": [
+        "turn209file0",
+        "turn210file0"
+      ],
+      "reading_scope": "日志全文：766/7与861/7；均为已提交历史测试记录，本轮未重跑。",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E14",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/x1_exploratory_config.json:1-150",
+        "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/admission/build_manifests.py:1-85",
+        "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n64_findings.json",
+        "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N64.json:1-150"
+      ],
+      "tool_citations": [
+        "turn216file0",
+        "turn217file0",
+        "turn218file0",
+        "turn219file0"
+      ],
+      "reading_scope": "关键反证：56个2020下半年训练issue、真实job_result、64样本逐项结果。完整X1 admission没有逐行复算。",
+      "evidence_status": "EXECUTION_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E15",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "plans/plan_v4_0923/FP05_PLAN.md:1-66"
+      ],
+      "tool_citations": [
+        "turn198file0",
+        "turn223file0"
+      ],
+      "reading_scope": "完整下一阶段计划及六项判断。",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E16",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "earthdelta/pilot_contract.py:121-137",
+        "earthdelta/ tree",
+        "scripts/ tree"
+      ],
+      "tool_citations": [
+        "turn189file0",
+        "turn199file0",
+        "turn220file0"
+      ],
+      "reading_scope": "DataRole标签边界；新split_freeze/candidate_cache/policy_oof/plan_followup_runner未在当前树中实现。",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "E17",
+      "commit": "e0136d4ca8ad3e49f49bdb4947cc73a95f082c4a",
+      "paths": [
+        "codex_audit_round4/evidence/artifact_crosschecks.json",
+        "codex_audit_round4/evidence/gpu_records_recomputed.json"
+      ],
+      "tool_citations": [
+        "turn129file0",
+        "turn130file0",
+        "turn131file0"
+      ],
+      "reading_scope": "已读历史来源：每个四worker旧job有4个Fs digest；不把这些记录套给新认证库。",
+      "evidence_status": "STATIC_CONFIRMED",
+      "status": "OBSERVED"
+    }
+  ],
+  "limits": [
+    "未重跑仓库pytest/GPU，不重新哈希未取得的大模型权重。",
+    "已读真实数值输出与部分嵌入job_result；多数当前formal job_result原件在ignored artifacts中，见REQUIRED_INPUTS。",
+    "compare API的大diff统计有截断/零计数，不作为所有文件未改的证明；核心tree比较及所读代码为依据。",
+    "没有新的文献或novelty重新综述；只核查本轮是否有实证支持。"
+  ]
+}

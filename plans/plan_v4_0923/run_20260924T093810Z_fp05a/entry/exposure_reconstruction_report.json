@@ -1,0 +1,399 @@
+{
+ "schema": "ed-fp05a-exposure-reconstruction-report/1",
+ "created_utc": "2026-09-24T09:45:38.772171+00:00",
+ "ledger": {
+  "path": "plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/exposure_ledger.json",
+  "sha256": "d8ee631fca47c79859a01bc4ac4b74e6b962c0347c00c4cf30632b16cf3446bb"
+ },
+ "x1": {
+  "extra_issue_indices_2020_store": [
+   779,
+   791,
+   803,
+   816,
+   828,
+   840,
+   852,
+   865,
+   877,
+   889,
+   901,
+   913,
+   926,
+   938,
+   950,
+   962,
+   974,
+   987,
+   999,
+   1011,
+   1023,
+   1036,
+   1048,
+   1060,
+   1072,
+   1084,
+   1097,
+   1109,
+   1121,
+   1133,
+   1146,
+   1158,
+   1170,
+   1182,
+   1194,
+   1207,
+   1219,
+   1231,
+   1243,
+   1256,
+   1268,
+   1280,
+   1292,
+   1304,
+   1317,
+   1329,
+   1341,
+   1353,
+   1365,
+   1378,
+   1390,
+   1402,
+   1414,
+   1427,
+   1439,
+   1451
+  ],
+  "first_extra_issue_utc": "2020-07-13T18Z",
+  "last_extra_issue_utc": "2020-12-28T18Z",
+  "min_spacing_hours": 72,
+  "max_spacing_hours": 78,
+  "support_length_hours": 84,
+  "support_union_contiguous": true,
+  "all_extra_cert_passed": true,
+  "all_extra_recorded_support_equals_uniform": true,
+  "x1_n32_first8_equal_train8_in_order": true,
+  "x1_n64_first8_equal_train8_in_order": true,
+  "x1_n32_subset_of_n64": true,
+  "x1_n64_extra_count": 56,
+  "x1_n64_extra_in_2020H2_count": 56,
+  "x1_n32_extra_count": 24
+ },
+ "2020H2": {
+  "window": [
+   "2020-07-01T00Z",
+   "2020-12-31T18Z"
+  ],
+  "gradient_or_result_runs_touching_H2_unbuffered": [
+   [
+    "2020-06-29T12Z",
+    "2020-07-04T18Z",
+    126
+   ],
+   [
+    "2020-07-13T06Z",
+    "2020-12-31T18Z",
+    4116
+   ]
+  ],
+  "free_runs_in_H2_after_24h_buffer": [
+   [
+    "2020-07-06T00Z",
+    "2020-07-12T00Z",
+    144
+   ]
+  ],
+  "free_runs_in_H2_no_buffer": [
+   [
+    "2020-07-05T00Z",
+    "2020-07-13T00Z",
+    192
+   ]
+  ],
+  "candidate_issue_times_full_support_in_buffered_gap": {
+   "count": 11,
+   "first": "2020-07-06T12Z",
+   "last": "2020-07-09T00Z"
+  },
+  "max_candidates_support_disjoint_buffered_(spacing>=90h)": 1,
+  "max_candidates_support_touching_allowed_buffered_(spacing>=84h)": 1,
+  "max_candidates_support_disjoint_NO_buffer": 2,
+  "max_candidates_support_disjoint_with_24h_mutual_buffer_(spacing>=114h)": 1,
+  "candidate_issue_times_full_support_no_buffer": {
+   "count": 19
+  },
+  "verdict": "EXPOSED_NOT_CONFIRM"
+ },
+ "2019H2_policy_dev_pool": {
+  "definition": "issue t on 6h grid, full t-12h..t+72h support inside 2019.zarr (2019-01-01T00Z..2019-12-31T18Z) and outside every gradient/result exposure run expanded by 24h",
+  "with_S0_aggregate_result_and_full_cross_year_buffer": {
+   "count": 698,
+   "first": "2019-07-06T12Z",
+   "last": "2019-12-27T18Z"
+  },
+  "2019_timesteps_inside_buffer_of_2020_exposure": [
+   "2019-12-31T00Z",
+   "2019-12-31T06Z",
+   "2019-12-31T12Z",
+   "2019-12-31T18Z"
+  ],
+  "without_S0_aggregate_result_(only_certified_row_exposure)_full_buffer": {
+   "count": 700,
+   "first": "2019-07-06T12Z",
+   "last": "2019-12-28T06Z"
+  },
+  "ignoring_cross_year_buffer_(2019_exposure_only)": {
+   "count": 702,
+   "first": "2019-07-06T12Z",
+   "last": "2019-12-28T18Z"
+  },
+  "integrity_scanned": false,
+  "finiteness_scan_2019_last_step_utc": "2019-07-03T18Z",
+  "status": "CANDIDATE_POOL_INTEGRITY_NOT_SCANNED (scan belongs to FP-05b)",
+  "sharedF0_sprint_disclosure": {
+   "admitted_rows_with_issue_in_2019H2": 147,
+   "admitted_rows_with_any_read_timestep_in_2019H2": 147,
+   "roles_of_2019H2_admitted_rows": {
+    "calibration": 64,
+    "policy_fit": 83
+   },
+   "excluded_rows_with_issue_in_2019H2_(read_attempted,_failed_nonfinite)": 37,
+   "exposure_kind": "INTEGRITY_READ_ONLY (no gradient, no model result: sprint stopped at S0, downstream NOT_STARTED)",
+   "treatment": "DISCLOSED_NOT_EXCLUDED (FP05A accepted decision 3); retrospective-transfer evaluation label"
+  }
+ },
+ "runs_by_year_gradient_or_result_24h_buffered": {
+  "2015": [],
+  "2018": [
+   [
+    "2018-12-31T12Z",
+    "2019-01-06T00Z",
+    132
+   ]
+  ],
+  "2019": [
+   [
+    "2018-12-31T12Z",
+    "2019-01-06T00Z",
+    132
+   ],
+   [
+    "2019-01-15T00Z",
+    "2019-01-20T12Z",
+    132
+   ],
+   [
+    "2019-01-24T12Z",
+    "2019-01-30T00Z",
+    132
+   ],
+   [
+    "2019-02-02T06Z",
+    "2019-02-07T18Z",
+    132
+   ],
+   [
+    "2019-02-17T18Z",
+    "2019-02-23T06Z",
+    132
+   ],
+   [
+    "2019-03-04T00Z",
+    "2019-03-09T12Z",
+    132
+   ],
+   [
+    "2019-03-13T18Z",
+    "2019-03-19T06Z",
+    132
+   ],
+   [
+    "2019-03-28T00Z",
+    "2019-04-02T12Z",
+    132
+   ],
+   [
+    "2019-04-07T00Z",
+    "2019-04-12T12Z",
+    132
+   ],
+   [
+    "2019-04-19T00Z",
+    "2019-04-24T12Z",
+    132
+   ],
+   [
+    "2019-05-01T00Z",
+    "2019-05-06T12Z",
+    132
+   ],
+   [
+    "2019-05-09T06Z",
+    "2019-05-14T18Z",
+    132
+   ],
+   [
+    "2019-05-25T00Z",
+    "2019-05-30T12Z",
+    132
+   ],
+   [
+    "2019-06-06T06Z",
+    "2019-06-11T18Z",
+    132
+   ],
+   [
+    "2019-06-18T06Z",
+    "2019-06-23T18Z",
+    132
+   ],
+   [
+    "2019-06-30T06Z",
+    "2019-07-05T18Z",
+    132
+   ],
+   [
+    "2019-12-31T00Z",
+    "2020-06-26T12Z",
+    4284
+   ]
+  ],
+  "2020": [
+   [
+    "2019-12-31T00Z",
+    "2020-06-26T12Z",
+    4284
+   ],
+   [
+    "2020-06-28T12Z",
+    "2020-07-05T18Z",
+    174
+   ],
+   [
+    "2020-07-12T06Z",
+    "2021-01-01T18Z",
+    4164
+   ]
+  ]
+ },
+ "runs_by_year_gradient_or_result_unbuffered": {
+  "2015": [],
+  "2018": [],
+  "2019": [
+   [
+    "2019-01-01T12Z",
+    "2019-01-05T00Z",
+    84
+   ],
+   [
+    "2019-01-16T00Z",
+    "2019-01-19T12Z",
+    84
+   ],
+   [
+    "2019-01-25T12Z",
+    "2019-01-29T00Z",
+    84
+   ],
+   [
+    "2019-02-03T06Z",
+    "2019-02-06T18Z",
+    84
+   ],
+   [
+    "2019-02-18T18Z",
+    "2019-02-22T06Z",
+    84
+   ],
+   [
+    "2019-03-05T00Z",
+    "2019-03-08T12Z",
+    84
+   ],
+   [
+    "2019-03-14T18Z",
+    "2019-03-18T06Z",
+    84
+   ],
+   [
+    "2019-03-29T00Z",
+    "2019-04-01T12Z",
+    84
+   ],
+   [
+    "2019-04-08T00Z",
+    "2019-04-11T12Z",
+    84
+   ],
+   [
+    "2019-04-20T00Z",
+    "2019-04-23T12Z",
+    84
+   ],
+   [
+    "2019-05-02T00Z",
+    "2019-05-05T12Z",
+    84
+   ],
+   [
+    "2019-05-10T06Z",
+    "2019-05-13T18Z",
+    84
+   ],
+   [
+    "2019-05-26T00Z",
+    "2019-05-29T12Z",
+    84
+   ],
+   [
+    "2019-06-07T06Z",
+    "2019-06-10T18Z",
+    84
+   ],
+   [
+    "2019-06-19T06Z",
+    "2019-06-22T18Z",
+    84
+   ],
+   [
+    "2019-07-01T06Z",
+    "2019-07-04T18Z",
+    84
+   ]
+  ],
+  "2020": [
+   [
+    "2020-01-01T00Z",
+    "2020-06-25T12Z",
+    4236
+   ],
+   [
+    "2020-06-29T12Z",
+    "2020-07-04T18Z",
+    126
+   ],
+   [
+    "2020-07-13T06Z",
+    "2020-12-31T18Z",
+    4116
+   ]
+  ]
+ },
+ "sharedF0_sprint_counts": {
+  "admitted_rows": 616,
+  "excluded_rows": 256,
+  "admitted_by_year": {
+   "2018": 160,
+   "2019": 320,
+   "2020": 136
+  },
+  "admitted_by_role": {
+   "bank_fit": 128,
+   "bank_qualification": 32,
+   "calibration": 64,
+   "debug": 8,
+   "policy_fit": 256,
+   "sprint_holdout": 128
+  }
+ }
+}

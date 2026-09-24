@@ -1,0 +1,42 @@
+{
+ "cache_manifest_sha256": "7682114e18c01bec1e0573481f9dfcda4a3f92475292c93cf50133c34914d993",
+ "created_utc": "2026-09-24T14:20:40.023757+00:00",
+ "dev_protocol_sha256": "11cb71fa617fb900c0430fb930411e36e74607007593718227cfeffdd5e6b876",
+ "features_manifest_digest": "5043eb6df1885d9ea604f1815c65c2a38d450a9891e567fca14b5e20611d37d3",
+ "folds": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/policies/folds.json",
+  "sha256": "cf68f9f3f07d90ff79b5383b129124f7cbe3f7e0e692bd67397d85e872c49f62"
+ },
+ "label_access_log": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/policies/label_access_log.json",
+  "sha256": "4e8fc50ab91110a5475c0312adc10cd84f02767eb360babeff4f7e5a1613846b"
+ },
+ "oof_predictions": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/policies/oof_predictions.json",
+  "sha256": "d7fff06712bcb1524b82073fc56d0c26a39d0850d7362c7bb283f2d0b7b17c09"
+ },
+ "per_fold_files": {
+  "fold0": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/policies/oof_predictions_fold0.json",
+   "sha256": "704120728efcf64c56e36592417e476fb48967cec5bd17ca2ff0c2e1aaa76c8f"
+  },
+  "fold1": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/policies/oof_predictions_fold1.json",
+   "sha256": "f89e9c9f01214826cb9856a788e8bd966822419cfa48629a09aa387031e7bcf4"
+  },
+  "fold2": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/policies/oof_predictions_fold2.json",
+   "sha256": "d8c29cf97fd86bf6b6ac5b3f34b758d01741d4a9f1db80e7f0e311246d9d7802"
+  },
+  "fold3": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/policies/oof_predictions_fold3.json",
+   "sha256": "ca974555f96524fe892425bf3b65593c1c20cbc669807e887f0489e4bb45321a"
+  }
+ },
+ "protocol_sha256": "a42c11dc68d9ede158370a6ba77c4ef8b54cb5cecde30358ee2424fc18ae96d8",
+ "schema": "ed-fp05-prediction-freeze/1",
+ "source": {
+  "earthdelta/policy_oof.py": "418afb27ccf813fb0162072797850da5e2f362854d2fb1a17494fbf45c5eb36c",
+  "scripts/r4_policy_oof.py": "d26dc322fd86e7ab67867829a2ec3defbb80b957b74fa0ba56c5456298c51929"
+ }
+}

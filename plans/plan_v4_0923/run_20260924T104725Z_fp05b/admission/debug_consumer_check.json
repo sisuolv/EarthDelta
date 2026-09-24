@@ -1,0 +1,354 @@
+{
+ "certification": {
+  "check": "fp05_admission_consumer_certification",
+  "content_reverified": true,
+  "expected_grid_hash": "c05fcc6b8e5e14ba",
+  "expected_normalization_digest": "3e0b216bfbf34ab0",
+  "expected_tag": "bank_fit",
+  "expected_variable_order_hash": "fb3775313a2b999e907e789efc4bbfc3148cf8e4466e354254ec2b53d21e7710",
+  "failures": [],
+  "max_lead_step": 12,
+  "n_rows": 8,
+  "only_issue_ids": [
+   "iss_292517fb189ee1bd",
+   "iss_039add2d41f5c08a",
+   "iss_4f2b54d7e8953451",
+   "iss_6361e4cdd8050ae3",
+   "iss_32d48efebee12be2",
+   "iss_bbd4e6e2ec71d9ca",
+   "iss_04eb8e8d56c68faa",
+   "iss_b42c91ed1b555939"
+  ],
+  "passed": true,
+  "required_history_steps": 2,
+  "rows": [
+   {
+    "certificate_indices": [
+     2,
+     16
+    ],
+    "content_sha256": "37788f56be5ea772a1b2eee6ec1b246f362f73d38f1bf25ccfe43f9c3c20bc85",
+    "fresh_content_sha256": "37788f56be5ea772a1b2eee6ec1b246f362f73d38f1bf25ccfe43f9c3c20bc85",
+    "identity_sha256": "a1b42000bc8072db04590351a000ff7254036b80d10786507688d49043366b6a",
+    "issue_id": "iss_292517fb189ee1bd",
+    "issue_index": 4,
+    "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625/2020.zarr"
+   },
+   {
+    "certificate_indices": [
+     212,
+     226
+    ],
+    "content_sha256": "4e0a34a0b9e1cfcd73b9faf8fc65d77848346fa5e75e0f21f09cd7c7fd6a0706",
+    "fresh_content_sha256": "4e0a34a0b9e1cfcd73b9faf8fc65d77848346fa5e75e0f21f09cd7c7fd6a0706",
+    "identity_sha256": "9a844d9a4db21b18719af2b6984aac53b1d65c115b8e165d551af345fa1c83a0",
+    "issue_id": "iss_039add2d41f5c08a",
+    "issue_index": 214,
+    "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625/2020.zarr"
+   },
+   {
+    "certificate_indices": [
+     242,
+     256
+    ],
+    "content_sha256": "dcd032fce145c1306e20f51f97167e3bab4f15614b63f3d342bc84fc67c1e5fd",
+    "fresh_content_sha256": "dcd032fce145c1306e20f51f97167e3bab4f15614b63f3d342bc84fc67c1e5fd",
+    "identity_sha256": "b2b701c064231d5955fd3dd7bf8e7536af978df1921a66d01f26622c649abceb",
+    "issue_id": "iss_4f2b54d7e8953451",
+    "issue_index": 244,
+    "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625/2020.zarr"
+   },
+   {
+    "certificate_indices": [
+     467,
+     481
+    ],
+    "content_sha256": "cf4ad3865b630b0524e5e8634d2e0bc2cd0878e324e84a12398167cc44e6f518",
+    "fresh_content_sha256": "cf4ad3865b630b0524e5e8634d2e0bc2cd0878e324e84a12398167cc44e6f518",
+    "identity_sha256": "283b8bbe15707c87d8eb90cceca15935adf368a6982b306d60742366d9f64877",
+    "issue_id": "iss_6361e4cdd8050ae3",
+    "issue_index": 469,
+    "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625/2020.zarr"
+   },
+   {
+    "certificate_indices": [
+     497,
+     511
+    ],
+    "content_sha256": "65fe84cbbf1c20ccb6c916708c4d760640208f27af85c5ef3dd0863fd8e39bf4",
+    "fresh_content_sha256": "65fe84cbbf1c20ccb6c916708c4d760640208f27af85c5ef3dd0863fd8e39bf4",
+    "identity_sha256": "659b807c45d625dc472d6f092bfc9557ce49283d0b17e49ff92d19ec83f7eff0",
+    "issue_id": "iss_32d48efebee12be2",
+    "issue_index": 499,
+    "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625/2020.zarr"
+   },
+   {
+    "certificate_indices": [
+     587,
+     601
+    ],
+    "content_sha256": "c76ae42f7a280d54f1abf7312677686456d605ff48f20d5dfd3093233df140c7",
+    "fresh_content_sha256": "c76ae42f7a280d54f1abf7312677686456d605ff48f20d5dfd3093233df140c7",
+    "identity_sha256": "0806a2dc24caa0e15d6cb3a7bacfd1f1f01b01500a852a1dc983bf456ef153ea",
+    "issue_id": "iss_bbd4e6e2ec71d9ca",
+    "issue_index": 589,
+    "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625/2020.zarr"
+   },
+   {
+    "certificate_indices": [
+     617,
+     631
+    ],
+    "content_sha256": "7df813e509cb626b51a36449730dff2bde43a98f2ecdb1a2c971876f51e3da12",
+    "fresh_content_sha256": "7df813e509cb626b51a36449730dff2bde43a98f2ecdb1a2c971876f51e3da12",
+    "identity_sha256": "36e109deec70233c16e8a32a74df67ef46e384024b618a49b33c1f9426ced967",
+    "issue_id": "iss_04eb8e8d56c68faa",
+    "issue_index": 619,
+    "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625/2020.zarr"
+   },
+   {
+    "certificate_indices": [
+     692,
+     706
+    ],
+    "content_sha256": "7b3ecc106c1e2d941629f40889216ba92683e4b7dfef994ec850505d008da333",
+    "fresh_content_sha256": "7b3ecc106c1e2d941629f40889216ba92683e4b7dfef994ec850505d008da333",
+    "identity_sha256": "e13bf06bf23cf2244472039a7e8fe684301fc5e03a07c6dc98948458be4ef137",
+    "issue_id": "iss_b42c91ed1b555939",
+    "issue_index": 694,
+    "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625/2020.zarr"
+   }
+  ],
+  "tag_is_authorisation": false
+ },
+ "clearance": {
+  "n_clear": 8,
+  "n_rows": 8,
+  "passed": true,
+  "pre_admission": false
+ },
+ "clearance_rows": [
+  {
+   "clear": true,
+   "excluded_indices_hit": [],
+   "in_guard_window": false,
+   "index_time_consistent": true,
+   "inside_role_window": true,
+   "issue_id": "iss_292517fb189ee1bd",
+   "on_allow_list": true,
+   "pre_admission": false,
+   "reasons": [],
+   "role": "debug",
+   "store": "2020.zarr",
+   "store_allowed": true,
+   "support_utc": [
+    "2020-01-01T12Z",
+    "2020-01-05T00Z"
+   ],
+   "tag": "bank_fit",
+   "touches_exposed_buffered": [
+    [
+     "2020-01-01T00Z",
+     "2020-06-25T12Z"
+    ]
+   ]
+  },
+  {
+   "clear": true,
+   "excluded_indices_hit": [],
+   "in_guard_window": false,
+   "index_time_consistent": true,
+   "inside_role_window": true,
+   "issue_id": "iss_039add2d41f5c08a",
+   "on_allow_list": true,
+   "pre_admission": false,
+   "reasons": [],
+   "role": "debug",
+   "store": "2020.zarr",
+   "store_allowed": true,
+   "support_utc": [
+    "2020-02-23T00Z",
+    "2020-02-26T12Z"
+   ],
+   "tag": "bank_fit",
+   "touches_exposed_buffered": [
+    [
+     "2020-01-01T00Z",
+     "2020-06-25T12Z"
+    ]
+   ]
+  },
+  {
+   "clear": true,
+   "excluded_indices_hit": [],
+   "in_guard_window": false,
+   "index_time_consistent": true,
+   "inside_role_window": true,
+   "issue_id": "iss_4f2b54d7e8953451",
+   "on_allow_list": true,
+   "pre_admission": false,
+   "reasons": [],
+   "role": "debug",
+   "store": "2020.zarr",
+   "store_allowed": true,
+   "support_utc": [
+    "2020-03-01T12Z",
+    "2020-03-05T00Z"
+   ],
+   "tag": "bank_fit",
+   "touches_exposed_buffered": [
+    [
+     "2020-01-01T00Z",
+     "2020-06-25T12Z"
+    ]
+   ]
+  },
+  {
+   "clear": true,
+   "excluded_indices_hit": [],
+   "in_guard_window": false,
+   "index_time_consistent": true,
+   "inside_role_window": true,
+   "issue_id": "iss_6361e4cdd8050ae3",
+   "on_allow_list": true,
+   "pre_admission": false,
+   "reasons": [],
+   "role": "debug",
+   "store": "2020.zarr",
+   "store_allowed": true,
+   "support_utc": [
+    "2020-04-26T18Z",
+    "2020-04-30T06Z"
+   ],
+   "tag": "bank_fit",
+   "touches_exposed_buffered": [
+    [
+     "2020-01-01T00Z",
+     "2020-06-25T12Z"
+    ]
+   ]
+  },
+  {
+   "clear": true,
+   "excluded_indices_hit": [],
+   "in_guard_window": false,
+   "index_time_consistent": true,
+   "inside_role_window": true,
+   "issue_id": "iss_32d48efebee12be2",
+   "on_allow_list": true,
+   "pre_admission": false,
+   "reasons": [],
+   "role": "debug",
+   "store": "2020.zarr",
+   "store_allowed": true,
+   "support_utc": [
+    "2020-05-04T06Z",
+    "2020-05-07T18Z"
+   ],
+   "tag": "bank_fit",
+   "touches_exposed_buffered": [
+    [
+     "2020-01-01T00Z",
+     "2020-06-25T12Z"
+    ]
+   ]
+  },
+  {
+   "clear": true,
+   "excluded_indices_hit": [],
+   "in_guard_window": false,
+   "index_time_consistent": true,
+   "inside_role_window": true,
+   "issue_id": "iss_bbd4e6e2ec71d9ca",
+   "on_allow_list": true,
+   "pre_admission": false,
+   "reasons": [],
+   "role": "debug",
+   "store": "2020.zarr",
+   "store_allowed": true,
+   "support_utc": [
+    "2020-05-26T18Z",
+    "2020-05-30T06Z"
+   ],
+   "tag": "bank_fit",
+   "touches_exposed_buffered": [
+    [
+     "2020-01-01T00Z",
+     "2020-06-25T12Z"
+    ]
+   ]
+  },
+  {
+   "clear": true,
+   "excluded_indices_hit": [],
+   "in_guard_window": false,
+   "index_time_consistent": true,
+   "inside_role_window": true,
+   "issue_id": "iss_04eb8e8d56c68faa",
+   "on_allow_list": true,
+   "pre_admission": false,
+   "reasons": [],
+   "role": "debug",
+   "store": "2020.zarr",
+   "store_allowed": true,
+   "support_utc": [
+    "2020-06-03T06Z",
+    "2020-06-06T18Z"
+   ],
+   "tag": "bank_fit",
+   "touches_exposed_buffered": [
+    [
+     "2020-01-01T00Z",
+     "2020-06-25T12Z"
+    ]
+   ]
+  },
+  {
+   "clear": true,
+   "excluded_indices_hit": [],
+   "in_guard_window": false,
+   "index_time_consistent": true,
+   "inside_role_window": true,
+   "issue_id": "iss_b42c91ed1b555939",
+   "on_allow_list": true,
+   "pre_admission": false,
+   "reasons": [],
+   "role": "debug",
+   "store": "2020.zarr",
+   "store_allowed": true,
+   "support_utc": [
+    "2020-06-22T00Z",
+    "2020-06-25T12Z"
+   ],
+   "tag": "bank_fit",
+   "touches_exposed_buffered": [
+    [
+     "2020-01-01T00Z",
+     "2020-06-25T12Z"
+    ]
+   ]
+  }
+ ],
+ "fresh_content_sha256_equals_stored_for_every_row": true,
+ "issue_ids": [
+  "iss_292517fb189ee1bd",
+  "iss_039add2d41f5c08a",
+  "iss_4f2b54d7e8953451",
+  "iss_6361e4cdd8050ae3",
+  "iss_32d48efebee12be2",
+  "iss_bbd4e6e2ec71d9ca",
+  "iss_04eb8e8d56c68faa",
+  "iss_b42c91ed1b555939"
+ ],
+ "passed": true,
+ "record": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+  "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea"
+ },
+ "role": "debug",
+ "schema": "ed-fp05-consumer-check/1",
+ "split_freeze": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/splits/split_freeze_v1.json",
+  "sha256": "20273225b07e0498d144dbec39029de2e5f9b573fedb6207f144063af5706cf5"
+ }
+}

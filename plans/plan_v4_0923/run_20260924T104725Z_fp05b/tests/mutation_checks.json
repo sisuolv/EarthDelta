@@ -1,0 +1,83 @@
+{
+ "note": "Temporary in-place mutations, each restored byte-identically (sha256 re-compared). Core mutants run before the protocol freeze; chain mutants after it (they need the frozen protocol) and the restored files equal the protocol pins.",
+ "mutants": [
+  {
+   "file": "earthdelta/split_freeze.py",
+   "mutation": "load_freeze: sha256 no longer compared",
+   "tests": "tests/test_split_freeze.py",
+   "result": "1 failed, 23 passed in 3.11s (KILLED)"
+  },
+  {
+   "file": "earthdelta/split_freeze.py",
+   "mutation": "classify_row: 24h exposure buffer removed",
+   "tests": "tests/test_split_freeze.py",
+   "result": "1 failed, 23 passed in 3.48s (KILLED)"
+  },
+  {
+   "file": "earthdelta/split_freeze.py",
+   "mutation": "classify_row: allow-list membership no longer checked (debug/policy_dev)",
+   "tests": "tests/test_split_freeze.py",
+   "result": "4 failed, 20 passed in 6.82s (KILLED)"
+  },
+  {
+   "file": "earthdelta/split_freeze.py",
+   "mutation": "read_slab: certified-slice check removed",
+   "tests": "tests/test_split_freeze.py",
+   "result": "1 failed, 23 passed in 3.14s (KILLED)"
+  },
+  {
+   "file": "earthdelta/policy_oof.py",
+   "mutation": "FoldLabels: train-id check removed",
+   "tests": "tests/test_policy_oof_isolation.py",
+   "result": "1 failed, 9 passed in 4.20s (KILLED)"
+  },
+  {
+   "file": "earthdelta/policy_oof.py",
+   "mutation": "purge: 24h widening removed",
+   "tests": "tests/test_policy_oof_isolation.py",
+   "result": "1 failed, 9 passed in 4.86s (KILLED)"
+  },
+  {
+   "file": "earthdelta/candidate_cache.py",
+   "mutation": "V5 tolerance loosened to 1e-6",
+   "tests": "tests/test_plan_cache_evaluation.py",
+   "result": "1 failed, 21 passed, 1 warning in 8.25s (KILLED)"
+  },
+  {
+   "file": "earthdelta/candidate_cache.py",
+   "mutation": "V2 single-role check removed",
+   "tests": "tests/test_plan_cache_evaluation.py",
+   "result": "1 failed, 21 passed, 1 warning in 8.58s (KILLED)"
+  },
+  {
+   "file": "earthdelta/candidate_cache.py",
+   "mutation": "DEBUG-DECIDE: anchors given a 1e-6 tolerance",
+   "tests": "tests/test_plan_cache_evaluation.py",
+   "result": "1 failed, 21 passed, 1 warning in 8.52s (KILLED)"
+  },
+  {
+   "file": "scripts/r4_candidate_cache.py",
+   "mutation": "cache: split-freeze clearance skipped",
+   "tests": "tests/test_fp05_consumption_chain.py",
+   "result": "4 failed, 8 passed, 1 warning in 6.46s (KILLED)"
+  },
+  {
+   "file": "scripts/r4_candidate_cache.py",
+   "mutation": "dev cache: debug-decision PASS no longer required",
+   "tests": "tests/test_fp05_consumption_chain.py",
+   "result": "5 failed, 7 passed, 1 warning in 6.87s (KILLED)"
+  },
+  {
+   "file": "scripts/r4_candidate_cache.py",
+   "mutation": "cache: source pins no longer compared",
+   "tests": "tests/test_fp05_consumption_chain.py",
+   "result": "1 failed, 11 passed, 1 warning in 43.25s (KILLED)"
+  },
+  {
+   "file": "scripts/r4_policy_oof.py",
+   "mutation": "score: prediction freeze no longer required",
+   "tests": "tests/test_fp05_consumption_chain.py",
+   "result": "4 failed, 8 passed, 1 warning in 6.54s (KILLED)"
+  }
+ ]
+}

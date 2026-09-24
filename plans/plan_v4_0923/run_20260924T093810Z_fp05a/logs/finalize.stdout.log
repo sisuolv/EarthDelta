@@ -1,0 +1,20 @@
+{
+ "verdict": "FP05A_COMPLETE",
+ "criteria": {
+  "C1_17_pins_match_before_and_after": true,
+  "C2_8_tracked_input_hashes_match": true,
+  "C2b_3_large_assets_rehashed_match": true,
+  "C3_every_job_receipt_matches": true,
+  "C4_certificates_recomputed_within_1e-12": true,
+  "C4b_assembly_equivalence_exactly_zero": true,
+  "C4c_verify_bank_bundle_deep_passed_no_zarr": true,
+  "C5_ledger_has_all_56_X1_H2_issues": true,
+  "C5b_ledger_has_sharedF0_616_reads": true,
+  "C6_2020H2_EXPOSED_NOT_CONFIRM": true,
+  "C7_confirm_null": true,
+  "C8_protocol_draft_v2_structural_check": true,
+  "C9_package_validators_pass": true,
+  "C10_fp02_gaps_recorded": true
+ },
+ "n_manifest": 36
+}

@@ -1,0 +1,116 @@
+{
+  "schema": "ed-fp05a-core-pin-check/1",
+  "label": "before",
+  "created_utc": "2026-09-24T09:38:24.908952+00:00",
+  "pin_source": "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/protocol/bank_protocol_v1.json",
+  "pin_source_sha256": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1",
+  "pin_source_sha256_recorded_sidecar": "394562dde7cae5b3b805e6f5344f680ec9f24c71d9ed90c3893d96e8867da0d1",
+  "pin_source_sidecar_match": true,
+  "n_pinned": 17,
+  "n_match": 17,
+  "all_match": true,
+  "files": [
+    {
+      "path": "earthdelta/bank_training.py",
+      "expected_sha256": "e0de5ec5403c139dc365225695892ef66bef35360107fb37dcd82f1a1b20a8c9",
+      "actual_sha256": "e0de5ec5403c139dc365225695892ef66bef35360107fb37dcd82f1a1b20a8c9",
+      "match": true
+    },
+    {
+      "path": "earthdelta/registry.py",
+      "expected_sha256": "42a1f064942a6c327bb5f0ce50856ea130970d601878d5ee43f114f399bd99af",
+      "actual_sha256": "42a1f064942a6c327bb5f0ce50856ea130970d601878d5ee43f114f399bd99af",
+      "match": true
+    },
+    {
+      "path": "earthdelta/static_adapter.py",
+      "expected_sha256": "8a3154c8587d5d7dde4844f38892eb3503e7d4227957f7c7ffb1ae9dbc457e46",
+      "actual_sha256": "8a3154c8587d5d7dde4844f38892eb3503e7d4227957f7c7ffb1ae9dbc457e46",
+      "match": true
+    },
+    {
+      "path": "earthdelta/fs_protocol.py",
+      "expected_sha256": "2b3116a1f87951d3d5549a08fd52244f23a6e2784d8378894f8736e25fdb39a2",
+      "actual_sha256": "2b3116a1f87951d3d5549a08fd52244f23a6e2784d8378894f8736e25fdb39a2",
+      "match": true
+    },
+    {
+      "path": "earthdelta/metrics_contract.py",
+      "expected_sha256": "7bd91cf4f244fed07afd3a66aaa4917151cf7893fad5df5bc146d1aeb871b199",
+      "actual_sha256": "7bd91cf4f244fed07afd3a66aaa4917151cf7893fad5df5bc146d1aeb871b199",
+      "match": true
+    },
+    {
+      "path": "earthdelta/pilot_contract.py",
+      "expected_sha256": "506b72e26d783fddae4411ff1dadbf8cc071bcb34b7167b3098b9b00805f62c0",
+      "actual_sha256": "506b72e26d783fddae4411ff1dadbf8cc071bcb34b7167b3098b9b00805f62c0",
+      "match": true
+    },
+    {
+      "path": "earthdelta/data/make_splits.py",
+      "expected_sha256": "e859e60fb07f026747c4cf6e07fe837e95f65bc3f19416dfcaffc93b7c48fd32",
+      "actual_sha256": "e859e60fb07f026747c4cf6e07fe837e95f65bc3f19416dfcaffc93b7c48fd32",
+      "match": true
+    },
+    {
+      "path": "scripts/r2_fs_bank_train.py",
+      "expected_sha256": "b0283f6ec0ec9bbc98ecc8d82ec0c1907e43b255848c6e303260fdda1447606a",
+      "actual_sha256": "b0283f6ec0ec9bbc98ecc8d82ec0c1907e43b255848c6e303260fdda1447606a",
+      "match": true
+    },
+    {
+      "path": "scripts/r4_bank_decide.py",
+      "expected_sha256": "3aae47105e235779c01ca88d4030873e9a5989071208167fda418703dea81445",
+      "actual_sha256": "3aae47105e235779c01ca88d4030873e9a5989071208167fda418703dea81445",
+      "match": true
+    },
+    {
+      "path": "tests/test_fitted_fs_bank_roundtrip.py",
+      "expected_sha256": "1feb88aa024610b7e1b3a8dd4c118ca1f5b52e5b4f643a5dba80a5df812393d5",
+      "actual_sha256": "1feb88aa024610b7e1b3a8dd4c118ca1f5b52e5b4f643a5dba80a5df812393d5",
+      "match": true
+    },
+    {
+      "path": "tests/test_bank_quality_gate.py",
+      "expected_sha256": "aa8ec0cf262989697acc9e5ab5d8f6c782aebe92c6d7434015a6ece5829dd48b",
+      "actual_sha256": "aa8ec0cf262989697acc9e5ab5d8f6c782aebe92c6d7434015a6ece5829dd48b",
+      "match": true
+    },
+    {
+      "path": "tests/test_profile_immutability.py",
+      "expected_sha256": "ac90e0066e1ae407d874ca87720bf2c0947ee4b589ad07ca1fdd8b0c976d2659",
+      "actual_sha256": "ac90e0066e1ae407d874ca87720bf2c0947ee4b589ad07ca1fdd8b0c976d2659",
+      "match": true
+    },
+    {
+      "path": "tests/test_plan_gate_chain.py",
+      "expected_sha256": "a2d9424453b2c323375723de9fc1b2cf121321112cc4930033038dfb8f7617f2",
+      "actual_sha256": "a2d9424453b2c323375723de9fc1b2cf121321112cc4930033038dfb8f7617f2",
+      "match": true
+    },
+    {
+      "path": "earthdelta/contracts.py",
+      "expected_sha256": "9e711ca45077349433a64b5b9321315272e8758ed9467c2650e01b786e39589d",
+      "actual_sha256": "9e711ca45077349433a64b5b9321315272e8758ed9467c2650e01b786e39589d",
+      "match": true
+    },
+    {
+      "path": "earthdelta/bridge/stormer_bridge.py",
+      "expected_sha256": "03e9659db1416de3b2b6cade08c0f245826119ce70bb25c8594523ac8f2652c3",
+      "actual_sha256": "03e9659db1416de3b2b6cade08c0f245826119ce70bb25c8594523ac8f2652c3",
+      "match": true
+    },
+    {
+      "path": "earthdelta/bridge/stormer_arch.py",
+      "expected_sha256": "366f9a9ffd03258b942b44de300a86820ecede588d94dd0d81f7c54a3a510f9e",
+      "actual_sha256": "366f9a9ffd03258b942b44de300a86820ecede588d94dd0d81f7c54a3a510f9e",
+      "match": true
+    },
+    {
+      "path": "earthdelta/lowrank.py",
+      "expected_sha256": "20fd93e6c8f922215df83b8b0a6b4604002b3dc7bfa3575eb5e078f0e77adec3",
+      "actual_sha256": "20fd93e6c8f922215df83b8b0a6b4604002b3dc7bfa3575eb5e078f0e77adec3",
+      "match": true
+    }
+  ]
+}

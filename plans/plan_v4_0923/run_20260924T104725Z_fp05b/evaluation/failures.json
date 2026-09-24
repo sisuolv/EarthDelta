@@ -1,0 +1,67 @@
+{
+ "failures_24h_issue_count": {
+  "M0": 0,
+  "M1": 0,
+  "M2": 0,
+  "M3": 0,
+  "M4": 0,
+  "M5": 0
+ },
+ "rates": {
+  "M1": {
+   "harmful_edit_rate": 0.026785714285714284,
+   "no_edit_rate": 0.0,
+   "selection_counts": {
+    "expert_0": 112,
+    "expert_1": 0,
+    "expert_2": 0,
+    "expert_3": 0,
+    "reference": 0
+   }
+  },
+  "M2": {
+   "harmful_edit_rate": 0.026785714285714284,
+   "no_edit_rate": 0.0,
+   "selection_counts": {
+    "expert_0": 92,
+    "expert_1": 20,
+    "expert_2": 0,
+    "expert_3": 0,
+    "reference": 0
+   }
+  },
+  "M3": {
+   "harmful_edit_rate": 0.017857142857142856,
+   "no_edit_rate": 0.0,
+   "selection_counts": {
+    "expert_0": 73,
+    "expert_1": 39,
+    "expert_2": 0,
+    "expert_3": 0,
+    "reference": 0
+   }
+  },
+  "M4": {
+   "harmful_edit_rate": 0.0,
+   "no_edit_rate": 0.0,
+   "selection_counts": {
+    "expert_0": 62,
+    "expert_1": 41,
+    "expert_2": 2,
+    "expert_3": 7,
+    "reference": 0
+   }
+  },
+  "M5": {
+   "harmful_edit_rate": 0.026785714285714284,
+   "no_edit_rate": 0.0,
+   "selection_counts": {
+    "expert_0": 112,
+    "expert_1": 0,
+    "expert_2": 0,
+    "expert_3": 0,
+    "reference": 0
+   }
+  }
+ }
+}

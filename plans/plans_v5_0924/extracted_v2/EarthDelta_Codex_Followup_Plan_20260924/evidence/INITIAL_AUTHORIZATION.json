@@ -1,0 +1,15 @@
+{
+  "status": "OBSERVED_PACKAGE_INITIAL_STATE",
+  "allowed_task_ids": [
+    "FP-05a"
+  ],
+  "allowed_operations": [
+    "read existing source/metadata/logs",
+    "create isolated evidence inventory and amended plan"
+  ],
+  "gpu_jobs_authorized": false,
+  "training_authorized": false,
+  "dev_outcome_access_authorized": false,
+  "confirm_access_authorized": false,
+  "notes": "Historical DONE does not grant new dispatch. Only FP05a is initially open; future gates require accepted artifacts and an explicit resource/scope authorization."
+}

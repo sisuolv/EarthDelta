@@ -7,16 +7,22 @@ reversible parameter edit — before ever applying it — and selects edits at i
 under a budget, using an exact quadratic form derived from forecast sensitivity theory.
 No fine-tuning loop, no retraining the base model, no peeking at future truth.
 
-> **Status (2026-09-24):** the S0 gate now passes official Stormer parity exactly (1/4/12-step
-> `max_abs_diff = 0.0` on real H100 hardware, after fixing an attention-backend/TF32 bug — see
-> [Status & roadmap](#status--roadmap)). On top of that, a single static reference adapter
-> ("Fs") and a K=4/rank=4 dynamic expert bank are now formally certified through a
-> pre-registered protocol with real GPU evidence. **Neither has demonstrated real
-> out-of-sample skill yet** — Fs itself is only "no material harm" relative to the frozen
-> backbone on a held-out panel, and the bank's per-expert gains are in-sample only. The
-> project is now in a read-only evidence-audit phase (FP-05a, see `plans/plan_v4_0923/`)
-> before any out-of-sample policy evaluation is attempted. This is an active research repo,
-> not a released package.
+> **Status (2026-09-24):** the S0 gate passes official Stormer parity exactly (1/4/12-step
+> `max_abs_diff = 0.0` on real H100 hardware), and a static reference adapter ("Fs") and a
+> K=4/rank=4 dynamic expert bank are formally certified through a pre-registered protocol
+> with real GPU evidence. **FP-05 has now run the first real out-of-sample policy
+> evaluation of that bank** — a purged, block-bootstrapped comparison on a held-out 2019 H2
+> window (N=112 issues, real GPU-built candidate cache, `plans/plan_v4_0923/run_20260924T104725Z_fp05b/`).
+> **Result: the bank's primary policy (ridge-based expert routing) does not clear the
+> pre-registered minimum-effect bar** — its 24h out-of-sample gain over Fs is BELOW
+> delta_min=0.34% (95% CI [0.239%, 0.284%]), and even the hindsight-optimal oracle only
+> STRADDLEs it (CI high 0.351%). No out-of-sample forecasting benefit from dynamic editing
+> has been demonstrated yet; this is an honest negative/inconclusive result, not a failed
+> run. FP-06 (the formal accept/reject decision built on these numbers) has not been run.
+> Separately, a standard-metrics evaluation harness reusing official
+> [`google-research/weatherbenchX`](https://github.com/google-research/weatherbenchX) code
+> (`earthdelta/wbx/`) has been added and independently cross-checked bit-for-bit against
+> these same certified numbers. This is an active research repo, not a released package.
 
 ---
 
@@ -200,18 +206,24 @@ resolution).
 | **S0 gate** (`scripts/s0_gate.py`, GPU) | strict real-ckpt load, zero-edit parity, and multistep rollout checks at a frozen `1e-5` tolerance | ✅ PASS on real H100 (1/4/12-step `max_abs_diff = 0.0`) |
 | **Fs certification** (static reference adapter, GPU) | pre-registered protocol, formal qualification against a fresh out-of-sample panel, exact freeze/reload verification | ✅ certified (`FS_SELECTED`) — but only "no material harm" vs the frozen backbone out of sample, not a demonstrated gain |
 | **K=4/rank=4 dynamic bank** (GPU) | each expert trained from one shared certified Fs (not re-fit per worker), exact assembly-equivalence verification | ✅ certified (`BANK_CERTIFIED`) — per-expert gains are in-sample only, no out-of-sample evidence yet |
-| **FP-05** (candidate cache + out-of-sample policy evaluation) | whether the certified bank has any real out-of-sample skill over the static Fs baseline | 🔍 read-only evidence audit in progress (FP-05a); no cache built, no policy evaluated yet |
-| S1+ / holdout evaluation | final confirm-set evaluation | not started — no genuinely untouched confirm data currently exists on disk (see `plans/plan_v4_0923/FP05A_PLAN.md`) |
+| **FP-05a** (read-only evidence audit) | rebuilt the full exposure ledger, re-verified all 17 pinned files and every certified number, corrected an error in the original FP-05 data-split design | ✅ done (`plans/plan_v4_0923/run_20260924T093810Z_fp05a/`) |
+| **FP-05b** (candidate cache + purged out-of-sample policy evaluation, GPU) | real 4-worker debug batch (C-J1) + full 4-shard cache build (C-J2) on N=112 policy_dev issues (2019 H2), then blocked cross-fit policy fitting + paired block-bootstrap scoring, all independently re-verified bit-for-bit against FP-03/FP-04's recorded numbers | ✅ done — **primary policy (ridge) is BELOW the pre-registered delta_min bar; hindsight oracle only STRADDLEs it** (`plans/plan_v4_0923/run_20260924T104725Z_fp05b/`) |
+| **WeatherBench-X integration** (`earthdelta/wbx/`) | export F0/Fs/bank forecasts to the official WeatherBench-X/WeatherBench 2 format and reuse their RMSE/ACC/regrid code instead of custom eval code | ✅ Tier A (CPU) and Tier B (real GPU, bit-for-bit reconciled against FP-03/FP-04) both pass; benchmark runner against public baselines not yet run |
+| **FP-06** (formal accept/reject decision) | applies pre-registered rules to the FP-05b ABOVE/BELOW/STRADDLE results to reach a final call | not started |
+| S1+ / holdout evaluation | final confirm-set evaluation | not started — no genuinely untouched confirm data currently exists on disk; 2021/2022 are the leading future candidates pending a fresh confirm-freeze (see `plans/plan_v4_0923/FP05A_PLAN.md`) |
 
 The S0 gate was the first real go/no-go: the point where predictions from this codebase
 are checked against the official Stormer implementation on real weights and real data,
-not against each other — it now passes cleanly. The next real go/no-go is FP-05/06: does
+not against each other — it now passes cleanly. The second real go/no-go was FP-05b: does
 editing this backbone with the certified expert bank produce any real, out-of-sample
-forecast improvement over the (already only break-even) static reference? Nothing
-certified so far answers that question yet. See `plans/plan_v4_0923/` for the full
-real-job evidence trail (protocols, decisions, deviations, certification bundles) behind
-every claim above, and `plans/plans_v1_0919/v6_draft/` for the original staged S0–S7 plan
-this work descends from.
+forecast improvement over the (already only break-even) static reference? **The answer so
+far is no** — the primary policy's out-of-sample gain over Fs does not clear the
+pre-registered minimum-effect bar, and the theoretical best case (hindsight oracle) only
+just reaches it. This is a genuine, pre-registered negative result, not a bug. FP-06 (the
+formal decision procedure) and a possible future confirm-set run are the remaining open
+questions. See `plans/plan_v4_0923/` for the full real-job evidence trail (protocols,
+decisions, deviations, certification bundles) behind every claim above, and
+`plans/plans_v1_0919/v6_draft/` for the original staged S0–S7 plan this work descends from.
 
 ## Provenance & licensing
 

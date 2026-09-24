@@ -1,0 +1,1 @@
+{"folds": 1, "poisoned": {"fold": 2, "value": "1e9", "scope": "only this fold is refit: its own OOF predictions must be byte-identical"}, "hpo": {"2": [10000.0, 4]}}

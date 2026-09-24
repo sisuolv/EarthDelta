@@ -1,0 +1,185 @@
+[
+  {
+    "stage": "FP-01",
+    "job_id": "pt-g3344e9z",
+    "run_path": "artifacts/round2_cci/ed-r4gate0923e-0923174024-32e8c7",
+    "reported_returncode": null,
+    "reported_elapsed_seconds": null,
+    "receipt_status": "MISSING",
+    "computed_result": "S0 committed PASS, all registered max_abs_diff=0.0",
+    "evidence": [
+      "plans/plan_v4_0923/run_20260923T_fp01_trace/gate_output/s0-gate-20260923t174135587010z/s0_gate_result.json"
+    ],
+    "evidence_state": "OBSERVED",
+    "execution_evidence_kind": "computational_artifact_and_or_tracked_completion_summary",
+    "platform_job_result_path": "artifacts/round2_cci/ed-r4gate0923e-0923174024-32e8c7/job_result.json",
+    "warning": "Numeric computation evidence is not the raw platform receipt. rc/elapsed, where present, were transcribed from a tracked summary, not independently read from job_result.json."
+  },
+  {
+    "stage": "FP-03-v1-J3",
+    "job_id": "pt-sz6iv529",
+    "run_path": "artifacts/round2_cci/ed-r4fs03formal-0923212136-800630",
+    "reported_returncode": null,
+    "reported_elapsed_seconds": null,
+    "receipt_status": "MISSING",
+    "computed_result": "STOP_FITTED_FS_QUALITY, Q6 ratio 1.038925",
+    "evidence": [
+      "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/j3_j3b_findings.json"
+    ],
+    "evidence_state": "OBSERVED",
+    "execution_evidence_kind": "computational_artifact_and_or_tracked_completion_summary",
+    "platform_job_result_path": "artifacts/round2_cci/ed-r4fs03formal-0923212136-800630/job_result.json",
+    "warning": "Numeric computation evidence is not the raw platform receipt. rc/elapsed, where present, were transcribed from a tracked summary, not independently read from job_result.json."
+  },
+  {
+    "stage": "FP-03-v1-J3b",
+    "job_id": "pt-n6b5uf0v",
+    "run_path": "artifacts/round2_cci/ed-r4fs03formalb-0923213547-b7d556",
+    "reported_returncode": null,
+    "reported_elapsed_seconds": null,
+    "receipt_status": "MISSING",
+    "computed_result": "STOP_FITTED_FS_QUALITY, Q6 ratio 1.020438",
+    "evidence": [
+      "plans/plan_v4_0923/run_20260923T192759Z_fp03_fs/forensics/j3_j3b_findings.json"
+    ],
+    "evidence_state": "OBSERVED",
+    "execution_evidence_kind": "computational_artifact_and_or_tracked_completion_summary",
+    "platform_job_result_path": "artifacts/round2_cci/ed-r4fs03formalb-0923213547-b7d556/job_result.json",
+    "warning": "Numeric computation evidence is not the raw platform receipt. rc/elapsed, where present, were transcribed from a tracked summary, not independently read from job_result.json."
+  },
+  {
+    "stage": "EXPLORATORY-X1-N32",
+    "job_id": "pt-jbhf3z73",
+    "run_path": "artifacts/round2_cci/ed-r4fs03x1n32-0924005248-503e5b",
+    "reported_returncode": 0,
+    "reported_elapsed_seconds": 624.669,
+    "receipt_status": "OBSERVED_EMBEDDED_JOB_RESULT",
+    "computed_result": "EXPLORATORY only; H2 2020 training exposure",
+    "evidence": [
+      "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n32_findings.json",
+      "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N32.json"
+    ],
+    "evidence_state": "OBSERVED",
+    "execution_evidence_kind": "embedded job_result with run_id, hostname, start/finish, returncode, elapsed_seconds and numeric panels",
+    "platform_job_result_path": "artifacts/round2_cci/ed-r4fs03x1n32-0924005248-503e5b/job_result.json",
+    "warning": "The embedded job_result was read. The standalone platform file was not rehashed; no additional receipt is required solely to establish X1 exposure.",
+    "receipt_evidence": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N32.json#job_result"
+  },
+  {
+    "stage": "EXPLORATORY-X1-N64",
+    "job_id": "pt-t3bfl3e9",
+    "run_path": "artifacts/round2_cci/ed-r4fs03x1n64-0924010930-404a65",
+    "reported_returncode": 0,
+    "reported_elapsed_seconds": 719.624,
+    "receipt_status": "OBSERVED_EMBEDDED_JOB_RESULT",
+    "computed_result": "EXPLORATORY only; H2 2020 training exposure",
+    "evidence": [
+      "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_n64_findings.json",
+      "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N64.json"
+    ],
+    "evidence_state": "OBSERVED",
+    "execution_evidence_kind": "embedded job_result with run_id, hostname, start/finish, returncode, elapsed_seconds and numeric panels",
+    "platform_job_result_path": "artifacts/round2_cci/ed-r4fs03x1n64-0924010930-404a65/job_result.json",
+    "warning": "The embedded job_result was read. The standalone platform file was not rehashed; no additional receipt is required solely to establish X1 exposure.",
+    "receipt_evidence": "plans/plan_v4_0923/run_20260924T004746Z_fp03_x1_ntrain_EXPLORATORY/results/x1_results_X1_N64.json#job_result"
+  },
+  {
+    "stage": "FP-03-v2-fit",
+    "job_id": "pt-fuiqqeau",
+    "run_path": "artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b",
+    "reported_returncode": 0,
+    "reported_elapsed_seconds": 306.8,
+    "receipt_status": "MISSING",
+    "computed_result": "QUALITY_PASS_PENDING_DESIGNATED_GATES",
+    "evidence": [
+      "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/task_result_fp03_v2.json",
+      "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/certify/fs/qualification.json"
+    ],
+    "evidence_state": "OBSERVED",
+    "execution_evidence_kind": "computational_artifact_and_or_tracked_completion_summary",
+    "platform_job_result_path": "artifacts/round2_cci/ed-r4fs03v2p-0924020931-71716b/job_result.json",
+    "warning": "Numeric computation evidence is not the raw platform receipt. rc/elapsed, where present, were transcribed from a tracked summary, not independently read from job_result.json."
+  },
+  {
+    "stage": "FP-03-v2-certify",
+    "job_id": "pt-gr3rrmdg",
+    "run_path": "artifacts/round2_cci/ed-r4fs03v2j4-0924021935-be0786",
+    "reported_returncode": 0,
+    "reported_elapsed_seconds": 263.7,
+    "receipt_status": "MISSING",
+    "computed_result": "FS_SELECTED",
+    "evidence": [
+      "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/task_result_fp03_v2.json"
+    ],
+    "evidence_state": "OBSERVED",
+    "execution_evidence_kind": "computational_artifact_and_or_tracked_completion_summary",
+    "platform_job_result_path": "artifacts/round2_cci/ed-r4fs03v2j4-0924021935-be0786/job_result.json",
+    "warning": "Numeric computation evidence is not the raw platform receipt. rc/elapsed, where present, were transcribed from a tracked summary, not independently read from job_result.json."
+  },
+  {
+    "stage": "FP-04-shortstep",
+    "job_id": "pt-ycpvyb6n",
+    "run_path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c",
+    "reported_returncode": 0,
+    "reported_elapsed_seconds": 561.7,
+    "receipt_status": "MISSING",
+    "computed_result": "shortstep/profile PASS",
+    "evidence": [
+      "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/task_result_fp04.json"
+    ],
+    "evidence_state": "OBSERVED",
+    "execution_evidence_kind": "computational_artifact_and_or_tracked_completion_summary",
+    "platform_job_result_path": "artifacts/round2_cci/ed-r4bankbj1-0924051352-a9732c/job_result.json",
+    "warning": "Numeric computation evidence is not the raw platform receipt. rc/elapsed, where present, were transcribed from a tracked summary, not independently read from job_result.json."
+  },
+  {
+    "stage": "FP-04-formal",
+    "job_id": "pt-vt003lhm",
+    "run_path": "artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d",
+    "reported_returncode": 0,
+    "reported_elapsed_seconds": 364.4,
+    "receipt_status": "MISSING",
+    "computed_result": "BANK_QUAL_PASS_PENDING_ASSEMBLY",
+    "evidence": [
+      "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/task_result_fp04.json"
+    ],
+    "evidence_state": "OBSERVED",
+    "execution_evidence_kind": "computational_artifact_and_or_tracked_completion_summary",
+    "platform_job_result_path": "artifacts/round2_cci/ed-r4bankbj2-0924052624-dde08d/job_result.json",
+    "warning": "Numeric computation evidence is not the raw platform receipt. rc/elapsed, where present, were transcribed from a tracked summary, not independently read from job_result.json."
+  },
+  {
+    "stage": "FP-04-assemble-failed",
+    "job_id": "pt-m52qwunf",
+    "run_path": "artifacts/round2_cci/ed-r4bankbj3-0924053507-ae0123",
+    "reported_returncode": 1,
+    "reported_elapsed_seconds": 180.2,
+    "receipt_status": "MISSING",
+    "computed_result": "FAIL_CLOSED_RELATIVE_PATH, no bank published",
+    "evidence": [
+      "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/task_result_fp04.json",
+      "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/deviations/DEV-FP04-001_relative_decision_paths.json"
+    ],
+    "evidence_state": "OBSERVED",
+    "execution_evidence_kind": "computational_artifact_and_or_tracked_completion_summary",
+    "platform_job_result_path": "artifacts/round2_cci/ed-r4bankbj3-0924053507-ae0123/job_result.json",
+    "warning": "Numeric computation evidence is not the raw platform receipt. rc/elapsed, where present, were transcribed from a tracked summary, not independently read from job_result.json."
+  },
+  {
+    "stage": "FP-04-assemble-retry",
+    "job_id": "pt-831c01g4",
+    "run_path": "artifacts/round2_cci/ed-r4bankbj3r-0924054117-185e82",
+    "reported_returncode": 0,
+    "reported_elapsed_seconds": 357.3,
+    "receipt_status": "MISSING",
+    "computed_result": "BANK_CERTIFIED",
+    "evidence": [
+      "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/task_result_fp04.json",
+      "plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/certify/BJ3_certify_decision.json"
+    ],
+    "evidence_state": "OBSERVED",
+    "execution_evidence_kind": "computational_artifact_and_or_tracked_completion_summary",
+    "platform_job_result_path": "artifacts/round2_cci/ed-r4bankbj3r-0924054117-185e82/job_result.json",
+    "warning": "Numeric computation evidence is not the raw platform receipt. rc/elapsed, where present, were transcribed from a tracked summary, not independently read from job_result.json."
+  }
+]

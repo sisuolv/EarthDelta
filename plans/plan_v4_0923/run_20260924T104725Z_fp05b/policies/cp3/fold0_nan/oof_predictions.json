@@ -1,0 +1,429 @@
+{
+ "methods": {
+  "M0": "fitted_fs_no_edit",
+  "M1": "fold_train_best_static",
+  "M2": "regime_router",
+  "M3": "ridge_direct_gain"
+ },
+ "per_fold_files": {
+  "fold0": {
+   "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/policies/cp3/fold0_nan/oof_predictions_fold0.json",
+   "sha256": "704120728efcf64c56e36592417e476fb48967cec5bd17ca2ff0c2e1aaa76c8f"
+  }
+ },
+ "poisoned": {
+  "fold": 0,
+  "scope": "only this fold is refit: its own OOF predictions must be byte-identical",
+  "value": "nan"
+ },
+ "predictions": {
+  "iss_01fcb3ca76145448": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    7.140158607254575e-05,
+    6.307003185129625e-05,
+    -2.817035908246188e-05,
+    -7.172775271798583e-07
+   ]
+  },
+  "iss_21b8f410b401ef92": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_1",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.503986573365367e-05,
+    6.568501478207279e-05,
+    -2.7943114067923435e-05,
+    -1.2956606320361214e-05
+   ]
+  },
+  "iss_2e0baf7c83b6f2c6": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.540881446977208e-05,
+    6.315270863560096e-05,
+    -2.3014827798866082e-05,
+    -1.1220259555482385e-05
+   ]
+  },
+  "iss_2f6fecdf4a2642ec": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    7.113925490401255e-05,
+    6.213471343560168e-05,
+    -2.8106736117040985e-05,
+    -8.535275824188958e-07
+   ]
+  },
+  "iss_3496fb93a3c5c5b2": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_1",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.134308377148758e-05,
+    6.183447932361512e-05,
+    -2.5498343674174316e-05,
+    -1.3351095084586328e-05
+   ]
+  },
+  "iss_43aabaf3d1190221": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.557129044497978e-05,
+    6.511670840098221e-05,
+    -2.5742030884596193e-05,
+    -1.2257697007225143e-05
+   ]
+  },
+  "iss_475f37905b27cec3": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.835720208774265e-05,
+    6.664420672596596e-05,
+    -2.64991238768709e-05,
+    -1.137561889697528e-05
+   ]
+  },
+  "iss_50b1cf9d95d45724": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_1",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.592962922794695e-05,
+    7.184679958968952e-05,
+    -3.4443765396561014e-05,
+    -2.0932355534709748e-05
+   ]
+  },
+  "iss_50e1b4dac9c81761": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_1",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    7.2133599955161e-05,
+    7.463460651064576e-05,
+    -3.8386313708537705e-05,
+    -1.6508332004375488e-05
+   ]
+  },
+  "iss_5a961c025f55d230": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    7.091123618845658e-05,
+    6.195278443135953e-05,
+    -2.1331565229530382e-05,
+    1.024033345918382e-06
+   ]
+  },
+  "iss_6637c710d67c2a0a": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.164566288972092e-05,
+    5.8315791829689206e-05,
+    -3.0146814758045372e-05,
+    -1.1433773224070911e-05
+   ]
+  },
+  "iss_6d9c922c38eb4e70": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_1",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.591593864960708e-05,
+    6.954049839059693e-05,
+    -3.601773228205316e-05,
+    -1.862711721742023e-05
+   ]
+  },
+  "iss_842ac794c83afc0d": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    7.46042323036746e-05,
+    6.685128227053034e-05,
+    -3.078005590764152e-05,
+    -8.526478866356486e-07
+   ]
+  },
+  "iss_86a5a87c07061e27": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    5.9191918686971206e-05,
+    5.7015167637584406e-05,
+    -2.345928038129926e-05,
+    -1.3846970803371339e-05
+   ]
+  },
+  "iss_86bf31effbc9958f": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.579694487086829e-05,
+    6.25129779943743e-05,
+    -2.6573068699883433e-05,
+    -1.483357807716461e-05
+   ]
+  },
+  "iss_86cd1427a581b2ab": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.783592322374992e-05,
+    5.975195691545674e-05,
+    -2.914227630415376e-05,
+    4.470278521061052e-07
+   ]
+  },
+  "iss_95f4a77ef327cf27": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_1",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.382153945260616e-05,
+    6.559075092527116e-05,
+    -2.7860669679568832e-05,
+    -1.1865127497268225e-05
+   ]
+  },
+  "iss_a0fc384bc7192157": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.697684257503885e-05,
+    6.469322663834412e-05,
+    -2.9806055249868773e-05,
+    -1.0933100703743957e-05
+   ]
+  },
+  "iss_ae0ef3d206525f07": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_1",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.85928128535865e-05,
+    7.17789241096259e-05,
+    -3.8091227961848954e-05,
+    -1.7613905962179553e-05
+   ]
+  },
+  "iss_b4162321ba8300fd": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_1",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    7.141829191476509e-05,
+    7.39614454334904e-05,
+    -3.451503483059429e-05,
+    -1.5822027801281966e-05
+   ]
+  },
+  "iss_b9946d55873b4cd3": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_1",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.64149687101766e-05,
+    6.840335360589186e-05,
+    -3.509696543987509e-05,
+    -1.2765363763100432e-05
+   ]
+  },
+  "iss_c3a188328ea9c3f9": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_1",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.494652142050893e-05,
+    6.559478305684552e-05,
+    -2.6021931204917064e-05,
+    -1.4196401954295026e-05
+   ]
+  },
+  "iss_d37387807d6c9bb1": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_1",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.037157144097787e-05,
+    6.412610767126828e-05,
+    -2.723165041286242e-05,
+    -1.853614698795966e-05
+   ]
+  },
+  "iss_d4622c7bbc965f42": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.642788527221344e-05,
+    6.248883651504604e-05,
+    -2.656809328360706e-05,
+    -9.714933422950877e-06
+   ]
+  },
+  "iss_e6f0d63cfb1fdc56": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_1",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.896284609711851e-05,
+    7.36509376916761e-05,
+    -3.499348113282724e-05,
+    -1.7586922562092246e-05
+   ]
+  },
+  "iss_e85bd458b3e2d1d9": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    7.17478642676269e-05,
+    6.248243427862915e-05,
+    -2.6547092089236273e-05,
+    2.9955473517379045e-06
+   ]
+  },
+  "iss_f2c0dda099f87092": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_1",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    7.200655372874885e-05,
+    7.461539301021953e-05,
+    -3.7463597064679866e-05,
+    -1.6089968136883813e-05
+   ]
+  },
+  "iss_f57a23a1ef84b057": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    6.33406172431276e-05,
+    6.17158380978305e-05,
+    -2.608175645058024e-05,
+    -1.3199721923240966e-05
+   ]
+  },
+  "iss_fef7ba15b020612c": {
+   "M0": "reference",
+   "M1": "expert_0",
+   "M2": "expert_0",
+   "M3": "expert_0",
+   "cluster": 0,
+   "fold": 0,
+   "ridge_pred_gain24": [
+    7.32629743691315e-05,
+    6.394907969496374e-05,
+    -2.528782642545362e-05,
+    -2.4381902736392257e-06
+   ]
+  }
+ },
+ "protocol_sha256": "a42c11dc68d9ede158370a6ba77c4ef8b54cb5cecde30358ee2424fc18ae96d8",
+ "schema": "ed-fp05-oof-predictions/1"
+}

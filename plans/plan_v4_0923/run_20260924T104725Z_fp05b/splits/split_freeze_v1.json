@@ -1,0 +1,504 @@
+{
+ "schema": "ed-split-freeze/1",
+ "freeze_id": "FP05B-SPLIT-FREEZE-v1",
+ "created_utc": "2026-09-24T10:52:31.088658+00:00",
+ "builder": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b/splits/build_split_freeze.py",
+  "sha256": "e5692e0b28b1fa811c523c3a3a1c638f7551c7cae16e14945b891572eeaea05a",
+  "module": {
+   "path": "earthdelta/split_freeze.py",
+   "sha256": "d695138dc734b9e75b2feefffcdb7184bdd2776f1f7fa7f46c53d57d2d1beda1"
+  }
+ },
+ "principle": "A row is consumable iff this frozen split (derived from the pinned FP-05a ledger) AND an explicit allow-list clear it. The row's data_role tag is recorded but never authorises anything.",
+ "exposure_ledger": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/exposure_ledger.json",
+  "sha256": "d8ee631fca47c79859a01bc4ac4b74e6b962c0347c00c4cf30632b16cf3446bb"
+ },
+ "exposure_reconstruction_report": {
+  "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T093810Z_fp05a/entry/exposure_reconstruction_report.json",
+  "sha256": "7aee5ceb3b35a9c9458bd2e5b37216b67048109191ec3fb8ae68399bc8c8bf9d"
+ },
+ "support_convention": {
+  "history_hours": 12,
+  "lead_hours": 72,
+  "interval_hours": 6,
+  "interval": "closed",
+  "touching": "sharing one instant = touching"
+ },
+ "buffer_hours": 24,
+ "derived": {
+  "boundary_rule": "conservative_full_24h_buffer_incl_S0_aggregate_result_2020-01-01T00Z",
+  "buffer_hours": 24,
+  "n_result_rows": 184,
+  "s0_aggregate_result_utc": [
+   "2020-01-01T00Z",
+   "2020-01-03T00Z"
+  ],
+  "exposed_runs_unbuffered_utc": [
+   [
+    "2019-01-01T12Z",
+    "2019-01-05T00Z",
+    84
+   ],
+   [
+    "2019-01-16T00Z",
+    "2019-01-19T12Z",
+    84
+   ],
+   [
+    "2019-01-25T12Z",
+    "2019-01-29T00Z",
+    84
+   ],
+   [
+    "2019-02-03T06Z",
+    "2019-02-06T18Z",
+    84
+   ],
+   [
+    "2019-02-18T18Z",
+    "2019-02-22T06Z",
+    84
+   ],
+   [
+    "2019-03-05T00Z",
+    "2019-03-08T12Z",
+    84
+   ],
+   [
+    "2019-03-14T18Z",
+    "2019-03-18T06Z",
+    84
+   ],
+   [
+    "2019-03-29T00Z",
+    "2019-04-01T12Z",
+    84
+   ],
+   [
+    "2019-04-08T00Z",
+    "2019-04-11T12Z",
+    84
+   ],
+   [
+    "2019-04-20T00Z",
+    "2019-04-23T12Z",
+    84
+   ],
+   [
+    "2019-05-02T00Z",
+    "2019-05-05T12Z",
+    84
+   ],
+   [
+    "2019-05-10T06Z",
+    "2019-05-13T18Z",
+    84
+   ],
+   [
+    "2019-05-26T00Z",
+    "2019-05-29T12Z",
+    84
+   ],
+   [
+    "2019-06-07T06Z",
+    "2019-06-10T18Z",
+    84
+   ],
+   [
+    "2019-06-19T06Z",
+    "2019-06-22T18Z",
+    84
+   ],
+   [
+    "2019-07-01T06Z",
+    "2019-07-04T18Z",
+    84
+   ],
+   [
+    "2020-01-01T00Z",
+    "2020-06-25T12Z",
+    4236
+   ],
+   [
+    "2020-06-29T12Z",
+    "2020-07-04T18Z",
+    126
+   ],
+   [
+    "2020-07-13T06Z",
+    "2020-12-31T18Z",
+    4116
+   ]
+  ],
+  "exposed_runs_buffered_utc": [
+   [
+    "2018-12-31T12Z",
+    "2019-01-06T00Z",
+    132
+   ],
+   [
+    "2019-01-15T00Z",
+    "2019-01-20T12Z",
+    132
+   ],
+   [
+    "2019-01-24T12Z",
+    "2019-01-30T00Z",
+    132
+   ],
+   [
+    "2019-02-02T06Z",
+    "2019-02-07T18Z",
+    132
+   ],
+   [
+    "2019-02-17T18Z",
+    "2019-02-23T06Z",
+    132
+   ],
+   [
+    "2019-03-04T00Z",
+    "2019-03-09T12Z",
+    132
+   ],
+   [
+    "2019-03-13T18Z",
+    "2019-03-19T06Z",
+    132
+   ],
+   [
+    "2019-03-28T00Z",
+    "2019-04-02T12Z",
+    132
+   ],
+   [
+    "2019-04-07T00Z",
+    "2019-04-12T12Z",
+    132
+   ],
+   [
+    "2019-04-19T00Z",
+    "2019-04-24T12Z",
+    132
+   ],
+   [
+    "2019-05-01T00Z",
+    "2019-05-06T12Z",
+    132
+   ],
+   [
+    "2019-05-09T06Z",
+    "2019-05-14T18Z",
+    132
+   ],
+   [
+    "2019-05-25T00Z",
+    "2019-05-30T12Z",
+    132
+   ],
+   [
+    "2019-06-06T06Z",
+    "2019-06-11T18Z",
+    132
+   ],
+   [
+    "2019-06-18T06Z",
+    "2019-06-23T18Z",
+    132
+   ],
+   [
+    "2019-06-30T06Z",
+    "2019-07-05T18Z",
+    132
+   ],
+   [
+    "2019-12-31T00Z",
+    "2020-06-26T12Z",
+    4284
+   ],
+   [
+    "2020-06-28T12Z",
+    "2020-07-05T18Z",
+    174
+   ],
+   [
+    "2020-07-12T06Z",
+    "2021-01-01T18Z",
+    4164
+   ]
+  ],
+  "policy_dev_pool": {
+   "store_year": 2019,
+   "first_index": 746,
+   "last_index": 1443,
+   "n_slots": 698,
+   "first_issue_utc": "2019-07-06T12Z",
+   "last_issue_utc": "2019-12-27T18Z",
+   "certificate_span_indices": [
+    744,
+    1455
+   ]
+  },
+  "alternative_rules_for_the_record": {
+   "full_24h_buffer_certified_rows_only": {
+    "n_slots": 700,
+    "first_issue_utc": "2019-07-06T12Z",
+    "last_issue_utc": "2019-12-28T06Z"
+   },
+   "no_cross_year_buffer": {
+    "n_slots": 702,
+    "first_issue_utc": "2019-07-06T12Z",
+    "last_issue_utc": "2019-12-28T18Z"
+   }
+  }
+ },
+ "derived_digest": "bc58e6d6555c2fa53ee859406fb11ecde4563604488f2359aeb571f041e0b7ff",
+ "crosschecks_vs_fp05a": {
+  "runs_equal_ledger_runs_by_year_unbuffered": true,
+  "pool_equals_fp05a_report": true,
+  "certified_rows_only_equals_fp05a_report": true,
+  "no_cross_year_equals_fp05a_report": true
+ },
+ "stores_allowed": {
+  "2019.zarr": {
+   "path": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625/2019.zarr",
+   "year": 2019,
+   "time0_utc": "2019-01-01T00Z",
+   "n_timesteps": 1460,
+   "data_shape": [
+    1460,
+    69,
+    128,
+    256
+   ],
+   "dtype": "<f4",
+   "time_units": "hours since 2019-01-01 00:00:00",
+   "metadata_only": true,
+   "metadata_sha256": {
+    "time/.zattrs": "09e158967c8b16206764409cd985a38fae8583aaba80f2829aad656cd43c59e7",
+    "time/.zarray": "3c3c3b2d57d3ebf8104eaba60a8ae15726e2e666a20fb8ecf8b4ed5b72facfa8",
+    "data/.zarray": "2d8d41bebe48307d93d3b79b3e189be18ffb587c6a50ed35f281f50b2d76d3e3",
+    "data/.zattrs": "4f4a82a2887050e49719d6c38d971ee470a874dcde512f8d78239a6f1c08050e"
+   }
+  },
+  "2020.zarr": {
+   "path": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625/2020.zarr",
+   "year": 2020,
+   "time0_utc": "2020-01-01T00Z",
+   "n_timesteps": 1464,
+   "data_shape": [
+    1464,
+    69,
+    128,
+    256
+   ],
+   "dtype": "<f4",
+   "time_units": "hours since 2020-01-01 00:00:00",
+   "metadata_only": true,
+   "metadata_sha256": {
+    "time/.zattrs": "e5190f3f32c383880e1eefd7477ecf557b071f67031663e5b525d146268018b2",
+    "time/.zarray": "d5c19e172eb562285521fb428ec8ababc14e2306896114f9d0840a7348e21f2a",
+    "data/.zarray": "f16a53f02160fda810a7f573b681468afc66a11a2244e619b301e14d18e4641b",
+    "data/.zattrs": "4f4a82a2887050e49719d6c38d971ee470a874dcde512f8d78239a6f1c08050e"
+   }
+  }
+ },
+ "stores_refused": "every other path (2015/2016/2017/2018/2021/2022, *_intermediate, 2020_jan, ...) for every role",
+ "roles": {
+  "policy_dev": {
+   "store": "2019.zarr",
+   "boundary_rule": "conservative_full_24h_buffer_incl_S0_aggregate_result_2020-01-01T00Z",
+   "issue_window_utc": [
+    "2019-07-06T12Z",
+    "2019-12-27T18Z"
+   ],
+   "support_window_utc": [
+    "2019-07-06T00Z",
+    "2019-12-30T18Z"
+   ],
+   "store_index_window": [
+    746,
+    1443
+   ],
+   "n_slots": 698,
+   "issue_guard_window_utc": [
+    "2019-01-02T00Z",
+    "2019-12-29T00Z"
+   ],
+   "issue_guard_window_source": "make_splits.compute_guard_boundaries(24, 72)['val'] [start, end)",
+   "must_not_touch": "any exposed run widened by buffer_hours (closed intervals)",
+   "allow_list": "NONE AT FREEZE TIME. Bound later by the FP-05b cache protocol (split.allow_lists.policy_dev = the policy_dev admission sha256 + its issue ids). Before that, only the manifest builder and certify-admission may classify rows (pre_admission=True).",
+   "label": "RETROSPECTIVE_HELD_PERIOD_DEV_NOT_HISTORICAL_DEPLOYMENT",
+   "disclosure_sharedF0_integrity_reads": {
+    "admitted_rows_with_issue_in_2019H2": 147,
+    "admitted_rows_with_any_read_timestep_in_2019H2": 147,
+    "roles_of_2019H2_admitted_rows": {
+     "calibration": 64,
+     "policy_fit": 83
+    },
+    "excluded_rows_with_issue_in_2019H2_(read_attempted,_failed_nonfinite)": 37,
+    "exposure_kind": "INTEGRITY_READ_ONLY (no gradient, no model result: sprint stopped at S0, downstream NOT_STARTED)",
+    "treatment": "DISCLOSED_NOT_EXCLUDED (FP05A accepted decision 3); retrospective-transfer evaluation label"
+   }
+  },
+  "debug": {
+   "store": "2020.zarr",
+   "selection_rule": "DEBUG-SELECT-v1: first and last issue, in time order, of each FP-04 expert group G_k (bank_fit_grouping.json)",
+   "source_admission": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_admission.json",
+    "sha256": "01d344b8e2bb2cd66766fae290204322a6cf4939c353bc632ed5824ee7a7bdea",
+    "tag_on_every_row": "bank_fit (tag != clearance)"
+   },
+   "grouping": {
+    "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T033627Z_fp04_bank/admission/bank_fit_grouping.json",
+    "sha256": "ede23fb9859971b1a06c8fa1df27facdc21a6a5e7ff4e4355c0822d871cefe25"
+   },
+   "allowed_issue_ids": [
+    "iss_292517fb189ee1bd",
+    "iss_039add2d41f5c08a",
+    "iss_4f2b54d7e8953451",
+    "iss_6361e4cdd8050ae3",
+    "iss_32d48efebee12be2",
+    "iss_bbd4e6e2ec71d9ca",
+    "iss_04eb8e8d56c68faa",
+    "iss_b42c91ed1b555939"
+   ],
+   "issues": [
+    {
+     "expert_group": 0,
+     "position": "first",
+     "issue_id": "iss_292517fb189ee1bd",
+     "issue_utc": "2020-01-02T00Z",
+     "issue_index": 4,
+     "certificate_slice": [
+      2,
+      16
+     ]
+    },
+    {
+     "expert_group": 0,
+     "position": "last",
+     "issue_id": "iss_039add2d41f5c08a",
+     "issue_utc": "2020-02-23T12Z",
+     "issue_index": 214,
+     "certificate_slice": [
+      212,
+      226
+     ]
+    },
+    {
+     "expert_group": 1,
+     "position": "first",
+     "issue_id": "iss_4f2b54d7e8953451",
+     "issue_utc": "2020-03-02T00Z",
+     "issue_index": 244,
+     "certificate_slice": [
+      242,
+      256
+     ]
+    },
+    {
+     "expert_group": 1,
+     "position": "last",
+     "issue_id": "iss_6361e4cdd8050ae3",
+     "issue_utc": "2020-04-27T06Z",
+     "issue_index": 469,
+     "certificate_slice": [
+      467,
+      481
+     ]
+    },
+    {
+     "expert_group": 2,
+     "position": "first",
+     "issue_id": "iss_32d48efebee12be2",
+     "issue_utc": "2020-05-04T18Z",
+     "issue_index": 499,
+     "certificate_slice": [
+      497,
+      511
+     ]
+    },
+    {
+     "expert_group": 2,
+     "position": "last",
+     "issue_id": "iss_bbd4e6e2ec71d9ca",
+     "issue_utc": "2020-05-27T06Z",
+     "issue_index": 589,
+     "certificate_slice": [
+      587,
+      601
+     ]
+    },
+    {
+     "expert_group": 3,
+     "position": "first",
+     "issue_id": "iss_04eb8e8d56c68faa",
+     "issue_utc": "2020-06-03T18Z",
+     "issue_index": 619,
+     "certificate_slice": [
+      617,
+      631
+     ]
+    },
+    {
+     "expert_group": 3,
+     "position": "last",
+     "issue_id": "iss_b42c91ed1b555939",
+     "issue_utc": "2020-06-22T12Z",
+     "issue_index": 694,
+     "certificate_slice": [
+      692,
+      706
+     ]
+    }
+   ],
+   "support_window_utc": [
+    "2020-01-01T12Z",
+    "2020-07-04T18Z"
+   ],
+   "issue_guard_window_utc": [
+    "2020-01-02T00Z",
+    "2020-12-29T00Z"
+   ],
+   "excluded_store_indices": [
+    712
+   ],
+   "exposure_note": "already GRADIENT_AND_RESULT exposed (FP-04 training rows); used only to validate the cache machinery; reveals nothing new"
+  },
+  "confirm": {
+   "status": "UNASSIGNED_NO_ACCESS",
+   "window": null,
+   "rule": "every FP-05 access raises CONFIRM_UNASSIGNED_NO_ACCESS; naming a confirm window is outside FP-05b"
+  },
+  "bank_fit": {
+   "consumable_by_fp05": false
+  }
+ },
+ "labels": {
+  "2020H2": "EXPOSED_NOT_CONFIRM",
+  "policy_dev": "RETROSPECTIVE_HELD_PERIOD_DEV_NOT_HISTORICAL_DEPLOYMENT",
+  "confirm": "UNASSIGNED_NO_ACCESS"
+ },
+ "integrity_read_only_disclosed_not_enforced": {
+  "sharedF0_sprint_2019H2": {
+   "admitted_rows_with_issue_in_2019H2": 147,
+   "admitted_rows_with_any_read_timestep_in_2019H2": 147,
+   "roles_of_2019H2_admitted_rows": {
+    "calibration": 64,
+    "policy_fit": 83
+   },
+   "excluded_rows_with_issue_in_2019H2_(read_attempted,_failed_nonfinite)": 37,
+   "exposure_kind": "INTEGRITY_READ_ONLY (no gradient, no model result: sprint stopped at S0, downstream NOT_STARTED)",
+   "treatment": "DISCLOSED_NOT_EXCLUDED (FP05A accepted decision 3); retrospective-transfer evaluation label"
+  },
+  "fp03_finiteness_scans": [
+   "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/holdout/finiteness_scan_2015.json",
+   "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/holdout/finiteness_scan_2018.json",
+   "plans/plan_v4_0923/run_20260924T013959Z_fp03_v2/holdout/finiteness_scan_2019.json"
+  ],
+  "fp05b_2019H2_scan": "appended afterwards in splits/exposure_ledger_addendum_fp05b.json"
+ }
+}
