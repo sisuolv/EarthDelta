@@ -7,10 +7,13 @@ reversible parameter edit — before ever applying it — and selects edits at i
 under a budget, using an exact quadratic form derived from forecast sensitivity theory.
 No fine-tuning loop, no retraining the base model, no peeking at future truth.
 
-> **Status (2026-09-24):** the S0 gate passes official Stormer parity exactly (1/4/12-step
+> **Status (2026-09-25):** the S0 gate passes official Stormer parity exactly (1/4/12-step
 > `max_abs_diff = 0.0` on real H100 hardware), and a static reference adapter ("Fs") and a
 > K=4/rank=4 dynamic expert bank are formally certified through a pre-registered protocol
-> with real GPU evidence. **FP-05 has now run the first real out-of-sample policy
+> with real GPU evidence. A separate audit still has an open formal-Fs stability
+> finding (some 500-update experts worsened on every paired diagnostic sample), so
+> that certification is not a license to trust every fitted expert downstream.
+> **FP-05 has now run the first real out-of-sample policy
 > evaluation of that bank** — a purged, block-bootstrapped comparison on a held-out 2019 H2
 > window (N=112 issues, real GPU-built candidate cache, `plans/plan_v4_0923/run_20260924T104725Z_fp05b/`).
 > **Result: the bank's primary policy (ridge-based expert routing) does not clear the
@@ -23,6 +26,10 @@ No fine-tuning loop, no retraining the base model, no peeking at future truth.
 > [`google-research/weatherbenchX`](https://github.com/google-research/weatherbenchX) code
 > (`earthdelta/wbx/`) has been added and independently cross-checked bit-for-bit against
 > these same certified numbers. This is an active research repo, not a released package.
+
+---
+
+**Latest execution note (2026-09-25):** a fresh 4-GPU standard-resource H100 run (`pt-lujnmfhg`) passed the full S0 gate with `max_abs_diff = 0.0` at 1/4/12 steps under the pinned Torch `2.3.1+cu121` / xformers `0.0.27` overlay. The base image itself does not ship xformers, so the overlay or an equivalent certified image must be recorded for official-parity runs. This remains an engineering gate; Fs stability and dynamic-bank out-of-sample value are still open.
 
 ---
 
@@ -204,8 +211,8 @@ resolution).
 | Stormer bridge (CPU, random weights) | SDPA≡softmax, zero-edit no-op, normalization round-trip | ✅ done |
 | ERA5 data pipeline | 2020 pulled, rechunked, split manifest built | ✅ done |
 | **S0 gate** (`scripts/s0_gate.py`, GPU) | strict real-ckpt load, zero-edit parity, and multistep rollout checks at a frozen `1e-5` tolerance | ✅ PASS on real H100 (1/4/12-step `max_abs_diff = 0.0`) |
-| **Fs certification** (static reference adapter, GPU) | pre-registered protocol, formal qualification against a fresh out-of-sample panel, exact freeze/reload verification | ✅ certified (`FS_SELECTED`) — but only "no material harm" vs the frozen backbone out of sample, not a demonstrated gain |
-| **K=4/rank=4 dynamic bank** (GPU) | each expert trained from one shared certified Fs (not re-fit per worker), exact assembly-equivalence verification | ✅ certified (`BANK_CERTIFIED`) — per-expert gains are in-sample only, no out-of-sample evidence yet |
+| **Fs certification** (static reference adapter, GPU) | pre-registered protocol, formal qualification against a fresh out-of-sample panel, exact freeze/reload verification | ✅ protocol-certified (`FS_SELECTED`) — only "no material harm" out of sample; formal-fit stability finding remains open |
+| **K=4/rank=4 dynamic bank** (GPU) | each expert trained from one shared certified Fs (not re-fit per worker), exact assembly-equivalence verification | ✅ assembly-certified (`BANK_CERTIFIED`) — per-expert gains are in-sample only, formal-Fs stability and out-of-sample value remain open |
 | **FP-05a** (read-only evidence audit) | rebuilt the full exposure ledger, re-verified all 17 pinned files and every certified number, corrected an error in the original FP-05 data-split design | ✅ done (`plans/plan_v4_0923/run_20260924T093810Z_fp05a/`) |
 | **FP-05b** (candidate cache + purged out-of-sample policy evaluation, GPU) | real 4-worker debug batch (C-J1) + full 4-shard cache build (C-J2) on N=112 policy_dev issues (2019 H2), then blocked cross-fit policy fitting + paired block-bootstrap scoring, all independently re-verified bit-for-bit against FP-03/FP-04's recorded numbers | ✅ done — **primary policy (ridge) is BELOW the pre-registered delta_min bar; hindsight oracle only STRADDLEs it** (`plans/plan_v4_0923/run_20260924T104725Z_fp05b/`) |
 | **WeatherBench-X integration** (`earthdelta/wbx/`) | export F0/Fs/bank forecasts to the official WeatherBench-X/WeatherBench 2 format and reuse their RMSE/ACC/regrid code instead of custom eval code | ✅ Tier A (CPU) and Tier B (real GPU, bit-for-bit reconciled against FP-03/FP-04) both pass; benchmark runner against public baselines not yet run |
