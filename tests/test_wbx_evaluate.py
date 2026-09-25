@@ -59,6 +59,24 @@ def test_default_year_gate_allows_only_exposed_2020():
             ev.assert_years_authorized(years)
 
 
+def test_evaluate_enforces_year_gate_before_loader_access():
+    with pytest.raises(ev.YearNotAuthorized):
+        ev.evaluate("/does/not/exist/prediction.zarr", "/does/not/exist/truth.zarr",
+                    init_times=[np.datetime64("2022-01-01T00", "ns")],
+                    lead_times=[np.timedelta64(24, "h")])
+
+
+def test_single_chunk_year_gate_when_issue_times_are_supplied():
+    p = {"x": np.zeros((1, 1), dtype=np.float32)}
+    t = {"x": np.zeros((1, 1), dtype=np.float32)}
+    with pytest.raises(ev.YearNotAuthorized):
+        ev.evaluate_single_chunk(p, t)
+    with pytest.raises(ev.YearNotAuthorized):
+        ev.evaluate_single_chunk(
+            p, t, init_times=[np.datetime64("2022-01-01T00", "ns")]
+        )
+
+
 def test_confirm_freeze_gate(tmp_path):
     freeze = tmp_path / "confirm_freeze.json"
     freeze.write_text(json.dumps({"authorized_evaluation_years": [2022]}))
@@ -193,7 +211,7 @@ def test_chunked_equals_single_chunk(wbx):
     xl = _vendor.import_official("weatherbenchX.data_loaders.xarray_loaders")
     p = xl.PredictionsFromXarray(ds=fc).load_chunk(inits, deltas)
     t = xl.TargetsFromXarray(ds=truth).load_chunk(inits, deltas)
-    single = ev.evaluate_single_chunk(p, t, metrics=metrics)
+    single = ev.evaluate_single_chunk(p, t, metrics=metrics, init_times=inits)
     for name in ref.data_vars:
         np.testing.assert_allclose(single[name].values, ref[name].values, rtol=1e-12, atol=0)
 

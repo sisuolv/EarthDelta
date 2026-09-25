@@ -199,6 +199,9 @@ def evaluate(
     variables: Optional[Sequence[str]] = None,
     init_chunk_size: int = 1,
     upcast_float64: bool = False,
+    confirm_freeze_path: Optional[Union[str, Path]] = None,
+    confirm_freeze_sha256: Optional[str] = None,
+    authorized: frozenset = DEFAULT_AUTHORIZED_YEARS,
 ):
     """Chunked official evaluation (the beam pipeline's per-chunk steps, in a loop).
 
@@ -215,10 +218,19 @@ def evaluate(
             statistics (the official code otherwise squares in the stored
             float32 precision). Used only to separate storage rounding from
             real discrepancies in reconciliation.
+        confirm_freeze_path / confirm_freeze_sha256: optional authorization
+            for years outside the already-exposed default set. The gate runs
+            before any loader is constructed or data is read.
+        authorized: override the default exposed-year set for controlled tests.
 
     Returns:
         (metric values Dataset, final AggregationState)
     """
+    # Enforce the exposure boundary before importing/constructing data loaders.
+    requested_years = {int(np.datetime64(t, "Y").astype(int)) + 1970 for t in init_times}
+    assert_years_authorized(requested_years, confirm_freeze_path=confirm_freeze_path,
+                            confirm_freeze_sha256=confirm_freeze_sha256,
+                            authorized=authorized)
     aggregation = import_official("weatherbenchX.aggregation")
     base = import_official("weatherbenchX.metrics.base")
     metrics = dict(metrics) if metrics is not None else standard_metrics()
@@ -240,8 +252,30 @@ def evaluate(
     return state.metric_values(metrics), state
 
 
-def evaluate_single_chunk(prediction_chunk, truth_chunk, *, metrics=None, aggregator=None):
-    """Official ``compute_metric_values_for_single_chunk`` on already-aligned data."""
+def evaluate_single_chunk(
+    prediction_chunk,
+    truth_chunk,
+    *,
+    metrics=None,
+    aggregator=None,
+    init_times: Optional[Sequence[Any]] = None,
+    confirm_freeze_path: Optional[Union[str, Path]] = None,
+    confirm_freeze_sha256: Optional[str] = None,
+    authorized: frozenset = DEFAULT_AUTHORIZED_YEARS,
+):
+    """Official single-chunk aggregation on already-aligned data.
+
+    The arrays are already loaded, so this helper cannot infer their year. A
+    caller must pass ``init_times``; the same year gate as :func:`evaluate`
+    then runs before importing the official aggregator. This keeps the public
+    single-chunk entry point from silently bypassing the exposure contract.
+    """
+    if init_times is None:
+        raise YearNotAuthorized("init_times are required for single-chunk evaluation")
+    requested_years = {int(np.datetime64(t, "Y").astype(int)) + 1970 for t in init_times}
+    assert_years_authorized(requested_years, confirm_freeze_path=confirm_freeze_path,
+                            confirm_freeze_sha256=confirm_freeze_sha256,
+                            authorized=authorized)
     aggregation = import_official("weatherbenchX.aggregation")
     metrics = dict(metrics) if metrics is not None else standard_metrics()
     aggregator = aggregator if aggregator is not None else make_aggregator()

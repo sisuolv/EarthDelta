@@ -447,13 +447,21 @@ def paired_block_bootstrap(losses: Mapping[str, Mapping[int, Mapping[str, float]
         if h == 72 and b == "M0" and m in ("M1", "M2", "M3"):
             entry["harm72_guard_pass"] = bool(lo >= -delta_min)
         res[name] = entry
-    h_draw = (tot[:, mi["M0"], li[24]] - tot[:, mi["F0"], li[24]]) / tot[:, mi["M0"], li[24]]
-    h_pt = (point[mi["M0"], li[24]] - point[mi["F0"], li[24]]) / point[mi["M0"], li[24]]
+    # F0 correction is lead-specific. Reusing the 24h harm for 6h/72h rows
+    # produces a numerically plausible but semantically incorrect diagnostic.
+    h_by_lead = {}
+    for h in LEADS:
+        h_draw = (tot[:, mi["M0"], li[h]] - tot[:, mi["F0"], li[h]]) / tot[:, mi["M0"], li[h]]
+        h_pt = (point[mi["M0"], li[h]] - point[mi["F0"], li[h]]) / point[mi["M0"], li[h]]
+        h_by_lead[int(h)] = {
+            "point": float(h_pt),
+            "ci": [float(v) for v in np.percentile(h_draw, [100 * alpha, 100 * (1 - alpha)])],
+        }
     return {"draws": int(draws), "seed": int(seed), "n_blocks": len(ublocks), "blocks": ublocks,
             "confidence": CONFIDENCE, "delta_min": delta_min, "comparisons": res,
+            "H_Fs_by_lead": {str(h): v for h, v in h_by_lead.items()},
             "H_Fs_24h": {"definition": "(sum L_Fs - sum L_F0) / sum L_Fs (Fs harm vs F0; >0 = Fs worse)",
-                         "point": float(h_pt),
-                         "ci": [float(v) for v in np.percentile(h_draw, [100 * alpha, 100 * (1 - alpha)])]},
+                         "point": h_by_lead[24]["point"], "ci": h_by_lead[24]["ci"]},
             "G_F0_note": "G_F0(M) = G_Fs(M) - H_Fs, reported per comparison"}
 
 

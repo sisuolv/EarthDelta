@@ -60,9 +60,24 @@ def real():
     return json.loads(PROTOCOL.read_text()), sha(PROTOCOL)
 
 
+def current_protocol(tmp_path):
+    """Bind a temporary protocol to the current worktree for positive tests."""
+    from earthdelta import candidate_cache as cc
+
+    p, _ = real()
+    for rel in p.get("source_at_preregistration", {}):
+        p["source_at_preregistration"][rel] = cc.file_sha256(REPO / rel)
+    path = tmp_path / "protocol_current.json"
+    path.write_text(json.dumps(p, indent=1, sort_keys=True))
+    return path, sha(path)
+
+
 def mutated(tmp_path, fn, name="p.json"):
     p, _ = real()
     p = copy.deepcopy(p)
+    from earthdelta import candidate_cache as cc
+    for rel in p.get("source_at_preregistration", {}):
+        p["source_at_preregistration"][rel] = cc.file_sha256(REPO / rel)
     fn(p)
     path = tmp_path / name
     path.write_text(json.dumps(p, indent=1))
@@ -71,6 +86,9 @@ def mutated(tmp_path, fn, name="p.json"):
 
 def cache(path, digest, config="CJ1_W0", device="cuda:0", out=None, extra=()):
     import scripts.r4_candidate_cache as rc
+
+    if out is not None and path == PROTOCOL and digest == sha(PROTOCOL):
+        path, digest = current_protocol(Path(out).parent)
 
     argv = ["cache", "--protocol", str(path), "--protocol-sha256", digest, "--config-id", config,
             "--device", device, "--output-dir", str(out), *extra]
@@ -81,12 +99,13 @@ def refused_phase(out):
     return json.loads((Path(out) / "binding_refused.json").read_text())
 
 
-def test_protocol_is_consistent_without_io(spies):
+def test_protocol_is_consistent_without_io(tmp_path, spies):
     import scripts.r4_candidate_cache as rc
     from earthdelta import candidate_cache as cc
 
-    p, digest = real()
-    rc.load_cache_protocol(PROTOCOL, digest)
+    protocol_path, digest = current_protocol(tmp_path)
+    p = json.loads(protocol_path.read_text())
+    rc.load_cache_protocol(protocol_path, digest)
     freeze = rc.bind_freeze(p)
     for w in range(4):
         cfg, role, ids, shard = rc.resolve_worker(p, digest, f"CJ1_W{w}")
@@ -146,10 +165,10 @@ def _dev_protocol(tmp_path, protocol_sha, verdict):
 
 
 def test_dev_cache_refuses_without_pass_debug_decision(tmp_path, spies):
-    _, digest = real()
-    assert cache(PROTOCOL, digest, config="CJ2_S0", out=tmp_path / "a") == 2
+    protocol_path, digest = current_protocol(tmp_path)
+    assert cache(protocol_path, digest, config="CJ2_S0", out=tmp_path / "a") == 2
     dev = _dev_protocol(tmp_path, digest, verdict="STOP")
-    assert cache(PROTOCOL, digest, config="CJ2_S0", out=tmp_path / "b",
+    assert cache(protocol_path, digest, config="CJ2_S0", out=tmp_path / "b",
                  extra=["--dev-protocol", str(dev), "--dev-protocol-sha256", sha(dev)]) == 2
     assert refused_phase(tmp_path / "b")["code"] == "DEBUG_DECISION_NOT_PASS"
     assert cache(PROTOCOL, digest, config="CJ2_S0", out=tmp_path / "c",
@@ -197,9 +216,9 @@ def test_merge_and_decide_refuse_before_io(tmp_path, spies):
     import scripts.r4_cache_decide as rd
     import scripts.r4_candidate_cache as rc
 
-    _, digest = real()
+    protocol_path, digest = current_protocol(tmp_path)
     dev = _dev_protocol(tmp_path, digest, "PASS")
-    base = ["merge", "--protocol", str(PROTOCOL), "--dev-protocol", str(dev),
+    base = ["merge", "--protocol", str(protocol_path), "--dev-protocol", str(dev),
             "--shard-dirs", str(tmp_path), "--out", str(tmp_path / "m")]
     assert rc.main(base[:3] + ["--protocol-sha256", "0" * 64] + base[3:5]
                    + ["--dev-protocol-sha256", sha(dev)] + base[5:]) == 2
@@ -209,7 +228,7 @@ def test_merge_and_decide_refuse_before_io(tmp_path, spies):
     assert rc.main(base[:3] + ["--protocol-sha256", digest, "--dev-protocol", str(stop),
                                "--dev-protocol-sha256", sha(stop)] + base[5:]) == 2
     assert not (tmp_path / "m").exists()
-    assert rd.main(["--kind", "debug", "--protocol", str(PROTOCOL), "--protocol-sha256", "0" * 64,
+    assert rd.main(["--kind", "debug", "--protocol", str(protocol_path), "--protocol-sha256", "0" * 64,
                     "--job-dir", str(tmp_path), "--out", str(tmp_path / "d.json")]) == 2
     path, d = mutated(tmp_path, lambda p: p["configs"]["CJ1_W0"].update(
         own_issue_ids=["iss_not_on_the_list", p["configs"]["CJ1_W0"]["own_issue_ids"][1]]))
@@ -232,11 +251,11 @@ def _manifest(tmp_path, protocol_sha, passed=True, name="cache_manifest.json"):
 def test_policy_stages_refuse(tmp_path, spies):
     import scripts.r4_policy_oof as rp
 
-    _, digest = real()
+    protocol_path, digest = current_protocol(tmp_path)
     good = _manifest(tmp_path, digest)
     bad = _manifest(tmp_path, digest, passed=False, name="bad.json")
-    common = ["--protocol", str(PROTOCOL), "--protocol-sha256", digest]
-    assert rp.main(["folds", "--protocol", str(PROTOCOL), "--protocol-sha256", "0" * 64,
+    common = ["--protocol", str(protocol_path), "--protocol-sha256", digest]
+    assert rp.main(["folds", "--protocol", str(protocol_path), "--protocol-sha256", "0" * 64,
                     "--cache-manifest", str(good), "--out", str(tmp_path / "f.json")]) == 2
     assert rp.main(["folds", *common, "--cache-manifest", str(bad), "--out", str(tmp_path / "f.json")]) == 2
     assert rp.main(["fit-predict", *common, "--cache-manifest", str(bad), "--folds", str(tmp_path / "f.json"),
@@ -249,6 +268,22 @@ def test_policy_stages_refuse(tmp_path, spies):
     assert rp.main(["score", *common, "--cache-manifest", str(good), "--prediction-freeze", str(fz),
                     "--out-dir", str(tmp_path / "ev")]) == 2
     assert not (tmp_path / "ev").exists() and not (tmp_path / "f.json").exists() and zero(spies)
+
+
+def test_policy_scorer_requires_its_own_source_pins():
+    import scripts.r4_policy_oof as rp
+    from earthdelta import candidate_cache as cc
+
+    protocol, _ = real()
+    for rel in protocol.get("source_at_preregistration", {}):
+        protocol["source_at_preregistration"][rel] = cc.file_sha256(REPO / rel)
+    protocol["source_at_preregistration"].pop("earthdelta/policy_oof.py")
+    protocol["source_at_preregistration"].pop("scripts/r4_policy_oof.py")
+    # The historical FP-05b protocol predates the scorer fixes and therefore
+    # must not silently consume a cache with the new scorer.
+    with pytest.raises(Exception) as exc:
+        rp._source_contract(protocol)
+    assert getattr(exc.value, "code", None) == "SCORER_SOURCE_PIN_MISSING"
 
 
 def test_certify_admission_refuses_before_reading(tmp_path, spies):

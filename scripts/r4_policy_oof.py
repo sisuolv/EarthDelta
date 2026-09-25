@@ -3,7 +3,8 @@
 
     folds       --protocol P --protocol-sha256 S --cache-manifest M --out policies/folds.json
     fit-predict --protocol P --protocol-sha256 S --cache-manifest M --folds F --out-dir policies
-                [--poison-eval-labels-of-fold f --poison-value nan|1e9]   (CP3 re-check only)
+                [--poison-eval-labels-of-fold f --poison-value nan|1e9]   (CP3 re-check only;
+                 poisons that fold's eval and purged labels)
     score       --protocol P --protocol-sha256 S --cache-manifest M
                 --prediction-freeze policies/prediction_freeze.json --out-dir evaluation
 
@@ -35,30 +36,87 @@ from earthdelta import policy_oof as po  # noqa: E402
 from earthdelta import split_freeze as sf  # noqa: E402
 
 
+# The original FP-05b protocol predates the scorer fixes made after the
+# historical run.  A new protocol must pin the scorer itself; otherwise a
+# changed scorer could consume an old cache while still presenting the old
+# protocol hash as provenance.
+SCORER_SOURCE_FILES = ("earthdelta/policy_oof.py", "scripts/r4_policy_oof.py")
+
+
 def _json(p) -> Dict[str, Any]:
     return json.loads(Path(p).read_text())
+
+
+def _source_contract(protocol: Dict[str, Any]) -> Dict[str, str]:
+    pins = protocol.get("source_at_preregistration") or {}
+    missing = [rel for rel in SCORER_SOURCE_FILES if rel not in pins]
+    if missing:
+        raise rc.Refused(
+            "SCORER_SOURCE_PIN_MISSING",
+            "protocol does not pin the scorer sources",
+            {"missing": missing},
+        )
+    # Reuse the cache protocol's complete source check for the certified core,
+    # then explicitly include the two files that implement OOF and scoring.
+    rc.check_sources(protocol)
+    drift = {
+        rel: {"expected": pins[rel], "actual": cc.file_sha256(SOURCE_ROOT / rel)}
+        for rel in SCORER_SOURCE_FILES
+        if cc.file_sha256(SOURCE_ROOT / rel) != pins[rel]
+    }
+    if drift:
+        raise rc.Refused("SCORER_SOURCE_DRIFT", "scorer source differs from protocol", {"files": drift})
+    return {rel: pins[rel] for rel in SCORER_SOURCE_FILES}
+
+
+def _check_manifest_binding(manifest: Dict[str, Any], manifest_path: Path,
+                            protocol_sha256: str, freeze: sf.SplitFreeze,
+                            allow: sf.AllowList) -> Dict[str, Any]:
+    if manifest.get("schema") != cc.CACHE_SCHEMA or manifest.get("kind") != "dev":
+        raise rc.Refused("CACHE_SCHEMA_MISMATCH", "expected a sealed dev cache manifest")
+    if manifest.get("passed") is not True:
+        raise rc.Refused("CACHE_NOT_VALID", "cache manifest is not a PASS")
+    if manifest.get("protocol_sha256") != protocol_sha256:
+        raise rc.Refused("CACHE_PROTOCOL_MISMATCH", "cache manifest is bound to another protocol")
+    if manifest.get("split_freeze_sha256") != freeze.sha256:
+        raise rc.Refused("CACHE_FREEZE_MISMATCH", "cache built under another split freeze")
+    vp = (manifest.get("validation") or {}).get("v_pass") or {}
+    if not vp or not all(v is True for v in vp.values()) or not (manifest.get("read_set") or {}).get("passed"):
+        raise rc.Refused("CACHE_VALIDATION_INCOMPLETE", "V1-V8 and read-set must all pass")
+    ids = list(manifest.get("issue_ids") or [])
+    if len(ids) != len(set(ids)) or sorted(ids) != sorted(allow.issue_ids):
+        raise rc.Refused("CACHE_ISSUE_ALLOWLIST_MISMATCH", "manifest ids are not exactly policy_dev allowlist")
+    if manifest.get("identity", {}).get("protocol_sha256") != protocol_sha256:
+        raise rc.Refused("CACHE_IDENTITY_MISMATCH", "manifest identity is not protocol-bound")
+    for key in ("dev_protocol", "candidate_results", "background_f0"):
+        ref = manifest.get(key)
+        if not isinstance(ref, dict) or not ref.get("path") or not ref.get("sha256"):
+            raise rc.Refused("CACHE_REFERENCE_MISSING", f"manifest reference {key} is incomplete")
+        path = Path(ref["path"])
+        if not path.is_file() or cc.file_sha256(path) != ref["sha256"]:
+            raise rc.Refused("CACHE_REFERENCE_MISMATCH", f"manifest reference {key} changed")
+    return {"manifest_sha256": cc.file_sha256(manifest_path), "issue_ids": ids}
 
 
 def bind(args) -> Dict[str, Any]:
     """Everything checked before any feature/label byte is read."""
     protocol = rc.load_cache_protocol(args.protocol, args.protocol_sha256)
+    scorer_sources = _source_contract(protocol)
     freeze = rc.bind_freeze(protocol)
     if freeze.role("confirm").get("status") != sf.CONFIRM_STATUS:
         raise rc.Refused("CONFIRM_ASSIGNED", "confirm must be UNASSIGNED_NO_ACCESS")
     manifest_path = Path(args.cache_manifest)
     manifest = _json(manifest_path)
-    if manifest.get("passed") is not True or manifest.get("protocol_sha256") != args.protocol_sha256:
-        raise rc.Refused("CACHE_NOT_VALID", "cache manifest is not a PASS for this protocol")
-    if manifest.get("split_freeze_sha256") != freeze.sha256:
-        raise rc.Refused("CACHE_FREEZE_MISMATCH", "cache built under another split freeze")
     allow = rc.allow_list(protocol, freeze, "policy_dev")
+    manifest_binding = _check_manifest_binding(manifest, manifest_path, args.protocol_sha256, freeze, allow)
     record, admission_sha = rc.role_admission(protocol, "policy_dev")
-    ids = list(manifest["issue_ids"])
+    ids = manifest_binding["issue_ids"]
     pairs = cc.rows_and_certificates(record, ids)
     rc.clear_rows(freeze, "policy_dev", pairs, allow, admission_sha)
     times = {r["issue_id"]: int(r["issue_time"]) for r, _ in pairs}
     return {"protocol": protocol, "freeze": freeze, "manifest": manifest,
-            "manifest_sha256": cc.file_sha256(manifest_path), "ids": ids, "times": times}
+            "manifest_sha256": manifest_binding["manifest_sha256"], "ids": ids, "times": times,
+            "scorer_sources": scorer_sources}
 
 
 def stage_folds(args, b) -> int:
@@ -91,6 +149,15 @@ def _load_rows(manifest):
     return _json(ref["path"])["rows"]
 
 
+def _poison_fold_labels(table, fold, value):
+    """Copy ``table`` with both eval and purged labels replaced for CP3."""
+    out = {iid: dict(labels) for iid, labels in table.items()}
+    ids = list(fold["eval_ids"]) + list(fold["purged_ids"])
+    for iid in ids:
+        out[iid] = {c: value for c in po.CANDIDATES}
+    return out, ids
+
+
 def stage_fit_predict(args, b) -> int:
     folds_path = Path(args.folds)
     folds = _json(folds_path)
@@ -104,10 +171,12 @@ def stage_fit_predict(args, b) -> int:
     if args.poison_eval_labels_of_fold is not None:
         f = int(args.poison_eval_labels_of_fold)
         value = float(args.poison_value)
-        for iid in folds["folds"][f]["eval_ids"]:
-            table[iid] = {c: value for c in po.CANDIDATES}
+        table, poisoned_ids = _poison_fold_labels(table, folds["folds"][f], value)
         poisoned = {"fold": f, "value": args.poison_value,
-                    "scope": "only this fold is refit: its own OOF predictions must be byte-identical"}
+                    "scope": "eval_and_purged_ids; only this fold is refit: its own OOF predictions must be byte-identical",
+                    "n_eval_ids": len(folds["folds"][f]["eval_ids"]),
+                    "n_purged_ids": len(folds["folds"][f]["purged_ids"]),
+                    "n_poisoned_ids": len(poisoned_ids)}
     run_folds = folds if poisoned is None else {"folds": [folds["folds"][poisoned["fold"]]]}
     per_fold, access = po.fit_predict(run_folds, features, table)
     for fo in run_folds["folds"]:
@@ -171,9 +240,10 @@ def stage_score(args, b) -> int:
     blocks = {i: po.block_of(b["times"][i]) for i in b["ids"]}
     boot7 = po.paired_block_bootstrap(real["losses"], blocks)
     boot14 = po.paired_block_bootstrap(real["losses"], blocks, block_days_factor=2)
-    h = boot7["H_Fs_24h"]["point"]
+    h_by_lead = {int(k): v["point"] for k, v in boot7["H_Fs_by_lead"].items()}
     for c in boot7["comparisons"].values():
-        c["G_F0_point"] = c["point"] - h if c["baseline"] == "M0" else None
+        c["G_F0_point"] = (c["point"] - h_by_lead[int(c["lead_hours"])]
+                            if c["baseline"] == "M0" else None)
     caveat = b["protocol"]["split"]["coverage_caveat"]
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)

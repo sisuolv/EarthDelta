@@ -11,6 +11,7 @@ import pytest
 
 from earthdelta import candidate_cache as cc
 from earthdelta import policy_oof as po
+from scripts import r4_policy_oof as policy_cli
 
 STEP = 6 * 3600
 
@@ -150,6 +151,31 @@ def test_score_bootstrap_by_block_with_pinned_seed(data):
     c = po.paired_block_bootstrap(real["losses"], blocks, draws=500, seed=1)
     assert c["comparisons"]["M1_vs_Fs"]["ci_low"] != a["comparisons"]["M1_vs_Fs"]["ci_low"]
     assert po.paired_block_bootstrap(real["losses"], blocks, draws=200, block_days_factor=2)["n_blocks"] < 23
+
+
+def test_g_f0_correction_uses_matching_lead(data):
+    times, _, _, _ = data
+    rows = _losses(times)
+    # Make the F0-vs-Fs harm deliberately different at every lead.
+    f0 = {i: {"6": 0.8, "24": 0.95, "72": 1.2} for i in times}
+    acts = {i: {"M0": "reference", "M1": "expert_0", "M2": "expert_1", "M3": "reference"}
+            for i in times}
+    real = po.realized_losses(rows, acts, f0)
+    blocks = {i: po.block_of(t) for i, t in times.items()}
+    out = po.paired_block_bootstrap(real["losses"], blocks, draws=200)
+    h = out["H_Fs_by_lead"]
+    assert h["6"]["point"] != pytest.approx(h["24"]["point"])
+    assert h["72"]["point"] != pytest.approx(h["24"]["point"])
+
+
+def test_cli_poison_scope_includes_eval_and_purged(data):
+    _, _, table, folds = data
+    poisoned, ids = policy_cli._poison_fold_labels(table, folds["folds"][0], float("nan"))
+    expected = folds["folds"][0]["eval_ids"] + folds["folds"][0]["purged_ids"]
+    assert ids == expected
+    assert all(np.isnan(v) for i in expected for v in poisoned[i].values())
+    untouched = set(table) - set(expected)
+    assert all(poisoned[i] == table[i] for i in untouched)
 
 
 def test_nonfinite_choice_falls_back_to_fs_and_is_counted(data):
