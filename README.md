@@ -38,19 +38,22 @@ No fine-tuning loop, no retraining the base model, no peeking at future truth.
 Two independent reviews of the current state were written on 2026-09-26. They supersede the
 status notes above wherever they disagree. Both are in Chinese.
 
-| Review | Relative link | GitHub link (branch `audit/round2-review-20260921`) |
+| Review | Relative link | GitHub link (`main`) |
 |---|---|---|
-| Claude review (Claude Code, `claude-opus-5-5`) | [`reviews/CLAUDE_INDEPENDENT_REVIEW_20260926.md`](reviews/CLAUDE_INDEPENDENT_REVIEW_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/audit/round2-review-20260921/reviews/CLAUDE_INDEPENDENT_REVIEW_20260926.md |
-| Claude review — recompute scripts and outputs | [`reviews/claude_independent_review_20260926/`](reviews/claude_independent_review_20260926/) | https://github.com/sisuolv/EarthDelta/tree/audit/round2-review-20260921/reviews/claude_independent_review_20260926 |
-| Codex review | [`reviews/EARTHDELTA_INDEPENDENT_REVIEW_20260926.md`](reviews/EARTHDELTA_INDEPENDENT_REVIEW_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/audit/round2-review-20260921/reviews/EARTHDELTA_INDEPENDENT_REVIEW_20260926.md |
-| Codex follow-up prompt for ChatGPT | [`reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md`](reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/audit/round2-review-20260921/reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md |
+| Claude review (Claude Code, `claude-opus-5-5`) | [`reviews/CLAUDE_INDEPENDENT_REVIEW_20260926.md`](reviews/CLAUDE_INDEPENDENT_REVIEW_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/main/reviews/CLAUDE_INDEPENDENT_REVIEW_20260926.md |
+| Claude review — recompute scripts and outputs | [`reviews/claude_independent_review_20260926/`](reviews/claude_independent_review_20260926/) | https://github.com/sisuolv/EarthDelta/tree/main/reviews/claude_independent_review_20260926 |
+| Codex review | [`reviews/EARTHDELTA_INDEPENDENT_REVIEW_20260926.md`](reviews/EARTHDELTA_INDEPENDENT_REVIEW_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/main/reviews/EARTHDELTA_INDEPENDENT_REVIEW_20260926.md |
+| Codex follow-up prompt for ChatGPT | [`reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md`](reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/main/reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md |
 
 Where the two reviews agree:
 
 - Only the frozen 2019H2 DEV set (112 issues, 23 weekly blocks) has been evaluated; no legal
   fresh/confirm split exists, and the dynamic router (M3) shows no gain over the static choice (M1).
-- GitHub HEAD does not contain the local working-tree fixes (10 modified files plus untracked
-  `scripts/r7_*` / `tests/test_r7_*`); the latest R7 diagnostics were produced by that uncommitted code.
+- Both reviews were written against `e4da7aa` plus an uncommitted working tree (10 modified files,
+  untracked `scripts/r7_*` and `tests/test_r7_*`), which produced the latest R7 diagnostics. On
+  2026-09-26 that working tree was committed to `main` unchanged, together with the v6/v7 plan
+  packages; the full CPU suite on it gave 1004 passed, 7 skipped. So "GitHub HEAD lacks the fixes"
+  in both reviews is no longer true.
 - Tests passing and S0 parity are engineering facts, not evidence that the research hypothesis holds.
 
 Where they disagree (the Claude review recomputed against the unedited backbone F0, which the
