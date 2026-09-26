@@ -1,7 +1,12 @@
-"""Independent read-only recheck of FP-05b DEV scalars (no arrays, no model)."""
-import json, collections, datetime as dt
+"""Independent read-only recheck of FP-05b DEV scalars (no arrays, no model).
+
+Needs only files tracked in git; run from anywhere inside a checkout:
+    python reviews/claude_independent_review_20260926/scalar_recheck.py
+"""
+import json, collections, datetime as dt, os
 import numpy as np
-R='/mnt/afs/260010168/EarthDelta/plans/plan_v4_0923/run_20260924T104725Z_fp05b'
+REPO=os.environ.get('EARTHDELTA_REPO', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+R=f'{REPO}/plans/plan_v4_0923/run_20260924T104725Z_fp05b'
 rows=json.load(open(f'{R}/cache/dev/candidate_results.json'))['rows']
 bg=json.load(open(f'{R}/cache/dev/background_f0.json'))['issues']
 pred=json.load(open(f'{R}/policies/oof_predictions.json'))['predictions']

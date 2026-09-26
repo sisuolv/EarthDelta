@@ -43,7 +43,8 @@ status notes above wherever they disagree. Both are in Chinese.
 | Claude review (Claude Code, `claude-opus-5-5`) | [`reviews/CLAUDE_INDEPENDENT_REVIEW_20260926.md`](reviews/CLAUDE_INDEPENDENT_REVIEW_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/main/reviews/CLAUDE_INDEPENDENT_REVIEW_20260926.md |
 | Claude review — recompute scripts and outputs | [`reviews/claude_independent_review_20260926/`](reviews/claude_independent_review_20260926/) | https://github.com/sisuolv/EarthDelta/tree/main/reviews/claude_independent_review_20260926 |
 | Codex review | [`reviews/EARTHDELTA_INDEPENDENT_REVIEW_20260926.md`](reviews/EARTHDELTA_INDEPENDENT_REVIEW_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/main/reviews/EARTHDELTA_INDEPENDENT_REVIEW_20260926.md |
-| Codex follow-up prompt for ChatGPT | [`reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md`](reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/main/reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md |
+| **ChatGPT Pro audit prompt (adjudicates both reviews; use this one)** | [`reviews/CHATGPT_PRO_AUDIT_PROMPT_20260926.md`](reviews/CHATGPT_PRO_AUDIT_PROMPT_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/main/reviews/CHATGPT_PRO_AUDIT_PROMPT_20260926.md |
+| Codex follow-up prompt for ChatGPT (earlier, Codex review only) | [`reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md`](reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/main/reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md |
 
 Where the two reviews agree:
 
