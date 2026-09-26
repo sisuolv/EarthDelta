@@ -1,0 +1,50 @@
+max rel diff of my objective vs stored cpu_loss: 3.455041924850208e-09
+
+RMSE of F0 (physical units) and % RMSE change vs F0 (+ = better), paired 7-day block bootstrap 95% CI
+geopotential_500           | 6h F0      27.5  Fs -0.04[-0.12,+0.03] M1 -0.05[-0.11,+0.01] | 24h F0     50.91  Fs -0.51[-0.65,-0.37] M1 -0.29[-0.43,-0.16] | 72h F0     151.7  Fs -1.31[-1.57,-1.06] M1 -0.98[-1.20,-0.75]
+temperature_850            | 6h F0     0.465  Fs -0.20[-0.22,-0.18] M1 -0.16[-0.19,-0.13] | 24h F0     0.691  Fs -0.40[-0.43,-0.36] M1 -0.19[-0.23,-0.15] | 72h F0     1.145  Fs -1.42[-1.58,-1.24] M1 -1.17[-1.29,-1.05]
+2m_temperature             | 6h F0     0.458  Fs +0.10[+0.05,+0.17] M1 +0.13[+0.07,+0.20] | 24h F0    0.6303  Fs -0.14[-0.24,-0.04] M1 -0.08[-0.19,+0.04] | 72h F0    0.9539  Fs -1.08[-1.26,-0.89] M1 -0.90[-1.07,-0.74]
+mean_sea_level_pressure    | 6h F0     34.57  Fs -0.10[-0.18,-0.03] M1 -0.09[-0.16,-0.03] | 24h F0     60.79  Fs -0.80[-0.95,-0.63] M1 -0.55[-0.68,-0.40] | 72h F0     159.2  Fs -1.53[-1.91,-1.12] M1 -1.26[-1.59,-0.88]
+u_component_of_wind_850    | 6h F0    0.8393  Fs -0.10[-0.14,-0.06] M1 -0.08[-0.10,-0.05] | 24h F0     1.261  Fs -0.24[-0.30,-0.18] M1 -0.17[-0.21,-0.12] | 72h F0     2.243  Fs -1.13[-1.35,-0.93] M1 -0.96[-1.14,-0.78]
+10m_u_component_of_wind    | 6h F0    0.5357  Fs -0.01[-0.04,+0.02] M1 -0.01[-0.04,+0.02] | 24h F0    0.8331  Fs -0.03[-0.07,+0.01] M1 +0.06[+0.03,+0.10] | 72h F0     1.566  Fs -1.15[-1.38,-0.94] M1 -0.89[-1.08,-0.70]
+specific_humidity_700      | 6h F0 0.0003452  Fs -0.20[-0.25,-0.16] M1 -0.19[-0.24,-0.14] | 24h F0 0.0005593  Fs -0.13[-0.19,-0.07] M1 -0.04[-0.10,+0.02] | 72h F0  0.000866  Fs -0.77[-0.90,-0.65] M1 -0.56[-0.67,-0.45]
+temperature_500            | 6h F0     0.387  Fs -0.08[-0.10,-0.06] M1 -0.08[-0.10,-0.06] | 24h F0    0.5633  Fs -0.26[-0.31,-0.21] M1 -0.23[-0.28,-0.18] | 72h F0     1.007  Fs -1.61[-1.79,-1.44] M1 -1.36[-1.50,-1.23]
+geopotential_50            | 6h F0     72.21  Fs +0.22[+0.14,+0.30] M1 +0.18[+0.10,+0.26] | 24h F0     138.4  Fs +0.17[-0.10,+0.46] M1 +0.12[-0.14,+0.41] | 72h F0     305.2  Fs -0.30[-1.20,+0.65] M1 -0.29[-1.23,+0.70]
+specific_humidity_50       | 6h F0 2.749e-08  Fs -0.09[-0.22,+0.03] M1 -0.01[-0.10,+0.08] | 24h F0 5.203e-08  Fs -0.36[-0.66,-0.16] M1 -0.17[-0.35,+0.00] | 72h F0  8.42e-08  Fs -0.69[-1.46,+0.14] M1 -0.46[-1.14,+0.27]
+u_component_of_wind_50     | 6h F0      1.72  Fs -0.25[-0.34,-0.15] M1 -0.26[-0.35,-0.16] | 24h F0     2.584  Fs +0.80[+0.57,+1.01] M1 +1.28[+1.07,+1.48] | 72h F0     3.393  Fs +1.32[+0.78,+1.83] M1 +1.19[+0.71,+1.63]
+temperature_50             | 6h F0    0.9093  Fs +0.11[+0.07,+0.15] M1 +0.11[+0.07,+0.15] | 24h F0     1.178  Fs -0.22[-0.43,+0.03] M1 -0.20[-0.39,+0.01] | 72h F0     1.711  Fs -0.82[-1.55,+0.02] M1 -0.74[-1.46,+0.11]
+
+6h objective gain M1 vs F0 = -3.054e-05 (rel -0.2169%); top channel contributions:
+   specific_humidity_250        -4.098e-06  (-13% of |total|)
+   specific_humidity_200        -3.810e-06  (-12% of |total|)
+   specific_humidity_150        -2.869e-06  (-9% of |total|)
+   specific_humidity_300        -2.424e-06  (-8% of |total|)
+   specific_humidity_400        -1.872e-06  (-6% of |total|)
+   v_component_of_wind_100      -1.423e-06  (-5% of |total|)
+   specific_humidity_500        -1.147e-06  (-4% of |total|)
+   specific_humidity_700        -1.031e-06  (-3% of |total|)
+   channels where M1 RMSE < F0 RMSE: 8/69
+
+24h objective gain M1 vs F0 = 2.140e-05 (rel +0.0702%); top channel contributions:
+   v_component_of_wind_50       +3.005e-05  (+140% of |total|)
+   specific_humidity_150        -1.427e-05  (-67% of |total|)
+   v_component_of_wind_100      +1.383e-05  (+65% of |total|)
+   u_component_of_wind_50       +1.052e-05  (+49% of |total|)
+   v_component_of_wind_300      +9.432e-06  (+44% of |total|)
+   specific_humidity_250        -7.985e-06  (-37% of |total|)
+   specific_humidity_200        -7.573e-06  (-35% of |total|)
+   v_component_of_wind_250      +7.336e-06  (+34% of |total|)
+   channels where M1 RMSE < F0 RMSE: 21/69
+
+72h objective gain M1 vs F0 = -4.902e-04 (rel -0.6903%); top channel contributions:
+   v_component_of_wind_50       +2.219e-04  (+45% of |total|)
+   v_component_of_wind_100      +1.315e-04  (+27% of |total|)
+   specific_humidity_300        -8.883e-05  (-18% of |total|)
+   specific_humidity_150        -8.523e-05  (-17% of |total|)
+   v_component_of_wind_300      +8.406e-05  (+17% of |total|)
+   specific_humidity_250        -8.044e-05  (-16% of |total|)
+   specific_humidity_400        -7.568e-05  (-15% of |total|)
+   v_component_of_wind_250      +7.193e-05  (+15% of |total|)
+   channels where M1 RMSE < F0 RMSE: 7/69
+
+F0 24h objective share by variable group: {'2m_temperature': 0.0, '10m_u_component_of_wind': 0.011, '10m_v_component_of_wind': 0.017, 'mean_sea_level_pressure': 0.001, 'geopotential': 0.003, 'u_component_of_wind': 0.141, 'v_component_of_wind': 0.307, 'temperature': 0.025, 'specific_humidity': 0.495}

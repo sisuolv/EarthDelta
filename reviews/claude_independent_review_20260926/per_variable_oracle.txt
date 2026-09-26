@@ -1,0 +1,8 @@
+per-variable hindsight oracle (choose candidate per issue by THAT variable at THAT lead) -- % RMSE change vs F0, + = better
+geopotential_500           | 6h oracle5 +0.13  oracle6 +0.22 | 24h oracle5 -0.00  oracle6 +0.24 | 72h oracle5 -0.54  oracle6 +0.33
+temperature_850            | 6h oracle5 -0.14  oracle6 +0.02 | 24h oracle5 -0.16  oracle6 +0.03 | 72h oracle5 -1.02  oracle6 +0.02
+2m_temperature             | 6h oracle5 +0.18  oracle6 +0.22 | 24h oracle5 +0.04  oracle6 +0.17 | 72h oracle5 -0.67  oracle6 +0.07
+mean_sea_level_pressure    | 6h oracle5 +0.07  oracle6 +0.17 | 24h oracle5 -0.26  oracle6 +0.14 | 72h oracle5 -0.80  oracle6 +0.31
+u_component_of_wind_850    | 6h oracle5 -0.05  oracle6 +0.04 | 24h oracle5 -0.07  oracle6 +0.07 | 72h oracle5 -0.67  oracle6 +0.13
+specific_humidity_700      | 6h oracle5 -0.13  oracle6 +0.03 | 24h oracle5 +0.06  oracle6 +0.15 | 72h oracle5 -0.41  oracle6 +0.05
+v_component_of_wind_50     | 6h oracle5 +0.19  oracle6 +0.29 | 24h oracle5 +1.61  oracle6 +1.62 | 72h oracle5 +4.91  oracle6 +4.91

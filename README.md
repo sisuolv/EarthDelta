@@ -33,8 +33,48 @@ No fine-tuning loop, no retraining the base model, no peeking at future truth.
 
 ---
 
+## Independent reviews (2026-09-26) — read these first
+
+Two independent reviews of the current state were written on 2026-09-26. They supersede the
+status notes above wherever they disagree. Both are in Chinese.
+
+| Review | Relative link | GitHub link (branch `audit/round2-review-20260921`) |
+|---|---|---|
+| Claude review (Claude Code, `claude-opus-5-5`) | [`reviews/CLAUDE_INDEPENDENT_REVIEW_20260926.md`](reviews/CLAUDE_INDEPENDENT_REVIEW_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/audit/round2-review-20260921/reviews/CLAUDE_INDEPENDENT_REVIEW_20260926.md |
+| Claude review — recompute scripts and outputs | [`reviews/claude_independent_review_20260926/`](reviews/claude_independent_review_20260926/) | https://github.com/sisuolv/EarthDelta/tree/audit/round2-review-20260921/reviews/claude_independent_review_20260926 |
+| Codex review | [`reviews/EARTHDELTA_INDEPENDENT_REVIEW_20260926.md`](reviews/EARTHDELTA_INDEPENDENT_REVIEW_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/audit/round2-review-20260921/reviews/EARTHDELTA_INDEPENDENT_REVIEW_20260926.md |
+| Codex follow-up prompt for ChatGPT | [`reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md`](reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md) | https://github.com/sisuolv/EarthDelta/blob/audit/round2-review-20260921/reviews/CHATGPT_FOLLOWUP_ANALYSIS_PROMPT_20260926.md |
+
+Where the two reviews agree:
+
+- Only the frozen 2019H2 DEV set (112 issues, 23 weekly blocks) has been evaluated; no legal
+  fresh/confirm split exists, and the dynamic router (M3) shows no gain over the static choice (M1).
+- GitHub HEAD does not contain the local working-tree fixes (10 modified files plus untracked
+  `scripts/r7_*` / `tests/test_r7_*`); the latest R7 diagnostics were produced by that uncommitted code.
+- Tests passing and S0 parity are engineering facts, not evidence that the research hypothesis holds.
+
+Where they disagree (the Claude review recomputed against the unedited backbone F0, which the
+FP-05b protocol reported only as background):
+
+- **Strongest baseline.** Codex: M1/static. Claude: **F0**. Relative to F0, Fs, M1, M3 and even the
+  24h hindsight oracle are significantly worse at 6h and 72h (M1 72h −0.69% objective, CI entirely
+  negative), and only +0.07% at 24h. Per variable, M1 degrades Z500, T850 and MSLP RMSE at 24h and
+  72h (Z500 72h −0.98%); the only gains are 50–100 hPa winds.
+- **Cause.** The training/selection objective (`earthdelta/static_adapter.py` `build_objective_spec`)
+  scales by the state std with equal weights over 69 channels, so humidity and winds make up ~95%
+  of it and Z/T/MSLP/T2m less than 3%. Fs was fit on 8 issues × 32 updates; experts on 6–16 issues.
+- **72h guard.** Codex: passes. Claude: passes only relative to Fs; relative to F0 it is about −0.7%.
+- **Next step.** Codex: one selector-only intervention on a fresh split. Claude: not worth running
+  (its success bar would require beating the oracle point estimate); instead fix the baseline and
+  metrics, repair the ERA5 stores (2016/2017/2022 empty, 12–29% NaN steps in 2015/2018/2019,
+  `pull_wb2.py` reports failure as success), then run a proper headroom test against F0 on
+  headline variables before any e0/du work.
+
+---
+
 ## Table of contents
 
+- [Independent reviews (2026-09-26) — read these first](#independent-reviews-2026-09-26--read-these-first)
 - [The idea in one paragraph](#the-idea-in-one-paragraph)
 - [Why this is different](#why-this-is-different)
 - [Repo layout](#repo-layout)
