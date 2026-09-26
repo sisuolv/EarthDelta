@@ -1,5 +1,5 @@
 from earthdelta.fp06_decision import decide_fp06
-from scripts.r5_audit_runner import fp06_decision
+from scripts.r5_audit_runner import _load_inputs, fp06_decision
 
 
 def comp(status, **extra):
@@ -49,3 +49,28 @@ def test_fp06_receipt_flattens_machine_verdict(tmp_path, monkeypatch):
     payload = __import__("json").loads((out / "decision.json").read_text())
     assert payload["verdict"] == "PIVOT_STATIC"
     assert payload["status"] == payload["decision"]["verdict"]
+
+
+def test_runner_fail_closed_for_missing_and_non_boolean_evidence(tmp_path):
+    for value, expected_type in ((None, "NoneType"), ("false", "str"), (0, "int"), (1, "int")):
+        obj = base()
+        if value is None:
+            obj.pop("evidence_valid")
+        else:
+            obj["evidence_valid"] = value
+        path = tmp_path / f"input_{expected_type}_{value}.json"
+        path.write_text(__import__("json").dumps(obj))
+        loaded = _load_inputs(path)
+        assert loaded["evidence_valid"] is False
+        assert loaded["evidence_valid_type"] == expected_type
+        out = tmp_path / f"out_{expected_type}_{value}"
+        args = type("Args", (), {"inputs": path, "out": out, "delta_min": 0.0034})()
+        assert fp06_decision(args) == 2
+
+
+def test_runner_keeps_normal_negative_verdict_zero(tmp_path):
+    path = tmp_path / "input.json"
+    path.write_text(__import__("json").dumps(base(oracle_vs_Fs=comp("BELOW"))))
+    out = tmp_path / "out"
+    args = type("Args", (), {"inputs": path, "out": out, "delta_min": 0.0034})()
+    assert fp06_decision(args) == 0

@@ -49,6 +49,11 @@ def assert_years_authorized(
     confirm-freeze JSON file and its expected SHA-256; the file must hash to
     that value and list the year under ``authorized_evaluation_years``.
     """
+    if frozenset(int(y) for y in authorized) != DEFAULT_AUTHORIZED_YEARS:
+        raise YearNotAuthorized(
+            "caller-supplied authorized years are forbidden in the production "
+            "evaluation path; use a hash-bound confirm-freeze file"
+        )
     ys = sorted({int(y) for y in years})
     if not ys:
         raise YearNotAuthorized("no evaluation years given")
@@ -227,7 +232,16 @@ def evaluate(
         (metric values Dataset, final AggregationState)
     """
     # Enforce the exposure boundary before importing/constructing data loaders.
+    # A lead can cross a calendar boundary (for example 2020-12-31 + 72h
+    # reads 2021 truth). Gate both issue and valid years before any loader is
+    # constructed; checking init years alone would permit an exposure hole.
     requested_years = {int(np.datetime64(t, "Y").astype(int)) + 1970 for t in init_times}
+    init_arr = np.asarray([np.datetime64(t, "ns") for t in init_times], dtype="datetime64[ns]")
+    lead_arr = np.asarray([_as_timedelta64(t) for t in lead_times], dtype="timedelta64[ns]")
+    requested_years.update(
+        int(v.astype("datetime64[Y]").astype(int)) + 1970
+        for v in (init_arr[:, None] + lead_arr[None, :]).reshape(-1)
+    )
     assert_years_authorized(requested_years, confirm_freeze_path=confirm_freeze_path,
                             confirm_freeze_sha256=confirm_freeze_sha256,
                             authorized=authorized)
@@ -259,6 +273,7 @@ def evaluate_single_chunk(
     metrics=None,
     aggregator=None,
     init_times: Optional[Sequence[Any]] = None,
+    valid_times: Optional[Sequence[Any]] = None,
     confirm_freeze_path: Optional[Union[str, Path]] = None,
     confirm_freeze_sha256: Optional[str] = None,
     authorized: frozenset = DEFAULT_AUTHORIZED_YEARS,
@@ -273,6 +288,9 @@ def evaluate_single_chunk(
     if init_times is None:
         raise YearNotAuthorized("init_times are required for single-chunk evaluation")
     requested_years = {int(np.datetime64(t, "Y").astype(int)) + 1970 for t in init_times}
+    if valid_times is not None:
+        requested_years.update(int(np.datetime64(t, "Y").astype(int)) + 1970
+                               for t in valid_times)
     assert_years_authorized(requested_years, confirm_freeze_path=confirm_freeze_path,
                             confirm_freeze_sha256=confirm_freeze_sha256,
                             authorized=authorized)

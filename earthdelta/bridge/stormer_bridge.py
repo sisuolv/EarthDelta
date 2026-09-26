@@ -883,23 +883,27 @@ class WeatherStepBridge:
         Returns:
             Normalized prediction at final step, shape (B, V, H, W)
         """
-        # Scale interval by 10.0 (matching iterative_module.py convention)
-        interval_tensor = torch.tensor([interval], device=x_norm.device, dtype=x_norm.dtype) / 10.0
-        interval_tensor = interval_tensor.repeat(x_norm.shape[0])
+        _acquire_plain_forward(self)
+        try:
+            # Scale interval by 10.0 (matching iterative_module.py convention)
+            interval_tensor = torch.tensor([interval], device=x_norm.device, dtype=x_norm.dtype) / 10.0
+            interval_tensor = interval_tensor.repeat(x_norm.shape[0])
 
-        x = x_norm
-        for _ in range(steps):
-            # Predict normalized diff
-            pred_diff = self._forward_single(x, variables, interval_tensor)
-            # Zero out constant channels
-            pred_diff = self.normalization.replace_constant(pred_diff, variables)
-            # Denormalize diff
-            pred_diff = self.normalization.denormalize_diff(pred_diff, interval)
-            # Denormalize current state, add diff, renormalize
-            pred = self.normalization.denormalize(x) + pred_diff
-            x = self.normalization.normalize(pred)
+            x = x_norm
+            for _ in range(steps):
+                # Predict normalized diff
+                pred_diff = self._forward_single(x, variables, interval_tensor)
+                # Zero out constant channels
+                pred_diff = self.normalization.replace_constant(pred_diff, variables)
+                # Denormalize diff
+                pred_diff = self.normalization.denormalize_diff(pred_diff, interval)
+                # Denormalize current state, add diff, renormalize
+                pred = self.normalization.denormalize(x) + pred_diff
+                x = self.normalization.normalize(pred)
 
-        return x
+            return x
+        finally:
+            _release_plain_forward(self)
 
 
 # =============================================================================
@@ -981,6 +985,9 @@ class _RolloutRegistry:
         # id(model) -> (id(bridge), owning thread name) for every backbone
         # currently being mutated by a rollout.
         self.active_models: Dict[int, Tuple[int, str]] = {}
+        # Ordinary forward_validation also uses the mutable model object. It
+        # must not overlap a controlled rollout whose hooks are installed.
+        self.active_plain_models: Dict[int, Tuple[int, str]] = {}
 
 
 _rollout_lock = _RolloutRegistry()
@@ -1051,6 +1058,14 @@ def _check_reentrant_rollout(bridge: 'WeatherStepBridge') -> None:
                 "each other's edits. Give each concurrent caller its own backbone, "
                 "or serialize the calls."
             )
+        plain_owner = _rollout_lock.active_plain_models.get(model_id)
+        if plain_owner is not None:
+            raise RuntimeError(
+                "controlled_rollout cannot overlap an ordinary forward_validation "
+                f"on shared backbone id={model_id} (bridge id={plain_owner[0]}, "
+                f"thread {plain_owner[1]!r}). Serialize all forwards that use a "
+                "backbone while hook-based edits are supported."
+            )
         _rollout_lock.active_bridges.add(bridge_id)
         _rollout_lock.active_models[model_id] = (bridge_id, this_thread)
 
@@ -1068,6 +1083,33 @@ def _release_rollout_lock(bridge: 'WeatherStepBridge') -> None:
         owner = _rollout_lock.active_models.get(model_id)
         if owner is not None and owner[0] == bridge_id:
             del _rollout_lock.active_models[model_id]
+
+
+def _acquire_plain_forward(bridge: 'WeatherStepBridge') -> None:
+    """Reserve a backbone for ordinary forward-validation, fail-closed."""
+    model_id = id(getattr(bridge, "model", None))
+    bridge_id = id(bridge)
+    this_thread = threading.current_thread().name
+    with _rollout_registry_mutex:
+        owner = _rollout_lock.active_models.get(model_id)
+        plain_owner = _rollout_lock.active_plain_models.get(model_id)
+        if owner is not None or plain_owner is not None:
+            held = owner or plain_owner
+            raise RuntimeError(
+                "forward_validation cannot overlap another forward on shared "
+                f"backbone id={model_id} (bridge id={held[0]}, thread {held[1]!r}). "
+                "Serialize all forwards that use a backbone."
+            )
+        _rollout_lock.active_plain_models[model_id] = (bridge_id, this_thread)
+
+
+def _release_plain_forward(bridge: 'WeatherStepBridge') -> None:
+    model_id = id(getattr(bridge, "model", None))
+    bridge_id = id(bridge)
+    with _rollout_registry_mutex:
+        owner = _rollout_lock.active_plain_models.get(model_id)
+        if owner is not None and owner[0] == bridge_id:
+            del _rollout_lock.active_plain_models[model_id]
 
 
 def controlled_rollout(

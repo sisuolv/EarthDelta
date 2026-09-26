@@ -23,7 +23,13 @@ import scripts.r4_candidate_cache as rc
 
 
 SOURCE_ROOT = Path(__file__).resolve().parent.parent
-SCORER_FILES = ("earthdelta/policy_oof.py", "scripts/r4_policy_oof.py")
+SCORER_FILES = (
+    "scripts/r5_score_erratum.py",
+    "earthdelta/policy_oof.py",
+    "scripts/r4_policy_oof.py",
+    "earthdelta/candidate_cache.py",
+    "scripts/r4_candidate_cache.py",
+)
 
 
 def _json(path: Path) -> Dict[str, Any]:
@@ -132,6 +138,13 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
     blocks = {iid: po.block_of(times[iid]) for iid in b["ids"]}
     boot7 = po.paired_block_bootstrap(real["losses"], blocks)
     boot14 = po.paired_block_bootstrap(real["losses"], blocks, block_days_factor=2)
+    f0_comparisons = tuple(
+        (f"{method}_vs_F0_{lead}h", method, "F0", lead)
+        for method in ("M0", "M1", "M2", "M3", "M4", "M5")
+        for lead in po.LEADS
+    )
+    paired_f0 = po.paired_block_bootstrap(real["losses"], blocks,
+                                          comparisons=f0_comparisons)
     h_by_lead = {int(k): v["point"] for k, v in boot7["H_Fs_by_lead"].items()}
     for comp in boot7["comparisons"].values():
         comp["G_F0_point"] = (
@@ -145,11 +158,27 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
     unchanged_24h = {}
     for name, comp in boot7["comparisons"].items():
         if int(comp["lead_hours"]) == 24 and name in old_comp:
+            old_row = old_comp[name]
             unchanged_24h[name] = {
-                "old_status": old_comp[name].get("status_vs_delta_min"),
+                "old_status": old_row.get("status_vs_delta_min"),
                 "new_status": comp.get("status_vs_delta_min"),
-                "same_status": old_comp[name].get("status_vs_delta_min") == comp.get("status_vs_delta_min"),
+                "old_point": old_row.get("point"),
+                "new_point": comp.get("point"),
+                "old_ci_low": old_row.get("ci_low"),
+                "new_ci_low": comp.get("ci_low"),
+                "old_ci_high": old_row.get("ci_high"),
+                "new_ci_high": comp.get("ci_high"),
+                "same_status": old_row.get("status_vs_delta_min") == comp.get("status_vs_delta_min"),
+                "same_point": old_row.get("point") == comp.get("point"),
+                "same_ci": old_row.get("ci_low") == comp.get("ci_low") and old_row.get("ci_high") == comp.get("ci_high"),
             }
+    required_24h = [name for name, _m, _b, lead in po.COMPARISONS if lead == 24]
+    all_required_24h_present = all(name in unchanged_24h for name in required_24h)
+    all_required_24h_unchanged = all(
+        unchanged_24h[name]["same_status"] and unchanged_24h[name]["same_point"] and unchanged_24h[name]["same_ci"]
+        for name in required_24h if name in unchanged_24h
+    ) and all_required_24h_present
+    gate_passed = all_required_24h_unchanged
     result = {
         "schema": "ed-fp05-lead-specific-erratum/1",
         "created_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
@@ -167,18 +196,28 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         "primary_7day_blocks": boot7,
         "sensitivity_14day_blocks_report_only": boot14,
         "unchanged_24h_status": unchanged_24h,
+        "required_24h_status_names": required_24h,
+        "all_required_24h_present": all_required_24h_present,
+        "all_required_24h_unchanged": all_required_24h_unchanged,
+        "gate_passed": gate_passed,
     }
     cc.write_json_once(out / "effects_by_lead.json", result)
     cc.write_json_once(out / "paired_F0_intervals.json", {
+        "schema": "ed-fp05-paired-f0-intervals/1",
+        "methods": ["M0", "M1", "M2", "M3", "M4", "M5"],
+        "leads": list(po.LEADS),
+        "comparisons": paired_f0["comparisons"],
         "H_Fs_by_lead": boot7["H_Fs_by_lead"],
         "coverage_caveat": b["coverage_caveat"],
         "source_used": result["source_used"],
     })
     cc.write_json_once(out / "gate.json", {
         "schema": "ed-fp05-erratum-gate/1",
-        "passed": all(v["same_status"] for v in unchanged_24h.values()) if unchanged_24h else False,
+        "passed": gate_passed,
         "checks": {"exact_allowlist": True, "cache_passed": True, "read_set_passed": True,
-                   "prediction_complete": True, "unaffected_24h_status": unchanged_24h},
+                   "prediction_complete": True, "all_required_24h_present": all_required_24h_present,
+                   "all_required_24h_unchanged": all_required_24h_unchanged,
+                   "unaffected_24h_values": unchanged_24h},
     })
     (out / "ERRATUM.md").write_text(
         "# FP-05 lead-specific score erratum\n\n"
@@ -204,8 +243,9 @@ def main(argv=None) -> int:
     except Exception as exc:  # noqa: BLE001 - CLI must fail closed with no output
         print(f"ERROR: {type(exc).__name__}: {exc}")
         return 2
-    print(json.dumps({"out": str(args.out), "H_Fs_by_lead": result["primary_7day_blocks"]["H_Fs_by_lead"]}, sort_keys=True))
-    return 0
+    print(json.dumps({"out": str(args.out), "H_Fs_by_lead": result["primary_7day_blocks"]["H_Fs_by_lead"],
+                      "gate_passed": result.get("gate_passed", False)}, sort_keys=True))
+    return 0 if result.get("gate_passed") is True else 2
 
 
 if __name__ == "__main__":

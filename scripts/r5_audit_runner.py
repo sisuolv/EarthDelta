@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -24,8 +25,39 @@ def _load_inputs(path: Path) -> dict[str, Any]:
     if "primary_7day_blocks" in ev:
         ev = ev["primary_7day_blocks"]
     comparisons = ev.get("comparisons", {})
+    # This is a typed trust gate.  Missing values and values such as the
+    # string "false" must never be coerced to a scientific PASS.
+    raw_evidence_valid = obj.get("evidence_valid")
+    verified_bundle = obj.get("verified_bundle") is True
+    # A formal bundle must carry numeric CI endpoints so the categorical
+    # labels cannot be supplied by a caller without recomputation.  The
+    # historical unit-test fixture intentionally omits this field and remains
+    # a pure rule test, never a scientific receipt.
+    if verified_bundle:
+        if not isinstance(obj.get("source_manifest"), dict) or not obj.get("input_manifest"):
+            raw_evidence_valid = False
+        delta = float(obj.get("delta_min", 0.0034))
+        required = ("oracle_vs_Fs", "oracle_vs_M1", "M1_vs_Fs", "M3_vs_Fs", "M3_vs_M1", "M3_vs_Fs_72h")
+        for key in required:
+            row = comparisons.get(key)
+            if not isinstance(row, dict) or not all(k in row for k in ("point", "ci_low", "ci_high", "status_vs_delta_min")):
+                raw_evidence_valid = False
+                continue
+            try:
+                point, lo, hi = float(row["point"]), float(row["ci_low"]), float(row["ci_high"])
+                expected = "ABOVE" if lo >= delta else ("BELOW" if hi < delta else "STRADDLE")
+                if not all(map(math.isfinite, (point, lo, hi))) or row["status_vs_delta_min"] != expected:
+                    raw_evidence_valid = False
+                if key == "M3_vs_Fs_72h" and row.get("harm72_guard_pass") != (lo >= -delta):
+                    raw_evidence_valid = False
+            except (TypeError, ValueError):
+                raw_evidence_valid = False
     return {
-        "evidence_valid": bool(obj.get("evidence_valid", True)),
+        "evidence_valid": raw_evidence_valid is True,
+        "evidence_valid_type": type(raw_evidence_valid).__name__,
+        "verified_bundle": verified_bundle,
+        "source_manifest": obj.get("source_manifest"),
+        "input_manifest": obj.get("input_manifest"),
         "comparisons": comparisons,
         "coverage_caveat": root_caveat or ev.get("coverage_caveat"),
         "source": obj.get("evaluation", str(path)),
@@ -72,6 +104,11 @@ def fp06_decision(args: argparse.Namespace) -> int:
         "authorize new GPU work, confirm access, or upgrade the novelty claim.\n"
     )
     print(json.dumps(decision, sort_keys=True))
+    # A valid negative science result is a successful computation.  Invalid
+    # or uncovered evidence is an execution failure and must propagate a
+    # nonzero status to shell/CI callers.
+    if decision["verdict"] in {"INVALID", "INCONCLUSIVE_RULE_COVERAGE"}:
+        return 2
     return 0
 
 

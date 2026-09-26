@@ -211,8 +211,19 @@ def quadratic_gain(
     gain_elements = 2 * error[:, None] * response - response.square()
 
     if convention == WeightConvention.WEIGHTED_MEAN:
-        # Normalize weights to sum to 1 along feature dimension
-        w_normalized = w / w.sum(-1, keepdim=True)
+        # Normalize each *actual* reduced slice independently.  A tensor such
+        # as [H,S,F] may contain a valid global weight sum while one lead or
+        # spatial slice is all zero; dividing that slice used to manufacture
+        # NaNs that could silently enter the paired/head path.  Zero-weight
+        # slices have no well-defined weighted mean, so fail closed.
+        denominator = w.sum(-1, keepdim=True)
+        if not bool((denominator > 0).all()):
+            bad = (~(denominator > 0)).nonzero(as_tuple=False).detach().cpu().tolist()
+            raise ValueError(
+                "weights must have a strictly positive sum for every reduced "
+                f"feature slice; zero-sum slice(s) at {bad[:8]}"
+            )
+        w_normalized = w / denominator
         return (gain_elements * w_normalized[:, None]).sum(-1)
     elif convention == WeightConvention.WEIGHTED_SUM:
         return (gain_elements * w[:, None]).sum(-1)

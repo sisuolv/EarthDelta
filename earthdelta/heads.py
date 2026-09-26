@@ -270,7 +270,8 @@ class ComposedPredictionHead(nn.Module):
     """
     def __init__(self, feature_dim: int, memory_dim: int, edit_dim: int,
                  target_dim: int, latent_dim: int = 32,
-                 use_jepa_latent: bool = False):
+                 use_jepa_latent: bool = False,
+                 use_gain_calibration: bool = False):
         super().__init__()
         if min(feature_dim, memory_dim, edit_dim, target_dim, latent_dim) <= 0:
             raise ValueError('All dimensions must be positive.')
@@ -278,6 +279,9 @@ class ComposedPredictionHead(nn.Module):
         self.memory_dim = memory_dim
         self.target_dim = target_dim
         self.use_jepa_latent = use_jepa_latent
+        # Analytic gain is the protocol quantity.  Calibration is an optional
+        # learned diagnostic and must never silently contaminate that quantity.
+        self.use_gain_calibration = bool(use_gain_calibration)
 
         # Context processing
         self.history = nn.GRU(feature_dim, latent_dim, batch_first=True)
@@ -354,9 +358,18 @@ class ComposedPredictionHead(nn.Module):
 
         reference_z = z0[:, None].expand(-1, k, -1, -1, -1)
         calibration = self.gain_calibration(torch.cat((reference_z, ze), -1)).squeeze(-1)
-        gain = (geometric + calibration) * enabled.to(history)[None, :, None, None]
+        enabled_gain = enabled.to(history)[None, :, None, None]
+        gain_analytic = geometric * enabled_gain
+        gain_calibrated = (geometric + calibration) * enabled_gain
+        gain = gain_calibrated if self.use_gain_calibration else gain_analytic
 
-        return {'base_z': z0, 'response_z': ze, 'reference_error': error, 'edit_response': response, 'gain': gain}
+        return {
+            'base_z': z0, 'response_z': ze, 'reference_error': error,
+            'edit_response': response, 'gain': gain,
+            'gain_analytic': gain_analytic,
+            'gain_calibrated': gain_calibrated,
+            'gain_calibration': calibration * enabled_gain,
+        }
 
     @torch.no_grad()
     def update_targets(self, momentum: float = 0.99) -> None:

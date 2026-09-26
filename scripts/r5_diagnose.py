@@ -61,8 +61,25 @@ def diagnose(args: argparse.Namespace) -> int:
     for key, ref in refs.items():
         if _hash(Path(ref["path"])) != ref["sha256"]:
             raise ValueError(f"diagnostic input changed: {key}")
+        # Consume the exact paths frozen by `freeze-diagnostics`; a second
+        # --inputs file cannot swap in an equally-shaped cache or prediction.
+        if key in inp and Path(inp[key]).resolve() != Path(ref["path"]).resolve():
+            raise ValueError(f"diagnostic input path is not the frozen path: {key}")
     manifest = _json(Path(inp["cache_manifest"]))
     freeze_rec = _json(Path(inp["prediction_freeze"]))
+    child_refs = {
+        "candidate_results": manifest["candidate_results"],
+        "background_f0": manifest["background_f0"],
+        "oof_predictions": freeze_rec["oof_predictions"],
+        "folds": freeze_rec["folds"],
+        "label_access_log": freeze_rec["label_access_log"],
+    }
+    child_before = {k: {"path": str(Path(v["path"]).resolve()),
+                         "sha256": _hash(Path(v["path"]))}
+                    for k, v in child_refs.items()}
+    for key, got in child_before.items():
+        if got["sha256"] != child_refs[key]["sha256"]:
+            raise ValueError(f"frozen child input hash mismatch: {key}")
     rows = _json(Path(manifest["candidate_results"]["path"]))["rows"]
     preds = _json(Path(freeze_rec["oof_predictions"]["path"]))["predictions"]
     bg = _json(Path(manifest["background_f0"]["path"]))["issues"]
@@ -89,6 +106,10 @@ def diagnose(args: argparse.Namespace) -> int:
     switch_deltas = {iid: float(m1[n] - m3[n]) for n, iid in enumerate(ids) if iid in switches}
     centered = gains - gains.mean(axis=0, keepdims=True)
     singular = np.linalg.svd(centered, compute_uv=False)
+    row_mean = gains.mean(axis=1, keepdims=True)
+    col_mean = gains.mean(axis=0, keepdims=True)
+    grand_mean = gains.mean()
+    double_centered = gains - row_mean - col_mean + grand_mean
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=False)
     hashes_before = {k: _hash(Path(v)) for k, v in inp.items() if k in ("protocol", "cache_manifest", "prediction_freeze", "evaluation")}
@@ -104,6 +125,20 @@ def diagnose(args: argparse.Namespace) -> int:
         "n": len(ids), "mean": centered.mean(axis=0).tolist(),
         "singular_values": singular.tolist(), "effective_rank_tol_1e-8": int((singular > 1e-8).sum()),
     }, indent=2, sort_keys=True) + "\n")
+    (out / "raw_expert_gain_matrix.json").write_text(json.dumps({
+        "schema": "ed-fp07-raw-expert-gain-matrix/1", "issue_ids": ids,
+        "candidate_order": candidates[1:], "values": gains.tolist(),
+        "interpretation": "Frozen descriptive matrix only; no labels are written back to the old evaluation.",
+    }, indent=2, sort_keys=True) + "\n")
+    (out / "centering_sensitivity.json").write_text(json.dumps({
+        "schema": "ed-fp07-centering-sensitivity/1",
+        "candidate_order": candidates[1:],
+        "row_centered_singular_values": np.linalg.svd(gains - row_mean, compute_uv=False).tolist(),
+        "column_centered_singular_values": np.linalg.svd(gains - col_mean, compute_uv=False).tolist(),
+        "double_centered_singular_values": np.linalg.svd(double_centered, compute_uv=False).tolist(),
+        "grand_mean_gain": float(grand_mean),
+        "note": "Centering is descriptive and computed after mapping to the common candidate basis.",
+    }, indent=2, sort_keys=True) + "\n")
     (out / "routing_regret.json").write_text(json.dumps({
         "schema": "ed-fp07-routing-regret/1", "m1_action_counts": _counts(actions, "M1"),
         "m3_action_counts": _counts(actions, "M3"), "switch_count": len(switches),
@@ -116,8 +151,28 @@ def diagnose(args: argparse.Namespace) -> int:
         "coverage_caveat": _json(Path(inp["evaluation"])).get("coverage_caveat"),
         "interpretation": "descriptive conditional-on-frozen-OOF diagnostics; no causal or confirm claim",
     }, indent=2, sort_keys=True) + "\n")
+    block_counts = _counts({iid: {"block": str(blocks[iid])} for iid in ids}, "block")
+    (out / "seasonal_coverage.json").write_text(json.dumps({
+        "schema": "ed-fp07-seasonal-coverage/1", "n_issues": len(ids),
+        "block_counts": block_counts, "n_nonempty_blocks": len(set(blocks.values())),
+        "interpretation": "Block coverage of the frozen development data; not a confirm-set subgroup claim.",
+    }, indent=2, sort_keys=True) + "\n")
+    (out / "hpo_feature_audit.json").write_text(json.dumps({
+        "schema": "ed-fp07-hpo-feature-audit/1", "status": "NOT_REFIT",
+        "features_consumed": "frozen OOF diagnostic inputs only",
+        "posthoc_tuning": False,
+        "note": "No new policy fit or HPO is performed by r5_diagnose.",
+    }, indent=2, sort_keys=True) + "\n")
     hashes_after = {k: _hash(Path(v)) for k, v in inp.items() if k in ("protocol", "cache_manifest", "prediction_freeze", "evaluation")}
-    (out / "old_hashes_after.json").write_text(json.dumps({"before": hashes_before, "after": hashes_after, "unchanged": hashes_before == hashes_after}, indent=2, sort_keys=True) + "\n")
+    child_after = {k: {"path": v["path"], "sha256": _hash(Path(v["path"]))}
+                   for k, v in child_before.items()}
+    if child_after != child_before or hashes_after != hashes_before:
+        raise ValueError("a frozen diagnostic input changed while diagnostics ran")
+    (out / "old_hashes_after.json").write_text(json.dumps({
+        "before": hashes_before, "after": hashes_after,
+        "recursive_before": child_before, "recursive_after": child_after,
+        "unchanged": hashes_before == hashes_after and child_before == child_after,
+    }, indent=2, sort_keys=True) + "\n")
     (out / "REPORT.md").write_text(
         f"# FP-07 diagnostics\n\nN={len(ids)}, M3 switches relative to M1 on {len(switches)} issues. "
         "These are read-only diagnostics on the sealed development set.\n"

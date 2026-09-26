@@ -84,6 +84,10 @@ class SurrogatePlan:
     declared_cost: float
     solves: int
     solver_failures: int
+    # Row in the declared finite candidate table, when selection came from
+    # that table.  Keeping the identity avoids approximate coefficient
+    # reverse-lookups after a float32 round trip.
+    candidate_index: int | None = None
 
 
 def quadratic_gain_numpy(benefit: np.ndarray, gram: np.ndarray, program: np.ndarray) -> float:
@@ -199,7 +203,7 @@ def plan_from_prediction(benefit: Tensor, gram: Tensor, *, bound: float = 0.25,
                 best_predicted = quadratic_gain_numpy(b, h, best)
 
     return SurrogatePlan(torch.from_numpy(best).to(benefit), best_support, best_predicted,
-                         best_gain, best_cost, solves, failures)
+                         best_gain, best_cost, solves, failures, None)
 
 
 @torch.no_grad()
@@ -279,6 +283,13 @@ def _plan_from_finite_candidates(
     solves = 0
     rejected_bound = 0
     rejected_support = 0
+    # The explicit no-edit row is a registered candidate.  Preserve its row
+    # identity even when every nonzero candidate has nonpositive gain.
+    reference_index = next(
+        (i for i, row in enumerate(candidates) if np.count_nonzero(row) == 0),
+        None,
+    )
+    best_candidate_index = reference_index
 
     for k in range(candidates.shape[0]):
         offset = candidates[k]
@@ -308,9 +319,11 @@ def _plan_from_finite_candidates(
             best_cost = cost
             best_gain = gain
             best_predicted = quadratic_gain_numpy(b, h, best)
+            best_candidate_index = k
 
     return SurrogatePlan(torch.from_numpy(best).to(benefit), best_support, best_predicted,
-                         best_gain, best_cost, solves, rejected_bound + rejected_support)
+                         best_gain, best_cost, solves, rejected_bound + rejected_support,
+                         best_candidate_index)
 
 
 @dataclass(frozen=True)
@@ -373,16 +386,17 @@ def select_from_registry(registry, benefit: Tensor, gram: Tensor, *,
         candidate_offsets=offsets,
     )
 
-    chosen = plan.coefficients.detach().to(torch.float64).cpu()
-    # The plan comes back in the benefit's dtype, so a coefficient that is not
-    # exactly representable there (0.1 in float32) differs from the registered
-    # float64 value by a rounding step. Match at the precision the round trip
-    # actually has, not at float64 precision it never had.
-    atol = 1e-12 if offsets.dtype == torch.float64 else 1e-6
-    reference = registry.reference_entry
-    for entry in ([reference] + [e for e in registry.entries if e is not reference]):
-        row = torch.tensor(entry.coefficients, dtype=torch.float64)
-        if torch.allclose(row, chosen, rtol=0., atol=atol):
+    # Finite selection carries the winning row index through the planner.  Do
+    # not infer identity from approximate coefficient equality: a valid tiny
+    # nonzero candidate can be within the old 1e-6 tolerance of the no-edit
+    # row after a float32 round trip.
+    if plan.candidate_index is not None:
+        ordered = [registry.reference_entry] + [
+            e for e in registry.entries if e is not registry.reference_entry
+        ]
+        idx = int(plan.candidate_index)
+        if 0 <= idx < len(ordered):
+            entry = ordered[idx]
             return RegistrySelection(
                 plan_id=entry.plan_id,
                 coefficients=tuple(float(a) for a in entry.coefficients),
@@ -391,7 +405,7 @@ def select_from_registry(registry, benefit: Tensor, gram: Tensor, *,
             )
 
     raise ValueError(
-        f'selected coefficients {chosen.tolist()} match no registered plan in '
+        f'finite planner returned no registered candidate identity in '
         f'{summary["registry"]!r}; the planner returned a program the registry '
         'does not contain'
     )

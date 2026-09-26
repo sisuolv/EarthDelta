@@ -66,6 +66,13 @@ def test_evaluate_enforces_year_gate_before_loader_access():
                     lead_times=[np.timedelta64(24, "h")])
 
 
+def test_evaluate_gates_valid_years_that_cross_calendar_boundary():
+    with pytest.raises(ev.YearNotAuthorized):
+        ev.evaluate("/does/not/exist/prediction.zarr", "/does/not/exist/truth.zarr",
+                    init_times=[np.datetime64("2020-12-31T00", "ns")],
+                    lead_times=[np.timedelta64(72, "h")])
+
+
 def test_single_chunk_year_gate_when_issue_times_are_supplied():
     p = {"x": np.zeros((1, 1), dtype=np.float32)}
     t = {"x": np.zeros((1, 1), dtype=np.float32)}
@@ -74,6 +81,11 @@ def test_single_chunk_year_gate_when_issue_times_are_supplied():
     with pytest.raises(ev.YearNotAuthorized):
         ev.evaluate_single_chunk(
             p, t, init_times=[np.datetime64("2022-01-01T00", "ns")]
+        )
+    with pytest.raises(ev.YearNotAuthorized):
+        ev.evaluate_single_chunk(
+            p, t, init_times=[np.datetime64("2020-12-31T00", "ns")],
+            valid_times=[np.datetime64("2021-01-03T00", "ns")]
         )
 
 
