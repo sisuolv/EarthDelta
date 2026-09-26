@@ -6,7 +6,7 @@
 你是一名独立审稿人，同时具备机器学习天气预报（ML-NWP）、统计评估和研究工程经验。请对 GitHub 私有仓库 sisuolv/EarthDelta 做一次证据优先的独立审核。用中文回答。
 
 ==================== 0. 固定版本与可见范围 ====================
-- 审核对象：分支 main，提交 9e91191。先报告你实际读到的 HEAD；如果不是 9e91191，说明差异，再按 9e91191 审核。
+- 审核对象：分支 main。代码与实验证据以提交 9e91191 为准；其后的提交只新增本 prompt、调整 README 链接，并让 reviews/claude_independent_review_20260926/scalar_recheck.py 自动定位仓库根目录。先报告你实际读到的 HEAD，并用 git log 确认 9e91191 之后的提交只改动了 README.md 和 reviews/；如果还改动了别的文件，列出差异再继续。
 - 以下内容不在 git 中，你看不到：ERA5 zarr（data/）、Stormer 检查点、GPU 产物与端点数组（artifacts/）、数据拉取日志（checkpoints/*.log）、仓库外的 Codex 执行目录、reference/ 下的第三方克隆。Stormer 官方代码请直接看 https://github.com/tung-nd/stormer（项目固定在 commit 58dfee5）。
 - 凡结论依赖不可见内容，标 UNVERIFIABLE，不要猜，也不要把文档里的叙述当成已核实的事实。
 
