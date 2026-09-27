@@ -38,6 +38,8 @@ def main() -> int:
     ap.add_argument("--spec", required=True)
     ap.add_argument("--run-dir", required=True)
     ap.add_argument("--norm-dir", default="reference/stormer/normalization_constants")
+    ap.add_argument("--cache-dir", default=None,
+                    help="optional directory for hash-bound per-index float32 NPY cache")
     ap.add_argument("--job", default="local")
     args = ap.parse_args()
     run = Path(args.run_dir).resolve(); run.mkdir(parents=True, exist_ok=True)
@@ -47,7 +49,7 @@ def main() -> int:
     guard = ProbeAccessController(spec, ledger, run_id=run.name)
     receipt = {"schema": "earthdelta.probe.data_qc.v1", "status": "BLOCKED", "spec_sha256": spec.sha256,
                "store": str(store), "job": args.job, "failure_list": [], "excluded_issues": {},
-               "per_index": {}, "metadata": {}}
+               "per_index": {}, "cache_files": {}, "metadata": {}}
     try:
         complete = store / "COMPLETE.json"
         expected_complete = "56a6f69aa99e76d9ca3dc977860205bdc05b04fbac85a8343ad53b39798a2d9c"
@@ -81,6 +83,11 @@ def main() -> int:
         std = np.asarray([stds[name].reshape(-1)[0] for name in channels], dtype=np.float64)
         if not np.isfinite(std).all() or np.any(std <= 0):
             raise RuntimeError("normalization std invalid")
+        cache_dir = Path(args.cache_dir).resolve() if args.cache_dir else None
+        if cache_dir is not None:
+            cache_dir.mkdir(parents=True, exist_ok=True)
+            receipt["cache_dir"] = str(cache_dir)
+            receipt["cache_policy"] = "write only finite indices with max_abs_z <= 40; GPU stages read only these files"
         names = issue_sets(spec)
         indices = sorted({i for name in names for issue in names[name]
                           for i in range(issue_index(issue), issue_index(issue) + max(spec.rollout_steps) + 1)})
@@ -100,6 +107,17 @@ def main() -> int:
             receipt["per_index"][str(index)] = row
             if (not finite) or (not np.isfinite(max_z)) or max_z > 40.0:
                 failures.add(index)
+            elif cache_dir is not None:
+                # Keep one immutable, decoded float32 payload per enrolled index.
+                # GPU stages verify this digest before loading it and never open Zarr.
+                cache_path = cache_dir / f"index_{index:04d}.npy"
+                np.save(cache_path, np.ascontiguousarray(array, dtype=np.float32), allow_pickle=False)
+                receipt["cache_files"][str(index)] = {
+                    "path": str(cache_path),
+                    "sha256": sha256_file(cache_path),
+                    "shape": list(array.shape),
+                    "dtype": str(array.dtype),
+                }
         receipt["failure_list"] = sorted(failures)
         for name, issues in names.items():
             excluded = [issue for issue in issues if failures.intersection(
