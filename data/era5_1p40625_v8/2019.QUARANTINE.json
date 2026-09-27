@@ -1,0 +1,26 @@
+{
+  "schema": "earthdelta.probe.quarantine.v1",
+  "status": "QUARANTINED",
+  "store": "data/era5_1p40625_v8/2019.zarr",
+  "reason": "This probe is bound exclusively to the 2020 store. The 2019 v8 store remains quarantined and is not opened or used.",
+  "findings": [
+    {
+      "id": "C-03",
+      "summary": "Dynamic expert weights were not previously serialized with a verified load/output round trip.",
+      "scope": "historical v8 bank artifacts",
+      "disposition": "do_not_consume"
+    },
+    {
+      "id": "C-07",
+      "summary": "The legacy quadratic_gain path could divide by a zero feature slice under broadcast weights.",
+      "scope": "historical paired/head diagnostic path",
+      "disposition": "do_not_consume"
+    }
+  ],
+  "probe_policy": {
+    "payload_access": "forbidden",
+    "allowed_store": "data/era5_1p40625_v8/2020.zarr",
+    "network_download": false,
+    "v8_runner": "paused"
+  }
+}
