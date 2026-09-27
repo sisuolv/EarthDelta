@@ -43,12 +43,15 @@ def main() -> int:
     ap.add_argument("--shard-index", type=int, default=0)
     ap.add_argument("--shards", type=int, default=1)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--extension", action="store_true",
+                    help="approved multiplier-8/16 extension after P5 trigger")
     args = ap.parse_args()
     run = Path(args.run_dir).resolve(); run.mkdir(parents=True, exist_ok=True)
     spec = load_probe_spec(args.spec, expected_sha256="bf247b2abc86ef81be62a7aa5a26318532ca3e3b5ceaeb492c98387781518348")
     receipt = {"schema": "earthdelta.probe.menu_eval.v1", "status": "BLOCKED",
                "spec_sha256": spec.sha256, "job": args.job, "shard_index": args.shard_index,
-               "shards": args.shards, "dry_run": bool(args.dry_run)}
+               "shards": args.shards, "dry_run": bool(args.dry_run),
+               "extension": bool(args.extension)}
     try:
         qc = json.loads((run / "DATA_QC_RECEIPT.json").read_text())
         direction_receipt = json.loads((run / "DIRECTIONS_RECEIPT.json").read_text())
@@ -82,8 +85,9 @@ def main() -> int:
             a_grad = a_grad[:1]; a_rand = a_rand[:1]
             multipliers = [0.25, 0.5]
         else:
-            multipliers = [0.25, 0.5, 1.0, 2.0, 4.0]
-            (run / "P4_STARTED.marker").write_text(datetime.now(timezone.utc).isoformat() + "\n")
+            multipliers = [0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0] if args.extension else [0.25, 0.5, 1.0, 2.0, 4.0]
+            marker = "P4_EXTENSION_STARTED.marker" if args.extension else "P4_STARTED.marker"
+            (run / marker).write_text(datetime.now(timezone.utc).isoformat() + "\n")
 
         grad_rows=[]; rand_rows=[]; ttt_rows=[]; ttt_grad_norms=[]
         grad_meta=[]; rand_meta=[]; ttt_meta=[]
@@ -127,7 +131,8 @@ def main() -> int:
             ttt_rows.append(np.stack(row_ttt))
             grad_meta=row_grad_meta; rand_meta=row_rand_meta; ttt_grad_norms.append(norm); ttt_meta=row_ttt_meta
         if not grad_rows: raise RuntimeError("shard has no issue rows")
-        out=run/f"MENU_EVAL_SHARD_{args.shard_index:02d}.npz"
+        prefix = "MENU_EVAL_EXTENSION_SHARD" if args.extension else "MENU_EVAL_SHARD"
+        out=run/f"{prefix}_{args.shard_index:02d}.npz"
         np.savez_compressed(out, issue_times=np.asarray(issues), mse_grad=np.asarray(grad_rows),
                             mse_rand=np.asarray(rand_rows), mse_ttt=np.asarray(ttt_rows),
                             grad_arm_labels=np.asarray(grad_meta),rand_arm_labels=np.asarray(rand_meta),
@@ -140,7 +145,12 @@ def main() -> int:
                         "multipliers":multipliers})
     except Exception as exc:
         receipt.update({"status":"BLOCKED","error":f"{type(exc).__name__}: {exc}"})
-    name="P4_DRY_RUN_RECEIPT.json" if args.dry_run else f"MENU_EVAL_RECEIPT_{args.shard_index:02d}.json"
+    if args.dry_run:
+        name="P4_DRY_RUN_RECEIPT.json"
+    elif args.extension:
+        name=f"MENU_EVAL_EXTENSION_RECEIPT_{args.shard_index:02d}.json"
+    else:
+        name=f"MENU_EVAL_RECEIPT_{args.shard_index:02d}.json"
     (run/name).write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\n")
     print(json.dumps(receipt,indent=2,sort_keys=True)); return 0 if receipt["status"]=="OBSERVED" else 2
 
