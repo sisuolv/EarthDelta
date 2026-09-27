@@ -79,9 +79,18 @@ def flat_delta(vector: np.ndarray, params, device: torch.device) -> dict[int, to
     return out
 
 
+def _assert_full_trajectory(value: torch.Tensor, name: str) -> None:
+    if value.ndim != 5 or value.shape[1] != 21:
+        raise ValueError(f"{name} must be a full [B,21,C,H,W] trajectory; got {tuple(value.shape)}")
+
+
 def cell_mse(pred_norm: torch.Tensor, truth_raw: torch.Tensor, bridge, lat: np.ndarray,
              variables, leads) -> np.ndarray:
-    pred_raw = bridge.denormalize(pred_norm.reshape(-1,69,128,256)).reshape_as(pred_norm)
+    """Compute metric cells from full trajectories using physical step indices."""
+    _assert_full_trajectory(pred_norm, "pred_norm")
+    _assert_full_trajectory(truth_raw, "truth_raw")
+    _, _, channels, height, width = pred_norm.shape
+    pred_raw = bridge.denormalize(pred_norm.reshape(-1,channels,height,width)).reshape_as(pred_norm)
     out = np.empty((len(variables),len(leads)),dtype=np.float64)
     for vi,v in enumerate(variables):
         ch=int(v["channel_index"])
@@ -91,15 +100,20 @@ def cell_mse(pred_norm: torch.Tensor, truth_raw: torch.Tensor, bridge, lat: np.n
     return out
 
 
-def normalized_rms(pred_norm: torch.Tensor, truth_raw: torch.Tensor, bridge,
-                   lat: np.ndarray) -> float:
+def calibration_effect(edited_norm: torch.Tensor, f0_norm: torch.Tensor,
+                       truth_raw: torch.Tensor, bridge, lat: np.ndarray) -> float:
+    """Frozen 24h calibration effect; all arguments are full 21-step paths."""
+    _assert_full_trajectory(edited_norm, "edited_norm")
+    _assert_full_trajectory(f0_norm, "f0_norm")
+    _assert_full_trajectory(truth_raw, "truth_raw")
     truth_norm = bridge.normalize(truth_raw)
-    delta = pred_norm[:, int(24//6)] - truth_norm[:, int(24//6)]
+    delta = edited_norm[:, 4] - f0_norm[:, 4]
     weights = torch.as_tensor(np.cos(np.deg2rad(lat)),dtype=delta.dtype,device=delta.device)
     weights = weights[:,None] / weights.sum()
-    # Mean over the 69 state channels and cosine-latitude weighted grid.
-    per_issue = (delta.square() * weights).mean(dim=1).sum(dim=(-1,-2))
-    return float(torch.sqrt(per_issue.mean()).detach().cpu())
+    numerator = torch.sqrt((delta.square() * weights).mean(dim=1).sum(dim=(-1,-2)))
+    error = f0_norm[:, 4] - truth_norm[:, 4]
+    denominator = torch.sqrt((error.square() * weights).mean(dim=1).sum(dim=(-1,-2)))
+    return float(torch.sqrt(torch.mean((numerator / denominator).square())).detach().cpu())
 
 
 def main() -> int:
@@ -135,9 +149,9 @@ def main() -> int:
         for issue in d_issues:
             data=load_issue(qc,issue,cache_dir=Path(args.cache_dir),ledger=run/"ACCESS_LEDGER.jsonl",run_id=run.name,job=args.job,stage="P3")
             x=loaded.bridge.normalize(torch.from_numpy(data[0:1]).float().to(device))
-            truth=torch.from_numpy(np.ascontiguousarray(data[[1,4,12,20]])).float().unsqueeze(0).to(device)
+            truth=torch.from_numpy(np.ascontiguousarray(data)).float().unsqueeze(0).to(device)
             with torch.inference_mode(): f0=rollout_trajectory(loaded.bridge,x,steps=20)
-            f0_cells.append(cell_mse(f0[:,[1,4,12,20]],truth,loaded.bridge,lat,spec.variables,spec.leads))
+            f0_cells.append(cell_mse(f0,truth,loaded.bridge,lat,spec.variables,spec.leads))
             f0_data.append((data,x,truth,f0.detach()))
         f0_cells=np.asarray(f0_cells); denom=np.sqrt(f0_cells.mean(axis=0)); denominator={f"{v['name']}@{lead}h":float(denom[vi,li]) for vi,v in enumerate(spec.variables) for li,lead in enumerate(spec.leads)}
         # One gradient per D issue, retained on CPU for the Gram construction.
@@ -169,22 +183,15 @@ def main() -> int:
         cal_data=[]
         for issue in cal:
             data=load_issue(qc,issue,cache_dir=Path(args.cache_dir),ledger=run/"ACCESS_LEDGER.jsonl",run_id=run.name,job=args.job,stage="P3")
-            x=loaded.bridge.normalize(torch.from_numpy(data[0:1]).float().to(device)); truth=torch.from_numpy(np.ascontiguousarray(data[[1,4,12,20]])).float().unsqueeze(0).to(device)
-            with torch.inference_mode(): f0=rollout_trajectory(loaded.bridge,x,steps=4)
+            x=loaded.bridge.normalize(torch.from_numpy(data[0:1]).float().to(device)); truth=torch.from_numpy(np.ascontiguousarray(data)).float().unsqueeze(0).to(device)
+            with torch.inference_mode(): f0=rollout_trajectory(loaded.bridge,x,steps=20)
             cal_data.append((x,truth,f0.detach()))
         def effect(direction,a):
             vals=[]
             delta=flat_delta(direction*a,params,device)
             for x,truth,f0 in cal_data:
-                with torch.inference_mode(): edited=rollout_trajectory(loaded.bridge,x,steps=4,deltas=delta)
-                num=normalized_rms(edited,f0[:,[1,2,3,4]].detach() if False else loaded.bridge.denormalize(f0[:,[4]]),loaded.bridge,loaded.bridge,lat) if False else None
-                # Both terms are measured in normalized state units at 24h.
-                diff=edited[:,4]-f0[:,4]
-                w=torch.as_tensor(np.cos(np.deg2rad(lat)),dtype=diff.dtype,device=diff.device); w=w[:,None]/w.sum()
-                n=torch.sqrt((diff.square()*w).mean(dim=1).sum(dim=(-1,-2)))
-                truthn=loaded.bridge.normalize(truth)[:,3]
-                e=f0[:,4]-truthn; den=torch.sqrt((e.square()*w).mean(dim=1).sum(dim=(-1,-2)))
-                vals.append(float((n/den).detach().cpu()))
+                with torch.inference_mode(): edited=rollout_trajectory(loaded.bridge,x,steps=20,deltas=delta)
+                vals.append(calibration_effect(edited, f0, truth, loaded.bridge, lat))
             return float(np.sqrt(np.mean(np.square(vals))))
         def calibrate(direction):
             lo,hi=1e-4,1e3; target=.1

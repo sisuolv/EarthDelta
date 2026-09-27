@@ -98,7 +98,12 @@ def area_weighted_mse(pred_raw: torch.Tensor, truth_raw: torch.Tensor, latitude:
 def l6_per_issue(pred_norm: torch.Tensor, truth_raw: torch.Tensor, bridge: WeatherStepBridge,
                  latitude: np.ndarray, variables: Sequence[Mapping[str, object]],
                  leads: Sequence[int], denominator: Mapping[str, float]) -> torch.Tensor:
-    pred_raw = bridge.denormalize(pred_norm.reshape(-1, 69, 128, 256)).reshape_as(pred_norm)
+    if pred_norm.ndim != 5 or pred_norm.shape[1] != 21:
+        raise ValueError(f"pred_norm must be a full [B,21,C,H,W] trajectory; got {tuple(pred_norm.shape)}")
+    if truth_raw.ndim != 5 or truth_raw.shape[1] != 21:
+        raise ValueError(f"truth_raw must be a full [B,21,C,H,W] trajectory; got {tuple(truth_raw.shape)}")
+    _, _, channels, height, width = pred_norm.shape
+    pred_raw = bridge.denormalize(pred_norm.reshape(-1, channels, height, width)).reshape_as(pred_norm)
     terms = []
     for var in variables:
         name = str(var["name"]); channel = int(var["channel_index"])
@@ -116,7 +121,12 @@ def l6_per_issue(pred_norm: torch.Tensor, truth_raw: torch.Tensor, bridge: Weath
 def l6_cells(pred_norm: torch.Tensor, truth_raw: torch.Tensor, bridge: WeatherStepBridge,
               latitude: np.ndarray, variables: Sequence[Mapping[str, object]],
               leads: Sequence[int], denominator: Mapping[str, float]) -> np.ndarray:
-    pred_raw = bridge.denormalize(pred_norm.reshape(-1, 69, 128, 256)).reshape_as(pred_norm)
+    if pred_norm.ndim != 5 or pred_norm.shape[1] != 21:
+        raise ValueError(f"pred_norm must be a full [B,21,C,H,W] trajectory; got {tuple(pred_norm.shape)}")
+    if truth_raw.ndim != 5 or truth_raw.shape[1] != 21:
+        raise ValueError(f"truth_raw must be a full [B,21,C,H,W] trajectory; got {tuple(truth_raw.shape)}")
+    _, _, channels, height, width = pred_norm.shape
+    pred_raw = bridge.denormalize(pred_norm.reshape(-1, channels, height, width)).reshape_as(pred_norm)
     out = np.empty((len(variables), len(leads)), dtype=np.float64)
     for vi, var in enumerate(variables):
         channel = int(var["channel_index"]); name = str(var["name"])
