@@ -86,6 +86,10 @@ def main() -> int:
         lat = np.asarray(coords["lat"], dtype=np.float64)
         if lat.shape != (128,):
             raise RuntimeError(f"unexpected latitude cache shape: {lat.shape}")
+        # From this point onward a failure is a started-stage technical
+        # failure, not an ACP launch retry.
+        (run / f"P2_{args.engine}_STARTED.marker").write_text(
+            datetime.now(timezone.utc).isoformat() + "\n")
         if not torch.cuda.is_available():
             raise RuntimeError("CUDA is unavailable")
         device = torch.device(args.device)
