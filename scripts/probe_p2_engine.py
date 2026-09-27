@@ -12,7 +12,7 @@ import time
 import numpy as np
 import torch
 
-from earthdelta.probe import ProbeAccessController, load_probe_spec, issue_sets, issue_index
+from earthdelta.probe import load_probe_spec, issue_sets, issue_index
 from earthdelta.probe.rollout import load_bridge, rollout_trajectory, TARGET_BLOCKS
 
 
@@ -24,6 +24,34 @@ def digest(path: Path) -> str:
     return h.hexdigest()
 
 
+def load_cache_row(qc: dict, index: int, *, cache_dir: Path, ledger: Path,
+                   run_id: str, job: str) -> np.ndarray:
+    """Load one hash-bound P1 payload; GPU stages never open the Zarr store."""
+    row = qc.get("cache_files", {}).get(str(index))
+    if not row:
+        raise RuntimeError(f"P1 cache is missing index {index}")
+    path = Path(row["path"])
+    if not path.is_absolute():
+        path = cache_dir / path
+    if digest(path) != row.get("sha256"):
+        raise RuntimeError(f"P1 cache hash mismatch at index {index}")
+    array = np.asarray(np.load(path, allow_pickle=False))
+    if list(array.shape) != list(row.get("shape", [])):
+        raise RuntimeError(f"P1 cache shape mismatch at index {index}: {array.shape}")
+    decoded = hashlib.sha256(np.ascontiguousarray(array).tobytes()).hexdigest()
+    expected = qc.get("per_index", {}).get(str(index), {}).get("decoded_sha256")
+    if decoded != expected:
+        raise RuntimeError(f"P1 decoded cache hash mismatch at index {index}")
+    with ledger.open("a", encoding="utf-8") as f:
+        f.write(json.dumps({"schema": "earthdelta.probe.access.v1", "run_id": run_id,
+                            "path": str(path), "indices": [index],
+                            "purpose": "engine_qualification_cache", "stage": "P2",
+                            "job": job, "array_payload": True,
+                            "decoded_sha256": decoded, "shape": list(array.shape)},
+                           sort_keys=True, separators=(",", ":")) + "\n")
+    return array
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--spec", required=True)
@@ -31,6 +59,8 @@ def main() -> int:
     ap.add_argument("--norm-dir", required=True)
     ap.add_argument("--checkpoint", required=True)
     ap.add_argument("--engine", choices=("H100", "RTX5090"), required=True)
+    ap.add_argument("--cache-dir", required=True,
+                    help="P1 per-index NPY cache; the worker must not open Zarr")
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--job", default="local")
     args = ap.parse_args()
@@ -47,6 +77,15 @@ def main() -> int:
         issue_times = [x for x in issue_sets(spec)["EQ_engine_qual"] if x not in excluded]
         if not issue_times:
             raise RuntimeError("all engine qualification issues excluded")
+        cache_dir = Path(args.cache_dir).resolve()
+        coordinate = json.loads(json.dumps(qc.get("coordinate_cache", {})))
+        coord_path = Path(coordinate.get("path", ""))
+        if not coord_path.exists() or digest(coord_path) != coordinate.get("sha256"):
+            raise RuntimeError("P1 coordinate cache is missing or hash-invalid")
+        coords = np.load(coord_path, allow_pickle=False)
+        lat = np.asarray(coords["lat"], dtype=np.float64)
+        if lat.shape != (128,):
+            raise RuntimeError(f"unexpected latitude cache shape: {lat.shape}")
         if not torch.cuda.is_available():
             raise RuntimeError("CUDA is unavailable")
         device = torch.device(args.device)
@@ -55,15 +94,15 @@ def main() -> int:
         loaded = load_bridge(args.checkpoint, args.norm_dir, device)
         if loaded.checkpoint_sha256 != spec.raw["bindings"]["checkpoint"]["sha256"]:
             raise RuntimeError("checkpoint hash mismatch")
-        guard = ProbeAccessController(spec, run / "ACCESS_LEDGER.jsonl", run_id=run.name)
-        group = guard.open_zarr(spec.store_path, stage="P2", job=args.job)
-        lat = np.asarray(guard.read_coordinate(spec.store_path, "lat", purpose="metric_latitude", stage="P2", job=args.job), dtype=np.float64)
         rows = []; mse_rows = []; six_norm = []; zero_edit_max = []
         start = time.perf_counter()
         for issue in issue_times:
             i0 = issue_index(issue)
             values = list(range(i0, i0 + 21))
-            data = guard.read(spec.store_path, values, purpose="engine_qualification", stage="P2", job=args.job)
+            data = np.stack([load_cache_row(qc, idx, cache_dir=cache_dir,
+                                            ledger=run / "ACCESS_LEDGER.jsonl",
+                                            run_id=run.name, job=args.job)
+                             for idx in values], axis=0)
             x_raw = torch.from_numpy(np.ascontiguousarray(data[0:1])).float().to(device)
             truth = torch.from_numpy(np.ascontiguousarray(data[[1, 4, 12, 20]])).float().unsqueeze(0).to(device)
             x_norm = loaded.bridge.normalize(x_raw)
