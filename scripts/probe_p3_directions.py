@@ -122,6 +122,11 @@ def main() -> int:
         loaded=load_bridge(args.checkpoint,args.norm_dir,device)
         if loaded.checkpoint_sha256!=spec.raw["bindings"]["checkpoint"]["sha256"]: raise RuntimeError("checkpoint hash mismatch")
         params=target_params(loaded.model); total=sum(p.numel() for _,p in params)
+        # Direction gradients are only taken with respect to F1 target
+        # projections; freezing all other parameters reduces graph memory while
+        # leaving the forward map unchanged.
+        for p in loaded.model.parameters(): p.requires_grad_(False)
+        for _, p in params: p.requires_grad_(True)
         started=run/"P3_STARTED.marker"; started.write_text(datetime.now(timezone.utc).isoformat()+"\n")
         names=issue_sets(spec); d_issues=names["D_direction"]
         # Freeze the L6 denominators from pristine F0 on D_direction.
@@ -140,7 +145,7 @@ def main() -> int:
         for idx,(data,x,truth,_f0) in enumerate(f0_data):
             begin=time.perf_counter()
             loaded.model.zero_grad(set_to_none=True)
-            pred=rollout_trajectory(loaded.bridge,x,steps=20,differentiable=True)
+            pred=rollout_trajectory(loaded.bridge,x,steps=20,differentiable=True,checkpoint_steps=True)
             # Keep the full 0..20 trajectory: l6_per_issue indexes the
             # physical lead step directly (1, 4, 12, 20).
             loss=l6_per_issue(pred,truth,loaded.bridge,lat,spec.variables,spec.leads,denominator)

@@ -7,6 +7,7 @@ from typing import Mapping, Sequence
 
 import numpy as np
 import torch
+from torch.utils.checkpoint import checkpoint as torch_checkpoint
 
 from earthdelta.bridge import (
     DEFAULT_VARIABLES,
@@ -48,7 +49,8 @@ def load_bridge(checkpoint: str | Path, norm_dir: str | Path, device: torch.devi
 def rollout_trajectory(bridge: WeatherStepBridge, x_norm: torch.Tensor, *, steps: int,
                        deltas: Mapping[int, torch.Tensor] | None = None,
                        target_blocks: Sequence[int] = TARGET_BLOCKS,
-                       differentiable: bool = False) -> torch.Tensor:
+                       differentiable: bool = False,
+                       checkpoint_steps: bool = False) -> torch.Tensor:
     """Return normalized states [B, steps+1, 69, 128, 256]."""
     if x_norm.ndim != 4 or x_norm.shape[1:] != (69, 128, 256):
         raise ValueError(f"unexpected normalized input shape: {tuple(x_norm.shape)}")
@@ -66,7 +68,13 @@ def rollout_trajectory(bridge: WeatherStepBridge, x_norm: torch.Tensor, *, steps
         x = x_norm
         for _ in range(steps):
             padded, pad_size = bridge.pad(x)
-            output = bridge.model(padded, list(DEFAULT_VARIABLES), interval_tensor)
+            if differentiable and checkpoint_steps:
+                output = torch_checkpoint(
+                    lambda value: bridge.model(value, list(DEFAULT_VARIABLES), interval_tensor),
+                    padded, use_reentrant=False,
+                )
+            else:
+                output = bridge.model(padded, list(DEFAULT_VARIABLES), interval_tensor)
             diff = output[:, :, pad_size:]
             diff = bridge.normalization.replace_constant(diff, list(DEFAULT_VARIABLES))
             diff = bridge.normalization.denormalize_diff(diff, interval)
