@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+import fcntl
 import hashlib
 import json
 from pathlib import Path
@@ -44,11 +45,18 @@ def cache_row(qc: dict, index: int, *, cache_dir: Path, ledger: Path,
     if decoded != qc.get("per_index", {}).get(str(index), {}).get("decoded_sha256"):
         raise RuntimeError(f"P1 decoded hash mismatch at {index}")
     with ledger.open("a", encoding="utf-8") as f:
-        f.write(json.dumps({"schema":"earthdelta.probe.access.v1","run_id":run_id,
-                            "path":str(path),"indices":[index],"purpose":"cache_read",
-                            "stage":stage,"job":job,"array_payload":True,
-                            "decoded_sha256":decoded,"shape":list(value.shape)},
-                           sort_keys=True,separators=(",", ":")) + "\n")
+        # Multiple ACP shards append to the single ledger concurrently.  Use an
+        # advisory lock so every JSONL record remains a complete line.
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+        try:
+            f.write(json.dumps({"schema":"earthdelta.probe.access.v1","run_id":run_id,
+                                "path":str(path),"indices":[index],"purpose":"cache_read",
+                                "stage":stage,"job":job,"array_payload":True,
+                                "decoded_sha256":decoded,"shape":list(value.shape)},
+                               sort_keys=True,separators=(",", ":")) + "\n")
+            f.flush()
+        finally:
+            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
     return value
 
 
