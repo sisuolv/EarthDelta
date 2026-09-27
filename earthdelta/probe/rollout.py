@@ -56,7 +56,11 @@ def rollout_trajectory(bridge: WeatherStepBridge, x_norm: torch.Tensor, *, steps
     interval_tensor = torch.full((x_norm.shape[0],), interval / 10.0,
                                  device=x_norm.device, dtype=x_norm.dtype)
     context = DirectWeightEditor(bridge.model, deltas or {}, blocks=target_blocks)
-    grad_context = context if deltas else torch.no_grad()
+    # A zero-delta rollout is inference-only by default, but direction
+    # construction needs gradients with respect to the pristine model weights.
+    # ``differentiable`` makes that intent explicit without changing the
+    # numerical forward path.
+    grad_context = context if (deltas or differentiable) else torch.no_grad()
     with grad_context:
         states = [x_norm]
         x = x_norm
