@@ -1,0 +1,15 @@
+{
+  "source_commit": "7771bb18de786724523e72df09804fe7e7debbb6",
+  "archive_filename": "EarthDelta_Review_Package_20260930.zip",
+  "archive_sha256": "974a65559459847f18336866f190ee292d239504c66dfc1a5311cf9956464192",
+  "archive_bytes": 2739254,
+  "archive_file_count": 742,
+  "uncompressed_bytes": 10659650,
+  "zip_crc_check": "PASS",
+  "member_hash_check": "PASS",
+  "unmodified_evidence_copies": 506,
+  "scientific_code_files_verified": 42,
+  "secret_pattern_findings": [],
+  "download_url": "https://github.com/sisuolv/EarthDelta/raw/refs/heads/online-stage0-20260930/reviews/online_stage0_20260930/EarthDelta_Review_Package_20260930.zip",
+  "source_commit_note": "Archive fixes the previous publication commit. The commit adding this archive does not change scientific code."
+}
