@@ -1,0 +1,100 @@
+{
+    "subscription_name": "0197ee17-b6eb-7846-b2b4-a77c5f509b92",
+    "resource_group_name": "default",
+    "zone": "cn-sh-01z",
+    "workspace_name": "share-space",
+    "name": "pt-0bnvpauj",
+    "uid": "6a854a0db0c84f0eba6765af1798ae36",
+    "display_name": "ed-v92-t1-reserved-072334",
+    "id": "/subscriptions/0197ee17-b6eb-7846-b2b4-a77c5f509b92/resourceGroups/default/zones/cn-sh-01z/workspaces/share-space/trainingJobs/pt-0bnvpauj",
+    "ownership": {
+        "requestor_id": "",
+        "tenant_id": "0197ee17-b6eb-7846-b2b4-a77c5f509b92",
+        "user_id": "01a042c9-2bfd-7169-af48-5fec08a63c8e",
+        "user_name": "260010168"
+    },
+    "framework": "PYTORCH",
+    "roles": [
+        {
+            "image_path": "registry.cn-sh-01g.sensecore.cn/lepton-trainingjob/nvidia24.04-ubuntu22.04-py3.10-cuda12.4-cudnn9.1-torch2.3.0-transformerengine1.5:v1.0.0-20241130-nvdia-base-image",
+            "name": "Worker",
+            "resource_spec": [
+                {
+                    "description": "1XN6lS-80GB",
+                    "limits": {
+                        "cpu": "4",
+                        "device": "1",
+                        "memory": "64",
+                        "nvidia.com/gpu": "1"
+                    },
+                    "name": "n6ls.iu.i40.1.4c64g",
+                    "replicas": 1,
+                    "requests": {
+                        "cpu": "4",
+                        "device": "1",
+                        "memory": "64",
+                        "nvidia.com/gpu": "1"
+                    }
+                }
+            ],
+            "startup_script": "timeout 1000s python3 -B /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tools/job_driver.py /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/jobs/t1_reserved/request.json",
+            "total_replicas": 1
+        }
+    ],
+    "mount": [
+        {
+            "access_mode": "VOLUME_ACCESS_MODE_UNSPECIFIED",
+            "endpoint": "",
+            "id": "01a04263-91e5-7603-bc01-c67e503da6b5",
+            "mount_options": "",
+            "mount_path": "/mnt/afs",
+            "name": "",
+            "region": "",
+            "subdir": "",
+            "type": "PV_AFS",
+            "zone": "cn-sh-01g"
+        }
+    ],
+    "tensorboard": {
+        "log_path": ""
+    },
+    "scheduling": {
+        "priority": "NORMAL",
+        "quota_type": "RESERVED",
+        "scoring_strategy": {
+            "type": "LEAST_ALLOCATED"
+        }
+    },
+    "resource_pool": {
+        "display_name": "computing_cluster",
+        "name": "share-cluster",
+        "vpc_id": "0198a254-1d71-7211-9a41-d5783abfe9aa",
+        "zone": "cn-sh-01g"
+    },
+    "state": "FAILED",
+    "root_mapping": false,
+    "fault_tolerance": {
+        "backoff_limit": 0,
+        "rules": []
+    },
+    "ssh": {
+        "auto_key_setup": false,
+        "config_mount_path": ""
+    },
+    "create_time": "2026-09-30T07:23:35Z",
+    "start_time": "2026-09-30T07:24:20Z",
+    "update_time": "2026-09-30T07:26:10.841274Z",
+    "complete_time": "2026-09-30T07:26:04Z",
+    "fine_tuning_specs": "",
+    "async_checkpoint": {
+        "max_ckpt_rounds": 0
+    },
+    "lme": {
+        "current_retries": 0,
+        "enable_checker": false,
+        "enable_health_monitor": false,
+        "enable_warmingup": false,
+        "max_retries": 0
+    },
+    "AdditionalProperties": {}
+}

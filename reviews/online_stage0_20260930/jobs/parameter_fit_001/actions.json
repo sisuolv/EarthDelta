@@ -1,0 +1,12 @@
+[
+  {
+    "action": "parameter_and_interval_negative_tests",
+    "exit_code": 0,
+    "wall_seconds": 14.16072354838252
+  },
+  {
+    "action": "fit_response_calibration_and_selection",
+    "exit_code": 0,
+    "wall_seconds": 1309.9360920265317
+  }
+]

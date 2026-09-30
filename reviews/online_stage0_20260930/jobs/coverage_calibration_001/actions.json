@@ -1,0 +1,12 @@
+[
+  {
+    "action": "registered_inference_tests",
+    "exit_code": 0,
+    "wall_seconds": 4.645119127817452
+  },
+  {
+    "action": "calibration_32_scenarios_sharded",
+    "exit_code": 0,
+    "wall_seconds": 48.04744124878198
+  }
+]

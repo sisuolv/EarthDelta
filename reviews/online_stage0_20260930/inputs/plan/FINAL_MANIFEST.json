@@ -1,0 +1,178 @@
+{
+  "schema": "earthdelta.plan_manifest.v1",
+  "utc": "2026-09-30T06:17:56.624240+00:00",
+  "status": "DRAFT_UNSIGNED",
+  "execution_authorized": false,
+  "head": "d55ad70854bcf535b86c761b8d9cf7a7981374a0",
+  "human_signature": "MISSING",
+  "scope": "v9.2 plan revision only; no new scientific execution",
+  "source_archive_sha256": "3310490bfacfae60734c0ae8f892bb06033ba1a4a88ad2add53d26c593c92b8b",
+  "source_review_manifest_sha256": "550f6afa87cf3eb5c83f2502831a33f913425516c1cbc3fb666fea63ec466760",
+  "validation": {
+    "checks": 69,
+    "synthetic_gate_examples": 9
+  },
+  "files": [
+    {
+      "path": "00_START_HERE.md",
+      "bytes": 3708,
+      "sha256": "2f8ac97b40edda40a052a50e12317b35427be8494719bac60932fcbe4c790e35"
+    },
+    {
+      "path": "01_BACKGROUND.md",
+      "bytes": 3752,
+      "sha256": "3079052da7cf079131d87f7160b18bd5909bdd05eb51da4df8c0e41029518d4c"
+    },
+    {
+      "path": "02_CODE_REUSE_MAP.md",
+      "bytes": 2324,
+      "sha256": "3aaccf10fdbe109c4f9384c319901392bdf34cdb44963f5367b2cabfd6524328"
+    },
+    {
+      "path": "03_RULES_AND_PITFALLS.md",
+      "bytes": 2486,
+      "sha256": "50b0799f1a7ee84c4bf7234fd422149b09636c7129d7b637cc25aac898423543"
+    },
+    {
+      "path": "AMENDMENT_LOG.md",
+      "bytes": 6013,
+      "sha256": "6581e15b7105cf6613e3c98053c3a8757235c3e71019308eca89656c60e63184"
+    },
+    {
+      "path": "AMENDMENT_TRACKER.json",
+      "bytes": 7748,
+      "sha256": "f70cd425aea197b7022358ad25cf10806a5ddedb55a0ff44a89678351a5b4b84"
+    },
+    {
+      "path": "AUTHORIZATIONS.md",
+      "bytes": 2130,
+      "sha256": "dcdfb90c4edc6262fd9d0bb467d19f1a269640a0a74ae5ffeb44747ab5ab7ef0"
+    },
+    {
+      "path": "BUDGET.md",
+      "bytes": 3919,
+      "sha256": "5d00ccef3f77335e2fa9335d4cd6d8e4cd0aae0fbc968efc57f55dd7fe594088"
+    },
+    {
+      "path": "CLAUDE_ROOT_PROPOSED.md",
+      "bytes": 2046,
+      "sha256": "abe09f32bbea041cf5dc899dc9ca84dc1751244d421a10499724d0a79ad07b53"
+    },
+    {
+      "path": "DATA_POLICY.md",
+      "bytes": 6045,
+      "sha256": "27b7549eeea53ecdc9b95521bacd56e968af8a629af4b776aedbd45380efd75c"
+    },
+    {
+      "path": "DATA_ROSTER_DRAFT.json",
+      "bytes": 128377,
+      "sha256": "e7dbc69cbada6ba0bbcdd491e4085df43551907d448653161da3fba2c811a869"
+    },
+    {
+      "path": "DECISIONS_PROPOSED_DEFAULTS.json",
+      "bytes": 2973,
+      "sha256": "73cddcbaf41d437555c07ddd6ce469c8fcd05eafb9af28ae6dc9b62af5f2f18c"
+    },
+    {
+      "path": "EXECUTION_DAG.md",
+      "bytes": 1636,
+      "sha256": "236b08bb0dd3583890a85d6457d2d89711a9e66487680eec8464387cd538c79c"
+    },
+    {
+      "path": "LATER_PHASES.md",
+      "bytes": 1463,
+      "sha256": "970b579719f483c15831716830a9c5ddd71dfc088c3f45cb0690fcdf205803a3"
+    },
+    {
+      "path": "PHASE0_CONTRACT_DRAFT.json",
+      "bytes": 20893,
+      "sha256": "ea2e6ddeb31b9314b190f28e49680e440875dca2e579a268b2d0012e9d32498b"
+    },
+    {
+      "path": "PHASE0_PROTOCOL.md",
+      "bytes": 9629,
+      "sha256": "6bb04fb061bcc2ac7eec372901f3bfb9c1cd4b2f2d86bc69e92004467216fb2b"
+    },
+    {
+      "path": "PLAN_VALIDATION.json",
+      "bytes": 9043,
+      "sha256": "0ac2bd9958e8d5db18025a4b9aefe5ef4fa4e900b4cf1a6552982eb9ad73e49f"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2706,
+      "sha256": "634627b6072436270e87b229ba075e7acbbf934cc979f1f532c5e540348760af"
+    },
+    {
+      "path": "REUSE_DECISIONS.md",
+      "bytes": 2486,
+      "sha256": "411a59aef787857c75a860b3675c8af8831f8e91a7ec24727f89a27e523efc22"
+    },
+    {
+      "path": "REVIEW_REQUEST.md",
+      "bytes": 1288,
+      "sha256": "2664e09a2746ed918888984e7fc4cb2e4d307c6fceecfe910cde7efaed594ccd"
+    },
+    {
+      "path": "SOURCE_INDEX.json",
+      "bytes": 9231,
+      "sha256": "d45acecf6c277bd4d9cbf37ce3d60972a7aaa3b93b6215bf9f3cc2021d62d816"
+    },
+    {
+      "path": "STATISTICAL_PLAN.md",
+      "bytes": 6834,
+      "sha256": "ce6504796eaf0403d75040101dd859924fec5a63214524c32a772754bbbae8c6"
+    },
+    {
+      "path": "STOP_CONDITIONS.md",
+      "bytes": 1770,
+      "sha256": "391576ba6526e91eff283e78b48e0da6439d206e83f5f975acb36d2e31703b70"
+    },
+    {
+      "path": "T0_REUSE_AUDIT.md",
+      "bytes": 964,
+      "sha256": "8bc517614148d47f4899fb5b3c18c21bc6fc3535fd02c626259888b9cbf5daa5"
+    },
+    {
+      "path": "T1_BASELINE_AND_RETIREMENT.md",
+      "bytes": 1974,
+      "sha256": "12f9ac41249f016a95b9dffc70f72f6dcb69ade0d5f52f17a7b41d43a1491d27"
+    },
+    {
+      "path": "T2_ONLINE_HELPERS.md",
+      "bytes": 5420,
+      "sha256": "de66ff9b3bb55cc3bd225d47bb2ff40f79e2cf96b6888e77ae17ba411fcd653e"
+    },
+    {
+      "path": "T3A_P0_OUTPUT_SPACE.md",
+      "bytes": 4289,
+      "sha256": "0ecd318db982b9346af7b982dcc2f9f43c6f74e68dc205f201f364c3a36e07c2"
+    },
+    {
+      "path": "T3B_P0_PARAM_SPACE.md",
+      "bytes": 4531,
+      "sha256": "e0eae8f54e70116e227f3d5f7e57db54532b0d5045f205eb4f17176488a22622"
+    },
+    {
+      "path": "T4_P0_REPORT_AND_GATE1.md",
+      "bytes": 3595,
+      "sha256": "5a81c0d24f23a724a697a126e3f5cc2bdd7eafd495cc83763eede309e62b50b7"
+    },
+    {
+      "path": "T5_ONLINE_REPLAY.md",
+      "bytes": 1700,
+      "sha256": "d75046e61f17f4ce5b5794e9c1838a4a909b0ffb6617cffd70996db4af1ac39e"
+    },
+    {
+      "path": "T6_DATA_2021.md",
+      "bytes": 1200,
+      "sha256": "1e9b3bf784c398f8783909accbde4deb533cb1a43fcb9ea8d50948eaee6722a7"
+    },
+    {
+      "path": "TASKS.json",
+      "bytes": 11715,
+      "sha256": "eb616e744b2eadf225ec0bb85c58c03639cfa95cbcf7b62268bfc34e4688ecb2"
+    }
+  ],
+  "self_hash": "omitted to avoid recursion; bound by enclosing run manifest and ZIP"
+}

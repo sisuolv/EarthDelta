@@ -1,0 +1,21 @@
+manifest keys ['utc', 'repo', 'run', 'head', 'task', 'scope', 'input_archive', 'exclusions', 'validation', 'artifacts']
+manifest entries 99 ok 99 mismatch 0 [] missing 0 []
+INTERFACES_HOST_JUNIT.xml {'tests': '16', 'failures': '0', 'errors': '0', 'skipped': '5', 'time': '9.130'}
+INTERFACES_JUNIT.xml {'tests': '16', 'failures': '2', 'errors': '0', 'skipped': '5', 'time': '9.368'}
+EXISTING_CPU_JUNIT.xml {'tests': '1037', 'failures': '0', 'errors': '0', 'skipped': '62', 'time': '766.008'}
+   test_arch_resampling_weekly_differences[StationaryBootstrap] skipped
+   test_arch_resampling_weekly_differences[CircularBlockBootstrap] skipped
+   test_arch_multiple_comparison_interfaces[StepM] skipped
+   test_arch_multiple_comparison_interfaces[SPA] skipped
+   test_arch_multiple_comparison_interfaces[MCS] skipped
+   test_sklearn_interfaces[Ridge] passed
+   test_sklearn_interfaces[RidgeCV] passed
+   test_sklearn_interfaces[TimeSeriesSplit] passed
+   test_wbx_matches_correct_hand_area_pooling passed
+   test_wbx_relative_rmse_matches_v8 passed
+   test_issue_mse_constant_error_independent_of_width[8] passed
+   test_issue_mse_constant_error_independent_of_width[24] passed
+   test_memory_filter_and_copy_semantics passed
+   test_memory_daily_spacing_ewma_special_case passed
+   test_lora_factory_signature_and_zero_edit passed
+   test_direct_editor_partial_entry_failure_is_not_safe passed

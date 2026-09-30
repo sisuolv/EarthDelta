@@ -1,0 +1,34 @@
+ACTION new_tests_with_direction_controls
+Running 67 items in this shard
+...................................................................      [100%]
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/output_fit_001/JUNIT.xml -
+67 passed in 8.89s
+ACTION fit_only_outputspace
+Traceback (most recent call last):
+  File "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/output_fit_001/scripts/online_p0a_outputspace.py", line 42, in main
+    np.testing.assert_allclose(recomputed,slot['mse'],rtol=1e-12,atol=1e-15,err_msg='F0 cell reproduction failed')
+  File "/mnt/afs/260010168/EarthDelta/.pydeps/numpy/testing/_private/utils.py", line 1504, in assert_allclose
+    assert_array_compare(compare, actual, desired, err_msg=str(err_msg),
+  File "/usr/lib/python3.10/contextlib.py", line 79, in inner
+    return func(*args, **kwds)
+  File "/mnt/afs/260010168/EarthDelta/.pydeps/numpy/testing/_private/utils.py", line 797, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Not equal to tolerance rtol=1e-12, atol=1e-15
+F0 cell reproduction failed
+Mismatched elements: 31 / 36 (86.1%)
+Max absolute difference: 0.00012073
+Max relative difference: 9.00170854e-09
+ x: array([[6.075958e+02, 1.322110e+03, 1.717299e+03, 2.734081e+03,
+        3.458917e+04, 1.334871e+05],
+       [2.028602e-01, 3.664239e-01, 4.282571e-01, 5.156111e-01,...
+ y: array([[6.075958e+02, 1.322110e+03, 1.717299e+03, 2.734081e+03,
+        3.458917e+04, 1.334871e+05],
+       [2.028602e-01, 3.664239e-01, 4.282571e-01, 5.156111e-01,...
+{
+  "status": "BLOCKED",
+  "scope": "fit and selection only; analysis sealed",
+  "scientific_support": false,
+  "error": "AssertionError: \nNot equal to tolerance rtol=1e-12, atol=1e-15\nF0 cell reproduction failed\nMismatched elements: 31 / 36 (86.1%)\nMax absolute difference: 0.00012073\nMax relative difference: 9.00170854e-09\n x: array([[6.075958e+02, 1.322110e+03, 1.717299e+03, 2.734081e+03,\n        3.458917e+04, 1.334871e+05],\n       [2.028602e-01, 3.664239e-01, 4.282571e-01, 5.156111e-01,...\n y: array([[6.075958e+02, 1.322110e+03, 1.717299e+03, 2.734081e+03,\n        3.458917e+04, 1.334871e+05],\n       [2.028602e-01, 3.664239e-01, 4.282571e-01, 5.156111e-01,...",
+  "wall_seconds": 0.47614724934101105
+}

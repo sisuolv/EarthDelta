@@ -1,0 +1,12 @@
+[
+  {
+    "action": "all_new_synthetic_tests",
+    "exit_code": 0,
+    "wall_seconds": 10.04584975168109
+  },
+  {
+    "action": "H100_numerical_and_timing_preflight",
+    "exit_code": 0,
+    "wall_seconds": 130.56557216495275
+  }
+]

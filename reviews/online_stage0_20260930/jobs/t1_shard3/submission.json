@@ -1,0 +1,12 @@
+{
+  "stage": "t1_shard3",
+  "job_name": "ed-v92-t1-shard3-074623",
+  "resource": "reserved_h100",
+  "gpus": 1,
+  "created_utc": "2026-09-30T07:46:23.368253+00:00",
+  "request_sha256": "3155d7e8504c29fff3ed436e945b0480a4452a4f4611334d3368502541e25959",
+  "driver_sha256": "2fe324045c052a3a90bf082768336dbfd76a475f6cc4f20afff80bc9034d41b1",
+  "exit_code": 0,
+  "stdout": "job pt-m6og3e2v submitted successfully, please wait for scheduling!\n",
+  "stderr": ""
+}

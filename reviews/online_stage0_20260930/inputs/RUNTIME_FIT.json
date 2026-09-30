@@ -1,0 +1,49 @@
+{
+  "schema": "earthdelta.online.runtime.v1",
+  "contract": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/inputs/plan/PHASE0_CONTRACT_DRAFT.json",
+    "sha256": "ea2e6ddeb31b9314b190f28e49680e440875dca2e579a268b2d0012e9d32498b"
+  },
+  "roster": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/inputs/plan/DATA_ROSTER_DRAFT.json",
+    "sha256": "e7dbc69cbada6ba0bbcdd491e4085df43551907d448653161da3fba2c811a869"
+  },
+  "session_authorization": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/SESSION_AUTHORIZATION.json",
+    "sha256": "c87e23a449a711cd76f24660ce2138774b6bba48ff6f897775d421337ef52213"
+  },
+  "t2_receipt": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/receipts/T2_SYNTHETIC_002.json",
+    "sha256": "7a03959505d13456c1a87b8ae7291c31f1c3876f38d6175aca611a878a58a234"
+  },
+  "old_qc": {
+    "path": "/mnt/afs/260010168/earthdelta_probe_headroom_20260927T072245Z_resume01/DATA_QC_RECEIPT.json",
+    "sha256": "2518c98c12b488c244315369d832cfdb2f0480ac3a7eddf7a1370239e6f89797"
+  },
+  "old_spec": {
+    "path": "/mnt/afs/260010168/earthdelta_probe_headroom_20260927T072245Z_resume01/PROBE_SPEC.json",
+    "sha256": "bf247b2abc86ef81be62a7aa5a26318532ca3e3b5ceaeb492c98387781518348"
+  },
+  "norm_dir": "/mnt/afs/260010168/EarthDelta/reference/stormer/normalization_constants",
+  "qc_receipt": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/qc_001/QC_RECEIPT.json",
+    "sha256": "202a67ae631e83ff94f2c72a17f4eefbf3209997e6336f28042d385408e6d233"
+  },
+  "numerical_precheck": {
+    "official20": "bitwise_equal",
+    "zero_hook20": "bitwise_equal",
+    "fd_relative_weight_norm": [
+      0.0001,
+      5e-05
+    ],
+    "fd_relative_error_max": 0.05,
+    "checkpoint_steps": false,
+    "precision": "fp32_no_tf32",
+    "purpose": "engineering tolerances set before real numerical preflight; not scientific thresholds"
+  },
+  "engine_receipt": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/engine_001/ENGINE_RECEIPT.json",
+    "sha256": "c9bb5246ca96ebbd66b4de048c226c321295e64d8cc2f805b0e2ef97a1f383b8"
+  },
+  "preflight_charged_fit_upper_bound": 0.9302000733333333
+}

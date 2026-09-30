@@ -1,0 +1,11 @@
+{
+  "status": "OBSERVED",
+  "engineering_pass": true,
+  "passed": 59,
+  "required_skips": 0,
+  "junit": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/qc_001/JUNIT.xml",
+    "sha256": "330ff85347e6cfbf27e8d347cb79f48358a65cdad27f9ecf77139f942fb023af"
+  },
+  "scope": "T2 plus QC worker synthetic tests; no scientific skill claim"
+}

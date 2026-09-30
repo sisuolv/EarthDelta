@@ -1,0 +1,6 @@
+{
+  "started_utc": "2026-09-30T09:05:10.754692+00:00",
+  "hostname": "pt-c5c2646c084143a9a5f6d4a5fedebc34-worker-0",
+  "python": "3.10.12",
+  "cwd": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/parameter_fit_001"
+}

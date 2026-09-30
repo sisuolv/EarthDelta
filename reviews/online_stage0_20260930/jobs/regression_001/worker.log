@@ -1,0 +1,57 @@
+ACTION full_guarded_cpu_regression
+Running 1097 items in this shard
+........................................................................ [  6%]
+......................................................................s. [ 13%]
+........................................................ssssssssssssssss [ 19%]
+ssss.s.s.sssss...................sss..............................s..... [ 26%]
+........................................................................ [ 32%]
+.....................................................................s.. [ 39%]
+........................................................................ [ 45%]
+...............ssssssssssssssss......................................... [ 52%]
+........................................................................ [ 59%]
+.............................................................ss...ss.... [ 65%]
+.....................s.................................................. [ 72%]
+........................................................................ [ 78%]
+........................................................................ [ 85%]
+........................................................................ [ 91%]
+....ssss................................................................ [ 98%]
+........sss......                                                        [100%]
+=============================== warnings summary ===============================
+tests/test_probe_p3_layout.py:55
+  /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/regression_001/tests/test_probe_p3_layout.py:55: DeprecationWarning: invalid escape sequence '\['
+    with pytest.raises(ValueError, match="full \[B,21"):
+
+tests/test_probe_p3_layout.py:78
+  /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/regression_001/tests/test_probe_p3_layout.py:78: DeprecationWarning: invalid escape sequence '\['
+    with pytest.raises(ValueError, match="full \[B,21"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/regression_001/JUNIT.xml -
+=========================== short test summary info ============================
+SKIPPED [25] scripts/online_cpu_tests.py:30: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_content_verification_b08.py:113: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_content_verification_b08.py:125: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_content_verification_b08.py:138: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_content_verification_b08.py:148: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_content_verification_b08.py:156: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_content_verification_b08.py:165: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_content_verification_b08.py:249: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_content_verification_b08.py:256: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_content_verification_b08.py:262: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_content_verification_b08.py:277: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_content_verification_b08.py:297: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_content_verification_b08.py:385: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_content_verification_b08.py:432: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_loaded_admission_binding.py:108: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [12] tests/test_loaded_admission_binding.py:122: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_loaded_admission_binding.py:148: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_loaded_admission_binding.py:159: historical admission not present on this machine
+SKIPPED [1] tests/test_loaded_admission_binding.py:168: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_upstream_parity.py:112: CUDA not available
+SKIPPED [1] tests/test_upstream_parity.py:184: CUDA not available
+SKIPPED [1] tests/test_upstream_parity.py:249: Upstream reference not exported yet
+SKIPPED [1] tests/test_upstream_parity.py:270: Upstream reference outputs not exported yet
+SKIPPED [1] tests/test_wbx_export.py:326: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_wbx_export.py:343: synthetic CPU run refuses real arrays/checkpoints
+SKIPPED [1] tests/test_wbx_export.py:359: synthetic CPU run refuses real arrays/checkpoints
+1036 passed, 61 skipped, 4 deselected, 2 warnings in 601.16s (0:10:01)

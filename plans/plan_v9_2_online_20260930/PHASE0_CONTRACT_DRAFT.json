@@ -1,0 +1,722 @@
+{
+  "schema": "earthdelta.online.plan.v9.2",
+  "status": "DRAFT_UNSIGNED",
+  "execution_authorized": false,
+  "source_head": "d55ad70854bcf535b86c761b8d9cf7a7981374a0",
+  "source_branch": "probe-headroom-20260927",
+  "human_signature": "MISSING",
+  "signatures": {
+    "rules_before_any_pilot": "MISSING",
+    "analysis_after_fit_receipts": "MISSING",
+    "gate1": "MISSING"
+  },
+  "data": {
+    "allowed_year": 2020,
+    "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr",
+    "roster": "DATA_ROSTER_DRAFT.json",
+    "other_years_forbidden": [
+      2019,
+      2021,
+      2022
+    ],
+    "download_authorized": false,
+    "qc_z_threshold": 40.0,
+    "qc_scope": "all 69 channels per time row; explicit quarantine, never a proof of corruption",
+    "missing_input": "all arms NO_FORECAST; no labels from this issue",
+    "missing_truth": "cell mask at scoring; invalid feedback never released before or after availability",
+    "missing_arm_feature": "F0 fallback counted and scored; no date substitution",
+    "new_unexpected_qc_failure": "BLOCKED before analysis; preserve evidence",
+    "calibration_replacement": "none; missing registered calibration issue is BLOCKED, not silent shrinking"
+  },
+  "clock": {
+    "step_hours": 6,
+    "cutoff": "t",
+    "residual_available": "issue+lead",
+    "bundle_available": "issue+4",
+    "gradient_available": "issue+4",
+    "fresh_issue": "t-1 calendar day, never latest surviving issue",
+    "actual_available": "max(nominal label availability, dependent fitted artifact availability); offline calibration is not online publication",
+    "decay_age": "t - raw_label_available, not artifact build time or usable_after",
+    "offline_calibration_context": "estimate artifacts may be retrospective; per-issue raw feedback labels must satisfy label_available<=t; never publish these fit scores as historical online forecasts",
+    "bundle_variables": "all six scoring variables at steps 1,2,3,4",
+    "ocl_label_lineage": "must contain every raw supervision id used by lag1/lag1c at same cutoff",
+    "preanalysis_state": "replay released F0 records only; no retroactive corrected forecasts before artifact availability"
+  },
+  "metrics": {
+    "variables": [
+      {
+        "name": "Z500",
+        "channel": "geopotential_500",
+        "index": 11,
+        "unit": "m2 s-2"
+      },
+      {
+        "name": "T850",
+        "channel": "temperature_850",
+        "index": 53,
+        "unit": "K"
+      },
+      {
+        "name": "T2m",
+        "channel": "2m_temperature",
+        "index": 0,
+        "unit": "K"
+      },
+      {
+        "name": "MSLP",
+        "channel": "mean_sea_level_pressure",
+        "index": 3,
+        "unit": "Pa"
+      },
+      {
+        "name": "U850",
+        "channel": "u_component_of_wind_850",
+        "index": 27,
+        "unit": "m s-1"
+      },
+      {
+        "name": "Q700",
+        "channel": "specific_humidity_700",
+        "index": 65,
+        "unit": "kg kg-1"
+      }
+    ],
+    "lead_steps": [
+      1,
+      4,
+      12,
+      20
+    ],
+    "primary_cells": [
+      "Z500@24h",
+      "Z500@72h",
+      "T850@24h",
+      "T850@72h"
+    ],
+    "weights": "cos(latitude) broadcast to H*W and normalized to sum 1 on declared regular global cell-center grid",
+    "pooled": "per-cell common mask; sqrt(mean(issue_mse))",
+    "improvement_pct": "100*(1-RMSE_arm/RMSE_f0)",
+    "difference_pp": "I_a-I_b with the same F0 denominator",
+    "selection_loss": "mean of physical MSE/D_est over 6 variables x steps 1,4,12,20",
+    "gradient_loss": "mean of physical MSE/D_est_short over 6 variables x steps 1,2,3,4",
+    "denominator": "D_est is pooled F0 physical MSE (RMSE squared), estimate-period only and versioned"
+  },
+  "arms": {
+    "output": [
+      "f0",
+      "obc",
+      "dabc",
+      "ocl_fresh"
+    ],
+    "parameter": [
+      "lag1c",
+      "lag1",
+      "static",
+      "ewma_g",
+      "delay30"
+    ],
+    "primary": "lag1c",
+    "secondary": [
+      "lag1"
+    ],
+    "mean_gradient": "arithmetic mean of raw FP32 gradients over estimate target rows; accumulate FP64; freeze permanently",
+    "lag1c": "-unit(g[t-1day]-g_mean_est); not claimed orthogonal to static",
+    "delay30": "-unit(g[t-30days]-g_mean_est); calendar exact; same centering as primary; replaces random",
+    "ewma_g": "-unit(sum(exp(-(t-label_available_s)/tau)*g_s)/sum(weights)); raw scale; only usable records",
+    "gradient_storage": {
+      "raw_dtype": "float32",
+      "norm_dtype": "float64",
+      "roundtrip_cosine_min": 0.99999
+    },
+    "calibration": {
+      "issues": [
+        "2020-02-02T00:00:00Z",
+        "2020-02-03T00:00:00Z",
+        "2020-02-04T00:00:00Z",
+        "2020-02-05T00:00:00Z",
+        "2020-02-06T00:00:00Z",
+        "2020-02-07T00:00:00Z",
+        "2020-02-08T00:00:00Z",
+        "2020-02-09T00:00:00Z",
+        "2020-02-10T00:00:00Z",
+        "2020-02-11T00:00:00Z",
+        "2020-02-12T00:00:00Z",
+        "2020-02-13T00:00:00Z",
+        "2020-02-14T00:00:00Z",
+        "2020-02-15T00:00:00Z",
+        "2020-02-16T00:00:00Z",
+        "2020-02-17T00:00:00Z"
+      ],
+      "response_target": 0.1,
+      "step": 4,
+      "bisection_iterations": 12,
+      "bracket_relative_weight_norm": [
+        1e-06,
+        0.1
+      ],
+      "response_tolerance_relative": 0.05,
+      "monotonicity_tolerance_absolute": 0.0001,
+      "zero_direction_policy": "include zero-response cases in registered median; if every registered direction is zero, freeze entire family F0-equivalent with amplitude=0,multiplier=1; do not remove zero cases",
+      "formula": "sqrt(sum(w*(edited_norm-f0_norm)^2)/sum(w*(f0_norm-truth_norm)^2)) per issue; all 69 state-normalized channels; median across registered issues",
+      "on_failure": "BLOCKED; no post-hoc bracket expansion"
+    },
+    "selection": {
+      "tau_days": [
+        3,
+        7,
+        15,
+        30
+      ],
+      "obc_lambda": [
+        0.5,
+        1.0
+      ],
+      "dabc_lambda": [
+        0.5,
+        1.0
+      ],
+      "ocl_eof_k": [
+        10,
+        20
+      ],
+      "ocl_ridge_lambda": [
+        0.001,
+        0.01,
+        0.1,
+        1.0,
+        10.0
+      ],
+      "ridge_sklearn_alpha": "n_train * ridge_lambda after estimate-only feature scaling",
+      "ocl_same_lead_ewma_tau_days": 7,
+      "amplitude_multipliers": [
+        0.5,
+        1,
+        2
+      ],
+      "candidate_counts": {
+        "obc": 2,
+        "dabc": 8,
+        "ocl_fresh": 10,
+        "lag1c": 3,
+        "lag1": 3,
+        "static": 3,
+        "ewma_g": 12,
+        "delay30": 3
+      },
+      "tie": "within 1e-12 normalized selection loss, choose the first in declared grid order",
+      "nested_cv": false,
+      "structured_sketch": false,
+      "final_output_refit": "estimate+select target rows only, gap excluded; artifacts available no earlier than 2020-03-31T00:00:00Z",
+      "parameter_refit": false
+    }
+  },
+  "inference": {
+    "implementation": "numpy circular weekly-block resampling; no arch requirement",
+    "block_days_primary": 14,
+    "block_days_diagnostic": [
+      7,
+      28
+    ],
+    "week_anchor": "2020-03-30T00:00:00Z (Monday); include partial first/last and empty weeks",
+    "paired_statistics": "weekly sum MSE and valid counts; shared indices for all arms/cells; no compression of empty weeks",
+    "replicates": 50000,
+    "seed": 20260930,
+    "family_alpha": 0.05,
+    "interval": "two-sided Bonferroni percentile per frozen family; optional pre-calibrated uniform width multiplier",
+    "families": {
+      "F_B": [
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "Z500@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "Z500@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "T850@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "T850@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "static",
+          "cell": "Z500@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "static",
+          "cell": "Z500@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "static",
+          "cell": "T850@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "static",
+          "cell": "T850@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "ewma_g",
+          "cell": "Z500@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "ewma_g",
+          "cell": "Z500@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "ewma_g",
+          "cell": "T850@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "ewma_g",
+          "cell": "T850@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "delay30",
+          "cell": "Z500@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "delay30",
+          "cell": "Z500@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "delay30",
+          "cell": "T850@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "delay30",
+          "cell": "T850@72h"
+        }
+      ],
+      "F_H": [
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "Z500@6h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "Z500@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "Z500@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "Z500@120h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "T850@6h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "T850@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "T850@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "T850@120h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "T2m@6h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "T2m@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "T2m@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "T2m@120h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "MSLP@6h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "MSLP@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "MSLP@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "MSLP@120h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "U850@6h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "U850@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "U850@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "U850@120h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "Q700@6h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "Q700@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "Q700@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "f0",
+          "cell": "Q700@120h"
+        }
+      ],
+      "F_C": [
+        {
+          "a": "lag1c",
+          "b": "dabc",
+          "cell": "Z500@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "dabc",
+          "cell": "Z500@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "dabc",
+          "cell": "T850@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "dabc",
+          "cell": "T850@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "ocl_fresh",
+          "cell": "Z500@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "ocl_fresh",
+          "cell": "Z500@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "ocl_fresh",
+          "cell": "T850@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "ocl_fresh",
+          "cell": "T850@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "obc",
+          "cell": "Z500@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "obc",
+          "cell": "Z500@72h"
+        },
+        {
+          "a": "lag1c",
+          "b": "obc",
+          "cell": "T850@24h"
+        },
+        {
+          "a": "lag1c",
+          "b": "obc",
+          "cell": "T850@72h"
+        }
+      ],
+      "F_O": [
+        {
+          "a": "ocl_fresh",
+          "b": "f0",
+          "cell": "Z500@24h"
+        },
+        {
+          "a": "ocl_fresh",
+          "b": "f0",
+          "cell": "Z500@72h"
+        },
+        {
+          "a": "ocl_fresh",
+          "b": "f0",
+          "cell": "T850@24h"
+        },
+        {
+          "a": "ocl_fresh",
+          "b": "f0",
+          "cell": "T850@72h"
+        },
+        {
+          "a": "dabc",
+          "b": "f0",
+          "cell": "Z500@24h"
+        },
+        {
+          "a": "dabc",
+          "b": "f0",
+          "cell": "Z500@72h"
+        },
+        {
+          "a": "dabc",
+          "b": "f0",
+          "cell": "T850@24h"
+        },
+        {
+          "a": "dabc",
+          "b": "f0",
+          "cell": "T850@72h"
+        },
+        {
+          "a": "ocl_fresh",
+          "b": "dabc",
+          "cell": "Z500@24h"
+        },
+        {
+          "a": "ocl_fresh",
+          "b": "dabc",
+          "cell": "Z500@72h"
+        },
+        {
+          "a": "ocl_fresh",
+          "b": "dabc",
+          "cell": "T850@24h"
+        },
+        {
+          "a": "ocl_fresh",
+          "b": "dabc",
+          "cell": "T850@72h"
+        }
+      ],
+      "F_M": [
+        {
+          "a": "lag1",
+          "b": "ewma_g",
+          "cell": "Z500@24h"
+        },
+        {
+          "a": "lag1",
+          "b": "ewma_g",
+          "cell": "Z500@72h"
+        },
+        {
+          "a": "lag1",
+          "b": "ewma_g",
+          "cell": "T850@24h"
+        },
+        {
+          "a": "lag1",
+          "b": "ewma_g",
+          "cell": "T850@72h"
+        }
+      ]
+    },
+    "width_factors": [
+      1.0,
+      1.5,
+      2.0,
+      3.0,
+      4.0
+    ],
+    "coverage_calibration": {
+      "status": "TO_BE_RUN",
+      "weather_input": "estimate/select only",
+      "daily_loss_rho": [
+        0.0,
+        0.6,
+        0.85,
+        "fit_estimate_clipped_to_0_0.95"
+      ],
+      "innovations": [
+        "gaussian",
+        "student_t_df5"
+      ],
+      "cell_correlation": 0.5,
+      "positive_mse_generator": {
+        "ar": "phi=sqrt(rho); Z_t=phi*Z_(t-1)+sqrt(1-phi^2)*epsilon_t; initialize with mean 0, marginal variance 1 and the same equicorrelation; 4096 burn-in days",
+        "rho_interpretation": "rho targets stationary squared-error daily autocorrelation without drift, not latent residual autocorrelation; report measured simulation autocorrelation with Monte Carlo error",
+        "innovation_covariance": "exchangeable correlation 0.5 across the full arm x cell vector; multivariate t5 standardized to marginal variance 1",
+        "formula": "MSE[t,a,c]=D_est[c]*r[a]*(0.05+(Z[t,a,c]+d[t])^2)",
+        "drift": "d[t]=0 without drift; separately d[t]=0.5*sin(2*pi*day_of_year(t)/365)",
+        "scale_scenarios": {
+          "equal": {
+            "f0": 1,
+            "all_others": 1
+          },
+          "ordered": {
+            "f0": 1,
+            "obc": 1.02,
+            "dabc": 1.0,
+            "ocl_fresh": 0.98,
+            "lag1c": 0.96,
+            "lag1": 0.97,
+            "static": 1.01,
+            "ewma_g": 0.99,
+            "delay30": 1.03
+          }
+        },
+        "population_truth": "pool D_est[c]*r[a]*(1.05+d[t]^2) over the fixed valid dates, then apply the same RMSE ratios/differences",
+        "restriction": "do not exponentiate t innovations: the resulting positive loss need not have a finite mean; do not claim these toy scenarios cover all real dependence"
+      },
+      "separate_slow_drift_scenario": true,
+      "mc_calibration_reps": 500,
+      "mc_validation_reps": 1000,
+      "bootstrap_screen_draws": 10000,
+      "bootstrap_validation_draws": 50000,
+      "calibration_seed": 41,
+      "validation_seed": 97,
+      "choose_factor": "smallest common factor passing every family/scenario on calibration simulations; independent validation once, no escalation after failure",
+      "pass_rule": "each family/scenario empirical simultaneous coverage >=0.95 and Wilson95 lower >=0.93",
+      "clock_budget_hours": 2,
+      "max_cpu_workers": 32,
+      "on_failure": "STATISTICAL_INCONCLUSIVE; no formal Gate or automatic analysis run",
+      "claim_limit": "simulation assurance only; no guaranteed real-sequence coverage"
+    },
+    "mde": {
+      "status": "TO_BE_RUN",
+      "power": 0.8,
+      "effect_grid_pp": [
+        0,
+        0.1,
+        0.2,
+        0.3,
+        0.5,
+        1.0,
+        2.0
+      ],
+      "source": "fit residual/cell paired influence series; centered null; selection split sensitivity",
+      "required": "table for all families, complete Gate conjunction power and CI half-width; Monte Carlo uncertainty",
+      "criterion": "MDE is the smallest true effect whose simulated lower bound exceeds the already fixed comparator threshold in >=80% replicates",
+      "on_low_power": "retain thresholds; descriptive run only with explicit signature or statistical INCONCLUSIVE"
+    },
+    "robustness": "if 7/28-day diagnostics support an opposite directional claim, flag INCONCLUSIVE; never select the most favorable block length"
+  },
+  "gate": {
+    "delta_pp": 0.3,
+    "harm_floor_pct": -0.5,
+    "benefit_floor_pct": 0.0,
+    "G_B": "all primary cells: L(I_lag1c)>0; L(I_lag1c-I_static)>0.3; L(I_lag1c-I_ewma_g)>0.3; L(I_lag1c-I_delay30)>0",
+    "G_C": "all primary cells and b in [dabc,ocl_fresh,obc]: L(I_lag1c-I_b)>0",
+    "G_H": "all 24 cells L(I_lag1c)>-0.5",
+    "three_state": "threshold q: PASS iff L>q, NOT_MET iff U<=q, otherwise INCONCLUSIVE",
+    "GO": "engineering+data+coverage gates pass AND G_B,G_C,G_H all PASS; human Gate1 and A5 still required",
+    "inconclusive_followup": "only same frozen configuration on preregistered 2021 replication under separate A7 and GPU approval; no 2020 expansion or threshold changes",
+    "null_claim": "CI crossing zero is not absence of effect or proof of only slow drift",
+    "threshold_status": "proposed and written before new pilot; human signature still MISSING"
+  },
+  "budget": {
+    "units": "allocated H100 card-hours including failed/startup/preempted jobs",
+    "proposed_total_cap": 8.0,
+    "proposed_A3_fit_cap": 3.0,
+    "proposed_A4_analysis_cap": 5.0,
+    "concurrent_h100_max": 2,
+    "approved_cap": "MISSING",
+    "measurement": "t_roll20,t_roll4,t_grad4,t_grad2,io/startup; synchronize CUDA; report p50 and p95",
+    "formula": "(361*t_roll20+361*t_grad4+8*16*14*t_roll4+24*26*t_roll20+5*270*t_roll20+39*(4*t_roll20+t_grad2)+precheck_extra_timing_seconds+io_startup_failure_seconds)*1.2/3600",
+    "phase_formulas": {
+      "A3": "(86*t_roll20+86*t_grad4+8*16*14*t_roll4+24*26*t_roll20+precheck_extra_timing_seconds+fit_io_startup_failure_seconds)*1.2/3600",
+      "A4": "(275*t_roll20+275*t_grad4+5*270*t_roll20+39*(4*t_roll20+t_grad2)+analysis_io_startup_failure_seconds)*1.2/3600"
+    },
+    "timing_dates": "first 8 calendar-ordered eligible estimate issues after signed QC; record exact dates before timing",
+    "formula_basis": "one worker/GPU per issue; allocated idle multi-GPU time also charged; warmup states do not require parameter forecasts",
+    "nominal_counts": {
+      "f0_issues": 361,
+      "gradient_issues": 361,
+      "calibration_variants": 8,
+      "calibration_issues": 16,
+      "calibration_calls_max": 14,
+      "selection_configs": 24,
+      "selection_issues": 26,
+      "analysis_arms": 5,
+      "analysis_issues": 270,
+      "diagnostic_issues": 39,
+      "diagnostic_rollouts_each": 4
+    },
+    "unmeasured_estimate": "2-3 card-hours is a review estimate, not a measurement or allocation",
+    "planning_effort_days": {
+      "T2": 2,
+      "fit_and_calibration": 1,
+      "analysis_and_T4": 1
+    },
+    "network_wait_excluded": true
+  },
+  "diagnostics": {
+    "truth_one_step": "39 preregistered issues only; nondeployable, not an upper bound",
+    "buf12": "steps1,2 paired with no buffer; 2 runs; same released labels at daily 00Z",
+    "lag2": "reuse existing day-2 gradient, no recomputation",
+    "eqnorm": false,
+    "random": false,
+    "full_multiplier_analysis": false
+  },
+  "retired": {
+    "legacy_headroom": "retired from current scope; incomplete, not scientific falsification",
+    "P5_repair_required": false,
+    "T5_scheduled": false,
+    "2021_scheduled": false,
+    "2022_scheduled": false
+  }
+}

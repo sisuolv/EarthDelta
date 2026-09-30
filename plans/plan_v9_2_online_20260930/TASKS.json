@@ -1,0 +1,377 @@
+{
+  "schema": "earthdelta.online.tasks.v9.2",
+  "status": "DRAFT_UNSIGNED",
+  "execution_authorized": false,
+  "T0": {
+    "evidence_status": "OBSERVED",
+    "scope": "phase-0 reuse evidence available under proposed narrowed rule",
+    "rule_adoption": "MISSING",
+    "optional_items_pending": [
+      "A2a arch",
+      "A2b TAFAS/OnlineTSF"
+    ]
+  },
+  "shared_budget_pools": {
+    "A3": 3,
+    "A4": 5,
+    "total_h100_hours": 8,
+    "approval": "MISSING"
+  },
+  "tasks": [
+    {
+      "id": "T1",
+      "evidence_status": "TO_BE_RUN",
+      "dependencies": [],
+      "approvals_required": [
+        "A1",
+        "root_rules_review"
+      ],
+      "goal": "环境复核；旧probe退役，不修P5",
+      "files_to_change": [
+        "runs/online/<new>/"
+      ],
+      "tests_to_add": [],
+      "inputs": [
+        "current HEAD",
+        "T0 receipts"
+      ],
+      "outputs": [
+        "env_baseline.json",
+        "CPU JUnit",
+        "protected hashes"
+      ],
+      "data_access": "synthetic only",
+      "success": "no unexplained regression failures; root rules and A1 checked",
+      "on_failure": "BLOCKED",
+      "budget_pool": {
+        "gpu_hours": 0,
+        "person_days_max": 0.5
+      },
+      "command_contract": "copy T0 guard source into NEW run/tools; execute guarded pytest tests/ -q -m \"not slow\" -p no:cacheprovider",
+      "commands_implemented": false,
+      "human_signature": "MISSING"
+    },
+    {
+      "id": "T2",
+      "evidence_status": "TO_BE_RUN",
+      "dependencies": [
+        "T1"
+      ],
+      "approvals_required": [
+        "A1",
+        "v9.2_scope_adoption"
+      ],
+      "goal": "实现阶段0薄模块与真实负例",
+      "files_to_change": [
+        "earthdelta/online/timeindex.py",
+        "earthdelta/online/clock.py",
+        "earthdelta/online/stores.py",
+        "earthdelta/online/qc_reuse.py",
+        "earthdelta/online/losses.py",
+        "earthdelta/online/metrics.py",
+        "earthdelta/online/grad_utils.py",
+        "earthdelta/online/dabc.py",
+        "earthdelta/online/outcorr.py",
+        "scripts/online_cpu_tests.py",
+        "tests/test_online_*.py"
+      ],
+      "tests_to_add": [
+        "date bounds",
+        "future-value/missing/id/exception/log poisoning",
+        "full label-lineage subset",
+        "QC identity and missing cells",
+        "hook cleanup and gradient finite-difference",
+        "pooled RMSE/width invariance",
+        "weekly sums/counts",
+        "raw gradient roundtrip",
+        "cold start/gap/refit availability",
+        "drift-only controls"
+      ],
+      "inputs": [
+        "draft adopted contract",
+        "source imports"
+      ],
+      "outputs": [
+        "new modules",
+        "negative-case logs",
+        "guarded CPU JUnit"
+      ],
+      "data_access": "synthetic only",
+      "success": "mandatory synthetic and WBX checks run; no protected edits; no unexplained regression failures",
+      "on_failure": "BLOCKED",
+      "budget_pool": {
+        "gpu_hours": 0,
+        "person_days_estimate": 2
+      },
+      "command_contract": "online_cpu_tests.py -- tests/ -q -m \"not slow\" -p no:cacheprovider",
+      "commands_implemented": false,
+      "human_signature": "MISSING"
+    },
+    {
+      "id": "T3A_fit",
+      "evidence_status": "TO_BE_RUN",
+      "dependencies": [
+        "T2"
+      ],
+      "approvals_required": [
+        "A3",
+        "protocol_A"
+      ],
+      "goal": "QC reuse、20步/梯度数值门、F0拟合库与输出基线",
+      "files_to_change": [
+        "scripts/online_qc_prepare.py",
+        "scripts/online_engine_precheck.py",
+        "scripts/online_p0a_f0bank.py",
+        "scripts/online_p0a_outputspace.py",
+        "configs/online_p0_2020.json",
+        "tests/test_online_p0a.py"
+      ],
+      "tests_to_add": [
+        "17-index/overlap mock",
+        "20-step/zero edit/nonzero hook/gradient direction",
+        "fit-only model selection",
+        "bank write once"
+      ],
+      "inputs": [
+        "bound P1 QC/cache",
+        "2020 fit supports",
+        "signed rule contract"
+      ],
+      "outputs": [
+        "QC_COMPOSITE_MANIFEST.json",
+        "ENGINE_PRECHECK.json",
+        "fit f0bank",
+        "output fit selection_scores",
+        "timing.json"
+      ],
+      "data_access": "signed role-bound 2020 inputs/derived artifacts only; no other years or downloads",
+      "success": "data/engine gates pass; all candidates preserved; no analysis skills accessed",
+      "on_failure": "BLOCKED",
+      "budget_pool": {
+        "shared_pool": "A3",
+        "shared_pool_cap_h100_hours": 3
+      },
+      "command_contract": "online_qc_prepare.py; online_engine_precheck.py; online_p0a_f0bank.py --phase fit; online_p0a_outputspace.py --phase fit",
+      "commands_implemented": false,
+      "human_signature": "MISSING"
+    },
+    {
+      "id": "T3B_fit",
+      "evidence_status": "TO_BE_RUN",
+      "dependencies": [
+        "T3A_fit"
+      ],
+      "approvals_required": [
+        "A3",
+        "protocol_A"
+      ],
+      "goal": "估计raw梯度均值、8配置等响应校准、24组选择",
+      "files_to_change": [
+        "scripts/online_p0b_gradworker.py",
+        "scripts/online_p0b_edits.py",
+        "tests/test_online_p0b.py"
+      ],
+      "tests_to_add": [
+        "mean raw vs normalized",
+        "centered delay30",
+        "gradient FP32 roundtrip",
+        "calibration offline-fit vs online clock",
+        "degenerate direction fallback"
+      ],
+      "inputs": [
+        "fit F0 bank",
+        "signed contract",
+        "QC composite"
+      ],
+      "outputs": [
+        "gradient manifests",
+        "calibration traces",
+        "parameter fit selection_scores",
+        "config_resolved.json"
+      ],
+      "data_access": "signed role-bound 2020 inputs/derived artifacts only; no other years or downloads",
+      "success": "same 16 calendar issues; direction and amplitude identities frozen; no analysis labels",
+      "on_failure": "BLOCKED",
+      "budget_pool": {
+        "shared_pool": "A3",
+        "shared_pool_cap_h100_hours": 3
+      },
+      "command_contract": "online_p0b_gradworker.py --phase fit; online_p0b_edits.py --phase fit",
+      "commands_implemented": false,
+      "human_signature": "MISSING"
+    },
+    {
+      "id": "STATISTICS_PREFLIGHT",
+      "evidence_status": "TO_BE_RUN",
+      "dependencies": [
+        "T3A_fit",
+        "T3B_fit"
+      ],
+      "approvals_required": [
+        "protocol_A"
+      ],
+      "goal": "拟合期覆盖率独立校准、MDE和计时预算",
+      "files_to_change": [
+        "scripts/online_calibrate_statistics.py",
+        "scripts/online_power.py",
+        "scripts/online_budget.py",
+        "tests/test_online_statistics.py"
+      ],
+      "tests_to_add": [
+        "analysis-input rejection",
+        "dependent synthetic coverage",
+        "interval family cardinality",
+        "power uses fixed delta",
+        "allocated card-hour caps"
+      ],
+      "inputs": [
+        "fit-only selected paired cells",
+        "fit timing",
+        "frozen family membership"
+      ],
+      "outputs": [
+        "COVERAGE_CALIBRATION.json",
+        "MDE.json",
+        "BUDGET_PROJECTION.json"
+      ],
+      "data_access": "signed role-bound 2020 inputs/derived artifacts only; no other years or downloads",
+      "success": "independent validation passes or explicit statistical INCONCLUSIVE; all numbers observed not placeholders",
+      "on_failure": "STATISTICAL_INCONCLUSIVE or BUDGET_BLOCKED; no automatic analysis",
+      "budget_pool": {
+        "gpu_hours": 0,
+        "coverage_wall_hours_max": 2,
+        "coverage_cpu_workers_max": 32
+      },
+      "command_contract": "online_calibrate_statistics.py --phase fit; online_power.py --phase fit; online_budget.py --timing <actual>",
+      "commands_implemented": false,
+      "human_signature": "MISSING"
+    },
+    {
+      "id": "T3A_analysis",
+      "evidence_status": "TO_BE_RUN",
+      "dependencies": [
+        "STATISTICS_PREFLIGHT"
+      ],
+      "approvals_required": [
+        "A4",
+        "protocol_B"
+      ],
+      "goal": "冻结输出空间分析；不更新超参",
+      "files_to_change": [],
+      "tests_to_add": [
+        "no refit after freeze",
+        "fresh records and fallback denominators"
+      ],
+      "inputs": [
+        "approved analysis config",
+        "fit bank",
+        "coverage/data/engine/budget receipts"
+      ],
+      "outputs": [
+        "analysis F0 bank",
+        "output cells",
+        "lineage",
+        "timing"
+      ],
+      "data_access": "signed role-bound 2020 inputs/derived artifacts only; no other years or downloads",
+      "success": "all registered slots accounted; same masks; no future leakage",
+      "on_failure": "BLOCKED",
+      "budget_pool": {
+        "shared_pool": "A4",
+        "shared_pool_cap_h100_hours": 5
+      },
+      "command_contract": "online_p0a_f0bank.py --phase warmup,analysis; online_p0a_outputspace.py --phase analysis",
+      "commands_implemented": false,
+      "human_signature": "MISSING"
+    },
+    {
+      "id": "T3B_analysis",
+      "evidence_status": "TO_BE_RUN",
+      "dependencies": [
+        "T3A_analysis"
+      ],
+      "approvals_required": [
+        "A4",
+        "protocol_B"
+      ],
+      "goal": "5冻结参数臂及39日诊断；F0复用",
+      "files_to_change": [],
+      "tests_to_add": [
+        "no post-output-analysis selection",
+        "missing arm result is failure not masking"
+      ],
+      "inputs": [
+        "frozen parameter config",
+        "shared F0 bank",
+        "QC manifest"
+      ],
+      "outputs": [
+        "parameter cells",
+        "diagnostic cells",
+        "lineage",
+        "budget actuals"
+      ],
+      "data_access": "signed role-bound 2020 inputs/derived artifacts only; no other years or downloads",
+      "success": "all five arms/fallbacks/shards complete; held fixed after output analysis",
+      "on_failure": "BLOCKED",
+      "budget_pool": {
+        "shared_pool": "A4",
+        "shared_pool_cap_h100_hours": 5
+      },
+      "command_contract": "online_p0b_gradworker.py --phase warmup,analysis; online_p0b_edits.py --phase analysis",
+      "commands_implemented": false,
+      "human_signature": "MISSING"
+    },
+    {
+      "id": "T4",
+      "evidence_status": "TO_BE_RUN",
+      "dependencies": [
+        "T3B_analysis"
+      ],
+      "approvals_required": [
+        "A1",
+        "protocol_B"
+      ],
+      "goal": "复算所有注册门并分层报告；由人判定Gate1",
+      "files_to_change": [
+        "scripts/online_report.py",
+        "tests/test_online_report.py"
+      ],
+      "tests_to_add": [
+        "one failed gate cannot GO",
+        "missing signature provisional",
+        "NOT_MET vs INCONCLUSIVE",
+        "all families complete",
+        "no arch dependency"
+      ],
+      "inputs": [
+        "all immutable cells",
+        "signed protocol",
+        "coverage and budget actuals"
+      ],
+      "outputs": [
+        "GATE1_REPORT.md",
+        "gate_status.json",
+        "tables",
+        "reproduction commands"
+      ],
+      "data_access": "signed role-bound 2020 inputs/derived artifacts only; no other years or downloads",
+      "success": "all numbers reproducible; four evidence layers independent; human decision pending",
+      "on_failure": "BLOCKED or scientific INCONCLUSIVE/NOT_MET according to evidence",
+      "budget_pool": {
+        "gpu_hours": 0,
+        "person_days_estimate": 1
+      },
+      "command_contract": "online_report.py --run <frozen_run> --contract <signed_contract>",
+      "commands_implemented": false,
+      "human_signature": "MISSING"
+    }
+  ],
+  "not_scheduled": [
+    "legacy_probe_repair",
+    "T5",
+    "T6",
+    "2021",
+    "2022"
+  ]
+}

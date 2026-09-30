@@ -1,0 +1,4 @@
+{"check": "editor_partial_enter", "raised": true, "hooks_left_after_failure": 1, "block0_output_still_edited": true}
+{"check": "verified_record_inplace_mutation", "value_after_add": [5.0, 5.0]}
+{"check": "eligible_records_pending_duplicate", "outcome": "ValueError", "msg": "Duplicate memory record IDs.", "note": "an unreleased record (available=999 > origin=100) changes the actor-side result"}
+{"check": "old_area_mse_vs_v8", "old": 2304.0, "v8": 8.999999999999998, "ratio": 256.00000000000006}

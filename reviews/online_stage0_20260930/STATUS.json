@@ -1,0 +1,60 @@
+{
+  "stage": "AFTER_FIT_BEFORE_ANALYSIS",
+  "status": "STATISTICAL_INCONCLUSIVE",
+  "T1_passed": 976,
+  "T1_skipped": 61,
+  "T2_passed": 76,
+  "T2_skipped": 0,
+  "qc": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/qc_001/QC_RECEIPT.json",
+    "sha256": "202a67ae631e83ff94f2c72a17f4eefbf3209997e6336f28042d385408e6d233"
+  },
+  "scientific_support": false,
+  "novelty_support": false,
+  "engine": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/engine_001/ENGINE_RECEIPT.json",
+    "sha256": "c9bb5246ca96ebbd66b4de048c226c321295e64d8cc2f805b0e2ef97a1f383b8"
+  },
+  "f0_bank": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/f0_rescore_001/F0_BANK_RECEIPT.json",
+    "sha256": "b317aef7d139fdf98511c6ed98d02fec7e3e596c9319154ac6df0dd7f070839f"
+  },
+  "last_issue": "Power qualification is strongly source-sensitive; estimate-source full-Gate MDE exceeds tested 2pp grid",
+  "f0_fit_published": 85,
+  "fit_nominal": 86,
+  "output_fit": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/output_fit_002/OUTPUT_FIT_RECEIPT.json",
+    "sha256": "ac26789f652a86c4d7404b23768d17d7cde53f87f0d4198d03b5900fdf800c6e"
+  },
+  "gradients": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/gradient_002/GRADIENT_RECEIPT.json",
+    "sha256": "74b3556e7820ce1a77e9b7f5e854eee1cee9e70b94a493c7ed027dad9ec6d499"
+  },
+  "parameter_fit": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/parameter_fit_001/PARAMETER_FIT_RECEIPT.json",
+    "sha256": "f5566558e553d13db80959cae04a6f69245eca3039f6689511685a2cc70ffa7f"
+  },
+  "coverage_validation": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/COVERAGE_VALIDATION.json",
+    "sha256": "7780260312a4d42a549515ac2e449189bc9db9b1bc977aa2ff93ec20c6e577d3"
+  },
+  "fit_influence": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/fit_influence_002/FIT_INFLUENCE_RECEIPT.json",
+    "sha256": "59827b650793a81c36c302a1b4442aadcb0cbee86bc04f77384a7f3e87d48ccd"
+  },
+  "analysis_run": false,
+  "all_jobs_terminal": true,
+  "decision": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/DECISION.json",
+    "sha256": "8a8f2dfbc41f9b93077c410d1ced02cefea391579a22a84d269fea6668e79983"
+  },
+  "power": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/power_001/MDE.json",
+    "sha256": "9685b0c8a8649d45aba99fc4da8f4f3106170badde06ac0e25cac00608f0d20f"
+  },
+  "budget": {
+    "reserved_h100": 1.3767276563888888,
+    "spot_5090_cpu": 0.29436474916666666,
+    "spot_h100": 0.08559779833333334
+  }
+}

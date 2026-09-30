@@ -1,5 +1,36 @@
 # EarthDelta
 
+## Current result: online stage 0 (2026-09-30)
+
+The v9.2 fit experiments are complete. **Formal analysis is paused at
+`STATISTICAL_INCONCLUSIVE`; forecasting value and novelty remain unproved.**
+The code and evidence were executed from baseline `d55ad70` plus the recorded
+online implementation snapshots. The publication commit packages that work;
+it does not represent a new weather experiment.
+
+- Real runs: 85 F0 fit forecasts, 85 full gradients, eight response calibrations,
+  624 parameter-selection forecasts, and 237 extra fit forecasts for power inputs.
+- Independent synthetic coverage validation passed with interval widths multiplied
+  by two. This is not a guarantee for real weather errors.
+- At an injected 2 percentage-point effect, complete-Gate power was **0.2%** using
+  estimate-period losses and **97.6%** using selection-period losses. This source
+  sensitivity prevents a reliable power decision; no formal analysis/Gate 1 followed.
+- Latest online tests: **76 passed**. The earlier full guarded suite passed 1036
+  tests with 61 skipped and four deselected. These counts describe different snapshots.
+
+Start with the [published evidence guide](reviews/online_stage0_20260930/README.md),
+[execution report](reviews/online_stage0_20260930/FINAL_REPORT.md),
+[frozen v9.2 plan](plans/plan_v9_2_online_20260930/), and
+[ChatGPT review and next-plan prompt](reviews/online_stage0_20260930/CHATGPT_NEXT_PLAN_PROMPT.md).
+The small paired fit-MSE table is included for independent statistical checks;
+raw weather fields, model checkpoints, and full gradients are not distributed.
+
+The overview and status notes below are historical design material. They must not
+be read as evidence that the proposed method, a formal headroom bound, or novelty
+has been demonstrated. The dated execution evidence above takes precedence.
+
+---
+
 **Response-space planning of low-rank edits for a frozen ML weather model.**
 
 EarthDelta learns to *predict* how a frozen forecaster (Stormer) will respond to a small,

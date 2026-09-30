@@ -1,0 +1,12 @@
+[
+  {
+    "action": "new_tests_with_bank_and_outputfit",
+    "exit_code": 0,
+    "wall_seconds": 10.446180365979671
+  },
+  {
+    "action": "fit_only_F0_bank",
+    "exit_code": 0,
+    "wall_seconds": 210.32296355813742
+  }
+]

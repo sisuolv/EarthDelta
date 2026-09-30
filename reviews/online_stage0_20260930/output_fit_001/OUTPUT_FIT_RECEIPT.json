@@ -1,0 +1,7 @@
+{
+  "status": "BLOCKED",
+  "scope": "fit and selection only; analysis sealed",
+  "scientific_support": false,
+  "error": "AssertionError: \nNot equal to tolerance rtol=1e-12, atol=1e-15\nF0 cell reproduction failed\nMismatched elements: 31 / 36 (86.1%)\nMax absolute difference: 0.00012073\nMax relative difference: 9.00170854e-09\n x: array([[6.075958e+02, 1.322110e+03, 1.717299e+03, 2.734081e+03,\n        3.458917e+04, 1.334871e+05],\n       [2.028602e-01, 3.664239e-01, 4.282571e-01, 5.156111e-01,...\n y: array([[6.075958e+02, 1.322110e+03, 1.717299e+03, 2.734081e+03,\n        3.458917e+04, 1.334871e+05],\n       [2.028602e-01, 3.664239e-01, 4.282571e-01, 5.156111e-01,...",
+  "wall_seconds": 0.47614724934101105
+}

@@ -1,0 +1,35 @@
+{
+  "decision": "STATISTICAL_INCONCLUSIVE",
+  "stopped_at": "AFTER_FIT_STATISTICS_BEFORE_ANALYSIS",
+  "reason": "Full-Gate conditional power at a 2pp injected effect is 0.002 using estimate data versus 0.976 using selection data; no stable >=80% qualification across registered sources. Estimate-source MDE was not reached within [0,2]pp.",
+  "formal_analysis_run": false,
+  "formal_gate1_run": false,
+  "scientific_hypothesis_rejected": false,
+  "coverage_simulation_qualified": true,
+  "width_factor": 2.0,
+  "engineered_fit_pipeline_passed": true,
+  "claims": {
+    "ENGINEERING_PASS": {
+      "supported": true,
+      "scope": "latest 76 online negative tests and actual numerical/fit gates; earlier full guarded suite 1036 passed/61 skipped/4 deselected"
+    },
+    "EXPERIMENT_EXECUTED": {
+      "supported": true,
+      "scope": "2020 fit/QC/calibration/selection and synthetic coverage/power only"
+    },
+    "SCIENTIFIC_SUPPORT": {
+      "supported": false,
+      "reason": "no held-out analysis or valid formal Gate result"
+    },
+    "NOVELTY_SUPPORT": {
+      "supported": false,
+      "reason": "no demonstrated advantage beyond deployable output/slow-drift baselines"
+    }
+  },
+  "remaining_scopes": [
+    "formal 2020 analysis paused",
+    "T5 not released",
+    "2021 and 2022 forbidden in current run"
+  ],
+  "completed_utc": "2026-09-30T09:43:31.218969+00:00"
+}

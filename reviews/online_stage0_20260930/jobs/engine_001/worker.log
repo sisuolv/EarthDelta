@@ -1,0 +1,165 @@
+ACTION all_new_synthetic_tests
+Running 60 items in this shard
+............................................................             [100%]
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/engine_001/JUNIT.xml -
+60 passed in 8.15s
+ACTION H100_numerical_and_timing_preflight
+{
+  "status": "OBSERVED",
+  "scientific_support": false,
+  "timings": [
+    {
+      "index": 4,
+      "io": 0.3527747467160225,
+      "roll20": 3.0967184007167816,
+      "roll4": 0.24880077689886093,
+      "grad4": 2.5164099745452404,
+      "grad2": 0.5735928304493427,
+      "grad_norm": 0.002819703049255564,
+      "engineering_loss": 0.009106109850108624,
+      "peak_gpu_bytes": 12598090752
+    },
+    {
+      "index": 8,
+      "io": 0.2887298949062824,
+      "roll20": 1.2414340674877167,
+      "roll4": 0.2480795942246914,
+      "grad4": 1.4364142529666424,
+      "grad2": 0.5697396621108055,
+      "grad_norm": 0.002795795773572764,
+      "engineering_loss": 0.009207123890519142,
+      "peak_gpu_bytes": 12631972864
+    },
+    {
+      "index": 12,
+      "io": 0.29386044666171074,
+      "roll20": 1.24129818379879,
+      "roll4": 0.24860136583447456,
+      "grad4": 1.442040715366602,
+      "grad2": 0.5741567984223366,
+      "grad_norm": 0.0028094640443380127,
+      "engineering_loss": 0.008757448755204678,
+      "peak_gpu_bytes": 12631972864
+    },
+    {
+      "index": 16,
+      "io": 0.3230432830750942,
+      "roll20": 1.2426216341555119,
+      "roll4": 0.24866199120879173,
+      "grad4": 1.4378720968961716,
+      "grad2": 0.5736928842961788,
+      "grad_norm": 0.0026490699732220646,
+      "engineering_loss": 0.009114635176956654,
+      "peak_gpu_bytes": 12631972864
+    },
+    {
+      "index": 20,
+      "io": 0.2916344664990902,
+      "roll20": 1.2378099672496319,
+      "roll4": 0.24814069643616676,
+      "grad4": 1.4375817142426968,
+      "grad2": 0.5729131959378719,
+      "grad_norm": 0.002638328076547443,
+      "engineering_loss": 0.008995139971375465,
+      "peak_gpu_bytes": 12631972864
+    },
+    {
+      "index": 24,
+      "io": 0.3110109977424145,
+      "roll20": 1.2413283661007881,
+      "roll4": 0.24784310907125473,
+      "grad4": 1.4364093840122223,
+      "grad2": 0.5732192546129227,
+      "grad_norm": 0.0029424758928888487,
+      "engineering_loss": 0.00915802363306284,
+      "peak_gpu_bytes": 12631972864
+    },
+    {
+      "index": 28,
+      "io": 0.2875141054391861,
+      "roll20": 1.2402710393071175,
+      "roll4": 0.24790307134389877,
+      "grad4": 1.4362229444086552,
+      "grad2": 0.571897704154253,
+      "grad_norm": 0.002833822967994552,
+      "engineering_loss": 0.00906565971672535,
+      "peak_gpu_bytes": 12631972864
+    },
+    {
+      "index": 32,
+      "io": 0.30612558871507645,
+      "roll20": 1.239046823233366,
+      "roll4": 0.24799273535609245,
+      "grad4": 1.4361827932298183,
+      "grad2": 0.5728963762521744,
+      "grad_norm": 0.0030646842672815673,
+      "engineering_loss": 0.008950216695666313,
+      "peak_gpu_bytes": 12631972864
+    }
+  ],
+  "environment": {
+    "torch": "2.3.1+cu121",
+    "xformers": "0.0.27",
+    "device": "NVIDIA H100 80GB HBM3"
+  },
+  "load_seconds": 49.77451802790165,
+  "gradient_check_objective": "six-variable physical MSE/state-std^2 at steps 1..4; engineering only, not the later fitted D_est",
+  "numerical_rule": {
+    "official20": "bitwise_equal",
+    "zero_hook20": "bitwise_equal",
+    "fd_relative_weight_norm": [
+      0.0001,
+      5e-05
+    ],
+    "fd_relative_error_max": 0.05,
+    "checkpoint_steps": false,
+    "precision": "fp32_no_tf32",
+    "purpose": "engineering tolerances set before real numerical preflight; not scientific thresholds"
+  },
+  "official20": {
+    "max_abs_diff": 0.0,
+    "bitwise_equal": true,
+    "wall_seconds": 1.2503014393150806
+  },
+  "zero_hook20": {
+    "max_abs_diff": 0.0,
+    "wall_seconds": 1.3000431768596172
+  },
+  "gradient_direction": [
+    {
+      "relative_weight_norm": 0.0001,
+      "autograd": 0.002819703049255564,
+      "finite_difference": 0.002819802891754875,
+      "relative_error": 3.540761646960276e-05
+    },
+    {
+      "relative_weight_norm": 5e-05,
+      "autograd": 0.002819703049255564,
+      "finite_difference": 0.002819802891754875,
+      "relative_error": 3.540761646960276e-05
+    }
+  ],
+  "nonzero_hook20": {
+    "finite": true,
+    "max_abs_change": 0.022698521614074707,
+    "wall_seconds": 1.2530621737241745
+  },
+  "p50": {
+    "roll20": 1.241313274949789,
+    "roll4": 0.24811014533042908,
+    "grad4": 1.4369979836046696,
+    "grad2": 0.5730662252753973,
+    "io": 0.2999930176883936
+  },
+  "p95": {
+    "roll20": 2.4477845324203362,
+    "roll4": 0.2487522019073367,
+    "grad4": 2.1403807338327163,
+    "grad2": 0.5739944284781814,
+    "io": 0.3423687344416976
+  },
+  "engineering_pass": true,
+  "pristine_digest_unchanged": true,
+  "checkpoint_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+  "wall_seconds": 118.70746566355228
+}

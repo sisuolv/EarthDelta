@@ -1,0 +1,20 @@
+{
+  "qc": {
+    "index": 1044,
+    "finite": true,
+    "max_abs_z": 8.187069632851117,
+    "argmax_flat": 2017868,
+    "decoded_sha256": "f272420f27db44b735ecd650c6bba383c4db7423974c7c5e63bd3ad00c9c4c7d",
+    "expected_epoch": 1600387200
+  },
+  "cache": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/qc_001/cache/index_1044.npy",
+    "sha256": "a773a2be3a04830a1ff22f6f83ab44508ad6864f00300cf93a345175ec151826",
+    "shape": [
+      69,
+      128,
+      256
+    ],
+    "dtype": "float32"
+  }
+}

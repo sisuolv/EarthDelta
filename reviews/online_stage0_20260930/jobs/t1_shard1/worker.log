@@ -1,0 +1,28 @@
+ACTION cpu_baseline
+Running 346 items in this shard
+............................s........................................... [ 20%]
+.............ssssssssssssssssssss.s.s.sssss..........................s.. [ 41%]
+........................................................................ [ 62%]
+........................................................................ [ 83%]
+..................................................ssss....               [100%]
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1_envfixed/runs/online/t1_shard1/EXISTING_CPU_JUNIT.xml -
+=========================== short test summary info ============================
+SKIPPED [16] runs/online/t1_shard1/tools/cpu_test_guard.py:21: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:113: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:125: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:138: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:148: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:156: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:165: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:249: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:256: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:262: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:277: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:297: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:385: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:432: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_upstream_parity.py:112: CUDA not available
+SKIPPED [1] tests/test_upstream_parity.py:184: CUDA not available
+SKIPPED [1] tests/test_upstream_parity.py:249: Upstream reference not exported yet
+SKIPPED [1] tests/test_upstream_parity.py:270: Upstream reference outputs not exported yet
+313 passed, 33 skipped, 3 deselected in 89.35s (0:01:29)

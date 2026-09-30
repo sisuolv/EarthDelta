@@ -1,0 +1,380 @@
+[
+ {
+  "id": "V91-01",
+  "priority": "P0",
+  "category": "authorization",
+  "evidence_kind": "OBSERVED",
+  "evidence": [
+   "git status (logs/01_git_state.stdout): plans/plan_v9_online_20260929/ 只含 REUSE_DECISIONS.md 与 t0_reuse.patch；仓库根无 CLAUDE.md",
+   "plan_zip:README.md:7-10",
+   "plan_zip:AUTHORIZATIONS.md:7-18",
+   "runs/online/t0_reuse_audit_20260929T114614Z/RUN_CONFIG.json"
+  ],
+  "claim": "方案包尚未部署：plans/ 下没有任务文件、授权表与协议，根目录没有 CLAUDE.md。AUTHORIZATIONS 各行签署栏为空，A1 行也没有列入 T0。T0 是在用户口头授权下执行的。",
+  "impact": "按方案自身规则，T1/T2 必须从 plans/ 读取规则和授权；在部署之前开工，授权与冻结文件清单都没有可核对的落点。",
+  "minimal_change": "由人把 ZIP 原文（sha 3310490b…）部署到 plans/，合并根目录 CLAUDE.md，并在 AUTHORIZATIONS.md 签署 A1（写明包含 T0 与 T1/T2）。t0_reuse.patch 暂不应用，按 REQUIRED_AMENDMENTS 的意见逐条处理。",
+  "acceptance": "plans/ 中的文件与 ZIP 成员逐一 sha256 一致；AUTHORIZATIONS.md 中 A1 已签署；根目录 CLAUDE.md 存在且已人工核对无冲突。",
+  "resolve_before": "T1/T2 开工前"
+ },
+ {
+  "id": "V91-02",
+  "priority": "P1",
+  "category": "science",
+  "evidence_kind": "OBSERVED",
+  "evidence": [
+   "plan_zip:00_START_HERE.md:5-8",
+   "plan_zip:01_BACKGROUND.md:15-37",
+   "plan_zip:LATER_PHASES.md:44",
+   "/mnt/afs/260010168/earthdelta_probe_headroom_20260927T093911Z_resume02/STATUS.json (P3–P5 TO_BE_RUN)",
+   "/mnt/afs/260010168/earthdelta_probe_claude_full_audit_20260927T121046Z/FINDINGS.json F-001..F-007"
+  ],
+  "claim": "转向依据中“事后 oracle 上限也很小”只来自 FP-05b 的 5 个候选（Fs 只用 8 个起报、32 次更新，而且已退化），并不是一次足够强的参数编辑 headroom 检验。预注册的 2020 headroom 探针从未得出数值：P3 在旧代码上 BLOCKED，P5 有维度 bug，P4 与 Step 2 也存在已知缺陷。",
+  "impact": "如果把它写成“参数编辑已被否定”，会夸大负证据。另外，保底论文计划中的“修好 P5 后跑出的 P4/P5 阶梯”在 P4 与 Step 2 冻结的前提下，无法产生合规结果。",
+  "minimal_change": "01 §3.1 改为：“在当前候选库和训练强度下没有看到收益；预注册的 headroom 探针未完成；转向是资源决策”。LATER_PHASES 中删除 P4/P5 阶梯，或者注明它需要先修复 P4 与 Step 2（见 V91-14）。",
+  "acceptance": "文本中不再出现“oracle 上限很小”的泛化表述；保底论文的内容清单与探针的真实状态一致。",
+  "resolve_before": "T1 前（只改文档）"
+ },
+ {
+  "id": "V91-03",
+  "priority": "P1",
+  "category": "science",
+  "evidence_kind": "SOURCE_CONFIRMED",
+  "evidence": [
+   "plan_zip:03_RULES_AND_PITFALLS.md:7-9",
+   "plan_zip:T3A_P0_OUTPUT_SPACE.md:30-35",
+   "plan_zip:T3B_P0_PARAM_SPACE.md:27-34",
+   "plan_zip:T4_P0_REPORT_AND_GATE1.md:38-41,48"
+  ],
+  "claim": "季节漂移混杂：拟合期只有 1–3 月（北半球冬季），分析期是 4–12 月。OBC 用的是拟合期的平均偏差，static 用的是 1–2 月的平均梯度 ḡ_fit，两者在分析期都随季节变得陈旧。因此“DABC/OCL 优于 OBC”和“lag1 优于 static”都可能只是在追踪缓慢漂移，而不是利用逐日的状态相关误差。参数空间缺少与 DABC 对应的慢漂移对照。",
+  "impact": "G-B（相对 static 的下界 > δ）和“输出空间可预测性为正”的判读会系统性偏向肯定结论；H1 与 H2 分不开“近期信息”和“慢漂移”。",
+  "minimal_change": "增加参数空间的慢漂移臂 ewma_g(τ) = −unit(已释放梯度的日历 EWMA)，τ 网格与 DABC 相同，拟合期选定，按同样方式校准。把“lag1 − ewma_g”和“OCL − DABC”列为检验“短记忆可预测性”的主差值，纳入 F_C 或 F_B；G-B 的对照改为 static 与 ewma_g 中较强的一个，或者两者都列。",
+  "acceptance": "协议写入新增的臂与比较族；在带季节漂移的合成序列上，测试 lag1 相对 static 的增益能被 ewma_g 吸收。",
+  "resolve_before": "签署 PHASE0_PROTOCOL / 编写 T3B 代码前"
+ },
+ {
+  "id": "V91-04",
+  "priority": "P1",
+  "category": "fairness",
+  "evidence_kind": "SOURCE_CONFIRMED",
+  "evidence": [
+   "plan_zip:T2_ONLINE_HELPERS.md:84",
+   "plan_zip:T3B_P0_PARAM_SPACE.md:17-19,31",
+   "plan_zip:PHASE0_PROTOCOL.md:29-30"
+  ],
+  "claim": "信息集不等价：lag1 使用前一天起报第 1–4 步的残差（验证时刻 ≤ t，最新到 24h），DABC 只用本时效自身的历史残差（72h 至少滞后 3 天，120h 至少滞后 5 天），OCL 只额外用了第 1 步的最新残差。所以在 72h 和 120h 上，参数臂拿到的信息更新鲜。",
+  "impact": "“参数更新相对输出订正的额外价值”会混入“信息新鲜度”，G-C 的比较不公平。",
+  "minimal_change": "给 OCL 加入与 lag1 完全相同的信息：最新已释放起报第 1–4 步残差的 EOF 系数，或者新增一个 OCL-fresh 臂。在协议里逐臂列出“每个时刻可用的记录集合”表。",
+  "acceptance": "单测：在同一个 cutoff 下，OCL 与 lag1 读取的 record_id 集合相同，或者后者是前者的子集；表格写入 config_resolved。",
+  "resolve_before": "T2 outcorr / T3A 前"
+ },
+ {
+  "id": "V91-05",
+  "priority": "P1",
+  "category": "data",
+  "evidence_kind": "OBSERVED",
+  "evidence": [
+   "REVIEW_DIR:logs/06_metadata_checks.stdout",
+   "data/era5_1p40625_v8/2020.zarr/COMPLETE.json（元数据）",
+   "plan_zip:03_RULES_AND_PITFALLS.md:13-16",
+   "plan_zip:T3A_P0_OUTPUT_SPACE.md:13",
+   "plan_zip:T2_ONLINE_HELPERS.md:40"
+  ],
+  "claim": "2020 数据中已知的缺口没有写进协议。缺失 index 0、1（01-01 00z 的拟合起报没有输入）以及 1096–1098：09-26 至 09-30 的部分真值缺失，10-01 00z 的起报没有输入。index 712（q100 异常）影响 06-22 至 06-27 的窗口：06-26 的 24h 真值就是它，所以 06-26 的残差记录与梯度记录（第 1–4 步）都受影响；06-27 的输入就是它。落到评分格上：09-26 缺 120h，09-28 缺 72h，09-30 缺 24h，10-01 无法起报。“坏输入由调用方执行事先规定好的回退”只是一句话，没有给出具体规则；“361 个起报”也没有扣除这些缺口。",
+  "impact": "输入缺失时各臂发布什么、真值缺失的记录要不要释放、QC 标记的极端输入怎么处理，都会直接改变 actor 状态（DABC、OCL、lag 的特征）。如果看到数据后再临时决定，就违反了“看分析期结果之前冻结一切选择”的规则。",
+  "minimal_change": "在协议中写死以下规则：(a) 输入缺失或 QC 失败时，所有臂一致不发布，该起报从评分中剔除，并且不产生监督记录；(b) 真值缺失的记录永不释放，actor 在可用时刻之前不能得知其缺失；(c) index 712 按新 QC（训练 mean/std，|z|>40）判定，并预先定好处置方式。起报数量改为扣除后的数值。复用 resume01 的 P1 QC 收据：1456 个所需 index 中已覆盖 1439 个，只需对其余 17 个做新 QC。",
+  "acceptance": "协议列出受影响的起报与格子；投毒测试之外，另加一项“缺失可见性”测试：未释放的缺失记录不会改变 actor 状态。",
+  "resolve_before": "签署 PHASE0_PROTOCOL / T3A F0 库前"
+ },
+ {
+  "id": "V91-06",
+  "priority": "P1",
+  "category": "causal",
+  "evidence_kind": "SOURCE_CONFIRMED",
+  "evidence": [
+   "plan_zip:PHASE0_PROTOCOL.md:20",
+   "plan_zip:T3A_P0_OUTPUT_SPACE.md:37-41",
+   "plan_zip:03_RULES_AND_PITFALLS.md:14"
+  ],
+  "claim": "拟合期的冷启动和隔离带语义没有定义。2020-01-01 之前没有记录（2019 只作诊断，v8 的 2019 store 已被隔离），所以 1 月初的起报缺少滞后特征。“2/25–2/29 的起报作为隔离带，不使用”没有说清：是只排除拟合目标，还是连它们已释放的残差也不能作为特征。",
+  "impact": "如果选择子期（3 月初）的滞后特征与分析期的处理方式不一致，就会在选择阶段引入偏差；用 0 填补缺失特征则会让 OCL 与 DABC 产生偏差。",
+  "minimal_change": "写明：隔离带只排除拟合和选择的“目标行”，已释放的记录仍然作为因果状态可用；缺少所需滞后特征的训练行剔除，不做零填补，并报告剔除数量；DABC 和 lag 在没有记录时回退到 F0 并计数。",
+  "acceptance": "单测：3 月 1 日的特征中包含 2 月 29 日起报的已释放记录；1 月前 N 天的 OCL 训练行被剔除，并有计数。",
+  "resolve_before": "T2 / T3A 前"
+ },
+ {
+  "id": "V91-07",
+  "priority": "P1",
+  "category": "statistics",
+  "evidence_kind": "REPRODUCED_SYNTHETIC",
+  "evidence": [
+   "REVIEW_DIR:tools/simultaneous_interval_sim.py",
+   "REVIEW_DIR:tools/block_length_sim.py",
+   "REVIEW_DIR:logs/05_block_length_sim.stdout",
+   "/mnt/afs/260010168/earthdelta_v9_1_claude_review_20260929T123449Z/logs/05_interval_sim_phi060.stdout",
+   "/mnt/afs/260010168/earthdelta_v9_1_claude_review_20260929T123449Z/logs/06_interval_sim_phi085.stdout",
+   "/mnt/afs/260010168/earthdelta_v9_1_claude_review_20260929T123449Z/logs/07_interval_sim_sanity.stdout",
+   "plans/plan_v9_online_20260929/REUSE_DECISIONS.md:81",
+   "plans/plan_v9_online_20260929/t0_reuse.patch:44"
+  ],
+  "claim": "约 39 个周块时，周块 bootstrap 的同时区间会明显覆盖不足。合成零效应、24 个相关格子、t5 尾部的设置下：日 AR(1)=0.6 时，Bonferroni 百分位与 sup-t 的同时覆盖率分别为 0.879 和 0.824（M=24）；AR=0.85 时为 0.582 和 0.493。独立同分布时约为 0.93–0.95（模拟本身无误）；把样本扩到 400 周后，AR=0.6 时回升到 0.918。2 周循环块能部分修复：M=8、AR=0.85 时，Bonferroni 覆盖率从 1 周块的 0.583 升到 0.808；4 周块因块数太少，没有更好（0.790）。T0 说 Bonferroni 是“保守的近似”，在这里不成立。尾部 Monte Carlo 误差（B=10000 时端点标准差约 0.018pp）是次要问题。",
+  "impact": "Gate 的判定（下界 > 0、下界 > δ、下界 > −0.5%）可能出现假阳性；14 天和 28 天分块只有 20 和 10 个块，块数更少，问题更严重。",
+  "minimal_change": "协议写明：(1) Gate 以 14 天循环块为主，或者取 7 天与 14 天中较保守的一个；(2) 签署前，用拟合期估计出的自相关生成合成数据，做一次覆盖率校准并报告，必要时放宽区间（例如按校准结果提高名义覆盖率）；(3) Bonferroni 百分位与 studentized sup-t 可以二选一，但不能声称达到名义覆盖；(4) 结论三态中 INCONCLUSIVE 的使用规则不变。",
+  "acceptance": "协议附带覆盖率校准表；T2 测试中加入一个依赖数据的覆盖率粗检（固定种子），并记录结果。",
+  "resolve_before": "签署 PHASE0_PROTOCOL / T2 metrics 前"
+ },
+ {
+  "id": "V91-08",
+  "priority": "P1",
+  "category": "statistics",
+  "evidence_kind": "SOURCE_CONFIRMED",
+  "evidence": [
+   "plan_zip:PHASE0_PROTOCOL.md:61-71",
+   "plan_zip:README.md:28",
+   "plan_zip:T4_P0_REPORT_AND_GATE1.md:38,50"
+  ],
+  "claim": "δ、非劣界和 G-B 下界定在拟合期试点之后填写，而且没有功效或最小可检测效应（MDE）分析。G-B 要求“相对 static 的差值下界 > δ（0.2–0.5pp）”，在约 39 个块下很可能以 INCONCLUSIVE 告终。“按原配置补充证据”也没有说明数据从哪里来（2021 年需要 A7）。",
+  "impact": "δ 可能在看到拟合期效应量之后被调整，留下研究者自由度；Gate 大概率既不通过也不失败，无法形成决策。",
+  "minimal_change": "δ 与非劣界只是实用显著性阈值，应当现在就固定，不必等试点。签署前用拟合期（选择子期）的分块方差估计 MDE，写入协议；写明 INCONCLUSIVE 后的唯一补证路径（例如 A7 签署后在 2021 年用同一配置复现），不得扩样或改阈值。",
+  "acceptance": "协议中有 MDE 表与预先写定的 INCONCLUSIVE 处理规则；阈值签署时间早于任何试点结果。",
+  "resolve_before": "A3 试点前（δ）；签署 PHASE0_PROTOCOL 前（MDE）"
+ },
+ {
+  "id": "V91-09",
+  "priority": "P1",
+  "category": "science",
+  "evidence_kind": "OBSERVED",
+  "evidence": [
+   "plan_zip:01_BACKGROUND.md:72-89",
+   "plan_zip:T3A_P0_OUTPUT_SPACE.md:34"
+  ],
+  "claim": "DABC 就是 NCEP 业务中使用的衰减平均偏差订正（decaying average bias correction），Kalman 滤波偏差订正等在线输出订正方法也早已成熟。相关工作表没有列出这些。在线输出订正本身谈不上新意；可以主张的只剩“同等信息下，参数空间相对于输出订正和重拟合”的比较，而这一点也尚未经过文献核验。",
+  "impact": "如果把输出订正方面的结果写成新方法，或者漏引业务上的前身，会影响新意与可信度。",
+  "minimal_change": "在 01 §5 补上业务偏差订正的前身（引文需人工核实），把新意主张限定为比较性问题，并在报告里避免使用“首次”一类措辞（原文已有此项要求）。",
+  "acceptance": "01 §5 有对应条目；报告中的新意陈述与之一致。",
+  "resolve_before": "T4 报告前（只改文档）"
+ },
+ {
+  "id": "V91-10",
+  "priority": "P2",
+  "category": "statistics",
+  "evidence_kind": "SOURCE_CONFIRMED",
+  "evidence": [
+   "plans/plan_v9_online_20260929/REUSE_DECISIONS.md:34,62-63",
+   "plan_zip:T2_ONLINE_HELPERS.md:52-58",
+   "T0 run: arch 5 项检查 SKIPPED（A2a 未签）"
+  ],
+  "claim": "Gate 用不到 arch：循环周块的采样索引与百分位或 sup-t 区间，用 numpy 实现约 40 行即可，而 StepM、SPA、MCS 本身也不是 Gate 所需的统计量。若为此安装 arch 及 statsmodels、patsy，只会把 A2a 放上关键路径。",
+  "impact": "无谓增加依赖与授权阻塞，也增加 NumPy 版本漂移的风险（.pydeps 中同时存在 1.26 与 2.2 两份元数据）。",
+  "minimal_change": "区间实现放在 earthdelta/online/metrics.py 内部，并用已知分布做单测；arch 可选，仅用于交叉核对；StepM、SPA、MCS 从阶段 0 移除。这样 A2a 可以只处理 T0 已确认可用的包，或者不签。",
+  "acceptance": "metrics 测试不依赖 arch；T4 报告不因 arch 缺失而被标为 BLOCKED。",
+  "resolve_before": "T2 前"
+ },
+ {
+  "id": "V91-11",
+  "priority": "P2",
+  "category": "engineering",
+  "evidence_kind": "REPRODUCED_SYNTHETIC",
+  "evidence": [
+   "REVIEW_DIR:logs/03_reuse_claims.stdout",
+   "earthdelta/probe/edits.py:33-46",
+   "earthdelta/memory.py:32-44,60-69",
+   "earthdelta/probe/rollout.py:87-95",
+   "scripts/probe_p3_directions.py:111-124",
+   "earthdelta/wbx/evaluate.py:269-303"
+  ],
+  "claim": "T0 的六项源码判断均属实，其中四项已独立复现：DirectWeightEditor 进入失败后遗留 1 个 hook，并且继续修改输出；VerifiedRecord 的 value 可以原地修改；eligible_records 会因未释放记录的 ID 重复而抛错（未来信息通过异常泄漏）；旧面积损失在 128×256 网格上是真值的 256 倍。另外两项有源码支撑：calibration_effect 先把各通道能量合并再求比；WBX 的 single_chunk 只把传入的时间用于年份门控，不与数组坐标绑定。",
+  "impact": "如果不在新代码中加封装，这些问题会带来因果泄漏、编辑状态污染或指标尺度错误。",
+  "minimal_change": "采纳 T0 的约束：新队列不在包含待释放记录的列表上调用 eligible_records；编辑器进入前做预检，失败时清理 hook；payload 只读；指标一律使用 v8 或新实现；效应比沿用冻结函数的公式；调用 WBX 时校验时间坐标。",
+  "acceptance": "T2 负例测试逐项覆盖以上几点（T0 补丁中已列出大部分）。",
+  "resolve_before": "T2 前"
+ },
+ {
+  "id": "V91-12",
+  "priority": "P2",
+  "category": "engineering",
+  "evidence_kind": "DESIGN_PREFERENCE",
+  "evidence": [
+   "plan_zip:T2_ONLINE_HELPERS.md:86",
+   "plans/plan_v9_online_20260929/t0_reuse.patch:73",
+   "plan_zip:T2_ONLINE_HELPERS.md:75"
+  ],
+  "claim": "OCL 的 α 另外用 RidgeCV 和 TimeSeriesSplit 做“折内再选择”，与协议中统一的“估计子期 / 选择子期”划分重复，还要额外处理 purge 与折内 EOF。structured_sketch 在阶段 0 也用不上：直接对滞后配对计算全梯度余弦，约 361×10 对 × 6.3M 维，CPU 可以承受。",
+  "impact": "增加代码量和泄漏面，而科学上没有收益。",
+  "minimal_change": "OCL 的 α 与 K 和其他超参一样，只在选择子期上从网格中选；删除 RidgeCV 与 TimeSeriesSplit（T0 关于折内 EOF 的约束随之失效）；阶段 0 不实现 sketch。",
+  "acceptance": "T2 代码中没有 TimeSeriesSplit 或 RidgeCV；OCL 的选择记录写入 config_resolved。",
+  "resolve_before": "T2 前"
+ },
+ {
+  "id": "V91-13",
+  "priority": "P2",
+  "category": "engineering",
+  "evidence_kind": "OBSERVED",
+  "evidence": [
+   "plan_zip:CLAUDE.md:31",
+   "plan_zip:T1_FIX_P5.md:6",
+   "runs/online/t0_reuse_audit_20260929T114614Z/FINAL_REPORT.md（系统 NumPy 1.24.4 被 WBX 拒绝；58 项经数据守卫跳过）",
+   "runs/online/t0_reuse_audit_20260929T114614Z/CPU_DATA_GUARD.json"
+  ],
+  "claim": "规定的测试命令没有写 PYTHONPATH=.pydeps:.。在系统环境下 WBX 会因 NumPy 版本被拒；T0 的 975/62 结果是在 .pydeps 环境加数据守卫下得到的。T1 第 0 步的“全量测试”如果不加守卫，可能读取真实数组或检查点。",
+  "impact": "基线无法复现，测试之间状态不一致；还可能在无意中读取天气数据。",
+  "minimal_change": "把命令固定为 PYTHONPATH=.pydeps:. PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python python -B -m pytest tests/ -q -m 'not slow' -p no:cacheprovider，并沿用 T0 的 cpu_test_guard 或等效的守卫；如实记录跳过项。",
+  "acceptance": "T1 第 0 步的结果与 T0 的 975 通过 / 62 跳过口径一致，或能逐项解释差异。",
+  "resolve_before": "T1 前"
+ },
+ {
+  "id": "V91-14",
+  "priority": "P2",
+  "category": "execution",
+  "evidence_kind": "OBSERVED",
+  "evidence": [
+   "plan_zip:T1_FIX_P5.md:10-64",
+   "plan_zip:CLAUDE.md:17-22",
+   "/mnt/afs/260010168/earthdelta_probe_claude_full_audit_20260927T121046Z/FINDINGS.json"
+  ],
+  "claim": "T1 只修 P5，而 P4 与 Step 2 已被列为冻结文件，其中的缺陷仍在：扩展会同时作用于两个方向族；TTT 梯度与菜单前向混在同一个作业里；Step 2 没有跨 lr 选择，也没有 V 集区间和 OBC 的 V 评估；P5 把所有 STOP 都映射到路线 B（T1 未提到）；P3 没有干跑模式。修完 P5 之后，headroom 探针依然跑不出合规结果。",
+  "impact": "T1 占用资源，却不在 v9.1 的研究关键路径上；还容易让人误以为 headroom 探针已经可以跑了。",
+  "minimal_change": "二选一：(a) 正式宣布 headroom 探针退役，T1 降为可选，只做“记录已知缺陷”；(b) 如果保底论文确实需要它，另立一项任务，修复 P4、Step 2 与 P5 的路线映射（需要解除这些文件的冻结）。",
+  "acceptance": "方案中明确写出探针的状态；T1 的验收不再暗示探针可运行。",
+  "resolve_before": "T1 前"
+ },
+ {
+  "id": "V91-15",
+  "priority": "P2",
+  "category": "authorization",
+  "evidence_kind": "OBSERVED",
+  "evidence": [
+   "plan_zip:T0_REUSE_AUDIT.md:16-19,50-55",
+   "plan_zip:AUTHORIZATIONS.md:10-11",
+   "runs/online/t0_reuse_audit_20260929T114614Z/VERIFICATION.json（A2a/A2b PENDING_UNSIGNED）"
+  ],
+  "claim": "T0 的验收要求完成 arch 运行和 batch 5 克隆，因此它“授权范围内完成、整体未完成”。这两项阻塞是授权问题，不是技术问题；另外，初次在沙箱中出现的 psutil 失败属于环境问题，在主机上已复跑解决。但阶段 0 其实不需要 TAFAS/OnlineTSF（只和 T5 的设计与相关工作有关），arch 也可以不用（见 V91-10）。",
+  "impact": "T0 被不必要地挂起，拖住 T2。",
+  "minimal_change": "修改 T0 的验收：阶段 0 只需要复用决策加上 sklearn、WBX、v8 的核验（已完成）；arch 改为可选；batch 5 克隆移到 T5 开工前（届时仍需签 A2b）。",
+  "acceptance": "T0 可以标记为“阶段 0 验收完成”，同时写明 A2a、A2b 仍未签署，以及它们将来的用途。",
+  "resolve_before": "T2 前"
+ },
+ {
+  "id": "V91-16",
+  "priority": "P2",
+  "category": "design",
+  "evidence_kind": "DESIGN_PREFERENCE",
+  "evidence": [
+   "plan_zip:PHASE0_PROTOCOL.md:49",
+   "plan_zip:T3B_P0_PARAM_SPACE.md:34,45",
+   "plan_zip:PHASE0_PROTOCOL.md:41-44"
+  ],
+  "claim": "主臂由选择子期的 26 个起报在 lag1 与 lag1c 之间择优决定（相差 0.05pp 以内时取 lag1），选择噪声很大。random 是一个固定的随机方向，在 630 万维空间里几乎与一切正交，作为对照太弱，无法检验“时间对齐”是否重要。各臂的调参预算也不相等（OCL 10 组，DABC 8 组，OBC 2 组，参数族每族 3 个倍数）。",
+  "impact": "主臂选择近乎随机，会降低功效；缺少“时间错位”对照，就无法把 H1 的时间可预测性与“任何梯度方向都有用”区分开。",
+  "minimal_change": "事先固定主臂（建议 lag1c，与 static 正交，互补性更清楚），另一个作为次要结果报告；把 random 换成或补上“时间错位梯度”对照（例如 g_{t−30天}，或者拟合期中随机日期的梯度，同样校准）；在报告中列出每个臂的调参预算。",
+  "acceptance": "协议中写明固定的主臂和错位对照；config_resolved 记录调参预算。",
+  "resolve_before": "签署 PHASE0_PROTOCOL 前"
+ },
+ {
+  "id": "V91-17",
+  "priority": "P2",
+  "category": "data",
+  "evidence_kind": "OBSERVED",
+  "evidence": [
+   "REVIEW_DIR:logs/06_metadata_checks.stdout",
+   "/mnt/afs/260010168/earthdelta_probe_headroom_20260927T072245Z_resume01/DATA_QC_RECEIPT.json"
+  ],
+  "claim": "resume01 中已有 1440 个 index 的 QC 与 sha256（用训练 mean/std 计算 z、有限性检查、坐标身份核对），覆盖 v9.1 所需 1456 个 index 中的 1439 个。方案要求从头做一次全年 QC，没有提到这份现成结果。",
+  "impact": "重复工作；新旧两次 QC 口径不同时，也难以对账。",
+  "minimal_change": "新 QC 按哈希绑定复用 P1 的逐 index 结果，只对缺少的 17 个 index（2、3、708–720、1099、1100）做新 QC，并对抽样重叠部分做一致性核对。",
+  "acceptance": "新的 QC 收据引用 P1 收据的 sha，并包含重叠部分的核对结果。",
+  "resolve_before": "T3A 前"
+ },
+ {
+  "id": "V91-18",
+  "priority": "P2",
+  "category": "execution",
+  "evidence_kind": "DESIGN_PREFERENCE",
+  "evidence": [
+   "plan_zip:LATER_PHASES.md:7-15"
+  ],
+  "claim": "时间线把 T5、2021 和 2022 的阶段都排进 10–12 月，以投 ICML 为目标。考虑到此前多轮 BLOCKED 与返工，这个安排过于乐观；同时 Gate 1 的结论尚不确定。",
+  "impact": "进度压力容易诱发事后放宽规则。",
+  "minimal_change": "在 Gate 1 之前不为后续阶段排期，也不冻结预算；只把阶段 0 作为当前承诺。",
+  "acceptance": "LATER_PHASES 改为“视 Gate 1 结果另行安排”。",
+  "resolve_before": "T3A 前（只改文档）"
+ },
+ {
+  "id": "V91-19",
+  "priority": "P3",
+  "category": "docs",
+  "evidence_kind": "OBSERVED",
+  "evidence": [
+   "plan_zip:README.md:10",
+   "plan_zip:01_BACKGROUND.md:3",
+   "plan_zip:02_CODE_REUSE_MAP.md:1",
+   "logs/01_git_state.stdout（main=f228895）"
+  ],
+  "claim": "“main@d55ad70”说法有误：d55ad70 是 probe-headroom-20260927 的 HEAD，main 是 f228895。",
+  "impact": "新分支的基点如果取自 main，就会缺少所有 probe 代码。",
+  "minimal_change": "改为“基于 probe-headroom-20260927@d55ad70”，新分支从该提交创建。",
+  "acceptance": "文档与 git 状态一致。",
+  "resolve_before": "部署时"
+ },
+ {
+  "id": "V91-20",
+  "priority": "P3",
+  "category": "docs",
+  "evidence_kind": "OBSERVED",
+  "evidence": [
+   "plan_zip:README.md:3",
+   "plan_zip:CHANGELOG_v9_1.md:3",
+   "ls EarthDelta/reviews/（无 CODEX_REVIEW_PLAN_V9_20260929.md）"
+  ],
+  "claim": "CHANGELOG 所依据的外部复查报告不在仓库中，逐条处理无法追溯。",
+  "impact": "外部复查意见与处理结果之间的对应关系无法核验。",
+  "minimal_change": "把该报告放进 reviews/，或者在 CHANGELOG 中注明其位置与 sha256。",
+  "acceptance": "文件存在且哈希可核对。",
+  "resolve_before": "部署时"
+ },
+ {
+  "id": "V91-21",
+  "priority": "P3",
+  "category": "engineering",
+  "evidence_kind": "DESIGN_PREFERENCE",
+  "evidence": [
+   "plans/plan_v9_online_20260929/t0_reuse.patch:26",
+   "earthdelta/static_adapter.py:208-241"
+  ],
+  "claim": "T0 建议复用 static_adapter.area_weight_q 来构造 torch 面积权重。但该函数的形状是 [1,1,Lat,1]，并缩放到均值为 1，与另一个目标函数的布局耦合；复用它只省下约 5 行代码。",
+  "impact": "引入不必要的耦合。",
+  "minimal_change": "二者都可以；新写的 5 行 torch 权重只要有与 v8 issue_mse 的一致性测试即可。",
+  "acceptance": "常数误差场的测试与 v8 结果一致。",
+  "resolve_before": "T2 中"
+ },
+ {
+  "id": "V91-22",
+  "priority": "P2",
+  "category": "engineering",
+  "evidence_kind": "RISK_TO_VERIFY",
+  "evidence": [
+   "plan_zip:T3B_P0_PARAM_SPACE.md:19",
+   "REVIEW_DIR:tools/fp16_direction_check.py",
+   "REVIEW_DIR:logs/04_fp16_direction.stdout"
+  ],
+  "claim": "梯度 worker 计划把原始梯度以 fp16 存盘（每条约 12.6MB）。在合成数据上：若梯度分量的量级在 1e-9 左右，直接转 fp16 会有 98% 的分量下溢为 0，与原始梯度的余弦只有 0.948；量级在 1e-6 时还能接受（余弦约 0.9999994）。先归一化再存 fp16，余弦恒为 0.99999998。真实梯度的量级尚未测过。",
+  "impact": "lag1、lag1c 与 ḡ_fit 的方向可能被量化误差扭曲，而且不会报错。",
+  "minimal_change": "先归一化为单位向量再存 fp16，范数单独以 fp64 保存；或者直接存 fp32（361 条约 9GB）。拟合期试点中记录梯度范数与下溢比例。",
+  "acceptance": "worker 单测中，存盘再读回的方向与 fp32 原值的余弦大于 0.99999；试点收据记录下溢比例。",
+  "resolve_before": "T3B 代码前"
+ },
+ {
+  "id": "V91-23",
+  "priority": "P3",
+  "category": "design",
+  "evidence_kind": "SOURCE_CONFIRMED",
+  "evidence": [
+   "plan_zip:T3B_P0_PARAM_SPACE.md:32",
+   "plan_zip:PHASE0_PROTOCOL.md:47-48"
+  ],
+  "claim": "lag1c = −unit(g_{t−1} − ḡ_fit) 没有说明 ḡ_fit 是对原始梯度求平均，还是对单位化后的梯度求平均。各天梯度范数差异很大，两种做法得到的中心化方向不同。",
+  "impact": "实现可能随意二选一，从而改变主臂的定义。",
+  "minimal_change": "在协议中写明：ḡ_fit 取估计子期原始梯度的平均，中心化也在原始尺度上做，然后再单位化；若选另一种，同样写明。",
+  "acceptance": "config_resolved 中记录 ḡ_fit 的定义与范数。",
+  "resolve_before": "签署 PHASE0_PROTOCOL 前"
+ }
+]

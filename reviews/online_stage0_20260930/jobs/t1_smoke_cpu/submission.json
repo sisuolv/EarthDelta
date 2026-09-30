@@ -1,0 +1,12 @@
+{
+  "stage": "t1_smoke_cpu",
+  "job_name": "ed-v92-t1-smoke-cpu-071737",
+  "resource": "spot_h100",
+  "gpus": 1,
+  "created_utc": "2026-09-30T07:17:37.617543+00:00",
+  "request_sha256": "6a786b813a4f05fe25e973954694e9eab8b497d934c334dc84669ad7e48b44c1",
+  "driver_sha256": "2fe324045c052a3a90bf082768336dbfd76a475f6cc4f20afff80bc9034d41b1",
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "level=error msg=\"command failed\" error=\"launcher: ensure cache ready for region cnsh01: stage=download code=download_failed region=: failed to download package from https://sco.sensecore.cn/registry/packages/sco/v2.0.1/v1/linux/amd64/sco-v2.0.1-v1-linux-amd64.tar.gz: failed to download package from https://sco.sensecore.cn/registry/packages/sco/v2.0.1/v1/linux/amd64/sco-v2.0.1-v1-linux-amd64.tar.gz: failed to obtain plugin archive: failed to download \\\"https://sco.sensecore.cn/registry/packages/sco/v2.0.1/v1/linux/amd64/sco-v2.0.1-v1-linux-amd64.tar.gz\\\", status code 404\"\n"
+}

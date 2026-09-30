@@ -1,0 +1,59 @@
+d55ad70854bcf535b86c761b8d9cf7a7981374a0
+probe-headroom-20260927
+?? $OUT
+?? "plan_v9_1_online_20260929 (2).zip"
+?? plans/plan_v9_online_20260929/
+?? plans/plans_v8_0926/EarthDelta_Main_Independent_Audit_20260926.zip
+?? plans/plans_v8_0926/codex_plan_20260926T134957Z/
+?? plans/plans_v8_0926/codex_plan_20260926T150212Z_r2/
+?? plans/plans_v8_0926/codex_plan_20260926T171440Z_r3/
+?? runs/
+d55ad70 probe: add static reference and estimator stages
+4480f0b probe: add menu evaluation worker
+f0f858e probe: fix full trajectory indexing and calibration
+2214ea9 probe: checkpoint P3 gradient rollouts
+fcfb73b probe: construct and calibrate frozen directions
+  audit/round2-review-20260921                f228895203d3ced2d5e984e705ea14a94160d4b8 docs: add v8 ChatGPT Pro packages and Codex follow-up planning prompt
+  main                                        f228895203d3ced2d5e984e705ea14a94160d4b8 docs: add v8 ChatGPT Pro packages and Codex follow-up planning prompt
+* probe-headroom-20260927                     d55ad70854bcf535b86c761b8d9cf7a7981374a0 probe: add static reference and estimator stages
+  v8-exec-20260926                            a0e4acf82c690e37248bb6d0410cec4c053493c1 Add fail-closed EarthDelta v8 execution layer
+  remotes/origin/audit/round2-review-20260921 f228895203d3ced2d5e984e705ea14a94160d4b8 docs: add v8 ChatGPT Pro packages and Codex follow-up planning prompt
+  remotes/origin/main                         f228895203d3ced2d5e984e705ea14a94160d4b8 docs: add v8 ChatGPT Pro packages and Codex follow-up planning prompt
+  remotes/origin/probe-headroom-20260927      d55ad70854bcf535b86c761b8d9cf7a7981374a0 probe: add static reference and estimator stages
+total 48
+-rw-r--r-- 1 11329 11329 27534 Sep 29 12:23 REUSE_DECISIONS.md
+-rw-r--r-- 1 11329 11329 17618 Sep 29 12:14 t0_reuse.patch
+ls: cannot access 'CLAUDE.md': No such file or directory
+3310490bfacfae60734c0ae8f892bb06033ba1a4a88ad2add53d26c593c92b8b  plan_v9_1_online_20260929 (2).zip
+6ae9c5a507263e27b2cf453515ab6cc0db10b6005934956208fa6593a6669a81  plans/plan_v9_online_20260929/REUSE_DECISIONS.md
+18c5f19aefc2e98ebfd4fc164061f298c889cce89f7b7caaab39b7959f7499f8  plans/plan_v9_online_20260929/t0_reuse.patch
+t0_reference_inventory_20260929T114614Z.json
+t0_reuse_audit_20260929T114614Z
+total 600
+-rw-r--r-- 1 11329 11329  11907 2026-09-29 12:27:10.992113145 +0000 COMMANDS.log
+-rw-r--r-- 1 11329 11329   8394 2026-09-29 12:15:38.929994839 +0000 CPU_DATA_GUARD.json
+-rw-r--r-- 1 11329 11329  14010 2026-09-29 12:03:27.204731398 +0000 DEPENDENCY_LOCAL_PROVENANCE.json
+-rw-r--r-- 1 11329 11329 198744 2026-09-29 11:48:57.893510725 +0000 ENVIRONMENT.json
+-rw-r--r-- 1 11329 11329 142372 2026-09-29 12:15:38.828699140 +0000 EXISTING_CPU_JUNIT.xml
+-rw-r--r-- 1 11329 11329  21864 2026-09-29 12:27:44.795319750 +0000 FINAL_MANIFEST.json
+-rw-r--r-- 1 11329 11329  11542 2026-09-29 12:25:51.269469394 +0000 FINAL_REPORT.md
+-rw-r--r-- 1 11329 11329    335 2026-09-29 12:05:32.463895421 +0000 HELPER_SEMANTICS.json
+-rw-r--r-- 1 11329 11329   3945 2026-09-29 11:56:39.086419416 +0000 INTERFACES_HOST_JUNIT.xml
+-rw-r--r-- 1 11329 11329  20493 2026-09-29 11:53:51.020499608 +0000 INTERFACES_JUNIT.xml
+-rw-r--r-- 1 11329 11329   1848 2026-09-29 11:50:26.208784134 +0000 MODULES_DEFAULT.json
+-rw-r--r-- 1 11329 11329   2376 2026-09-29 11:50:30.572560168 +0000 MODULES_PYDEPS.json
+-rw-r--r-- 1 11329 11329   1270 2026-09-29 12:14:58.600346682 +0000 PATCH_BASES.json
+-rw-r--r-- 1 11329 11329  15139 2026-09-29 12:23:16.287108580 +0000 PROTECTED_SOURCE_AFTER.json
+-rw-r--r-- 1 11329 11329  15139 2026-09-29 12:03:59.431294773 +0000 PROTECTED_SOURCE_BEFORE.json
+-rw-r--r-- 1 11329 11329  30291 2026-09-29 12:05:50.508842994 +0000 PYPI_RELEASE_METADATA.json
+-rw-r--r-- 1 11329 11329    733 2026-09-29 11:46:14.549642829 +0000 RUN_CONFIG.json
+-rw-r--r-- 1 11329 11329  27171 2026-09-29 12:03:59.165658329 +0000 SYMBOLS.json
+-rw-r--r-- 1 11329 11329   9894 2026-09-29 12:11:54.671566932 +0000 SYMBOL_REVIEW.md
+-rw-r--r-- 1 11329 11329   5045 2026-09-29 12:23:16.291280596 +0000 VERIFICATION.json
+-rw-r--r-- 1 11329 11329    325 2026-09-29 11:56:36.919798155 +0000 WBX_HAND_CHECK.json
+-rw-r--r-- 1 11329 11329    284 2026-09-29 11:56:37.139328225 +0000 WBX_V8_CHECK.json
+drwxr-xr-x 2 11329 11329   4096 2026-09-29 12:27:04.399166579 +0000 evidence
+drwxr-xr-x 3 11329 11329   4096 2026-09-29 11:46:14.457366736 +0000 inputs
+drwxr-xr-x 3 11329 11329   4096 2026-09-29 12:14:58.515967748 +0000 patch_sandbox
+drwxr-xr-x 8 11329 11329   4096 2026-09-29 12:15:33.114363211 +0000 tmp
+drwxr-xr-x 2 11329 11329   4096 2026-09-29 12:26:48.775836111 +0000 tools

@@ -1,0 +1,38 @@
+{
+  "cwd": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/statistics_001",
+  "job_dir": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/jobs/coverage_validation_000",
+  "timeout_seconds": 3750,
+  "actions": [
+    {
+      "name": "independent_validation_once",
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/online_calibrate_statistics.py",
+        "--config",
+        "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/inputs/RUNTIME_COVERAGE_VALIDATION.json",
+        "--out",
+        "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/coverage_validation_000",
+        "--phase",
+        "validation",
+        "--workers",
+        "13",
+        "--shard",
+        "0",
+        "--shards",
+        "2"
+      ],
+      "env": {
+        "PYTHONPATH": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/statistics_001",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "ONLINE_CONTRACT": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/inputs/plan/PHASE0_CONTRACT_DRAFT.json",
+        "PYTHONUNBUFFERED": "1"
+      },
+      "timeout": 3600
+    }
+  ]
+}

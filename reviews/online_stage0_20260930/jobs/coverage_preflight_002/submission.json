@@ -1,0 +1,12 @@
+{
+  "stage": "coverage_preflight_002",
+  "job_name": "ed-v92-coverage-preflight-002-091907",
+  "resource": "spot_5090_cpu",
+  "gpus": 1,
+  "created_utc": "2026-09-30T09:19:07.930935+00:00",
+  "request_sha256": "6047e4236dd3f9d0e2776e7aa187eeb92a66eea75329dc03591dbd91b2554009",
+  "driver_sha256": "2fe324045c052a3a90bf082768336dbfd76a475f6cc4f20afff80bc9034d41b1",
+  "exit_code": 0,
+  "stdout": "job pt-qansk7fl submitted successfully, please wait for scheduling!\n",
+  "stderr": ""
+}

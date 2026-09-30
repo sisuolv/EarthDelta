@@ -1,0 +1,29 @@
+{"coordinate": "lat", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"coordinate": "lon", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"coordinate": "time", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"coordinate": "channel", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [2], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [3], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [4], "purpose": "overlap_content_check", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [209], "purpose": "overlap_content_check", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [415], "purpose": "overlap_content_check", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [620], "purpose": "overlap_content_check", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [708], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [709], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [710], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [711], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [712], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [713], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [714], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [715], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [716], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [717], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [718], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [719], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [720], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [839], "purpose": "overlap_content_check", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [1044], "purpose": "overlap_content_check", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [1099], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [1100], "purpose": "new_qc", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [1255], "purpose": "overlap_content_check", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}
+{"indices": [1460], "purpose": "overlap_content_check", "stage": "qc", "store": "/mnt/afs/260010168/EarthDelta/data/era5_1p40625_v8/2020.zarr"}

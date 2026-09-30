@@ -1,0 +1,10 @@
+{
+  "status": "OBSERVED",
+  "engineering_pass": true,
+  "passed": 1036,
+  "skipped": 61,
+  "failures": [],
+  "junit_sha256": "c788124a521bf15af03dbd4f41c2dc7856e6bb541b28599e19e1841e58366ca3",
+  "junit_path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/regression_001/JUNIT.xml",
+  "required_online_skips": []
+}

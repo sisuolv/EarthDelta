@@ -37,6 +37,9 @@ __pycache__/
 
 # Ephemeral run logs
 checkpoints/*.log
+# Local execution trees contain model/data caches and immutable job snapshots.
+# Publish only curated review receipts under reviews/.
+/runs/
 
 # Build artifacts
 *.egg-info/

@@ -1,0 +1,100 @@
+{
+  "subscription_name": "0197ee17-b6eb-7846-b2b4-a77c5f509b92",
+  "resource_group_name": "default",
+  "zone": "cn-sh-01z",
+  "workspace_name": "share-space",
+  "name": "pt-z3vpw2af",
+  "uid": "315f30ae14704b9c859d14dc8b1816c8",
+  "display_name": "ed-v92-coverage-validation-001-093009",
+  "id": "/subscriptions/0197ee17-b6eb-7846-b2b4-a77c5f509b92/resourceGroups/default/zones/cn-sh-01z/workspaces/share-space/trainingJobs/pt-z3vpw2af",
+  "ownership": {
+    "requestor_id": "",
+    "tenant_id": "0197ee17-b6eb-7846-b2b4-a77c5f509b92",
+    "user_id": "01a042c9-2bfd-7169-af48-5fec08a63c8e",
+    "user_name": "260010168"
+  },
+  "framework": "PYTORCH",
+  "roles": [
+    {
+      "image_path": "registry.cn-sh-01.sensecore.cn/lepton-trainingjob/ngc-pytorch:25.06-cu12.9-py3.12-ubuntu24.04",
+      "name": "Worker",
+      "resource_spec": [
+        {
+          "description": "1Xn12lp-32GB",
+          "limits": {
+            "cpu": "14",
+            "device": "1",
+            "memory": "60",
+            "nvidia.com/gpu": "1"
+          },
+          "name": "n12lp.nn.i10a.1",
+          "replicas": 1,
+          "requests": {
+            "cpu": "14",
+            "device": "1",
+            "memory": "60",
+            "nvidia.com/gpu": "1"
+          }
+        }
+      ],
+      "startup_script": "timeout 3750s python3 -B /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tools/job_driver.py /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/jobs/coverage_validation_001/request.json",
+      "total_replicas": 1
+    }
+  ],
+  "mount": [
+    {
+      "access_mode": "VOLUME_ACCESS_MODE_UNSPECIFIED",
+      "endpoint": "",
+      "id": "01a04263-91e5-7603-bc01-c67e503da6b5",
+      "mount_options": "",
+      "mount_path": "/mnt/afs",
+      "name": "",
+      "region": "",
+      "subdir": "",
+      "type": "PV_AFS",
+      "zone": "cn-sh-01g"
+    }
+  ],
+  "tensorboard": {
+    "log_path": ""
+  },
+  "scheduling": {
+    "priority": "NORMAL",
+    "quota_type": "SPOT",
+    "scoring_strategy": {
+      "type": "LEAST_ALLOCATED"
+    }
+  },
+  "resource_pool": {
+    "display_name": "computing_cluster_5090_01g",
+    "name": "computing-cluster-5090-01g",
+    "vpc_id": "0198a254-1d71-7211-9a41-d5783abfe9aa",
+    "zone": "cn-sh-01g"
+  },
+  "state": "SUCCEEDED",
+  "root_mapping": false,
+  "fault_tolerance": {
+    "backoff_limit": 0,
+    "rules": []
+  },
+  "ssh": {
+    "auto_key_setup": false,
+    "config_mount_path": ""
+  },
+  "create_time": "2026-09-30T09:30:11Z",
+  "start_time": "2026-09-30T09:30:32Z",
+  "update_time": "2026-09-30T09:36:15.382267Z",
+  "complete_time": "2026-09-30T09:36:11Z",
+  "fine_tuning_specs": "",
+  "async_checkpoint": {
+    "max_ckpt_rounds": 0
+  },
+  "lme": {
+    "current_retries": 0,
+    "enable_checker": false,
+    "enable_health_monitor": false,
+    "enable_warmingup": false,
+    "max_retries": 0
+  },
+  "AdditionalProperties": {}
+}

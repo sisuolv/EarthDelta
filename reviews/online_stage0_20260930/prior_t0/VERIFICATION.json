@@ -1,0 +1,156 @@
+{
+  "utc": "2026-09-29T12:23:16.231845+00:00",
+  "scope": "T0 audit only; no installation, cloning, GPU or weather-array operations",
+  "completion": "AUTHORIZED_SCOPE_COMPLETE_WITH_UNSIGNED_DEPENDENCIES_PENDING",
+  "head_before": "d55ad70854bcf535b86c761b8d9cf7a7981374a0",
+  "head_after": "d55ad70854bcf535b86c761b8d9cf7a7981374a0",
+  "branch": "probe-headroom-20260927",
+  "protections": {
+    "checked_count": 149,
+    "changed": [],
+    "added_python": [],
+    "tracked_changes": [],
+    "head_unchanged": true,
+    "archive_unchanged": true,
+    "protected_out_unchanged": true,
+    "batch5_script_not_created": true,
+    "patch_not_applied": true
+  },
+  "git_status_after": "?? $OUT\n?? \"plan_v9_1_online_20260929 (2).zip\"\n?? plans/plan_v9_online_20260929/\n?? plans/plans_v8_0926/EarthDelta_Main_Independent_Audit_20260926.zip\n?? plans/plans_v8_0926/codex_plan_20260926T134957Z/\n?? plans/plans_v8_0926/codex_plan_20260926T150212Z_r2/\n?? plans/plans_v8_0926/codex_plan_20260926T171440Z_r3/\n?? runs/\n",
+  "status_added": [
+    "?? plans/plan_v9_online_20260929/"
+  ],
+  "status_removed": [],
+  "reference_inventory": {
+    "total": 46,
+    "missing_directories": 0,
+    "head_mismatches": 0,
+    "head_unverifiable": 0,
+    "missing_license_files": 6
+  },
+  "inventory_sha256": "32e56200149b1fa823de1da89af24a26d0e85143a8f736645404e7c2064b522c",
+  "source_symbols": {
+    "requested": 66,
+    "found": 66
+  },
+  "dependencies": {
+    "A2a": "PENDING_UNSIGNED",
+    "A2b": "PENDING_UNSIGNED",
+    "installation_executed": false,
+    "batch5_clone_executed": false,
+    "pip_freeze_unchanged": true,
+    "pip_freeze_before_sha256": "b9480509f97936c4756dca6b02960ceaa19657f6ffd0e8e9c5d2c708e09b9aaa",
+    "pip_freeze_after_sha256": "b9480509f97936c4756dca6b02960ceaa19657f6ffd0e8e9c5d2c708e09b9aaa",
+    "pip_freeze_line_count": 250,
+    "added_packages": [],
+    "removed_packages": [],
+    "caveat": "freeze describes metadata; actual imported versions are recorded separately"
+  },
+  "tests": {
+    "interfaces": {
+      "tests": 16,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 5,
+      "seconds": 9.13,
+      "skipped_reasons": {
+        "A2a unsigned; arch not installed": 5
+      },
+      "source": "INTERFACES_HOST_JUNIT.xml",
+      "source_sha256": "ad71933518059a02cf27ccf1d8df8cee07da95c61f9f080cc1ffda1b1da4fc5d"
+    },
+    "existing_cpu": {
+      "tests": 1037,
+      "passed": 975,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 62,
+      "seconds": 766.008,
+      "skipped_reasons": {
+        "T0 synthetic-only boundary: real arrays/checkpoints are not opened": 58,
+        "CUDA not available": 2,
+        "Upstream reference not exported yet": 1,
+        "Upstream reference outputs not exported yet": 1
+      },
+      "source": "EXISTING_CPU_JUNIT.xml",
+      "source_sha256": "3947f5e51aa9cb68c9594ae5ba1afc91d1265b5ad6cf4c1ebddb2c3fe60cf99c",
+      "deselected": 4,
+      "selection": "not slow",
+      "blocked_open_events": 58
+    },
+    "initial_sandbox_attempt": {
+      "tests": 16,
+      "passed": 9,
+      "failed": 2,
+      "errors": 0,
+      "skipped": 5,
+      "seconds": 9.368,
+      "skipped_reasons": {
+        "A2a unsigned; arch not installed": 5
+      },
+      "source": "INTERFACES_JUNIT.xml",
+      "source_sha256": "65a38224f4423cf9ac628c057a3e3ee667a6b49c715a4ce9d32d6333c526773f"
+    }
+  },
+  "metrics": {
+    "hand": {
+      "expected": [
+        0.8162498917952818,
+        0.8064709774768395,
+        0.8510723084058078,
+        0.8334677672162094
+      ],
+      "actual": [
+        0.8162498917952812,
+        0.8064709774768388,
+        0.851072308405807,
+        0.8334677672162087
+      ],
+      "max_abs_error": 7.771561172376096e-16,
+      "grid": "synthetic regular global cell centers"
+    },
+    "v8": {
+      "expected_pct": [
+        19.562912745782278,
+        19.215373040438497,
+        19.631550338487482,
+        19.689851937708326
+      ],
+      "actual_pct": [
+        19.56291274578229,
+        19.2153730404385,
+        19.63155033848749,
+        19.689851937708312
+      ],
+      "max_abs_error_pct": 1.4210854715202004e-14
+    },
+    "semantics": {
+      "calibration": {
+        "actual": 0.4472135954999579,
+        "ratio_of_pooled_energy": 0.4472135954999579,
+        "mean_of_channel_ratios": 0.6666666666666666,
+        "status": "OBSERVED_DIFFERENCE"
+      },
+      "old_area_weight": {
+        "old_mse": 45.0,
+        "correct_mse": 9.0,
+        "width": 5,
+        "ratio": 5.0,
+        "status": "BUG_REPRODUCED"
+      }
+    }
+  },
+  "patch": {
+    "dry_run_returncode": 0,
+    "changed_document_count": 5,
+    "applied": false,
+    "sha256": "18c5f19aefc2e98ebfd4fc164061f298c889cce89f7b7caaab39b7959f7499f8"
+  },
+  "pending": [
+    "A2a: arch runtime checks; statsmodels/patsy installation review",
+    "A2b: pinned TAFAS/OnlineTSF clone, license and design review",
+    "Human acceptance of proposed statistics and task-text amendments"
+  ],
+  "scientific_support": "NOT_ASSESSED; synthetic/interface audit only"
+}

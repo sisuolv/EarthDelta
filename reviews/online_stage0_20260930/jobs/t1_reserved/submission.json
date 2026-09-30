@@ -1,0 +1,12 @@
+{
+  "stage": "t1_reserved",
+  "job_name": "ed-v92-t1-reserved-072334",
+  "resource": "reserved_h100",
+  "gpus": 1,
+  "created_utc": "2026-09-30T07:23:34.421639+00:00",
+  "request_sha256": "22982b755a5c26b6d74ec6df08b47170580e021343a30f7399459178508c2c78",
+  "driver_sha256": "2fe324045c052a3a90bf082768336dbfd76a475f6cc4f20afff80bc9034d41b1",
+  "exit_code": 0,
+  "stdout": "job pt-0bnvpauj submitted successfully, please wait for scheduling!\n",
+  "stderr": ""
+}

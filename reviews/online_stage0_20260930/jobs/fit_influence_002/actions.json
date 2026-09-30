@@ -1,0 +1,12 @@
+[
+  {
+    "action": "all_online_negative_tests",
+    "exit_code": 0,
+    "wall_seconds": 13.501290239393711
+  },
+  {
+    "action": "fit_only_paired_influence_cells",
+    "exit_code": 0,
+    "wall_seconds": 483.72185476496816
+  }
+]

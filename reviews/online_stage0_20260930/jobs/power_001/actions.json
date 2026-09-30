@@ -1,0 +1,12 @@
+[
+  {
+    "action": "registered_power_tests",
+    "exit_code": 0,
+    "wall_seconds": 4.740167384967208
+  },
+  {
+    "action": "fit_power_80_percent_and_gate_conjunction",
+    "exit_code": 0,
+    "wall_seconds": 74.92606458626688
+  }
+]

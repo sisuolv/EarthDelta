@@ -1,0 +1,12 @@
+[
+  {
+    "action": "new_tests_with_direction_controls",
+    "exit_code": 0,
+    "wall_seconds": 10.799157690256834
+  },
+  {
+    "action": "fit_only_outputspace",
+    "exit_code": 1,
+    "wall_seconds": 2.533706206828356
+  }
+]

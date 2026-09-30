@@ -1,0 +1,170 @@
+--- a/plans/plan_v9_online_20260929/T2_ONLINE_HELPERS.md
++++ b/plans/plan_v9_online_20260929/T2_ONLINE_HELPERS.md
+@@ -23,7 +23,7 @@
+ ### `clock.py`：释放时钟与监督队列
+ - `SupervisionRecord`：不可变记录。
+   - 字段包括：`kind`（如 residual、gradient）、`issue_index`、`steps`、`valid_index_max`、`analysis_window_end`、`available_index`、`versions`（包含 model、loss、norm、denominators 四项），以及 `payload`。
+-  - 构造时对 payload 做 copy，并调用 `setflags(write=False)`。
++  - 构造时对 payload 做 copy，并调用 `setflags(write=False)`；避免向 actor 暴露队列持有的可变引用。`memory.VerifiedRecord` 仅支持向量 tensor，防御性 clone 后仍可原地修改，不能直接作为不可变 payload。只复用其时间规则和已释放记录的筛选。
+ - `SupervisionQueue`
+   - `add_pending(record)`：只供 worker 调用。
+   - `release(cutoff_index) -> tuple[SupervisionRecord, ...]`：只返回尚未释放、且 `available_index <= cutoff` 的记录，结果稳定排序并去重。
+@@ -32,7 +32,7 @@
+ - `available_index_for(issue_index, steps, buffer_steps)`：可用时刻 = 最后一步的有效时刻 + 缓冲。
+ 
+ ### `stores.py`：两种 store
+-两者都复用 `probe/access.py` 的读取方式和 JSONL 台账格式。
++两者只参考 `probe/access.py` 的读取和 JSONL 台账字段；现有控制器绑定旧 probe spec，不能直接当每次起报的 cutoff 边界。新包装先做角色、年份、索引和坐标校验，再访问 store；不向 actor 暴露原始句柄或 pending 对象。
+ 
+ - `ActorStore(store_path, year, norm_dir, ledger, run_id, expected_coords)`
+   - `read_input(index, *, t_index)`：要求 `index ≤ t_index`。
+@@ -43,33 +43,36 @@
+ - `qc_report(indices)`：生成数据报告。**这个报告不能被 actor 使用。**
+ 
+ ### `losses.py`
+-- `area_weights(lat, width)`：cos 纬度加权，广播到整个网格后再归一化，与 `v8/standard_metrics._weights` 保持一致。
++- `area_weights(lat, width)`：优先复用 `static_adapter.area_weight_q` 的 torch 纬度权重，在完整 H×W 上归一化，并补有限性/坐标校验；与 v8 的 issue_mse 和 WBX 核对。WBX 网格盒面积与 cos 纬度权重的等价范围限于本项目的规则、无极点格心网格。
+ - `normalized_step_mse(pred_norm, truth_raw, bridge, lat, variables, steps, denominators)`：
+   - 输入可以是任意 K 步、任意 H×W，并且可以反传梯度；
+   - `denominators` 要带上版本号。
+-- `cells(...)`：在物理单位下计算面积加权 MSE，返回形状为 `[n_var, n_step]`。
++- `cells(...)`：评分侧按变量 import `v8.standard_metrics.issue_mse`，只写形状/身份/掩码包装，返回 `[n_var, n_step]`。梯度侧保留可微 torch reduction，不能把 NumPy issue_mse 接到反传图上。禁止复用旧 area_weighted_mse/l6 的绝对值或旧分母。
+ 
+-### `metrics.py`（要保持很薄：同时推断交给 `arch`，官方指标交给 `earthdelta/wbx`）
+-- `relative_rmse_from_mse(mse_method, mse_base)`：输入形状为 `[N, V, L]`，按 pooled MSE 开方后计算。
++### `metrics.py`（保持薄封装：采样与区间接口用 `arch`，官方评分用 `earthdelta/wbx`；统计量与比较族显式定义）
++- `relative_rmse_from_mse(mse_method, mse_base)`：输入 `[N,V,L]`，对共同有效 issue 先池化 MSE 再开方，结果为百分比。`diff(a,b)=I_a-I_b` 始终共用 F0 分母，单位为百分点，不能换成以 b 为分母。
+ - `calendar_blocks(issue_times, block_days)`：按固定的日历边界分块。
+ - `bootstrap(mse_by_method, issue_times, *, base, block_days, draws=10000, seed)`：
+   - 所有方法共用同一套抽样；
+   - 输出每个格子的**边际**百分位区间；
+-  - 输出**同时**区间：先把逐 issue 的损失差按日历周聚合成序列，再用 `arch.bootstrap`（StationaryBootstrap 或 CircularBlockBootstrap，加上 StepM、SPA、MCS）做推断。这里只保留聚合和掩码的薄封装，不要自己实现多重比较；
++  - 每周保存各方法/格子的 MSE 总和及共同有效 issue 数，所有方法用同一套采样索引；每次用 sum(MSE总和)/sum(有效数) 重建非线性 pooled RMSE。不能只保存周均损失差或平均每周 RMSE。保留空周的日历位置，冻结周锚点和全空样本处理规则；
++  - 用 arch CircularBlockBootstrap 或签署的 StationaryBootstrap 生成配对样本。周序列上的 1/2/4 个单位才对应 7/14/28 天；不得将 7 错当成 7 周；
++  - 同时区间的建议实现：复用 arch conf_int(percentile)，按事先冻结的 F_B/F_H/F_C（8/24/12 项）分别以 1-0.05/M 的覆盖率作 Bonferroni 调整；所有臂差值作为统计量进入区间。方法须在 PHASE0_PROTOCOL 签署时采纳，报告有限块数和 Monte Carlo 尾部精度，并用合成数据核验；
++  - StepM、SPA、MCS 的优胜模型、p 值或置信集合另作损失比较诊断，不能当作 RMSE 同时区间或替代非劣界；它们目前因 A2a 未签尚未运行验收；
+   - 提供 `diff(a, b)` 用于两两比较。
+ - `acf_pairs(series, issue_times, lags_days)`：按日历配对，缺失的位置用掩码，不做替补；配对完成后再做分块 bootstrap。
+-- 必须有一致性测试：在随机场上，结果要与 `v8/standard_metrics.relative_rmse` 一致；在同一小样本上，RMSE 要与 `earthdelta/wbx/evaluate` 的官方计算一致（需要 A2a 装好 wbx 的依赖；如果因此跳过，要在汇报中如实说明）。
++- 必须有一致性测试：随机场与 v8.standard_metrics.relative_rmse、WBX、正确手写面积公式一致。T0 已在现有 .pydeps + .pydeps_wbx 上验证，默认无需重装 JAX；使用 WBX 自己的 vendor loader。调用 evaluate_single_chunk 时显式传入并校验 init_times、valid_times 与数组坐标一致，不能依赖其可选参数形成安全边界。缺依赖仍需如实记跳过。
+ 
+ ### `grad_utils.py`
+ - `load_frozen_script(name)`：用 importlib 按路径加载冻结脚本（只支持源码检出）。先校验仓库根目录，并记录 commit。
+ - `target_metadata(model, blocks)`：从模型推断目标参数的名称、形状、总维度，以及 block 的编号。
+ - `weight_gradient(model_or_loaded, x, truth, *, steps, loss_fn, rollout_fn, deltas=None)`：
+   - 如果 `deltas` 不为空，**不开 checkpoint**，或者在编辑上下文里完成反传；
+-  - 结束后恢复所有参数的 `requires_grad`，并检查 hook 数量为 0。
++  - DirectWeightEditor.__enter__ 在后续层校验失败时会留下前面已经注册的 hook。进入前须检查全部层/形状/device/dtype，使用独占模型或互斥；失败清理只处理本次拥有的 hook。结束后恢复 requires_grad、train/eval 状态、RNG，核对原权重/缓冲 digest 和 hook 数量。
+ - `response_effect(edited_traj, f0_traj, truth, lat, step=4)`：
+-  - 计算在 24h 那一步上，编辑造成的预报变化与 F0 误差之比，按变量取平均；
+-  - 允许传入 K ≥ 4 的短轨迹，这样校准只需要跑 4 步 rollout；
+-  - 定义要和 `calibration_effect` 保持一致，并在 21 步的数据上与后者做交叉核对。
++  - 保留冻结 calibration_effect 的实际公式：第 4 步在状态标准化通道上先池化加权平方差，分别开方求编辑响应/F0误差比，再对 batch 的比值取 RMS；不是逐通道比值的算术平均。按 issue（B=1）算值，跨校准 issue 的中位数由 T3B 处理；
++  - 允许至少包含初始场和前 4 步的短轨迹（T>=5）；校准只需 4 步 rollout，不能传仅含 4 个状态的数组；
++  - 在 21 状态合成数据上与冻结函数对账；对零/非有限分母拒绝。main 内部 effect/calibrate 无法直接 import，只新写短窗口包装和对数二分控制。
+ - `calibrate_amplitude(effect_fn, *, target, lo, hi, iters=12)`：与 P3 的对数二分算法相同。如果给定区间括不住目标值，就报错。
+ - `unit(v)`：零范数时返回 `None`，由调用方回退到 F0 并计数。另外提供 `cosine`。
+ - `structured_sketch(vector, *, seed, rank)`：只用于压缩诊断。报告里的主结果用完整梯度；sketch 要用多个 seed 与完整梯度的余弦做校验。
+@@ -83,7 +86,7 @@
+ - **基**：对每个变量、每个时效，用拟合期的残差场计算 K 个 EOF。
+ - **特征**：只用已释放的记录，包括两部分：同一时效上，最近若干个已兑现残差的 EOF 系数（按日历衰减做 EWMA）；最短时效（第 1 步）上，最新已兑现残差的 EOF 系数。
+ - **目标**：当期残差的 EOF 系数，然后还原成订正场，订正后为 `forecast − 预测的 bias`。
+-- **模型**：直接用 `sklearn` 的 Ridge 或 RidgeCV，配合 TimeSeriesSplit。α 在拟合期内按时间分割选定，每个时效单独建一个模型。EOF 用 numpy SVD，按 sqrt(cos lat) 加权。**不要引入 `eofs`**，它是 GPL-3.0。
++- **模型**：直接用 sklearn Ridge/RidgeCV；不能使用默认 cv=None。TimeSeriesSplit 的 gap 以行计，不懂标签可用时刻；在每折按日期与 available/支持窗 purge，先用折内训练部分拟合 EOF/均值/尺度，再变换验证部分。α 只在拟合期选定，每个时效一个模型。最终冻结选择后才能用整个拟合期重拟合。EOF 用 numpy SVD，按 sqrt(cos lat) 加权，不引入 eofs。
+ - 所有特征都通过 `Derived` 检查可用性。
+ 
+ ## 测试（全部在 CPU 上）
+@@ -102,13 +105,13 @@
+   - 常数误差场的面积加权 MSE 不随网格宽度变化；
+   - 与 v8 的结果一致；
+   - 边际区间和同时区间的形状；
+-  - 同时区间在合成零效应数据上的覆盖率大致正确（抽样次数少一点，只做粗检）；
++  - 同时区间在合成零效应数据上的覆盖率粗检；验证周有效数不等时仍与逐 issue pooled RMSE 一致、差值共用 F0 分母、空周不压缩；明确稀疏尾部的 Monte Carlo 限制；
+   - `acf_pairs` 对缺失位置正确使用掩码。
+ - `test_online_grad.py`
+   - 用小模型（`blocks[i].attn.proj = Linear(8, 8)`）复现"hook 移除后再用 checkpoint 反传"：**可以接受 CheckpointError，也可以接受数值不一致，两种都记录下来**；
+   - 安全路径必须与 eager 模式以及中心有限差分一致，并记录 torch 版本；
+   - `target_metadata` 在小模型上推断正确；
+-  - 零范数时正确回退。
++  - 零范数时正确回退；第二个 block 形状错误的失败路径不遗留 hook；校准使用双通道反例区分能量比与逐变量比值平均。
+ - `test_online_dabc.py`
+   - 符号正确；同一 cutoff 下反馈与 lag1 同时可用；
+   - 在"每天一条记录、衰减按天"的特例下，结果与 `memory.ewma_error_feature` 一致。
+--- a/plans/plan_v9_online_20260929/T3A_P0_OUTPUT_SPACE.md
++++ b/plans/plan_v9_online_20260929/T3A_P0_OUTPUT_SPACE.md
+@@ -37,7 +37,7 @@
+ **拟合期内部的时间分割**（写入协议）：
+ 1. 用 1 月 1 日至 2 月 24 日的起报估计偏差、EOF 和 ridge 模型（这些起报的 120h 窗口最晚到 2 月 29 日；2 月 25 日至 29 日的起报作为隔离带，不使用）；
+ 2. 用 3 月 1 日至 3 月 26 日的起报选超参；
+-3. 选定之后，用整个拟合期重新拟合；
++3. 选定之后，用整个拟合期重新拟合；若内部再用 RidgeCV，则每折也须按真实日期/支持窗 purge，EOF/中心化只在该折训练部分估计，不能先在整个拟合期算 EOF 再用于内部验证；
+ 4. 预热期只更新状态。
+ 
+ **诊断**（不作为门槛）：
+@@ -46,7 +46,7 @@
+ 
+ ## 输出
+ 
+-- `cells.npz`：按 arm × issue × 6 个变量 × 4 个时效存放，另附掩码和版本信息；
++- `cells.npz`：保留 arm × issue × 6变量 × 4时效的物理 MSE、共同评分掩码、issue 时间和版本；周汇总必须同时保存 MSE总和及有效数，不能只存周均损失差。官方评分复用 WBX，轻量评分复用 v8.issue_mse；
+ - `acf.npz`；
+ - `config_resolved.json`：记录所有冻结的选择及选择过程，包括每个候选的拟合期分数；
+ - `timing.json`。
+--- a/plans/plan_v9_online_20260929/T3B_P0_PARAM_SPACE.md
++++ b/plans/plan_v9_online_20260929/T3B_P0_PARAM_SPACE.md
+@@ -15,7 +15,7 @@
+ ## 梯度 worker（与 actor 分开）：`scripts/online_p0b_gradworker.py`
+ 
+ - 覆盖全部 361 个起报。对每个起报 s，在 F0 上计算梯度：只用第 1 到 4 步，损失为 `normalized_step_mse`，分母是拟合期的版本。
+-- 用 `weight_gradient` 计算，并且不带编辑增量，所以可以开 checkpoint。
++- 用 weight_gradient 计算，不带编辑增量时可以开 checkpoint。维度由 metadata 推断；target_params/flat_delta 固定旧 block 范围，effect/calibrate 又是 main 内部局部函数，不能当作通用可导入实现。分母来自新 F0 库的正确面积指标，不读取旧 DIRECTIONS_RECEIPT 的分母。
+ - 每个梯度写入 `SupervisionQueue` 的待释放区，`available_index = s + 4`（再加上缓冲）。存储格式为 fp16 文件：每条约 12.6MB，361 条约 4.5GB。记录中带上版本信息。
+ - 在诊断子集上，额外计算两类梯度：
+   - 第 1–2 步的梯度，用于 buf12 的配对检验；
+@@ -39,7 +39,7 @@
+ 
+ **校准（在拟合期完成，并冻结）**：
+ - **等响应**：对每个族分别确定一个幅度 a_族，使其在校准子集上 24h 效应比的中位数等于 0.1。
+-  - 效应比用 `response_effect` 计算，只需要跑 4 步 rollout；
++  - 效应比用 T2 修订后 response_effect 的同一公式：逐 issue 在状态标准化的全部通道上先池化能量再求比，跨校准 issue 取中位数；只需 4 步 rollout，但轨迹含初始场共 5 个状态；
+   - 滞后族在校准 issue 上，用的是当时已经释放的梯度。
+ - **倍数**：每个族在同一组候选 {0.5, 1, 2} 中，按选择子期的 L6 选出最好的倍数，然后冻结。所有族的调参预算相同。
+ - **主臂**：在选择子期，按协议规定的规则在 `lag1` 和 `lag1c` 中选一个作为主臂，然后冻结。
+--- a/plans/plan_v9_online_20260929/T4_P0_REPORT_AND_GATE1.md
++++ b/plans/plan_v9_online_20260929/T4_P0_REPORT_AND_GATE1.md
+@@ -12,7 +12,7 @@
+    - 投毒不变性测试的结果；
+    - 所有 actor 输入和派生状态是否都满足 `available ≤ cutoff`；
+    - 被排除或被掩码的格子数量，以及原因。
+-2. **主表**：主臂以及各个基线（OBC、DABC、OCL、static、random），相对 F0 在四个主格子上的结果。每个格子都给出**边际** 95% 区间，并给出协议里定义的**同时**区间。
++2. **主表**：主臂及 OBC/DABC/OCL/static/random 相对 F0 的四个主格子；先池化 MSE 再开方。报告边际95%与签署方法生成的家族同时区间；差值统一为 I_a-I_b（F0分母、百分点）。StepM/SPA/MCS 结果另列，不能填作区间上下界。arch 未完成安装和接口验收时，推断部分明确 BLOCKED，不能给出正式 Gate 建议。
+ 3. **差值表**：
+    - 主臂减 static、主臂减 random；
+    - 主臂减 DABC、主臂减 OCL、主臂减 OBC；
+@@ -26,6 +26,8 @@
+ 7. **拟合期的选择记录**：所有候选的分数和最终冻结的选择。报告里要写明：多倍数的全表只是探索性的，没有参与任何选择。
+ 8. **官方交叉核对**：用 `earthdelta/wbx/evaluate.py`（官方 WeatherBench-X）重新计算 F0 和主臂在四个主格子上的 RMSE，与 `online/metrics.py` 的结果比较，差异要在数值容差以内。2020 年在 wbx 的年份门控内，是默认允许的。
+ 9. **计时与预算**：从进程启动起累计的全阶段用时，以及据此外推的 T5 预算。
++10. **统计身份**：记录 sampler、日历锚点、周块单位、掩码与有效数、随机种子、抽样数、F_B/F_H/F_C成员和区间方法；声明 T0 建议的 Bonferroni bootstrap 区间是否已在协议中采纳，以及小样本/Monte Carlo限制。
++11. **官方接口边界**：经 WBX 自带 vendor loader 导入；显式校验 issue/valid 时间与数组坐标绑定，只在声明的同一网格比较。T0 的合成一致性不能替代真实数据身份核验。
+ 
+ ## Gate 1 规则
+ 
+--- a/plans/plan_v9_online_20260929/T5_ONLINE_REPLAY.md
++++ b/plans/plan_v9_online_20260929/T5_ONLINE_REPLAY.md
+@@ -14,7 +14,7 @@
+ 4. 冻结 θ_t 和保护门的决策，然后发布；
+ 5. 由 scorer 评分。
+ 
+-**已经发布的预报记录不能回写。** 每个臂都有独立的 adapter、optimizer、保护门和 RNG。
++**已经发布的预报记录不能回写。** 每个臂都有独立 adapter、optimizer、保护门和 RNG；导入现有 build_fs_adapter、ExpertLoRA、controlled_rollout，不重新实现 LoRA。保持同一 backbone 串行，禁用外部 checkpoint 包装。
+ 
+ ## 必须包含的基线
+ 
+@@ -55,5 +55,5 @@
+ ## 验收
+ 
+ - CPU 测试：事件顺序正确；投毒不变性；游标与消费次数；遗忘的实现；保护门只使用已释放的信息；各臂之间的状态互相独立。
+-- 报告沿用 T4 的格式，并支持多个配置之间的比较。
++- 报告沿用 T4 的格式，并支持多个配置之间的比较；不能把 PETSA 在部分真值到达后重写后缀的评价协议照搬为已发布预报。ORCA/PETSA 仅只读参考，不拷贝代码；TAFAS/OnlineTSF 须先完成 A2b 后的固定版本、license 与延迟标签审查。
+ - 写出需要人执行的命令，以及每个配置的预算。

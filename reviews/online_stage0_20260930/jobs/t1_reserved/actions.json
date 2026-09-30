@@ -1,0 +1,17 @@
+[
+  {
+    "action": "smoke",
+    "exit_code": 0,
+    "wall_seconds": 13.800225336104631
+  },
+  {
+    "action": "environment",
+    "exit_code": 0,
+    "wall_seconds": 2.434112936258316
+  },
+  {
+    "action": "cpu_baseline",
+    "exit_code": 1,
+    "wall_seconds": 81.29330488666892
+  }
+]

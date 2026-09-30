@@ -1,0 +1,57 @@
+ACTION cpu_environment
+3.12.3 (main, Feb  4 2025, 14:48:35) [GCC 13.3.0]
+1.26.4
+8.1.1
+ACTION coverage_negative_equivalence_tests
+Running 11 items in this shard
+FF.........                                                              [100%]
+=================================== FAILURES ===================================
+__________ test_optimized_bootstrap_matches_direct_pooling_with_gaps ___________
+
+    def test_optimized_bootstrap_matches_direct_pooling_with_gaps():
+        c=contract();indices=364+4*np.arange(270);mask=np.ones((270,24),bool)
+        mask[60:74]=False;mask[170,3::4]=False
+        m=np.exp(np.random.default_rng(711).normal(size=(270,9,24)))
+>       plan=BootstrapPlan(indices,mask,c,500)
+
+tests/test_online_coverage.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earthdelta/online/coverage.py:92: in __init__
+    s=weekly_sufficient_stats(np.ones((len(indices),len(ARMS),len(self.cells))),mask,indices,
+earthdelta/online/metrics.py:49: in weekly_sufficient_stats
+    anchor=index_of(anchor); week=(idx-anchor)//28
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = '2020-03-30T00:00:00Z (Monday); include partial first/last and empty weeks'
+
+    def index_of(value):
+>       value = datetime.fromisoformat(value.replace('Z', '+00:00')) if isinstance(value, str) else value
+E       ValueError: Invalid isoformat string: '2020-03-30T00:00:00+00:00 (Monday); include partial first/last and empty weeks'
+
+earthdelta/online/timeindex.py:16: ValueError
+____ test_population_truth_does_not_use_observed_sample_and_f0_denominator _____
+
+    def test_population_truth_does_not_use_observed_sample_and_f0_denominator():
+        c=contract();ids=364+4*np.arange(270);mask=np.ones((270,24),bool)
+>       plan=BootstrapPlan(ids,mask,c,100)
+
+tests/test_online_coverage.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earthdelta/online/coverage.py:92: in __init__
+    s=weekly_sufficient_stats(np.ones((len(indices),len(ARMS),len(self.cells))),mask,indices,
+earthdelta/online/metrics.py:49: in weekly_sufficient_stats
+    anchor=index_of(anchor); week=(idx-anchor)//28
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = '2020-03-30T00:00:00Z (Monday); include partial first/last and empty weeks'
+
+    def index_of(value):
+>       value = datetime.fromisoformat(value.replace('Z', '+00:00')) if isinstance(value, str) else value
+E       ValueError: Invalid isoformat string: '2020-03-30T00:00:00+00:00 (Monday); include partial first/last and empty weeks'
+
+earthdelta/online/timeindex.py:16: ValueError
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/coverage_preflight_001/JUNIT.xml -
+=========================== short test summary info ============================
+FAILED tests/test_online_coverage.py::test_optimized_bootstrap_matches_direct_pooling_with_gaps
+FAILED tests/test_online_coverage.py::test_population_truth_does_not_use_observed_sample_and_f0_denominator
+2 failed, 9 passed in 3.79s

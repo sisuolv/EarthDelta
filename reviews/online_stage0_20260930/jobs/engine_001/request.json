@@ -1,0 +1,55 @@
+{
+  "cwd": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/engine_001",
+  "job_dir": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/jobs/engine_001",
+  "timeout_seconds": 1450,
+  "actions": [
+    {
+      "name": "all_new_synthetic_tests",
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/online_cpu_tests.py",
+        "--out",
+        "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/engine_001"
+      ],
+      "env": {
+        "PYTHONPATH": "/mnt/afs/260010168/EarthDelta/.pydeps:/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/engine_001",
+        "PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION": "python",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "JAX_PLATFORMS": "cpu",
+        "OMP_NUM_THREADS": "4",
+        "OPENBLAS_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4",
+        "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=4",
+        "ONLINE_CONTRACT": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/inputs/plan/PHASE0_CONTRACT_DRAFT.json"
+      },
+      "timeout": 180
+    },
+    {
+      "name": "H100_numerical_and_timing_preflight",
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/online_engine_precheck.py",
+        "--config",
+        "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/inputs/RUNTIME_ENGINE.json",
+        "--out",
+        "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/engine_001"
+      ],
+      "env": {
+        "PYTHONPATH": "/mnt/afs/260010168/EarthDelta/artifacts/ed-sprint8h-20260922T035313Z/cuda_site:/mnt/afs/260010168/EarthDelta/reference/stormer:/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/engine_001:/mnt/afs/260010168/EarthDelta/.pydeps",
+        "PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION": "python",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "JAX_PLATFORMS": "cpu",
+        "OMP_NUM_THREADS": "4",
+        "OPENBLAS_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4",
+        "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=4",
+        "ONLINE_CONTRACT": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/inputs/plan/PHASE0_CONTRACT_DRAFT.json",
+        "PYTHONUNBUFFERED": "1"
+      },
+      "timeout": 1200
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "status": "OBSERVED",
+  "engineering_pass": true,
+  "passed": 52,
+  "required_skips": 0,
+  "failures": [],
+  "scope": "T2 helper modules and mandatory synthetic negative tests; not scientific evidence",
+  "junit": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/t2_001/JUNIT.xml",
+    "sha256": "25c8ed1c635787173c54d9aa81c44b20c9ee188747c11c1cd1df72dd24792e0b"
+  },
+  "snapshot": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/T2_001_SNAPSHOT.json"
+}

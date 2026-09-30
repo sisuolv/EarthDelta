@@ -1,0 +1,104 @@
+ACTION parameter_and_interval_negative_tests
+Running 70 items in this shard
+......................................................................   [100%]
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/parameter_fit_001/JUNIT.xml -
+70 passed in 11.45s
+ACTION fit_response_calibration_and_selection
+{"calibration_started": "lag1c"}
+{"calibrated": "lag1c", "amplitude": 0.48194731845264943, "evaluations": 9}
+{"calibration_started": "lag1"}
+{"calibrated": "lag1", "amplitude": 0.48194731845264943, "evaluations": 9}
+{"calibration_started": "static"}
+{"calibrated": "static", "amplitude": 0.5273052170896847, "evaluations": 4}
+{"calibration_started": "delay30"}
+{"calibrated": "delay30", "amplitude": 0.48194731845264943, "evaluations": 9}
+{"calibration_started": "ewma_g_tau3"}
+{"calibrated": "ewma_g_tau3", "amplitude": 0.48194731845264943, "evaluations": 9}
+{"calibration_started": "ewma_g_tau7"}
+{"calibrated": "ewma_g_tau7", "amplitude": 0.5273052170896847, "evaluations": 4}
+{"calibration_started": "ewma_g_tau15"}
+{"calibrated": "ewma_g_tau15", "amplitude": 0.5273052170896847, "evaluations": 4}
+{"calibration_started": "ewma_g_tau30"}
+{"calibrated": "ewma_g_tau30", "amplitude": 0.5273052170896847, "evaluations": 4}
+{"selection_issue_complete": 240}
+{"selection_issue_complete": 244}
+{"selection_issue_complete": 248}
+{"selection_issue_complete": 252}
+{"selection_issue_complete": 256}
+{"selection_issue_complete": 260}
+{"selection_issue_complete": 264}
+{"selection_issue_complete": 268}
+{"selection_issue_complete": 272}
+{"selection_issue_complete": 276}
+{"selection_issue_complete": 280}
+{"selection_issue_complete": 284}
+{"selection_issue_complete": 288}
+{"selection_issue_complete": 292}
+{"selection_issue_complete": 296}
+{"selection_issue_complete": 300}
+{"selection_issue_complete": 304}
+{"selection_issue_complete": 308}
+{"selection_issue_complete": 312}
+{"selection_issue_complete": 316}
+{"selection_issue_complete": 320}
+{"selection_issue_complete": 324}
+{"selection_issue_complete": 328}
+{"selection_issue_complete": 332}
+{"selection_issue_complete": 336}
+{"selection_issue_complete": 340}
+{
+  "status": "OBSERVED",
+  "scope": "fit calibration/selection only",
+  "scientific_support": false,
+  "registered_variants": [
+    "lag1c",
+    "lag1",
+    "static",
+    "delay30",
+    "ewma_g_tau3",
+    "ewma_g_tau7",
+    "ewma_g_tau15",
+    "ewma_g_tau30"
+  ],
+  "active_variant": "ewma_g_tau30",
+  "candidate_scores": {
+    "lag1c_x0.5": 1.0613227361967539,
+    "lag1c_x1": 1.1345134771303709,
+    "lag1c_x2": 1.4662891830284237,
+    "lag1_x0.5": 1.0554717833820695,
+    "lag1_x1": 1.1283335358878541,
+    "lag1_x2": 2.60103218979703,
+    "static_x0.5": 1.07634284949505,
+    "static_x1": 1.2033589884566374,
+    "static_x2": 5.50630142859157,
+    "delay30_x0.5": 1.0748649636827838,
+    "delay30_x1": 1.147635018189368,
+    "delay30_x2": 1.6070466591144072,
+    "ewma_g_tau3_x0.5": 1.0524179102245048,
+    "ewma_g_tau3_x1": 1.1319668504051577,
+    "ewma_g_tau3_x2": 1.5392805967543037,
+    "ewma_g_tau7_x0.5": 1.0592255884943371,
+    "ewma_g_tau7_x1": 1.1647429793667796,
+    "ewma_g_tau7_x2": 1.9464485176887911,
+    "ewma_g_tau15_x0.5": 1.0612212803546708,
+    "ewma_g_tau15_x1": 1.169463487914623,
+    "ewma_g_tau15_x2": 1.7013404686933704,
+    "ewma_g_tau30_x0.5": 1.063068311806904,
+    "ewma_g_tau30_x1": 1.1725865596722602,
+    "ewma_g_tau30_x2": 2.311533466275184
+  },
+  "choices": {
+    "lag1c": "lag1c_x0.5",
+    "lag1": "lag1_x0.5",
+    "static": "static_x0.5",
+    "ewma_g": "ewma_g_tau3_x0.5",
+    "delay30": "delay30_x0.5"
+  },
+  "resolved": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/parameter_fit_001/CONFIG_RESOLVED.json",
+    "sha256": "9c73a10664ad2da9e4d31d54fb58edcc05cb762ab1aeb35df521a51c7f01b5ee"
+  },
+  "model_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+  "contract_sha256": "ea2e6ddeb31b9314b190f28e49680e440875dca2e579a268b2d0012e9d32498b",
+  "wall_seconds": 1297.8038734830916
+}

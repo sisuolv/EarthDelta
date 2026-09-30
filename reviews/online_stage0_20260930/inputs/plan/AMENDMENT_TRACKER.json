@@ -1,0 +1,275 @@
+{
+  "status": "PLAN_REVISED_NOT_IMPLEMENTED",
+  "items": [
+    {
+      "id": "V91-01",
+      "priority": "P0",
+      "disposition": "PARTIAL",
+      "plan_files": [
+        "README.md",
+        "AUTHORIZATIONS.md",
+        "CLAUDE_ROOT_PROPOSED.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-02",
+      "priority": "P1",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "01_BACKGROUND.md",
+        "T1_BASELINE_AND_RETIREMENT.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-03",
+      "priority": "P1",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "PHASE0_PROTOCOL.md",
+        "T3B_P0_PARAM_SPACE.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-04",
+      "priority": "P1",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "PHASE0_PROTOCOL.md",
+        "T2_ONLINE_HELPERS.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-05",
+      "priority": "P1",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "DATA_POLICY.md",
+        "DATA_ROSTER_DRAFT.json"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-06",
+      "priority": "P1",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "DATA_POLICY.md",
+        "PHASE0_PROTOCOL.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-07",
+      "priority": "P1",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "STATISTICAL_PLAN.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-08",
+      "priority": "P1",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "STATISTICAL_PLAN.md",
+        "PHASE0_PROTOCOL.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-09",
+      "priority": "P1",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "01_BACKGROUND.md",
+        "SOURCE_INDEX.json"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-10",
+      "priority": "P2",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "REUSE_DECISIONS.md",
+        "STATISTICAL_PLAN.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-11",
+      "priority": "P2",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "T2_ONLINE_HELPERS.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-12",
+      "priority": "P2",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "T2_ONLINE_HELPERS.md",
+        "T3A_P0_OUTPUT_SPACE.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-13",
+      "priority": "P2",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "T1_BASELINE_AND_RETIREMENT.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-14",
+      "priority": "P2",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "T1_BASELINE_AND_RETIREMENT.md",
+        "LATER_PHASES.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-15",
+      "priority": "P2",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "T0_REUSE_AUDIT.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-16",
+      "priority": "P2",
+      "disposition": "PARTIAL",
+      "plan_files": [
+        "PHASE0_PROTOCOL.md",
+        "T3B_P0_PARAM_SPACE.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-17",
+      "priority": "P2",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "DATA_POLICY.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-18",
+      "priority": "P2",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "LATER_PHASES.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-19",
+      "priority": "P3",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "README.md",
+        "SOURCE_INDEX.json"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-20",
+      "priority": "P3",
+      "disposition": "PARTIAL",
+      "plan_files": [
+        "SOURCE_INDEX.json"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-21",
+      "priority": "P3",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "REUSE_DECISIONS.md",
+        "T2_ONLINE_HELPERS.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-22",
+      "priority": "P2",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "PHASE0_PROTOCOL.md",
+        "T3B_P0_PARAM_SPACE.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    },
+    {
+      "id": "V91-23",
+      "priority": "P3",
+      "disposition": "ACCEPTED",
+      "plan_files": [
+        "PHASE0_PROTOCOL.md",
+        "T3B_P0_PARAM_SPACE.md"
+      ],
+      "implementation_verified": false,
+      "human_approval": "MISSING",
+      "detail": "See AMENDMENT_LOG.md; no research code or weather arrays changed."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "action": "all_new_precision_and_causality_tests",
+    "exit_code": 0,
+    "wall_seconds": 10.696567755192518
+  },
+  {
+    "action": "FP64_rescore_cached_F0",
+    "exit_code": 0,
+    "wall_seconds": 37.182396952062845
+  },
+  {
+    "action": "bind_revised_metric_receipt",
+    "exit_code": 0,
+    "wall_seconds": 0.08384842798113823
+  },
+  {
+    "action": "outputspace_fit",
+    "exit_code": 0,
+    "wall_seconds": 148.6421812698245
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "status": "OBSERVED",
+  "engineering_pass": true,
+  "tests": 1037,
+  "passed": 976,
+  "skipped": 61,
+  "deselected": 4,
+  "failure_count": 0,
+  "changed_outcomes": [
+    {
+      "test": "tests.test_v8_runner::test_runner_stops_at_missing_signed_source_after_formal_precheck",
+      "old": "SKIP",
+      "new": "PASS"
+    }
+  ],
+  "receipts": [
+    {
+      "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1_envfixed/runs/online/t1_shard0/EXISTING_CPU_JUNIT.xml",
+      "sha256": "065cccf20043b2a9f915ef5e56c90e3f74c7415a904094a1bf8d397f84814bc2"
+    },
+    {
+      "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1_envfixed/runs/online/t1_shard1/EXISTING_CPU_JUNIT.xml",
+      "sha256": "3865b71af2bf3f0ea5b26d94cda4886e1756e444fdd443e82d011d9539354e7c"
+    },
+    {
+      "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1_envfixed/runs/online/t1_shard2/EXISTING_CPU_JUNIT.xml",
+      "sha256": "ca8acbb1a5bd614fa868e57790d17691c524d92b492f5d8c8cb42ec83ddc6b05"
+    },
+    {
+      "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1_envfixed/runs/online/t1_shard3/EXISTING_CPU_JUNIT.xml",
+      "sha256": "b8dde0fd10b99a2c3cb46b20e0f1f6082148cb24a87f5f2972c48631d243a2bc"
+    }
+  ],
+  "array_guard": "T0 audit hook, same guarded real-payload skips",
+  "scope": "restricted CPU baseline, no scientific claim",
+  "initial_harness_failures": [
+    "missing basetemp parent",
+    "snapshot absolute data path mismatch; fixed via dependency mapping"
+  ]
+}

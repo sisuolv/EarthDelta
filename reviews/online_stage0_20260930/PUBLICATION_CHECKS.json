@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "file_count": 589,
+  "patterns": "provider tokens, GitHub tokens, private keys, AWS access-key identifiers; matches are reported only as file/line",
+  "findings": [],
+  "npz_note": "one small derived MSE table; original hash checked, raw fields and checkpoints excluded",
+  "scientific_code_matches_tested_snapshot": true
+}

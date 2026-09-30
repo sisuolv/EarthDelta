@@ -1,0 +1,81 @@
+{
+  "cwd": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/coverage_preflight_001",
+  "job_dir": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/jobs/coverage_preflight_001",
+  "timeout_seconds": 500,
+  "actions": [
+    {
+      "name": "cpu_environment",
+      "argv": [
+        "python3",
+        "-B",
+        "-c",
+        "import sys,numpy,pytest; print(sys.version); print(numpy.__version__); print(pytest.__version__)"
+      ],
+      "env": {
+        "PYTHONPATH": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/coverage_preflight_001",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "ONLINE_CONTRACT": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/inputs/plan/PHASE0_CONTRACT_DRAFT.json",
+        "PYTHONUNBUFFERED": "1"
+      },
+      "timeout": 30
+    },
+    {
+      "name": "coverage_negative_equivalence_tests",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_online_coverage.py",
+        "tests/test_online_statistics.py",
+        "--basetemp",
+        "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/coverage_preflight_001/tmp",
+        "--junitxml",
+        "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/coverage_preflight_001/JUNIT.xml"
+      ],
+      "env": {
+        "PYTHONPATH": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/coverage_preflight_001",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "ONLINE_CONTRACT": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/inputs/plan/PHASE0_CONTRACT_DRAFT.json",
+        "PYTHONUNBUFFERED": "1"
+      },
+      "timeout": 120
+    },
+    {
+      "name": "coverage_timing",
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/online_calibrate_statistics.py",
+        "--config",
+        "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/inputs/RUNTIME_PARAMETER_FIT.json",
+        "--out",
+        "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/coverage_preflight_001",
+        "--phase",
+        "preflight",
+        "--workers",
+        "12"
+      ],
+      "env": {
+        "PYTHONPATH": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/coverage_preflight_001",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "ONLINE_CONTRACT": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/inputs/plan/PHASE0_CONTRACT_DRAFT.json",
+        "PYTHONUNBUFFERED": "1"
+      },
+      "timeout": 300
+    }
+  ]
+}

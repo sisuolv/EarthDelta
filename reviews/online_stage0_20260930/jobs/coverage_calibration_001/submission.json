@@ -1,0 +1,12 @@
+{
+  "stage": "coverage_calibration_001",
+  "job_name": "ed-v92-coverage-calibration-001-092743",
+  "resource": "spot_5090_cpu",
+  "gpus": 1,
+  "created_utc": "2026-09-30T09:27:43.100105+00:00",
+  "request_sha256": "446f9cea7efac38abf74a8b96f0621db17803aa4836c8c6e048865cf491638b9",
+  "driver_sha256": "2fe324045c052a3a90bf082768336dbfd76a475f6cc4f20afff80bc9034d41b1",
+  "exit_code": 0,
+  "stdout": "job pt-rtcrppdd submitted successfully, please wait for scheduling!\n",
+  "stderr": ""
+}

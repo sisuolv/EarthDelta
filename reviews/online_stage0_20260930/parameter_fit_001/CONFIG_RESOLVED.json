@@ -1,0 +1,108 @@
+{
+  "arms": {
+    "lag1c": {
+      "variant": "lag1c",
+      "tau_days": null,
+      "multiplier": 0.5,
+      "amplitude": 0.24097365922632472,
+      "all_zero_family": false
+    },
+    "lag1": {
+      "variant": "lag1",
+      "tau_days": null,
+      "multiplier": 0.5,
+      "amplitude": 0.24097365922632472,
+      "all_zero_family": false
+    },
+    "static": {
+      "variant": "static",
+      "tau_days": null,
+      "multiplier": 0.5,
+      "amplitude": 0.26365260854484235,
+      "all_zero_family": false
+    },
+    "ewma_g": {
+      "variant": "ewma_g_tau3",
+      "tau_days": 3,
+      "multiplier": 0.5,
+      "amplitude": 0.24097365922632472,
+      "all_zero_family": false
+    },
+    "delay30": {
+      "variant": "delay30",
+      "tau_days": null,
+      "multiplier": 0.5,
+      "amplitude": 0.24097365922632472,
+      "all_zero_family": false
+    }
+  },
+  "primary": "lag1c",
+  "mean": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/gradient_002/RAW_MEAN_ESTIMATE_FP64.npy",
+    "sha256": "30c33dc28c167afcaf74f7cfcc3a271240d677a77454623195e574a3f67c01a3",
+    "dtype": "float64",
+    "source_indices": [
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      28,
+      32,
+      36,
+      40,
+      44,
+      48,
+      52,
+      56,
+      60,
+      64,
+      68,
+      72,
+      76,
+      80,
+      84,
+      88,
+      92,
+      96,
+      100,
+      104,
+      108,
+      112,
+      116,
+      120,
+      124,
+      128,
+      132,
+      136,
+      140,
+      144,
+      148,
+      152,
+      156,
+      160,
+      164,
+      168,
+      172,
+      176,
+      180,
+      184,
+      188,
+      192,
+      196,
+      200,
+      204,
+      208,
+      212,
+      216
+    ],
+    "artifact_available": 236
+  },
+  "denominators": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/f0_rescore_001/DENOMINATORS.json",
+    "sha256": "ae3839cdf083dba6a15424075901c0682b04eec84868025428d125a10be4348c"
+  },
+  "contract_sha256": "ea2e6ddeb31b9314b190f28e49680e440875dca2e579a268b2d0012e9d32498b",
+  "analysis_run": false
+}

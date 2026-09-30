@@ -1,0 +1,12 @@
+{
+  "stage": "f0_fit_002",
+  "job_name": "ed-v92-f0-fit-002-083441",
+  "resource": "reserved_h100",
+  "gpus": 1,
+  "created_utc": "2026-09-30T08:34:41.514700+00:00",
+  "request_sha256": "5d972ac57800394f7fb1b79f3289bfb1b4640f17990cc9f4c8679701661157df",
+  "driver_sha256": "2fe324045c052a3a90bf082768336dbfd76a475f6cc4f20afff80bc9034d41b1",
+  "exit_code": 0,
+  "stdout": "job pt-rsqrf0i5 submitted successfully, please wait for scheduling!\n",
+  "stderr": ""
+}

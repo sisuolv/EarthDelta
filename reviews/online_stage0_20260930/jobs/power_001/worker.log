@@ -1,0 +1,27 @@
+ACTION registered_power_tests
+Running 6 items in this shard
+......                                                                   [100%]
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/power_001/JUNIT.xml -
+6 passed in 3.98s
+ACTION fit_power_80_percent_and_gate_conjunction
+{"mc_complete": 50, "total": 1000, "seconds": 18.260320011526346}
+{"mc_complete": 100, "total": 1000, "seconds": 19.626604486256838}
+{"mc_complete": 150, "total": 1000, "seconds": 22.94014403782785}
+{"mc_complete": 200, "total": 1000, "seconds": 25.841243838891387}
+{"mc_complete": 250, "total": 1000, "seconds": 28.74632685445249}
+{"mc_complete": 300, "total": 1000, "seconds": 31.625492583960295}
+{"mc_complete": 350, "total": 1000, "seconds": 34.6375888120383}
+{"mc_complete": 400, "total": 1000, "seconds": 37.59469103068113}
+{"mc_complete": 450, "total": 1000, "seconds": 40.41407166235149}
+{"mc_complete": 500, "total": 1000, "seconds": 43.442168498411775}
+{"mc_complete": 550, "total": 1000, "seconds": 46.32879162952304}
+{"mc_complete": 600, "total": 1000, "seconds": 49.37061011604965}
+{"mc_complete": 650, "total": 1000, "seconds": 52.3772627171129}
+{"mc_complete": 700, "total": 1000, "seconds": 55.200846461579204}
+{"mc_complete": 750, "total": 1000, "seconds": 58.09355153515935}
+{"mc_complete": 800, "total": 1000, "seconds": 61.078535770997405}
+{"mc_complete": 850, "total": 1000, "seconds": 64.08498644083738}
+{"mc_complete": 900, "total": 1000, "seconds": 66.99202205054462}
+{"mc_complete": 950, "total": 1000, "seconds": 69.88797226548195}
+{"mc_complete": 1000, "total": 1000, "seconds": 72.74295603111386}
+{"status": "OBSERVED", "scope": "conditional fit power only", "gate_detectable_within_preregistered_grid_for_both_sources": false, "recommendation": "STATISTICAL_INCONCLUSIVE", "analysis_release": false, "scientific_support": false, "novelty_support": false, "wall_seconds": 73.20624379441142, "inputs_sha256": "2249286cdffdf66dab326b9cb9684ef2fc335d82350ee09c35ca845e97ad1486"}

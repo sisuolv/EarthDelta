@@ -1,0 +1,12 @@
+{
+  "stage": "coverage_calibration_000",
+  "job_name": "ed-v92-coverage-calibration-000-092740",
+  "resource": "spot_5090_cpu",
+  "gpus": 1,
+  "created_utc": "2026-09-30T09:27:40.672534+00:00",
+  "request_sha256": "317d8b8dbb964c79d9f4c1d0ba7f38cf7941486d810f9222c6a4fb8a13f75626",
+  "driver_sha256": "2fe324045c052a3a90bf082768336dbfd76a475f6cc4f20afff80bc9034d41b1",
+  "exit_code": 0,
+  "stdout": "job pt-0p4kyyi3 submitted successfully, please wait for scheduling!\n",
+  "stderr": ""
+}

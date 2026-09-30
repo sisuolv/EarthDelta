@@ -1,0 +1,9 @@
+{
+  "decision": "Restore exact estimate-anchored width formula from frozen STATISTICAL_PLAN.md section 2 before any coverage/analysis CI run.",
+  "replaced": "Unapplied midpoint widening in parameter_fit_001 snapshot; no weather CI affected.",
+  "formula": "L=theta-c*max(theta-L_percentile,0); U=theta+c*max(U_percentile-theta,0)",
+  "preflight": "CPU only on one spot 5090 allocation; no Torch CUDA or weather arrays",
+  "cpu_resource_cap": "at most 2 spot 5090 allocations, at most 26 CPU workers overall and two-hour qualification timebox; record all allocated GPU time even though GPU is idle",
+  "rho_rule": "daily mean of 24 normalized estimate F0 MSE cells; calendar-adjacent correlation clipped [0,.95], disclosed proxy limitation",
+  "plan_files_changed": false
+}

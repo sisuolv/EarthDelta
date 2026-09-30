@@ -1,0 +1,141 @@
+ACTION cpu_baseline
+Running 1037 items in this shard
+........................................................................ [  6%]
+......................................................................s. [ 13%]
+........................................................ssssssssssssssss [ 20%]
+ssss.s.s.sssss...................sss..............................s..... [ 27%]
+........................................................................ [ 34%]
+.....................................................................s.. [ 41%]
+........................................................................ [ 48%]
+...............ssssssssssssssss......................................... [ 55%]
+........................................................................ [ 62%]
+.ss...ss.........................s...................................... [ 69%]
+........................................................................ [ 76%]
+........................................................................ [ 83%]
+................................................F...........F........... [ 90%]
+................ssss.................................................... [ 97%]
+....................sss......                                            [100%]
+=================================== FAILURES ===================================
+________________ test_fp04_ninth_row_same_tag_refused_as_debug _________________
+
+freeze = SplitFreeze(path='/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1/runs/online/t1_retr...est_fp04_ninth_row_same_tag_r0/freeze.json', sha256='2f126c8b7f882e0d11aaedd7a373a4ae6a1c0a9bdc371b5a8dd8115918f9b2f1')
+
+    def test_fp04_ninth_row_same_tag_refused_as_debug(freeze):
+        rows = fp04_rows()
+        sha = sf.file_sha256(FP04_ADMISSION)
+        allowed = [r for r in rows if r["issue_id"] in DEBUG_IDS]
+        assert len(allowed) == 8 and {r["data_role"] for r in rows} == {"bank_fit"}
+>       report = sf.assert_rows_clear(freeze, allowed, "debug", source_admission_sha256=sha)
+
+tests/test_split_freeze.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+freeze = SplitFreeze(path='/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1/runs/online/t1_retr...est_fp04_ninth_row_same_tag_r0/freeze.json', sha256='2f126c8b7f882e0d11aaedd7a373a4ae6a1c0a9bdc371b5a8dd8115918f9b2f1')
+rows = [{'admitted': True, 'admitted_at': '2026-09-24T03:40:35.416085+00:00', 'available_time': 1578204000, 'checks': ['row_s...malization_hash_not_placeholder', 'data_role_declared', 'endpoints_exist_on_disk', 'span_uniformly_spaced'], ...}, ...]
+role = 'debug'
+
+    def assert_rows_clear(freeze: SplitFreeze, rows: Sequence[Mapping[str, Any]], role: str, *,
+                          allow_list: Optional[AllowList] = None,
+                          source_admission_sha256: Optional[str] = None,
+                          pre_admission: bool = False) -> Dict[str, Any]:
+        """Classify every row; raise ``ROW_NOT_CLEAR`` listing each failing row."""
+        if not rows:
+            raise SplitFreezeViolation("NO_ROWS", "nothing to clear")
+        verdicts = [classify_row(freeze, r, role, allow_list=allow_list,
+                                 source_admission_sha256=source_admission_sha256,
+                                 pre_admission=pre_admission) for r in rows]
+        ids = [v["issue_id"] for v in verdicts]
+        if len(set(ids)) != len(ids):
+            raise SplitFreezeViolation("DUPLICATE_ISSUE", "a row appears twice")
+        bad = [v for v in verdicts if not v["clear"]]
+        report = {"check": "split_freeze_clearance", "freeze_sha256": freeze.sha256, "role": role,
+                  "pre_admission": bool(pre_admission), "n_rows": len(rows),
+                  "n_clear": len(rows) - len(bad), "passed": not bad, "rows": verdicts}
+        if bad:
+>           raise SplitFreezeViolation("ROW_NOT_CLEAR",
+                                       f"{len(bad)} of {len(rows)} row(s) not clear for {role!r}; "
+                                       f"first {bad[0]['issue_id']}: {bad[0]['reasons']}", report)
+E           earthdelta.split_freeze.SplitFreezeViolation: [ROW_NOT_CLEAR] 8 of 8 row(s) not clear for 'debug'; first iss_292517fb189ee1bd: ['STORE_PATH_NOT_THE_FROZEN_ONE']
+
+earthdelta/split_freeze.py:486: SplitFreezeViolation
+_______ test_read_slab_inside_slice_logged_and_one_step_outside_refused ________
+
+freeze = SplitFreeze(path='/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1/runs/online/t1_retr...est_read_slab_inside_slice_lo0/freeze.json', sha256='2f126c8b7f882e0d11aaedd7a373a4ae6a1c0a9bdc371b5a8dd8115918f9b2f1')
+fake_store = []
+
+    def test_read_slab_inside_slice_logged_and_one_step_outside_refused(freeze, fake_store):
+        row, cert, sha = _debug_row_and_cert()
+>       x = sf.read_slab(freeze, "debug", row, cert, row["issue_store"], row["issue_index"],
+                         source_admission_sha256=sha)
+
+tests/test_split_freeze.py:303: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+freeze = SplitFreeze(path='/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1/runs/online/t1_retr...est_read_slab_inside_slice_lo0/freeze.json', sha256='2f126c8b7f882e0d11aaedd7a373a4ae6a1c0a9bdc371b5a8dd8115918f9b2f1')
+role = 'debug'
+row = {'admitted': True, 'admitted_at': '2026-09-24T03:40:35.416085+00:00', 'available_time': 1578204000, 'checks': ['row_se..., 'normalization_hash_not_placeholder', 'data_role_declared', 'endpoints_exist_on_disk', 'span_uniformly_spaced'], ...}
+certificate = {'batch_size': 2, 'channel_stats': [{'channel': '2m_temperature', 'channel_index': 0, 'max': 319.0740051269531, 'max_a...ha256': '37788f56be5ea772a1b2eee6ec1b246f362f73d38f1bf25ccfe43f9c3c20bc85', 'created_utc': '2026-09-20T18:54:05Z', ...}
+store_path = '/mnt/afs/260010168/EarthDelta/data/era5_1p40625/2020.zarr'
+index = 4
+
+    def read_slab(freeze: SplitFreeze, role: str, row: Mapping[str, Any],
+                  certificate: Mapping[str, Any], store_path: Path | str, index: int, *,
+                  allow_list: Optional[AllowList] = None,
+                  source_admission_sha256: Optional[str] = None) -> np.ndarray:
+        """Read ONE ``[V, Lat, Lon]`` float32 slab -- only inside the certified slice.
+    
+        Re-classifies the row (fail-closed), refuses any other store or any index
+        outside `allowed_indices`, checks the store's own time coordinate at the
+        index, and logs the read.
+        """
+        verdict = classify_row(freeze, row, role, allow_list=allow_list,
+                               source_admission_sha256=source_admission_sha256)
+        if not verdict["clear"]:
+>           raise SplitFreezeViolation("ROW_NOT_CLEAR", f"{verdict['issue_id']}: {verdict['reasons']}",
+                                       verdict)
+E           earthdelta.split_freeze.SplitFreezeViolation: [ROW_NOT_CLEAR] iss_292517fb189ee1bd: ['STORE_PATH_NOT_THE_FROZEN_ONE']
+
+earthdelta/split_freeze.py:555: SplitFreezeViolation
+=============================== warnings summary ===============================
+tests/test_probe_p3_layout.py:55
+  /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1/tests/test_probe_p3_layout.py:55: DeprecationWarning: invalid escape sequence '\['
+    with pytest.raises(ValueError, match="full \[B,21"):
+
+tests/test_probe_p3_layout.py:78
+  /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1/tests/test_probe_p3_layout.py:78: DeprecationWarning: invalid escape sequence '\['
+    with pytest.raises(ValueError, match="full \[B,21"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1/runs/online/t1_retry/EXISTING_CPU_JUNIT.xml -
+=========================== short test summary info ============================
+SKIPPED [21] runs/online/t1_retry/tools/cpu_test_guard.py:21: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:113: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:125: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:138: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:148: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:156: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:165: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:249: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:256: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:262: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:277: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:297: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:385: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:432: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_content_verification_b08.py:447: real ERA5 store data/era5_1p40625/2020.zarr not present
+SKIPPED [1] tests/test_content_verification_b08.py:469: real ERA5 store data/era5_1p40625/2016.zarr not present
+SKIPPED [1] tests/test_loaded_admission_binding.py:108: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [12] tests/test_loaded_admission_binding.py:122: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_loaded_admission_binding.py:148: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_loaded_admission_binding.py:159: historical admission not present on this machine
+SKIPPED [1] tests/test_loaded_admission_binding.py:168: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_pilot_admission_b09.py:615: real ERA5 store data/era5_1p40625/2020.zarr not present
+SKIPPED [1] tests/test_pilot_admission_b09.py:629: real ERA5 store data/era5_1p40625/2016.zarr not present
+SKIPPED [1] tests/test_upstream_parity.py:112: CUDA not available
+SKIPPED [1] tests/test_upstream_parity.py:184: CUDA not available
+SKIPPED [1] tests/test_upstream_parity.py:249: Upstream reference not exported yet
+SKIPPED [1] tests/test_upstream_parity.py:270: Upstream reference outputs not exported yet
+SKIPPED [1] tests/test_wbx_export.py:326: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_wbx_export.py:343: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_wbx_export.py:359: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+2 failed, 974 passed, 61 skipped, 4 deselected, 2 warnings in 541.25s (0:09:01)

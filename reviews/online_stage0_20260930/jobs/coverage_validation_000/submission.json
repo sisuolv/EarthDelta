@@ -1,0 +1,12 @@
+{
+  "stage": "coverage_validation_000",
+  "job_name": "ed-v92-coverage-validation-000-093007",
+  "resource": "spot_5090_cpu",
+  "gpus": 1,
+  "created_utc": "2026-09-30T09:30:07.084226+00:00",
+  "request_sha256": "28cf0a2d1a5a8ded01dd46f4fed3a940ecbeb25e8d67ba363725e248478b3386",
+  "driver_sha256": "2fe324045c052a3a90bf082768336dbfd76a475f6cc4f20afff80bc9034d41b1",
+  "exit_code": 0,
+  "stdout": "job pt-hg2sq6ta submitted successfully, please wait for scheduling!\n",
+  "stderr": ""
+}

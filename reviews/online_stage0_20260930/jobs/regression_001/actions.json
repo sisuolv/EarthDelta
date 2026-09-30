@@ -1,0 +1,7 @@
+[
+  {
+    "action": "full_guarded_cpu_regression",
+    "exit_code": 0,
+    "wall_seconds": 603.7388190589845
+  }
+]

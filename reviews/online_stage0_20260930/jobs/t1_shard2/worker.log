@@ -1,0 +1,19 @@
+ACTION cpu_baseline
+Running 325 items in this shard
+........................................................................ [ 22%]
+..................sss................................sss................ [ 44%]
+..............s......................................................... [ 66%]
+...........................................................sssssssssssss [ 88%]
+sss..................................                                    [100%]
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1_envfixed/runs/online/t1_shard2/EXISTING_CPU_JUNIT.xml -
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_wbx_export.py:326: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_wbx_export.py:343: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_wbx_export.py:359: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [4] runs/online/t1_shard2/tools/cpu_test_guard.py:21: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_loaded_admission_binding.py:108: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [12] tests/test_loaded_admission_binding.py:122: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_loaded_admission_binding.py:148: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+SKIPPED [1] tests/test_loaded_admission_binding.py:159: historical admission not present on this machine
+SKIPPED [1] tests/test_loaded_admission_binding.py:168: T0 synthetic-only boundary: real arrays/checkpoints are not opened
+302 passed, 23 skipped, 1 deselected in 93.57s (0:01:33)

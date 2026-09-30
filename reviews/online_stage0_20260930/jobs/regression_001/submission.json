@@ -1,0 +1,12 @@
+{
+  "stage": "regression_001",
+  "job_name": "ed-v92-regression-001-082301",
+  "resource": "reserved_h100",
+  "gpus": 1,
+  "created_utc": "2026-09-30T08:23:01.032507+00:00",
+  "request_sha256": "74dfb19bdd15818cc12beb803b5340cb87aa4e2382fac8163679d4a31e0e9fce",
+  "driver_sha256": "2fe324045c052a3a90bf082768336dbfd76a475f6cc4f20afff80bc9034d41b1",
+  "exit_code": 0,
+  "stdout": "job pt-8r7za9cy submitted successfully, please wait for scheduling!\n",
+  "stderr": ""
+}

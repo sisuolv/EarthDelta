@@ -1,0 +1,12 @@
+[
+  {
+    "action": "new_tests_and_parameter_artifact_guards",
+    "exit_code": 0,
+    "wall_seconds": 13.400708839297295
+  },
+  {
+    "action": "fit_raw_full_gradients",
+    "exit_code": 0,
+    "wall_seconds": 276.2148777246475
+  }
+]

@@ -1,0 +1,8 @@
+v8_2020_COMPLETE_present 1457 absent [0, 1, 1096, 1097, 1098, 1462, 1463]
+counts fit/warm/analysis 86 5 270 total 361
+fit affected (steps missing) [('01-01', 'input')]
+analysis affected (steps missing) [('09-26', [20]), ('09-27', [16, 17, 18]), ('09-28', [12, 13, 14]), ('09-29', [8, 9, 10]), ('09-30', [4, 5, 6]), ('10-01', 'input')]
+analysis windows touching 712 (step offset) [('06-22', 20), ('06-23', 16), ('06-24', 12), ('06-25', 8), ('06-26', 4), ('06-27', 0)]
+analysis scored cells lost to absent truth [('09-26', [20]), ('09-27', []), ('09-28', [12]), ('09-29', []), ('09-30', [4]), ('10-01', [1])]
+needed 1456 covered by P1 QC 1439 not covered [2, 3, 708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 718, 719, 720, 1099, 1100]
+norm files ['normalize_diff_mean_12.npz', 'normalize_diff_mean_18.npz', 'normalize_diff_mean_24.npz', 'normalize_diff_mean_6.npz', 'normalize_diff_std_12.npz', 'normalize_diff_std_18.npz', 'normalize_diff_std_24.npz', 'normalize_diff_std_6.npz', 'normalize_mean.npz', 'normalize_std.npz']

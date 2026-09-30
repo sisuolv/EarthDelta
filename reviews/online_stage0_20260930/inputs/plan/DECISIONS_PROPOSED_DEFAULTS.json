@@ -1,0 +1,78 @@
+{
+  "status": "PROPOSED",
+  "human_signature": "MISSING",
+  "decisions": [
+    {
+      "id": "D01",
+      "default": "新建 v9.2 独立计划目录；根 CLAUDE 仅提供提案",
+      "reason": "保留 v9.1/T0 历史；A1 人工签署不由代理代办",
+      "approval": "MISSING"
+    },
+    {
+      "id": "D02",
+      "default": "主臂 lag1c；δ=0.3pp；非劣界=-0.5%；收益下界>0",
+      "reason": "在任何新试点前锁定研究对象和资源决策阈值，不视为行业常数",
+      "approval": "MISSING"
+    },
+    {
+      "id": "D03",
+      "default": "ewma_g 与 DABC 使用同一 τ 网格；OCL-fresh 读取全部六变量×前四步监督",
+      "reason": "区分慢漂移、信息新鲜度及参数更新的额外价值",
+      "approval": "MISSING"
+    },
+    {
+      "id": "D04",
+      "default": "同样中心化的delay30替代random；校准02-02至02-17；F_M单列raw lag1−ewma_g",
+      "reason": "隔离时间错位与中心化；校准有足够历史，不读2019，不增加GPU臂",
+      "approval": "MISSING"
+    },
+    {
+      "id": "D05",
+      "default": "14天循环块；固定家族16/24/12/12/4；50000次；独立覆盖率校准",
+      "reason": "不将 Bonferroni 或换块长视为覆盖保证；校准失败不得正式放行",
+      "approval": "MISSING"
+    },
+    {
+      "id": "D06",
+      "default": "raw FP32 梯度+FP64范数；原始梯度均值和原尺度中心化",
+      "reason": "避免 fp16 下溢及单位梯度均值混用；增加约4.5GB存储的代价很小",
+      "approval": "MISSING"
+    },
+    {
+      "id": "D07",
+      "default": "明确逐格缺失、冷启动F0回退、隔离带仅排除目标行",
+      "reason": "反馈失败不能提前改变actor；不能以未来窗口QC删除起报",
+      "approval": "MISSING"
+    },
+    {
+      "id": "D08",
+      "default": "只补17个待QC索引并校验8个重叠点；旧QC绑定已哈希缓存",
+      "reason": "复用真实收据；不宣称 COMPLETE 或抽样足以认证整个当前store",
+      "approval": "MISSING"
+    },
+    {
+      "id": "D09",
+      "default": "arch可选，batch5推迟至T5；阶段0采用NumPy与Ridge",
+      "reason": "不让无关未签安装/克隆挡住已具备依赖的阶段0",
+      "approval": "MISSING"
+    },
+    {
+      "id": "D10",
+      "default": "旧headroom探针退役；T1只做环境/来源核验",
+      "reason": "只修P5无法修复全链，不借未运行探针支持结论",
+      "approval": "MISSING"
+    },
+    {
+      "id": "D11",
+      "default": "A3≤3/A4≤5/合计≤8 H100卡时，均待签",
+      "reason": "扩充慢漂移/错位臂后按实际计时重算，不能沿用未测2–3卡时",
+      "approval": "MISSING"
+    },
+    {
+      "id": "D12",
+      "default": "两次签署：试点前规则签署，分析前结果/身份签署",
+      "reason": "前者锁阈值、后者绑定fit产物；后者不能改变前者",
+      "approval": "MISSING"
+    }
+  ]
+}

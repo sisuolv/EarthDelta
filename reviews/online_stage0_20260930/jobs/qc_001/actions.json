@@ -1,0 +1,12 @@
+[
+  {
+    "action": "synthetic_tests_including_qc",
+    "exit_code": 0,
+    "wall_seconds": 9.995058953762054
+  },
+  {
+    "action": "registered_partial_qc",
+    "exit_code": 0,
+    "wall_seconds": 7.290064614266157
+  }
+]

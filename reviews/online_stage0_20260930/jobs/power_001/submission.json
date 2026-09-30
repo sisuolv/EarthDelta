@@ -1,0 +1,12 @@
+{
+  "stage": "power_001",
+  "job_name": "ed-v92-power-001-093831",
+  "resource": "spot_5090_cpu",
+  "gpus": 1,
+  "created_utc": "2026-09-30T09:38:31.469797+00:00",
+  "request_sha256": "8499ac770ce57372baebf5b0a653141e69d3b4bc903295dd3f6c89ab7c9c389c",
+  "driver_sha256": "2fe324045c052a3a90bf082768336dbfd76a475f6cc4f20afff80bc9034d41b1",
+  "exit_code": 0,
+  "stdout": "job pt-petyr8nq submitted successfully, please wait for scheduling!\n",
+  "stderr": ""
+}

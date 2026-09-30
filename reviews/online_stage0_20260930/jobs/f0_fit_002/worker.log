@@ -1,0 +1,170 @@
+ACTION new_tests_with_bank_and_outputfit
+Running 65 items in this shard
+.................................................................        [100%]
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/f0_fit_002/JUNIT.xml -
+65 passed in 8.42s
+ACTION fit_only_F0_bank
+{"issue": 4, "role": "estimate", "roll20_seconds": 3.069761123508215}
+{"issue": 8, "role": "estimate", "roll20_seconds": 1.237265046685934}
+{"issue": 12, "role": "estimate", "roll20_seconds": 1.2410790212452412}
+{"issue": 16, "role": "estimate", "roll20_seconds": 1.237298145890236}
+{"issue": 20, "role": "estimate", "roll20_seconds": 1.2352434396743774}
+{"issue": 24, "role": "estimate", "roll20_seconds": 1.235872384160757}
+{"issue": 28, "role": "estimate", "roll20_seconds": 1.2375777699053288}
+{"issue": 32, "role": "estimate", "roll20_seconds": 1.2392758689820766}
+{"issue": 36, "role": "estimate", "roll20_seconds": 1.237179733812809}
+{"issue": 40, "role": "estimate", "roll20_seconds": 1.2376419380307198}
+{"issue": 44, "role": "estimate", "roll20_seconds": 1.240907359868288}
+{"issue": 48, "role": "estimate", "roll20_seconds": 1.2361625917255878}
+{"issue": 52, "role": "estimate", "roll20_seconds": 1.2362117730081081}
+{"issue": 56, "role": "estimate", "roll20_seconds": 1.2387925833463669}
+{"issue": 60, "role": "estimate", "roll20_seconds": 1.2378282807767391}
+{"issue": 64, "role": "estimate", "roll20_seconds": 1.2226731106638908}
+{"issue": 68, "role": "estimate", "roll20_seconds": 1.2392346002161503}
+{"issue": 72, "role": "estimate", "roll20_seconds": 1.2451312988996506}
+{"issue": 76, "role": "estimate", "roll20_seconds": 1.2344038896262646}
+{"issue": 80, "role": "estimate", "roll20_seconds": 1.2393363118171692}
+{"issue": 84, "role": "estimate", "roll20_seconds": 1.250070709735155}
+{"issue": 88, "role": "estimate", "roll20_seconds": 1.2396353669464588}
+{"issue": 92, "role": "estimate", "roll20_seconds": 1.2431836016476154}
+{"issue": 96, "role": "estimate", "roll20_seconds": 1.242574792355299}
+{"issue": 100, "role": "estimate", "roll20_seconds": 1.2391046658158302}
+{"issue": 104, "role": "estimate", "roll20_seconds": 1.2444313243031502}
+{"issue": 108, "role": "estimate", "roll20_seconds": 1.2388326711952686}
+{"issue": 112, "role": "estimate", "roll20_seconds": 1.2391856238245964}
+{"issue": 116, "role": "estimate", "roll20_seconds": 1.238882839679718}
+{"issue": 120, "role": "estimate", "roll20_seconds": 1.229187000542879}
+{"issue": 124, "role": "estimate", "roll20_seconds": 1.2394434213638306}
+{"issue": 128, "role": "estimate", "roll20_seconds": 1.2416457869112492}
+{"issue": 132, "role": "estimate", "roll20_seconds": 1.2394352070987225}
+{"issue": 136, "role": "estimate", "roll20_seconds": 1.239294033497572}
+{"issue": 140, "role": "estimate", "roll20_seconds": 1.2393353544175625}
+{"issue": 144, "role": "estimate", "roll20_seconds": 1.2392663583159447}
+{"issue": 148, "role": "estimate", "roll20_seconds": 1.2393113523721695}
+{"issue": 152, "role": "estimate", "roll20_seconds": 1.240245707333088}
+{"issue": 156, "role": "estimate", "roll20_seconds": 1.2392607666552067}
+{"issue": 160, "role": "estimate", "roll20_seconds": 1.2384591549634933}
+{"issue": 164, "role": "estimate", "roll20_seconds": 1.2390197403728962}
+{"issue": 168, "role": "estimate", "roll20_seconds": 1.2401458323001862}
+{"issue": 172, "role": "estimate", "roll20_seconds": 1.2399075739085674}
+{"issue": 176, "role": "estimate", "roll20_seconds": 1.237746424973011}
+{"issue": 180, "role": "estimate", "roll20_seconds": 1.2391240298748016}
+{"issue": 184, "role": "estimate", "roll20_seconds": 1.2379276864230633}
+{"issue": 188, "role": "estimate", "roll20_seconds": 1.2348449379205704}
+{"issue": 192, "role": "estimate", "roll20_seconds": 1.2392979748547077}
+{"issue": 196, "role": "estimate", "roll20_seconds": 1.2387606911361217}
+{"issue": 200, "role": "estimate", "roll20_seconds": 1.2461892776191235}
+{"issue": 204, "role": "estimate", "roll20_seconds": 1.2408064417541027}
+{"issue": 208, "role": "estimate", "roll20_seconds": 1.2381494455039501}
+{"issue": 212, "role": "estimate", "roll20_seconds": 1.2387255765497684}
+{"issue": 216, "role": "estimate", "roll20_seconds": 1.2394926361739635}
+{"issue": 220, "role": "gap", "roll20_seconds": 1.2255728021264076}
+{"issue": 224, "role": "gap", "roll20_seconds": 1.2393472827970982}
+{"issue": 228, "role": "gap", "roll20_seconds": 1.2399515248835087}
+{"issue": 232, "role": "gap", "roll20_seconds": 1.2397364489734173}
+{"issue": 236, "role": "gap", "roll20_seconds": 1.237518049776554}
+{"issue": 240, "role": "select", "roll20_seconds": 1.239473782479763}
+{"issue": 244, "role": "select", "roll20_seconds": 1.2383391000330448}
+{"issue": 248, "role": "select", "roll20_seconds": 1.243044339120388}
+{"issue": 252, "role": "select", "roll20_seconds": 1.2382793761789799}
+{"issue": 256, "role": "select", "roll20_seconds": 1.2394347712397575}
+{"issue": 260, "role": "select", "roll20_seconds": 1.2390132881700993}
+{"issue": 264, "role": "select", "roll20_seconds": 1.2391829267144203}
+{"issue": 268, "role": "select", "roll20_seconds": 1.2429332733154297}
+{"issue": 272, "role": "select", "roll20_seconds": 1.2377900294959545}
+{"issue": 276, "role": "select", "roll20_seconds": 1.2393198758363724}
+{"issue": 280, "role": "select", "roll20_seconds": 1.240273755043745}
+{"issue": 284, "role": "select", "roll20_seconds": 1.240659672766924}
+{"issue": 288, "role": "select", "roll20_seconds": 1.2416228018701077}
+{"issue": 292, "role": "select", "roll20_seconds": 1.2510315254330635}
+{"issue": 296, "role": "select", "roll20_seconds": 1.246396992355585}
+{"issue": 300, "role": "select", "roll20_seconds": 1.2368092238903046}
+{"issue": 304, "role": "select", "roll20_seconds": 1.2393475472927094}
+{"issue": 308, "role": "select", "roll20_seconds": 1.2385395169258118}
+{"issue": 312, "role": "select", "roll20_seconds": 1.2386012561619282}
+{"issue": 316, "role": "select", "roll20_seconds": 1.238955244421959}
+{"issue": 320, "role": "select", "roll20_seconds": 1.2427000254392624}
+{"issue": 324, "role": "select", "roll20_seconds": 1.2453652434051037}
+{"issue": 328, "role": "select", "roll20_seconds": 1.241690680384636}
+{"issue": 332, "role": "select", "roll20_seconds": 1.2389293760061264}
+{"issue": 336, "role": "select", "roll20_seconds": 1.2388952672481537}
+{"issue": 340, "role": "select", "roll20_seconds": 1.2402971722185612}
+{
+  "status": "OBSERVED",
+  "phase": "fit",
+  "scientific_support": false,
+  "cost_admission": {
+    "fit_card_hours_upper_projection": 1.7194546423153332,
+    "analysis_card_hours_upper_projection": 1.6568315789184216,
+    "total_card_hours_upper_projection": 3.3762862212337548,
+    "admitted": true,
+    "basis": "p95 per-issue timing, full nominal counts, 20% future overhead, plus already charged jobs",
+    "not_a_measured_total": true
+  },
+  "denominators": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/f0_fit_002/DENOMINATORS.json",
+    "sha256": "5a329bbad63720f78b35c98fbceba213fe87ec05386b42debb69b0db1c80903b"
+  },
+  "published": 85,
+  "nominal": 86,
+  "model_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+  "normalization_sha256": "cfc2f0581cf92f478e2e8a89ee1b508230be45c3be11fdf6dcce16dcf3323172",
+  "contract_sha256": "ea2e6ddeb31b9314b190f28e49680e440875dca2e579a268b2d0012e9d32498b",
+  "variables": [
+    {
+      "name": "Z500",
+      "channel": "geopotential_500",
+      "index": 11,
+      "unit": "m2 s-2"
+    },
+    {
+      "name": "T850",
+      "channel": "temperature_850",
+      "index": 53,
+      "unit": "K"
+    },
+    {
+      "name": "T2m",
+      "channel": "2m_temperature",
+      "index": 0,
+      "unit": "K"
+    },
+    {
+      "name": "MSLP",
+      "channel": "mean_sea_level_pressure",
+      "index": 3,
+      "unit": "Pa"
+    },
+    {
+      "name": "U850",
+      "channel": "u_component_of_wind_850",
+      "index": 27,
+      "unit": "m s-1"
+    },
+    {
+      "name": "Q700",
+      "channel": "specific_humidity_700",
+      "index": 65,
+      "unit": "kg kg-1"
+    }
+  ],
+  "lead_steps": [
+    1,
+    2,
+    3,
+    4,
+    12,
+    20
+  ],
+  "coordinate_cache": {
+    "arrays": [
+      "channels",
+      "lat",
+      "lon",
+      "time"
+    ],
+    "path": "/mnt/afs/260010168/earthdelta_probe_headroom_20260927T072245Z_resume01/cache/coordinates.npz",
+    "sha256": "c2351448186aed588517fde1f2c5694692e6f901be19c8472f75751867bb5c71"
+  },
+  "wall_seconds": 198.06081257387996
+}

@@ -1,0 +1,172 @@
+ACTION synthetic_tests_including_qc
+Running 59 items in this shard
+...........................................................              [100%]
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/qc_001/JUNIT.xml -
+59 passed in 8.07s
+ACTION registered_partial_qc
+{
+  "status": "OBSERVED",
+  "array_scope": "2020 declared 17+8 only",
+  "science_support": false,
+  "unexpected_rejections": [],
+  "rejected_indices": [
+    712
+  ],
+  "new_count": 17,
+  "overlap_count": 8,
+  "reused_count": 1439,
+  "normalization_sha256": "cfc2f0581cf92f478e2e8a89ee1b508230be45c3be11fdf6dcce16dcf3323172",
+  "coordinate_cache": {
+    "arrays": [
+      "channels",
+      "lat",
+      "lon",
+      "time"
+    ],
+    "path": "/mnt/afs/260010168/earthdelta_probe_headroom_20260927T072245Z_resume01/cache/coordinates.npz",
+    "sha256": "c2351448186aed588517fde1f2c5694692e6f901be19c8472f75751867bb5c71"
+  },
+  "manifest": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/qc_001/INDEX_MANIFEST.json",
+    "sha256": "e3f62292d206c1187212f26a23f7e2234818e1a39ebd0d0f959d862aa8cd0f5a"
+  },
+  "new_rows": {
+    "2": {
+      "index": 2,
+      "finite": true,
+      "max_abs_z": 6.406460263724926,
+      "argmax_flat": 1336044,
+      "decoded_sha256": "806b9635a127c65d87f2e9acf8335a8c6844f21dbbb51435c44a8384b1697118",
+      "expected_epoch": 1577880000
+    },
+    "3": {
+      "index": 3,
+      "finite": true,
+      "max_abs_z": 6.4008669072478455,
+      "argmax_flat": 2014082,
+      "decoded_sha256": "b029f7862381d11302fc252dc6ebd0d1554dca0d6f80a761065262a53bfa5ade",
+      "expected_epoch": 1577901600
+    },
+    "708": {
+      "index": 708,
+      "finite": true,
+      "max_abs_z": 11.410708826660873,
+      "argmax_flat": 1889470,
+      "decoded_sha256": "cd7bec9697875baa2ecaccd9fc254c6d690fe25b19242fcb37bc212dc81d9597",
+      "expected_epoch": 1593129600
+    },
+    "709": {
+      "index": 709,
+      "finite": true,
+      "max_abs_z": 9.739844529486533,
+      "argmax_flat": 1889470,
+      "decoded_sha256": "bee4fffdf5af7e666be9ba7c063829c8880ef989b7aff3c514719937bc023c8a",
+      "expected_epoch": 1593151200
+    },
+    "710": {
+      "index": 710,
+      "finite": true,
+      "max_abs_z": 8.817021927826074,
+      "argmax_flat": 1922372,
+      "decoded_sha256": "aa7997b8fd944398b869cd906ec4b3f897dc70dbded035d0667519a3f4c6d2c3",
+      "expected_epoch": 1593172800
+    },
+    "711": {
+      "index": 711,
+      "finite": true,
+      "max_abs_z": 8.544010527697168,
+      "argmax_flat": 1889216,
+      "decoded_sha256": "62d062affb6b24509a4fff6857e602ab282d57b14d0af09c0ccda3feaaf112c6",
+      "expected_epoch": 1593194400
+    },
+    "712": {
+      "index": 712,
+      "finite": true,
+      "max_abs_z": 102.60770439581425,
+      "argmax_flat": 1891776,
+      "decoded_sha256": "4248b58d394454375f7b0a93df1bdaba17c7d07af6eae9c2113da49596a99dc8",
+      "expected_epoch": 1593216000
+    },
+    "713": {
+      "index": 713,
+      "finite": true,
+      "max_abs_z": 35.286825368323164,
+      "argmax_flat": 1891521,
+      "decoded_sha256": "1b850364d76fffc853d68b59afb9fcc46f87ec17199d427f094c9c7fb5293495",
+      "expected_epoch": 1593237600
+    },
+    "714": {
+      "index": 714,
+      "finite": true,
+      "max_abs_z": 8.65910084806348,
+      "argmax_flat": 1988176,
+      "decoded_sha256": "907d899a15ad2dbd96ac3c792c9a2653079c7fe9d09b9cfca66f1f75560df309",
+      "expected_epoch": 1593259200
+    },
+    "715": {
+      "index": 715,
+      "finite": true,
+      "max_abs_z": 8.251144588139525,
+      "argmax_flat": 1987661,
+      "decoded_sha256": "46e65447729ac63c6f4e2beb4d0325a9f4e39b472567b561e456c9435de3fd44",
+      "expected_epoch": 1593280800
+    },
+    "716": {
+      "index": 716,
+      "finite": true,
+      "max_abs_z": 8.15329072064424,
+      "argmax_flat": 1987387,
+      "decoded_sha256": "a3ab240e5b6f8b4c7efb2a0e43a95c0fbad266d2e20965e78a60dbeeb052760a",
+      "expected_epoch": 1593302400
+    },
+    "717": {
+      "index": 717,
+      "finite": true,
+      "max_abs_z": 9.286530408035336,
+      "argmax_flat": 1891265,
+      "decoded_sha256": "14010ee0ed86aeed3192cb826964821cbf356092a3377ffdc3a09b9626186eb5",
+      "expected_epoch": 1593324000
+    },
+    "718": {
+      "index": 718,
+      "finite": true,
+      "max_abs_z": 8.475374222780449,
+      "argmax_flat": 1891265,
+      "decoded_sha256": "c0e5a15f9ac7ac2281bf3f4ae957b62fe9a17f0999cca0f38f383534aa92ee6c",
+      "expected_epoch": 1593345600
+    },
+    "719": {
+      "index": 719,
+      "finite": true,
+      "max_abs_z": 8.750669119842621,
+      "argmax_flat": 1987131,
+      "decoded_sha256": "6b6d82207aa02a3510881d80be94a76fcacc75cd94694c7c9fb1560fbf3c03ee",
+      "expected_epoch": 1593367200
+    },
+    "720": {
+      "index": 720,
+      "finite": true,
+      "max_abs_z": 12.44631458456764,
+      "argmax_flat": 1891011,
+      "decoded_sha256": "84129992799bbdee871dd746753c874047244c8298d8d954286b92b3fd48eddb",
+      "expected_epoch": 1593388800
+    },
+    "1099": {
+      "index": 1099,
+      "finite": true,
+      "max_abs_z": 8.050235399779059,
+      "argmax_flat": 1887175,
+      "decoded_sha256": "1a54542cba71f09e1dd9120cb80f613f853fcf1fb28f0a8c8e3404939409c560",
+      "expected_epoch": 1601575200
+    },
+    "1100": {
+      "index": 1100,
+      "finite": true,
+      "max_abs_z": 7.102454259737192,
+      "argmax_flat": 988303,
+      "decoded_sha256": "edfe6330193a49a553e12322f864103c40c931ae1461547237eac66632043c95",
+      "expected_epoch": 1601596800
+    }
+  },
+  "wall_seconds": 5.108786601573229
+}

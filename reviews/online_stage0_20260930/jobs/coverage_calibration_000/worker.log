@@ -1,0 +1,47 @@
+ACTION registered_inference_tests
+Running 13 items in this shard
+.............                                                            [100%]
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/coverage_calibration_000/JUNIT.xml -
+13 passed in 3.72s
+ACTION calibration_32_scenarios_sharded
+{"phase": "calibration", "completed_chunks": 20, "scheduled_chunks": 800, "seconds": 5.488705239258707}
+{"phase": "calibration", "completed_chunks": 40, "scheduled_chunks": 800, "seconds": 6.265558433718979}
+{"phase": "calibration", "completed_chunks": 60, "scheduled_chunks": 800, "seconds": 7.057483876124024}
+{"phase": "calibration", "completed_chunks": 80, "scheduled_chunks": 800, "seconds": 7.819815220311284}
+{"phase": "calibration", "completed_chunks": 100, "scheduled_chunks": 800, "seconds": 8.587355328723788}
+{"phase": "calibration", "completed_chunks": 120, "scheduled_chunks": 800, "seconds": 9.347886393778026}
+{"phase": "calibration", "completed_chunks": 140, "scheduled_chunks": 800, "seconds": 10.136565322056413}
+{"phase": "calibration", "completed_chunks": 160, "scheduled_chunks": 800, "seconds": 10.933333552442491}
+{"phase": "calibration", "completed_chunks": 180, "scheduled_chunks": 800, "seconds": 11.706849968060851}
+{"phase": "calibration", "completed_chunks": 200, "scheduled_chunks": 800, "seconds": 12.514205911196768}
+{"phase": "calibration", "completed_chunks": 220, "scheduled_chunks": 800, "seconds": 13.28313094843179}
+{"phase": "calibration", "completed_chunks": 240, "scheduled_chunks": 800, "seconds": 14.072342682629824}
+{"phase": "calibration", "completed_chunks": 260, "scheduled_chunks": 800, "seconds": 14.858302688226104}
+{"phase": "calibration", "completed_chunks": 280, "scheduled_chunks": 800, "seconds": 15.634627300314605}
+{"phase": "calibration", "completed_chunks": 300, "scheduled_chunks": 800, "seconds": 16.380279988981783}
+{"phase": "calibration", "completed_chunks": 320, "scheduled_chunks": 800, "seconds": 17.11415290646255}
+{"phase": "calibration", "completed_chunks": 340, "scheduled_chunks": 800, "seconds": 17.8848008941859}
+{"phase": "calibration", "completed_chunks": 360, "scheduled_chunks": 800, "seconds": 18.670814489014447}
+{"phase": "calibration", "completed_chunks": 380, "scheduled_chunks": 800, "seconds": 19.49232460092753}
+{"phase": "calibration", "completed_chunks": 400, "scheduled_chunks": 800, "seconds": 20.33758319914341}
+{"phase": "calibration", "completed_chunks": 420, "scheduled_chunks": 800, "seconds": 21.227744738571346}
+{"phase": "calibration", "completed_chunks": 440, "scheduled_chunks": 800, "seconds": 22.153774121776223}
+{"phase": "calibration", "completed_chunks": 460, "scheduled_chunks": 800, "seconds": 23.070632589049637}
+{"phase": "calibration", "completed_chunks": 480, "scheduled_chunks": 800, "seconds": 23.84524734131992}
+{"phase": "calibration", "completed_chunks": 500, "scheduled_chunks": 800, "seconds": 24.64934639353305}
+{"phase": "calibration", "completed_chunks": 520, "scheduled_chunks": 800, "seconds": 25.48594063706696}
+{"phase": "calibration", "completed_chunks": 540, "scheduled_chunks": 800, "seconds": 26.374019528739154}
+{"phase": "calibration", "completed_chunks": 560, "scheduled_chunks": 800, "seconds": 27.224849640391767}
+{"phase": "calibration", "completed_chunks": 580, "scheduled_chunks": 800, "seconds": 28.09818076901138}
+{"phase": "calibration", "completed_chunks": 600, "scheduled_chunks": 800, "seconds": 28.941128556616604}
+{"phase": "calibration", "completed_chunks": 620, "scheduled_chunks": 800, "seconds": 29.84417547751218}
+{"phase": "calibration", "completed_chunks": 640, "scheduled_chunks": 800, "seconds": 30.70615087915212}
+{"phase": "calibration", "completed_chunks": 660, "scheduled_chunks": 800, "seconds": 31.55912076868117}
+{"phase": "calibration", "completed_chunks": 680, "scheduled_chunks": 800, "seconds": 32.444001886062324}
+{"phase": "calibration", "completed_chunks": 700, "scheduled_chunks": 800, "seconds": 33.308752045966685}
+{"phase": "calibration", "completed_chunks": 720, "scheduled_chunks": 800, "seconds": 34.281188076362014}
+{"phase": "calibration", "completed_chunks": 740, "scheduled_chunks": 800, "seconds": 35.15601815842092}
+{"phase": "calibration", "completed_chunks": 760, "scheduled_chunks": 800, "seconds": 36.11393384169787}
+{"phase": "calibration", "completed_chunks": 780, "scheduled_chunks": 800, "seconds": 36.96155871357769}
+{"phase": "calibration", "completed_chunks": 800, "scheduled_chunks": 800, "seconds": 37.83060028310865}
+{"status": "OBSERVED", "phase": "calibration", "shard": 0, "shards": 2, "draws": 10000, "mc_per_scenario": 500, "selected_factor": null, "inputs_sha256": "dadc448f16e4853a5ecc02e5fb5135b0738c1ebdd23ca9c8d97d775e24dfc28e", "wall_seconds": 45.13698760420084, "scientific_support": false, "qualification_complete": false, "requires_all_shards_and_independent_validation": true}

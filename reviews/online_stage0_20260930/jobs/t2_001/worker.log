@@ -1,0 +1,5 @@
+ACTION synthetic_online_cpu
+Running 52 items in this shard
+....................................................                     [100%]
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/t2_001/JUNIT.xml -
+52 passed in 8.21s

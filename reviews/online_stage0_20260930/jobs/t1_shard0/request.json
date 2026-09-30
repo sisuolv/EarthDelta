@@ -1,0 +1,29 @@
+{
+  "run": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z",
+  "cwd": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1_envfixed",
+  "job_dir": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/jobs/t1_shard0",
+  "timeout_seconds": 950,
+  "actions": [
+    {
+      "name": "cpu_baseline",
+      "argv": [
+        "python3",
+        "-B",
+        "-u",
+        "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1_envfixed/runs/online/t1_shard0/tools/cpu_test_guard.py"
+      ],
+      "env": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION": "python",
+        "OMP_NUM_THREADS": "4",
+        "OPENBLAS_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4",
+        "JAX_PLATFORMS": "cpu",
+        "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=4",
+        "PYTHONPATH": "/mnt/afs/260010168/EarthDelta/.pydeps:/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1_envfixed",
+        "CUDA_VISIBLE_DEVICES": ""
+      },
+      "timeout": 900
+    }
+  ]
+}

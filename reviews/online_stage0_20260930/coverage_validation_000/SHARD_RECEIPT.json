@@ -1,0 +1,1360 @@
+{
+  "status": "OBSERVED",
+  "phase": "validation",
+  "shard": 0,
+  "shards": 2,
+  "draws": 50000,
+  "mc_per_scenario": 1000,
+  "selected_factor": 2.0,
+  "scenarios": [
+    {
+      "scenario": {
+        "id": 0,
+        "rho": 0.0,
+        "rho_source": 0.0,
+        "innovation": "gaussian",
+        "drift": false,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 57.567007104135214,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 59.9805593246718,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 55.796421693616466,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 55.98615010999272,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 48.366783453602096,
+          "mc_se": 0.0
+        }
+      ],
+      "measured_daily_loss_rho": -0.00405651156564611,
+      "measured_rho_mc_se": 0.0005998422467658922
+    },
+    {
+      "scenario": {
+        "id": 2,
+        "rho": 0.0,
+        "rho_source": 0.0,
+        "innovation": "gaussian",
+        "drift": true,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 55.676890258925795,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 57.89578717428666,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 53.943171613019096,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 53.86883055673567,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 46.99505550891209,
+          "mc_se": 0.0
+        }
+      ],
+      "measured_daily_loss_rho": -0.0017829546200866275,
+      "measured_rho_mc_se": 0.0006839890130762655
+    },
+    {
+      "scenario": {
+        "id": 4,
+        "rho": 0.0,
+        "rho_source": 0.0,
+        "innovation": "student_t_df5",
+        "drift": false,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 79.42593387656902,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 81.71077418205536,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 77.30136031732218,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 76.5664289699911,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 68.21287810287308,
+          "mc_se": 0.0009994998749374613
+        }
+      ],
+      "measured_daily_loss_rho": -0.0032447374083563576,
+      "measured_rho_mc_se": 0.0007689214606198189
+    },
+    {
+      "scenario": {
+        "id": 6,
+        "rho": 0.0,
+        "rho_source": 0.0,
+        "innovation": "student_t_df5",
+        "drift": true,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 74.39974666071863,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 76.46187320684915,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 72.09412779857546,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 71.31358517556562,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 63.47987184314232,
+          "mc_se": 0.0009994998749374613
+        }
+      ],
+      "measured_daily_loss_rho": -0.0025564104859071247,
+      "measured_rho_mc_se": 0.0007807795038857931
+    },
+    {
+      "scenario": {
+        "id": 8,
+        "rho": 0.6,
+        "rho_source": 0.6,
+        "innovation": "gaussian",
+        "drift": false,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 103.11508451625117,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 106.75312460084689,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 100.53676422318104,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 99.82341126223457,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 87.43930195194949,
+          "mc_se": 0.0009994998749374613
+        }
+      ],
+      "measured_daily_loss_rho": 0.5681773424182629,
+      "measured_rho_mc_se": 0.0011409165255363701
+    },
+    {
+      "scenario": {
+        "id": 10,
+        "rho": 0.6,
+        "rho_source": 0.6,
+        "innovation": "gaussian",
+        "drift": true,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 104.30908093008915,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 107.67647332817543,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 100.89802358761288,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 100.91502539465435,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 88.00232240031369,
+          "mc_se": 0.0
+        }
+      ],
+      "measured_daily_loss_rho": 0.6049331168676951,
+      "measured_rho_mc_se": 0.0012453839069867815
+    },
+    {
+      "scenario": {
+        "id": 12,
+        "rho": 0.6,
+        "rho_source": 0.6,
+        "innovation": "student_t_df5",
+        "drift": false,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 114.07899994327184,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 998,
+          "coverage": 0.998,
+          "wilson95": [
+            0.9927371921365079,
+            0.9994513564118793
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 117.70317689857337,
+          "mc_se": 0.0014127986409959495
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 111.01274395295783,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 110.39643800117454,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 97.23795865416042,
+          "mc_se": 0.0
+        }
+      ],
+      "measured_daily_loss_rho": 0.5698580701040936,
+      "measured_rho_mc_se": 0.0011959327514040057
+    },
+    {
+      "scenario": {
+        "id": 14,
+        "rho": 0.6,
+        "rho_source": 0.6,
+        "innovation": "student_t_df5",
+        "drift": true,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 112.93207624844852,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 116.3743693964742,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 109.93552460748481,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 109.47667270022107,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 998,
+          "coverage": 0.998,
+          "wilson95": [
+            0.9927371921365079,
+            0.9994513564118793
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 95.8926451909816,
+          "mc_se": 0.0014127986409959495
+        }
+      ],
+      "measured_daily_loss_rho": 0.5970771822271311,
+      "measured_rho_mc_se": 0.0012454344589620742
+    },
+    {
+      "scenario": {
+        "id": 16,
+        "rho": 0.85,
+        "rho_source": 0.85,
+        "innovation": "gaussian",
+        "drift": false,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 996,
+          "coverage": 0.996,
+          "wilson95": [
+            0.9897604437227377,
+            0.9984434118595916
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 147.4528963853981,
+          "mc_se": 0.0019959959919799443
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 981,
+          "coverage": 0.981,
+          "wilson95": [
+            0.9705155440876868,
+            0.9878031142492091
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 152.36770071417058,
+          "mc_se": 0.004317290817167639
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 995,
+          "coverage": 0.995,
+          "wilson95": [
+            0.9883490446266249,
+            0.9978624644726756
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 143.08142137908047,
+          "mc_se": 0.002230470802319547
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 993,
+          "coverage": 0.993,
+          "wilson95": [
+            0.9856216845342334,
+            0.9966051315990092
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 141.1929534155899,
+          "mc_se": 0.002636474919281427
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 994,
+          "coverage": 0.994,
+          "wilson95": [
+            0.9869718317581478,
+            0.9972473308581237
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 125.45110232973043,
+          "mc_se": 0.002442130217658347
+        }
+      ],
+      "measured_daily_loss_rho": 0.8124024554654109,
+      "measured_rho_mc_se": 0.0008004810821929971
+    },
+    {
+      "scenario": {
+        "id": 18,
+        "rho": 0.85,
+        "rho_source": 0.85,
+        "innovation": "gaussian",
+        "drift": true,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 989,
+          "coverage": 0.989,
+          "wilson95": [
+            0.9804106042992137,
+            0.9938468259019134
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 145.55445324640664,
+          "mc_se": 0.0032983329122452166
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 977,
+          "coverage": 0.977,
+          "wilson95": [
+            0.9657235493377733,
+            0.9846257230670071
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 150.31463795293277,
+          "mc_se": 0.004740358636221528
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 995,
+          "coverage": 0.995,
+          "wilson95": [
+            0.9883490446266249,
+            0.9978624644726756
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 141.41844402658236,
+          "mc_se": 0.002230470802319547
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 978,
+          "coverage": 0.978,
+          "wilson95": [
+            0.9669143266526004,
+            0.985427292235209
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 140.033147250763,
+          "mc_se": 0.004638534251247911
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 995,
+          "coverage": 0.995,
+          "wilson95": [
+            0.9883490446266249,
+            0.9978624644726756
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 123.16124257941364,
+          "mc_se": 0.002230470802319547
+        }
+      ],
+      "measured_daily_loss_rho": 0.8264821911756469,
+      "measured_rho_mc_se": 0.000889719589606253
+    },
+    {
+      "scenario": {
+        "id": 20,
+        "rho": 0.85,
+        "rho_source": 0.85,
+        "innovation": "student_t_df5",
+        "drift": false,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 995,
+          "coverage": 0.995,
+          "wilson95": [
+            0.9883490446266249,
+            0.9978624644726756
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 152.7653965167302,
+          "mc_se": 0.002230470802319547
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 988,
+          "coverage": 0.988,
+          "wilson95": [
+            0.9791427315245017,
+            0.9931223521935965
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 157.4939445215741,
+          "mc_se": 0.003443254274665176
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 997,
+          "coverage": 0.997,
+          "wilson95": [
+            0.9912169859464969,
+            0.9989792161188614
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 148.84320863864852,
+          "mc_se": 0.0017294507798720387
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 985,
+          "coverage": 0.985,
+          "wilson95": [
+            0.9753990230730932,
+            0.9908890211959184
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 147.16114193854233,
+          "mc_se": 0.0038438262187565153
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 130.64645617489202,
+          "mc_se": 0.0009994998749374613
+        }
+      ],
+      "measured_daily_loss_rho": 0.812496211133524,
+      "measured_rho_mc_se": 0.0008274973937755609
+    },
+    {
+      "scenario": {
+        "id": 22,
+        "rho": 0.85,
+        "rho_source": 0.85,
+        "innovation": "student_t_df5",
+        "drift": true,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 995,
+          "coverage": 0.995,
+          "wilson95": [
+            0.9883490446266249,
+            0.9978624644726756
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 150.45906162206904,
+          "mc_se": 0.002230470802319547
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 984,
+          "coverage": 0.984,
+          "wilson95": [
+            0.97416793978826,
+            0.9901277579977227
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 154.49429055141707,
+          "mc_se": 0.00396787096564392
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 992,
+          "coverage": 0.992,
+          "wilson95": [
+            0.9842936654690199,
+            0.995940804181194
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 146.65742372233768,
+          "mc_se": 0.0028170906978654425
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 987,
+          "coverage": 0.987,
+          "wilson95": [
+            0.9778855576244203,
+            0.9923871796106489
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 144.9301063481155,
+          "mc_se": 0.0035820385257559714
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 985,
+          "coverage": 0.985,
+          "wilson95": [
+            0.9753990230730932,
+            0.9908890211959184
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 126.14717031540513,
+          "mc_se": 0.0038438262187565153
+        }
+      ],
+      "measured_daily_loss_rho": 0.8264231178040359,
+      "measured_rho_mc_se": 0.0008451277732404573
+    },
+    {
+      "scenario": {
+        "id": 24,
+        "rho": 0.6223874290095058,
+        "rho_source": "fit_estimate_clipped_to_0_0.95",
+        "innovation": "gaussian",
+        "drift": false,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 106.29518534066514,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 109.55061977185234,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 103.2836806779078,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 102.32500548506951,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 90.08379656947413,
+          "mc_se": 0.0
+        }
+      ],
+      "measured_daily_loss_rho": 0.5906417761675777,
+      "measured_rho_mc_se": 0.0011471905949717197
+    },
+    {
+      "scenario": {
+        "id": 26,
+        "rho": 0.6223874290095058,
+        "rho_source": "fit_estimate_clipped_to_0_0.95",
+        "innovation": "gaussian",
+        "drift": true,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 106.58741639017028,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 110.09897342334047,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 103.74708470359002,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 102.90544170486997,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 998,
+          "coverage": 0.998,
+          "wilson95": [
+            0.9927371921365079,
+            0.9994513564118793
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 90.81553296601298,
+          "mc_se": 0.0014127986409959495
+        }
+      ],
+      "measured_daily_loss_rho": 0.6250508190247112,
+      "measured_rho_mc_se": 0.0013111608880715304
+    },
+    {
+      "scenario": {
+        "id": 28,
+        "rho": 0.6223874290095058,
+        "rho_source": "fit_estimate_clipped_to_0_0.95",
+        "innovation": "student_t_df5",
+        "drift": false,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 117.2791113317243,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 998,
+          "coverage": 0.998,
+          "wilson95": [
+            0.9927371921365079,
+            0.9994513564118793
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 120.71135657632388,
+          "mc_se": 0.0014127986409959495
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 998,
+          "coverage": 0.998,
+          "wilson95": [
+            0.9927371921365079,
+            0.9994513564118793
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 114.42610089764554,
+          "mc_se": 0.0014127986409959495
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 999,
+          "coverage": 0.999,
+          "wilson95": [
+            0.9943574414020421,
+            0.9998234536293739
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 113.25313941898862,
+          "mc_se": 0.0009994998749374613
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 99.67314535877274,
+          "mc_se": 0.0
+        }
+      ],
+      "measured_daily_loss_rho": 0.5908514339173232,
+      "measured_rho_mc_se": 0.0012029210246218944
+    },
+    {
+      "scenario": {
+        "id": 30,
+        "rho": 0.6223874290095058,
+        "rho_source": "fit_estimate_clipped_to_0_0.95",
+        "innovation": "student_t_df5",
+        "drift": true,
+        "scale": "equal"
+      },
+      "families": [
+        {
+          "family": "F_B",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 115.33175711595925,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_H",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 998,
+          "coverage": 0.998,
+          "wilson95": [
+            0.9927371921365079,
+            0.9994513564118793
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 119.49776334189241,
+          "mc_se": 0.0014127986409959495
+        },
+        {
+          "family": "F_C",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 112.30489814644895,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_O",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 1000,
+          "coverage": 1.0,
+          "wilson95": [
+            0.996173241514445,
+            1.0
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 111.63882221433826,
+          "mc_se": 0.0
+        },
+        {
+          "family": "F_M",
+          "factor": 2.0,
+          "mc_n": 1000,
+          "successes": 998,
+          "coverage": 0.998,
+          "wilson95": [
+            0.9927371921365079,
+            0.9994513564118793
+          ],
+          "pass": true,
+          "mean_interval_width_pp": 98.10570622716119,
+          "mc_se": 0.0014127986409959495
+        }
+      ],
+      "measured_daily_loss_rho": 0.6196556098455906,
+      "measured_rho_mc_se": 0.0012158468166377624
+    }
+  ],
+  "inputs_sha256": "52ea6644fa47d0b08ecb705d1918ad124e193b4c74a7bd1dcb5083c0575bcf32",
+  "wall_seconds": 333.7932825954631,
+  "scientific_support": false,
+  "qualification_complete": false,
+  "requires_all_shards_and_independent_validation": true
+}

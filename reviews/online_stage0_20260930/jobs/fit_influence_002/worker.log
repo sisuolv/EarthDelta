@@ -1,0 +1,68 @@
+ACTION all_online_negative_tests
+Running 76 items in this shard
+........................................................................ [ 94%]
+....                                                                     [100%]
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/tests/fit_influence_002/JUNIT.xml -
+76 passed in 11.33s
+ACTION fit_only_paired_influence_cells
+{"estimate_issues_completed": 10, "rollouts": 37}
+{"estimate_issues_completed": 20, "rollouts": 77}
+{"estimate_issues_completed": 30, "rollouts": 117}
+{"estimate_issues_completed": 40, "rollouts": 167}
+{"estimate_issues_completed": 50, "rollouts": 217}
+{
+  "status": "OBSERVED",
+  "scope": "fit influence only",
+  "scientific_support": false,
+  "analysis_arrays_opened": false,
+  "artifact": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/fit_influence_002/FIT_PAIRED_CELLS.npz",
+    "sha256": "6925048dea2df5583621aabaefc6953e6934ee118494cd7456adc8e6344d09ba"
+  },
+  "arms": [
+    "f0",
+    "obc",
+    "dabc",
+    "ocl_fresh",
+    "lag1c",
+    "lag1",
+    "static",
+    "ewma_g",
+    "delay30"
+  ],
+  "cells": [
+    "Z500@6h",
+    "Z500@24h",
+    "Z500@72h",
+    "Z500@120h",
+    "T850@6h",
+    "T850@24h",
+    "T850@72h",
+    "T850@120h",
+    "T2m@6h",
+    "T2m@24h",
+    "T2m@72h",
+    "T2m@120h",
+    "MSLP@6h",
+    "MSLP@24h",
+    "MSLP@72h",
+    "MSLP@120h",
+    "U850@6h",
+    "U850@24h",
+    "U850@72h",
+    "U850@120h",
+    "Q700@6h",
+    "Q700@24h",
+    "Q700@72h",
+    "Q700@120h"
+  ],
+  "estimate_count": 54,
+  "selection_count": 26,
+  "extra_rollouts": 237,
+  "extra_forecast_slots": 270,
+  "estimate_fallback_slots": 33,
+  "reused_selection_slots": 130,
+  "contract_sha256": "ea2e6ddeb31b9314b190f28e49680e440875dca2e579a268b2d0012e9d32498b",
+  "warning": "retrospective fitted estimate cells and hyperparameter-selected selection cells; centered power proxy only, neither is held-out evidence",
+  "wall_seconds": 471.97868812829256
+}

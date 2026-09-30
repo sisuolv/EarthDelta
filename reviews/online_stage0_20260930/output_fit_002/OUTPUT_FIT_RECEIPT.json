@@ -1,0 +1,27 @@
+{
+  "status": "OBSERVED",
+  "scope": "fit and selection only; analysis sealed",
+  "scientific_support": false,
+  "choices": {
+    "obc": "lambda=0.5",
+    "dabc": "tau=15,lambda=0.5",
+    "ocl_fresh": "k=10,lambda=10.0"
+  },
+  "candidate_counts": {
+    "obc": 2,
+    "dabc": 8,
+    "ocl_fresh": 10
+  },
+  "selection_scores": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/output_fit_002/SELECTION_SCORES.json",
+    "sha256": "8c70b644cfb35f9552112a2e15df0e6e6db3e9eb2b65cf166331d65700db1870"
+  },
+  "resolved": {
+    "path": "/mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/output_fit_002/CONFIG_RESOLVED.json",
+    "sha256": "2a80d6dd1ab52cc619d91ca8d41956186484a29ad2ae127a278a9b10dddaaa15"
+  },
+  "refit_target_count": 80,
+  "model_sha256": "7fde884ec85f4999d4bcb02d55ed72c142912071956083ebee08d3d86311b695",
+  "contract_sha256": "ea2e6ddeb31b9314b190f28e49680e440875dca2e579a268b2d0012e9d32498b",
+  "wall_seconds": 146.54439122229815
+}

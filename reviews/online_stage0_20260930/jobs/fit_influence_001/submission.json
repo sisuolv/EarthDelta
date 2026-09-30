@@ -1,0 +1,12 @@
+{
+  "stage": "fit_influence_001",
+  "job_name": "ed-v92-fit-influence-001-092745",
+  "resource": "reserved_h100",
+  "gpus": 1,
+  "created_utc": "2026-09-30T09:27:45.564372+00:00",
+  "request_sha256": "a6d665f5e8af253e33b9f8637e1e1a6019d6a59f9e7f747228e52fb588149140",
+  "driver_sha256": "2fe324045c052a3a90bf082768336dbfd76a475f6cc4f20afff80bc9034d41b1",
+  "exit_code": 0,
+  "stdout": "job pt-mdpr215u submitted successfully, please wait for scheduling!\n",
+  "stderr": ""
+}

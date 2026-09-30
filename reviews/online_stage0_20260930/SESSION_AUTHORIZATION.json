@@ -1,0 +1,15 @@
+{
+  "type": "conversation_instruction_record_not_a_human_signature",
+  "user_instruction": "请帮我按照上述计划依次执行吧，你有4卡标准h100资源可以使用，spoth100和5090都可以使用",
+  "recorded_utc": "20260930T071601Z",
+  "scope": "adopt v9.2; implement T1/T2 and prepare/run phase-0 fit tasks under prerequisites; use new run only",
+  "contract_sha256": "ea2e6ddeb31b9314b190f28e49680e440875dca2e579a268b2d0012e9d32498b",
+  "standard_h100_concurrency_max": 4,
+  "H100_card_hours_total_cap": 8,
+  "fit_pool_card_hours_cap": 3,
+  "analysis_pool_card_hours_cap": 5,
+  "analysis_requires_fit_receipts": true,
+  "human_gate1_still_required": true,
+  "old_signature_files_modified": false,
+  "rationale": "Latest explicit user execution instruction supersedes draft-only status for authorized work; no historical signature is fabricated."
+}

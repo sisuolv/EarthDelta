@@ -1,0 +1,12 @@
+{
+  "stage": "t1_smoke_cpu_fallback",
+  "job_name": "ed-v92-t1-smoke-cpu-fallback-071809",
+  "resource": "spot_h100",
+  "gpus": 1,
+  "created_utc": "2026-09-30T07:18:09.370706+00:00",
+  "request_sha256": "3a9827309828a7aa2542bf7e1949d80c0f1847830b1f341b7c9487a70b4ccfce",
+  "driver_sha256": "2fe324045c052a3a90bf082768336dbfd76a475f6cc4f20afff80bc9034d41b1",
+  "exit_code": 0,
+  "stdout": "job pt-jxsk968b submitted successfully, please wait for scheduling!\n",
+  "stderr": ""
+}

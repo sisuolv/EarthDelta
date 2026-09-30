@@ -1,0 +1,12 @@
+[
+  {
+    "action": "cpu_environment",
+    "exit_code": 0,
+    "wall_seconds": 0.18253696896135807
+  },
+  {
+    "action": "coverage_negative_equivalence_tests",
+    "exit_code": 1,
+    "wall_seconds": 4.4890793692320585
+  }
+]

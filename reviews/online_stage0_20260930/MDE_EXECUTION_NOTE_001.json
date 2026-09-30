@@ -1,0 +1,24 @@
+{
+  "scope": "extra fit-only cells required for the pre-registered MDE task; no hyperparameter search or new years",
+  "extra_nominal_forecasts": 270,
+  "existing_selection_forecasts_reused": 130,
+  "upper_timing_basis": "270 * engine roll20 p95 * 1.2 + 300s CPU/load allowance",
+  "allocated_H100_job_limit_seconds": 1100,
+  "fit_cap_card_hours_unchanged": 3,
+  "influence_source": "54 retrospective estimate rows + 26 selected validation rows separately; never described as held-out skill",
+  "MDE_MC_replicates_per_source": 500,
+  "MDE_seed_rule": "SeedSequence([18501, source_id, mc]); source IDs estimate=0, selection=1",
+  "MDE_grid_pp": [
+    0,
+    0.1,
+    0.2,
+    0.3,
+    0.5,
+    1,
+    2
+  ],
+  "MDE_bootstrap_draws": 50000,
+  "MDE_factors": "only the common factor passing independent coverage validation",
+  "power_interpretation": "conditional on short fit covariance, not guaranteed seasonal transfer; each marginal contrast has its own alternative, full Gate uses one common lag1c improvement",
+  "coverage_deadline": "shared 2-hour wall-clock limit for calibration and validation, to be fixed before their first submission"
+}

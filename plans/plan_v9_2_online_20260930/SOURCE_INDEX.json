@@ -1,0 +1,189 @@
+{
+  "head": "d55ad70854bcf535b86c761b8d9cf7a7981374a0",
+  "branch": "probe-headroom-20260927",
+  "main": "f228895203d3ced2d5e984e705ea14a94160d4b8",
+  "revision_run": "/mnt/afs/260010168/earthdelta_v9_2_plan_revision_20260930T053606Z",
+  "sources": [
+    {
+      "path": "/mnt/afs/260010168/EarthDelta/plan_v9_1_online_20260929 (2).zip",
+      "role": "original v9.1 contract archive",
+      "exists": true,
+      "sha256": "3310490bfacfae60734c0ae8f892bb06033ba1a4a88ad2add53d26c593c92b8b"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_1_claude_review_20260930T050649Z/REVIEW.md",
+      "role": "2026-09-30 independent review; existing evidence only",
+      "exists": true,
+      "sha256": "27eb39528fea4fc1f64e2a9d0b782940de7e359352e4bfee2537df60e2b5e40a"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_1_claude_review_20260930T050649Z/FINDINGS.json",
+      "role": "2026-09-30 independent review; existing evidence only",
+      "exists": true,
+      "sha256": "b662e4e4b379f177be6f2314a2654f16e1c8068a92ed0efd31c17ada72099939"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_1_claude_review_20260930T050649Z/REQUIRED_AMENDMENTS.md",
+      "role": "2026-09-30 independent review; existing evidence only",
+      "exists": true,
+      "sha256": "070a1bd80fc8c4a77366477fa535e7bbb60868379319d52d29b08f8a90614387"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_1_claude_review_20260930T050649Z/MANIFEST.json",
+      "role": "2026-09-30 independent review; existing evidence only",
+      "exists": true,
+      "sha256": "550f6afa87cf3eb5c83f2502831a33f913425516c1cbc3fb666fea63ec466760"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_1_claude_review_20260930T050649Z/logs/03_reuse_claims.stdout",
+      "role": "2026-09-30 independent review; existing evidence only",
+      "exists": true,
+      "sha256": "41b52ac80b9fc9ec34ec23054e4761ae796969579aba591b061c8032adf088a6"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_1_claude_review_20260930T050649Z/logs/04_fp16_direction.stdout",
+      "role": "2026-09-30 independent review; existing evidence only",
+      "exists": true,
+      "sha256": "0f65bbed990dc6d0bfe6a491eadf8705c8aa47b2cac909c6edb833df3ec90094"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_1_claude_review_20260930T050649Z/logs/05_block_length_sim.stdout",
+      "role": "2026-09-30 independent review; existing evidence only",
+      "exists": true,
+      "sha256": "65c2c20425bc518b39b4d2b5afa13439d10860a71fc23f8eccf151f54b0bad4c"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_1_claude_review_20260930T050649Z/logs/06_metadata_checks.stdout",
+      "role": "2026-09-30 independent review; existing evidence only",
+      "exists": true,
+      "sha256": "a6f071ccafdfe86a4531b0c531c0befd5f13524a83f1d5fbda65a83b97c9b1bd"
+    },
+    {
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v9_online_20260929/REUSE_DECISIONS.md",
+      "role": "historical T0; unchanged",
+      "exists": true,
+      "sha256": "6ae9c5a507263e27b2cf453515ab6cc0db10b6005934956208fa6593a6669a81"
+    },
+    {
+      "path": "/mnt/afs/260010168/EarthDelta/plans/plan_v9_online_20260929/t0_reuse.patch",
+      "role": "historical T0; unchanged",
+      "exists": true,
+      "sha256": "18c5f19aefc2e98ebfd4fc164061f298c889cce89f7b7caaab39b7959f7499f8"
+    },
+    {
+      "path": "/mnt/afs/260010168/EarthDelta/runs/online/t0_reuse_audit_20260929T114614Z/FINAL_MANIFEST.json",
+      "role": "historical T0 run",
+      "exists": true,
+      "sha256": "12f60ac45045beeeedcdf23d2728be770b4dc8d8b54ffed0d9aa2cb9903de19f"
+    },
+    {
+      "path": "/mnt/afs/260010168/EarthDelta/runs/online/t0_reuse_audit_20260929T114614Z/FINAL_REPORT.md",
+      "role": "historical T0 run",
+      "exists": true,
+      "sha256": "b99e46f075bafd130704ec96f03c70cfb8f5dce21c057ee2de0e059bd9685b86"
+    },
+    {
+      "path": "/mnt/afs/260010168/EarthDelta/runs/online/t0_reuse_audit_20260929T114614Z/VERIFICATION.json",
+      "role": "historical T0 run",
+      "exists": true,
+      "sha256": "7ce2c11897e85a767d8ad7457d1873de7afa16abc3b6573666da00de4ad61fd9"
+    },
+    {
+      "path": "/mnt/afs/260010168/EarthDelta/runs/online/t0_reuse_audit_20260929T114614Z/SYMBOLS.json",
+      "role": "historical T0 run",
+      "exists": true,
+      "sha256": "96e8fc3d64981d495c4146301eef6a38d60f857cae1bc51011229548dbc1cbde"
+    },
+    {
+      "path": "/mnt/afs/260010168/EarthDelta/runs/online/t0_reuse_audit_20260929T114614Z/SYMBOL_REVIEW.md",
+      "role": "historical T0 run",
+      "exists": true,
+      "sha256": "742e4fe29e71ae8646fb3a7db542de6460fd9429f4661287c0bb8a34fa2a6365"
+    },
+    {
+      "path": "/mnt/afs/260010168/EarthDelta/reviews/CODEX_REVIEW_PLAN_V9_20260929.md",
+      "role": "v9.0 predecessor report referenced by old ZIP; MISSING at declared path",
+      "exists": false,
+      "sha256": null
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_2_plan_revision_20260930T053606Z/inputs/plan_v9_online_20260929/00_START_HERE.md",
+      "role": "exact original ZIP member; not the active v9.2 draft",
+      "exists": true,
+      "sha256": "5c23fc459c1137746313daf346a1a77c68b493fdbafee8713ad2bf958c0262b2"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_2_plan_revision_20260930T053606Z/inputs/plan_v9_online_20260929/CLAUDE.md",
+      "role": "exact original ZIP member; not the active v9.2 draft",
+      "exists": true,
+      "sha256": "2fcf4445d401865a18a3e0edf5ced936e70c55cf0377bee6b6f9417205b3fdf5"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_2_plan_revision_20260930T053606Z/inputs/plan_v9_online_20260929/AUTHORIZATIONS.md",
+      "role": "exact original ZIP member; not the active v9.2 draft",
+      "exists": true,
+      "sha256": "515e5136d005540a5915d3bfa38c7e31c35ee333400dd9cc40398ae0f38faa75"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_2_plan_revision_20260930T053606Z/inputs/plan_v9_online_20260929/PHASE0_PROTOCOL.md",
+      "role": "exact original ZIP member; not the active v9.2 draft",
+      "exists": true,
+      "sha256": "85bc6c9f3b10b856d1d889aa7afb83cc5737a78804454bfc06cf31f61ac0dc6f"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_2_plan_revision_20260930T053606Z/inputs/plan_v9_online_20260929/T0_REUSE_AUDIT.md",
+      "role": "exact original ZIP member; not the active v9.2 draft",
+      "exists": true,
+      "sha256": "5180af9d218828951ee5935832a951aafe5b2905de64900af81c595e4df8e7f5"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_2_plan_revision_20260930T053606Z/inputs/plan_v9_online_20260929/T1_FIX_P5.md",
+      "role": "exact original ZIP member; not the active v9.2 draft",
+      "exists": true,
+      "sha256": "aef73eeec3a77c0829b882d2ffa21813446e75161d237213aa6a07774e5b57fd"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_2_plan_revision_20260930T053606Z/inputs/plan_v9_online_20260929/T2_ONLINE_HELPERS.md",
+      "role": "exact original ZIP member; not the active v9.2 draft",
+      "exists": true,
+      "sha256": "c921e3fbb66ab023186dbf49c5c9d4ee9ea6cceccf259175cfb08ed094c43bd6"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_2_plan_revision_20260930T053606Z/inputs/plan_v9_online_20260929/T3A_P0_OUTPUT_SPACE.md",
+      "role": "exact original ZIP member; not the active v9.2 draft",
+      "exists": true,
+      "sha256": "7cdf80feecf98baad9c317167e3555c21efa6bccd2903eb64c2bc74281eb977d"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_2_plan_revision_20260930T053606Z/inputs/plan_v9_online_20260929/T3B_P0_PARAM_SPACE.md",
+      "role": "exact original ZIP member; not the active v9.2 draft",
+      "exists": true,
+      "sha256": "27f8098adc243a3aa5bb02e3200ba10b1980e2c419f61b66056d943297f9133b"
+    },
+    {
+      "path": "/mnt/afs/260010168/earthdelta_v9_2_plan_revision_20260930T053606Z/inputs/plan_v9_online_20260929/T4_P0_REPORT_AND_GATE1.md",
+      "role": "exact original ZIP member; not the active v9.2 draft",
+      "exists": true,
+      "sha256": "e6abe3a9ddd5c4fbfd62411ee4dbc80048d54b59983add7a7e425e1db8e0c0f5"
+    }
+  ],
+  "input_verification": "/mnt/afs/260010168/earthdelta_v9_2_plan_revision_20260930T053606Z/INPUT_VERIFICATION.json",
+  "manifest_count_note": "T0 manifest lists 98 artifacts; counting the manifest itself gives 99 files.",
+  "original_predecessor_report": "MISSING at declared repo path; not used as an independently verified source",
+  "primary_web_sources": [
+    {
+      "title": "Cui et al. 2012, Bias Correction for Global Ensemble Forecast",
+      "url": "https://www.emc.ncep.noaa.gov/gmb/yzhu/gif/pub/WAF201204_Cui.pdf",
+      "doi": "10.1175/WAF-D-11-00011.1",
+      "accessed_utc_date": "2026-09-30",
+      "supports": "decaying-average/Kalman-type operational bias correction predecessor; not novelty of this project"
+    },
+    {
+      "title": "ECMWF ERA5T reanalysis data now available for direct delivery to users",
+      "url": "https://www.ecmwf.int/en/about/media-centre/news/2026/era5t-reanalysis-data",
+      "published": "2026-09-21",
+      "accessed_utc_date": "2026-09-30",
+      "supports": "ERA5T initial release is five days behind real time; replay is not operational timeliness"
+    }
+  ]
+}

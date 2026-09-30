@@ -1,0 +1,5 @@
+ACTION cpu_baseline
+Running 17 items in this shard
+.................                                                        [100%]
+- generated xml file: /mnt/afs/260010168/EarthDelta/runs/online/v92_execution_20260930T071601Z/code/t1_envfixed/runs/online/t1_shard0/EXISTING_CPU_JUNIT.xml -
+17 passed in 244.97s (0:04:04)

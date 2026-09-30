@@ -1,0 +1,418 @@
+{
+  "status": "PLAN_VALIDATION_PASS",
+  "scope": "documents, calendar, metadata hashes and synthetic plan decision arithmetic only",
+  "not_claimed": [
+    "production implementation tests",
+    "new weather QC",
+    "GPU execution",
+    "coverage calibration",
+    "MDE estimates",
+    "scientific support"
+  ],
+  "utc": "2026-09-30T06:16:05.061529+00:00",
+  "checks": [
+    {
+      "check": "no execution approval",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "all protocol signatures missing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "task approvals missing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "fixed primary and thresholds",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no raw fp16 or nested cv",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "delay control shares centering",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "label age is distinct from availability",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "channel indices bind actual source",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "family sizes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "F_B exact unique membership",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "F_H exact unique membership",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "F_C exact unique membership",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "F_O exact unique membership",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "F_M exact unique membership",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "361 unique nominal slots",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "role counts",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "calendar indices independently recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "last support ends in 2020",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "calibration 16 common dates",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "delay30 calibration never uses 2019 or Jan1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "diagnostic39",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "17 new QC and 1439 reusable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "8 fixed overlap indices",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "712_passes input count",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "712_passes analysis step1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "712_passes analysis step4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "712_passes analysis step12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "712_passes analysis step20",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "712_rejected input count",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "712_rejected analysis step1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "712_rejected analysis step4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "712_rejected analysis step12",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "712_rejected analysis step20",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "decision missing approval",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "decision engineering failure",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "decision missing registered result",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "decision coverage failure",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "decision all pass",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "decision no proof of superiority",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "decision below practical threshold",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "decision harmful interval",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "decision strict boundary equals threshold",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "fresh full lineage covers gradient",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "single variable fresh lineage rejected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "centering not orthogonal counterexample",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "selection configs derive from parameter grids",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "calibration variants derive from tau grid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "analysis arms counted",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "budget pools not double counted",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "phase budgets include numerical gates and add to total",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage toy model finite moments and explicit truth",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "coverage tests null and non-null scales",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "DAG T1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "DAG T2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "DAG T3A_fit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "DAG T3B_fit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "DAG STATISTICS_PREFLIGHT",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "DAG T3A_analysis",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "DAG T3B_analysis",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "DAG T4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "legacy and later phases unscheduled",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "all 23 findings mapped",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "every finding has existing plan targets",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "all plan JSON parses",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "local markdown links",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "protected code and history unchanged",
+      "passed": true,
+      "detail": {
+        "checked": 151,
+        "changed": [],
+        "added": []
+      }
+    },
+    {
+      "check": "root CLAUDE not silently activated",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "HEAD unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no tracked changes",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "checks_passed": 69,
+  "synthetic_gate_examples": [
+    {
+      "case": "missing approval",
+      "result": "AWAIT_SIGNATURE"
+    },
+    {
+      "case": "engineering failure",
+      "result": "BLOCKED"
+    },
+    {
+      "case": "missing registered result",
+      "result": "BLOCKED"
+    },
+    {
+      "case": "coverage failure",
+      "result": "STATISTICAL_INCONCLUSIVE"
+    },
+    {
+      "case": "all pass",
+      "result": "GO_RECOMMENDATION_ONLY"
+    },
+    {
+      "case": "no proof of superiority",
+      "result": "INCONCLUSIVE"
+    },
+    {
+      "case": "below practical threshold",
+      "result": "NOT_MET"
+    },
+    {
+      "case": "harmful interval",
+      "result": "NOT_MET"
+    },
+    {
+      "case": "strict boundary equals threshold",
+      "result": "INCONCLUSIVE"
+    }
+  ],
+  "protected_files_checked": 151,
+  "head": "d55ad70854bcf535b86c761b8d9cf7a7981374a0",
+  "git_status": "?? $OUT\n?? \"plan_v9_1_online_20260929 (2).zip\"\n?? plans/plan_v9_2_online_20260930/\n?? plans/plan_v9_online_20260929/\n?? plans/plans_v8_0926/EarthDelta_Main_Independent_Audit_20260926.zip\n?? plans/plans_v8_0926/codex_plan_20260926T134957Z/\n?? plans/plans_v8_0926/codex_plan_20260926T150212Z_r2/\n?? plans/plans_v8_0926/codex_plan_20260926T171440Z_r3/\n?? runs/\n",
+  "signatures": "MISSING",
+  "pending": [
+    "root rule activation/A1",
+    "protocol A/A3",
+    "17-index QC",
+    "new code tests",
+    "coverage and MDE",
+    "timing/budget approval",
+    "protocol B/A4",
+    "human Gate1"
+  ],
+  "original_v9_0_report": "MISSING at declared path"
+}
